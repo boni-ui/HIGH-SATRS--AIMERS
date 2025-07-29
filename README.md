@@ -1,2 +1,2 @@
 # HIGH-SATRS--AIMERS
-Website fir HIGH STARS AIMERS 
+Website for HIGH STARS AIMERS 
