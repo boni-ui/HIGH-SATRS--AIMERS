@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up - High Stars Aimers</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f5faff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #ccc;
+      width: 300px;
+    }
+    h1 {
+      color: #2a7ae2;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .password-wrapper {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: gray;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    input[type="submit"] {
+      background-color: #2a7ae2;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    input[type="submit"]:hover {
+      background-color: #004ea2;
+    }
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: green;
+    }
+    .back-link {
+      margin-top: 20px;
+      display: inline-block;
+      color: #2a7ae2;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Create Account</h1>
+
+  <form onsubmit="return registerUser()">
+    <label for="newUsername">Username</label>
+    <input type="text" id="newUsername" required>
+
+    <label for="newPassword">Password</label>
+    <div class="password-wrapper">
+      <input type="password" id="newPassword" required>
+      <i class="fas fa-eye toggle-password" onclick="togglePassword('newPassword', this)"></i>
+    </div>
+
+    <label for="confirmPassword">Confirm Password</label>
+    <div class="password-wrapper">
+      <input type="password" id="confirmPassword" required>
+      <i class="fas fa-eye toggle-password" onclick="togglePassword('confirmPassword', this)"></i>
+    </div>
+
+    <input type="submit" value="Sign Up">
+  </form>
+
+  <p class="message" id="signupMsg"></p>
+
+  <a class="back-link" href="signin1.html">Already have an account? Sign In</a>
+
+  <script>
+    function togglePassword(fieldId, icon) {
+      const field = document.getElementById(fieldId);
+      const type = field.getAttribute("type") === "password" ? "text" : "password";
+      field.setAttribute("type", type);
+      icon.classList.toggle("fa-eye");
+      icon.classList.toggle("fa-eye-slash");
+    }
+
+    function registerUser() {
+      const username = document.getElementById("newUsername").value.trim();
+      const password = document.getElementById("newPassword").value;
+      const confirm = document.getElementById("confirmPassword").value;
+      const message = document.getElementById("signupMsg");
+
+      if (password !== confirm) {
+        message.style.color = "red";
+        message.textContent = "Passwords do not match.";
+        return false;
+      }
+
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+
+      if (users.find(user => user.username === username)) {
+        message.style.color = "red";
+        message.textContent = "Username already exists.";
+        return false;
+      }
+
+      users.push({ username: username, password: password });
+      localStorage.setItem("users", JSON.stringify(users));
+
+      message.style.color = "green";
+      message.textContent = "Account created successfully! Redirecting...";
+
+      setTimeout(() => {
+        window.location.href = "signin1.html";
+      }, 2000);
+
+      return false;
+    }
+  </script>
+
+</body>
+</html>

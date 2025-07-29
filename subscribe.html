@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subscribe - High Stars Aimers</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://i.postimg.cc/MpH2Cjc6/file-00000000a8046230bc1b196305d9b3b4-conversation-id-685a6dbd-5aa8-800e-a943-4ac4d1da4bea-message-i.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+    .container {
+      max-width: 500px;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 10px;
+      margin: 60px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    h1 {
+      color: #2a2e92;
+      margin-bottom: 20px;
+    }
+    .mpesa-instructions {
+      font-size: 16px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .pay-number {
+      color: red;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .whatsapp-btn {
+      background-color: #25D366;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 20px;
+    }
+    .success-message {
+      display: none;
+      margin-top: 20px;
+      color: green;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .back-home {
+      display: inline-block;
+      margin-top: 20px;
+      color: #2a2e92;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Subscribe to Premium</h1>
+    <p class="mpesa-instructions">
+      Unlock unlimited downloads for <strong>30 days</strong>.<br><br>
+      Send <strong>KSH 299</strong> via <strong>M-PESA</strong> to:<br>
+      <span class="pay-number">254116136780</span><br><br>
+      After payment, tap the button below to send confirmation.
+    </p>
+
+    <a class="whatsapp-btn"
+       href="https://wa.me/254116136780?text=Hello, I have paid KSH 299 to subscribe to High Stars Aimers. Kindly activate my account."
+       target="_blank">
+      ✅ Confirm via WhatsApp
+    </a>
+
+    <div class="success-message" id="successMsg">
+      🎉 You now have Premium access for 30 days!
+    </div>
+
+    <a href="home.html" class="back-home">← Back to Home</a>
+  </div>
+
+  <script>
+    // Simulate user being marked as subscribed
+    const btn = document.querySelector(".whatsapp-btn");
+    btn.addEventListener("click", () => {
+      localStorage.setItem("premiumUser", "true");
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + 30);
+      localStorage.setItem("premiumExpiry", expiryDate.toISOString());
+      setTimeout(() => {
+        document.getElementById("successMsg").style.display = "block";
+      }, 1000);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Profile - High Stars Aimers</title>
+  <style>
+    body {
+      background-color: #f2f9ff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .profile-box {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 300px;
+    }
+
+    h1 {
+      color: #2a2e92;
+      margin-bottom: 10px;
+    }
+
+    .info {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #2a2e92;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1e2478;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="profile-box">
+    <h1>👤 Your Profile</h1>
+    <p class="info"><strong>Username:</strong> <span id="username">Loading...</span></p>
+
+    <button onclick="goHome()">🏠 Home</button>
+    <button onclick="logout()">🚪 Sign Out</button>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (!user) {
+      window.location.href = "signin.html";
+    } else {
+      document.getElementById("username").textContent = user.username;
+    }
+
+    function goHome() {
+      window.location.href = "home.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "signin.html";
+    }
+  </script>
+
+</body>
+</html>

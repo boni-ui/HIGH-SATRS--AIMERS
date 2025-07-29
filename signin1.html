@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign In</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #e6ecf0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .signin-box {
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 300px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2a2e92;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: gray;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #2a2e92;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1e2478;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="signin-box">
+    <h2>Sign In</h2>
+    <input type="text" id="username" placeholder="Enter your username">
+
+    <div class="password-wrapper">
+      <input type="password" id="password" placeholder="Enter your password">
+      <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+    </div>
+
+    <button onclick="signIn()">Sign In</button>
+    <p class="error" id="errorMsg"></p>
+  </div>
+
+  <script>
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+
+    togglePassword.addEventListener("click", function () {
+      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+      passwordInput.setAttribute("type", type);
+      this.classList.toggle("fa-eye");
+      this.classList.toggle("fa-eye-slash");
+    });
+
+    function signIn() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      const savedUsername = "boni";
+      const savedPassword = "bonimbugua5077";
+
+      if (username === savedUsername && password === savedPassword) {
+        localStorage.setItem("loggedInUser", JSON.stringify({ username }));
+        window.location.href = "home.html";
+      } else {
+        document.getElementById("errorMsg").textContent = "Incorrect username or password.";
+      }
+    }
+  </script>
+
+</body>
+</html>
