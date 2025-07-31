@@ -17,7 +17,7 @@
 
     .panel {
       margin-top: 30px;
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       gap: 15px;
@@ -37,19 +37,73 @@
     .panel a:hover {
       background-color: #1e2478;
     }
+
+    .auth {
+      margin-top: 100px;
+    }
+
+    .auth input {
+      padding: 10px;
+      font-size: 16px;
+      width: 250px;
+      margin: 10px 0;
+    }
+
+    .auth button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #2a2e92;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .auth button:hover {
+      background: #1e2478;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
-  <h1>High Stars Aimers - Admin Dashboard</h1>
-  <div class="panel">
+  <h1>High Stars Aimers - Admin Panel</h1>
+
+  <div class="auth" id="auth">
+    <p>Enter Admin Password to Continue:</p>
+    <input type="password" id="adminPass" placeholder="Enter password..." />
+    <br>
+    <button onclick="checkPassword()">Login</button>
+    <div id="error" class="error"></div>
+  </div>
+
+  <div class="panel" id="panel">
     <a href="home.html" target="_blank">🏠 Home</a>
     <a href="admin_upload.html" target="_blank">⬆️ Upload Content</a>
-    <a href="subscribe.html" target="_blank">⭐ Subscribe System</a>
+    <a href="subscribe.html" target="_blank">⭐ Subscription System</a>
     <a href="purchase.html" target="_blank">💰 Purchase System</a>
-    <a href="contact.html" target="_blank">📞 Contact Page</a>
     <a href="profile.html" target="_blank">👤 Profile Page</a>
+    <a href="contact.html" target="_blank">📞 Contact Page</a>
   </div>
+
+  <script>
+    const correctPassword = "admin299"; // Change to your secret password
+
+    function checkPassword() {
+      const input = document.getElementById("adminPass").value;
+      const error = document.getElementById("error");
+      if (input === correctPassword) {
+        document.getElementById("auth").style.display = "none";
+        document.getElementById("panel").style.display = "flex";
+      } else {
+        error.textContent = "Incorrect password!";
+      }
+    }
+  </script>
 
 </body>
 </html>
