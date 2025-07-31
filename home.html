@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>High Stars Aimers - Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; font-family: 'Segoe UI', sans-serif; }
+    body {
+      display: flex;
+      flex-direction: column;
+      background: url('https://i.postimg.cc/MpH2Cjc6/file-00000000a8046230bc1b196305d9b3b4-conversation-id-685a6dbd-5aa8-800e-a943-4ac4d1da4bea-message-i.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+    .header {
+      background-color: #2a2e92;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 { font-size: 20px; }
+    .menu-btn {
+      font-size: 26px;
+      background: none;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .dropdown {
+      display: none;
+      background-color: white;
+      position: absolute;
+      right: 20px;
+      top: 60px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border-radius: 6px;
+      overflow: hidden;
+      z-index: 1000;
+    }
+    .dropdown button {
+      width: 100%;
+      padding: 12px;
+      background: white;
+      border: none;
+      text-align: left;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .dropdown button:hover { background-color: #f0f0f0; }
+    .main-buttons {
+      margin: 50px auto 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .main-buttons button {
+      padding: 20px 40px;
+      font-size: 18px;
+      background-color: #2a2e92;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .main-buttons button:hover { background-color: #1e2478; }
+    .table-section {
+      display: none;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.92);
+      margin: 30px auto;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 900px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ccc;
+    }
+    th {
+      background-color: #2a2e92;
+      color: white;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .close-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #2a2e92;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .footer {
+      margin-top: auto;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      text-align: center;
+      border-top: 1px solid #ccc;
+    }
+    .social-icons a {
+      margin: 0 10px;
+      font-size: 22px;
+      text-decoration: none;
+    }
+    .footer-links {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .footer-links a {
+      color: #2a2e92;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+    .footer-links a:hover { text-decoration: underline; }
+    .fab.fa-facebook { color: #3b5998; }
+    .fab.fa-instagram { color: #e4405f; }
+    .fab.fa-twitter { color: #1da1f2; }
+    .fab.fa-youtube { color: #ff0000; }
+    .fab.fa-tiktok { color: black; }
+    .fab.fa-whatsapp { color: #25D366; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>High Stars Aimers</h1>
+    <button class="menu-btn" onclick="toggleMenu()">⋮</button>
+  </div>
+  <div id="dropdown" class="dropdown">
+    <button onclick="window.location.href='profile.html'">👤 Profile</button>
+    <button onclick="window.location.href='contact.html'">📞 Contact</button>
+    <button onclick="window.location.href='privacy.html'">🔒 Privacy & Policy</button>
+    <button onclick="logout()">🚪 Sign Out</button>
+  </div>
+  <div class="main-buttons">
+    <button onclick="showSection('papers')">Past Papers</button>
+    <button onclick="showSection('notes')">Notes</button>
+  </div>
+
+  <div id="papers" class="table-section">
+    <h2>Past Papers</h2>
+    <table>
+      <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
+      <tbody id="papersTable"></tbody>
+    </table>
+  </div>
+
+  <div id="notes" class="table-section">
+    <h2>Notes</h2>
+    <table>
+      <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
+      <tbody id="notesTable"></tbody>
+    </table>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <p id="modalText"></p>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Follow Boni Mbugua:</p>
+    <div class="social-icons">
+      <a href="https://facebook.com/boniMbugua" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/boni.mbugua?igsh=MWF3MmI0N29leDdzeA==" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://x.com/mbugua_bon60636?s=09" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://youtube.com/@boniMbugua" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="https://tiktok.com/@boniMbugua" target="_blank"><i class="fab fa-tiktok"></i></a>
+      <a href="https://wa.me/254116136780" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy & Policy</a> |
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("dropdown");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "signin1.html";
+    }
+
+    function showSection(id) {
+      document.getElementById("papers").style.display = "none";
+      document.getElementById("notes").style.display = "none";
+      document.getElementById(id).style.display = "block";
+    }
+
+    function viewItem(year, subject) {
+      document.getElementById("modalText").textContent = `You are viewing: ${subject} (${year})`;
+      document.getElementById("modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    function populateTables() {
+      const papersTable = document.getElementById("papersTable");
+      const notesTable = document.getElementById("notesTable");
+      papersTable.innerHTML = "";
+      notesTable.innerHTML = "";
+
+      const uploads = JSON.parse(localStorage.getItem("uploads") || "[]");
+
+      uploads.forEach(item => {
+        const row = `
+          <tr>
+            <td>${item.year}</td>
+            <td>${item.subject}</td>
+            <td>${item.price}</td>
+            <td><button onclick="viewItem('${item.year}', '${item.subject}')">👁 View</button></td>
+            <td><a href="${item.file}" download><button>⬇ Download</button></a></td>
+          </tr>`;
+
+        if (item.type === "paper") {
+          papersTable.innerHTML += row;
+        } else if (item.type === "note") {
+          notesTable.innerHTML += row;
+        }
+      });
+    }
+
+    populateTables();
+  </script>
+</body>
+</html>
