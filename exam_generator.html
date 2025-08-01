@@ -1,140 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Exam Generator - High Stars Aimers</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f1f4fa;
+      font-family: 'Times New Roman', serif;
       padding: 40px;
+      background: #fdfaf6;
+      color: #000;
     }
-    .container {
-      background: white;
-      max-width: 900px;
-      margin: auto;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
     }
-    h2 { text-align: center; color: #2a2e92; }
-    label { font-weight: bold; margin-top: 20px; display: block; }
-    select, textarea, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
+    .logo img {
+      width: 60px;
+    }
+    .center-title {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .paper-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .exam-date {
       font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      margin-bottom: 20px;
     }
-    textarea {
-      height: 200px;
-      resize: vertical;
+    .info-fields {
+      margin-bottom: 30px;
     }
-    button {
-      background-color: #2a2e92;
-      color: white;
-      border: none;
-      cursor: pointer;
+    .info-fields div {
+      margin-bottom: 12px;
+    }
+    .instructions {
+      margin-bottom: 30px;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    .section-table {
+      border: 1px solid #000;
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .section-table th,
+    .section-table td {
+      border: 1px solid #000;
+      text-align: center;
+      padding: 8px;
+    }
+    .section-label {
+      font-weight: bold;
       margin-top: 20px;
     }
-    button:hover {
-      background-color: #1d2274;
+    .grand-total {
+      float: right;
+      font-weight: bold;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>KCSE Exam Generator (Admin Only)</h2>
-
-    <label for="subject">Subject:</label>
-    <select id="subject">
-      <option value="">-- Select Subject --</option>
-      <option>Mathematics</option>
-      <option>Biology</option>
-      <option>Chemistry</option>
-      <option>Physics</option>
-    </select>
-
-    <label for="form">Form Level:</label>
-    <select id="form">
-      <option value="">-- Select Form --</option>
-      <option>Form 1</option>
-      <option>Form 2</option>
-      <option>Form 3</option>
-      <option>Form 4</option>
-    </select>
-
-    <label for="questions">Exam Questions (KCSE Style):</label>
-    <textarea id="questions" placeholder="Paste or type your questions here..."></textarea>
-
-    <label for="answers">Marking Scheme:</label>
-    <textarea id="answers" placeholder="Write matching marking scheme..."></textarea>
-
-    <button onclick="downloadPDF()">Download as PDF</button>
-    <button onclick="saveToUploads()">Save to Uploads (Admin Panel)</button>
+  <div class="logo">
+    <img src="https://i.postimg.cc/Y0qgyY8n/star-icon.png" alt="Star">
   </div>
-
-  <script>
-    function downloadPDF() {
-      const subject = document.getElementById("subject").value;
-      const form = document.getElementById("form").value;
-      const questions = document.getElementById("questions").value;
-      const answers = document.getElementById("answers").value;
-
-      if (!subject || !form || !questions) {
-        alert("Please fill all fields before downloading.");
-        return;
-      }
-
-      const content = `
-        <h2 style="text-align:center;">HIGH STARS AIMERS</h2>
-        <h3 style="text-align:center;">KCSE MOCK EXAMINATION – ${subject.toUpperCase()} - ${form}</h3>
-        <hr>
-        <div><strong>Questions:</strong><br><pre>${questions}</pre></div>
-        <hr>
-        <div><strong>Marking Scheme:</strong><br><pre>${answers}</pre></div>
-      `;
-
-      const opt = {
-        margin: 0.5,
-        filename: `${subject}_${form}_KCSE_Mock.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().from(content).set(opt).save();
-    }
-
-    function saveToUploads() {
-      const subject = document.getElementById("subject").value;
-      const form = document.getElementById("form").value;
-      const questions = document.getElementById("questions").value;
-      const answers = document.getElementById("answers").value;
-
-      if (!subject || !form || !questions) {
-        alert("Please fill all fields before saving.");
-        return;
-      }
-
-      const upload = {
-        title: `${subject} - ${form} Exam`,
-        subject: subject,
-        type: "paper",
-        year: "2025",
-        price: "Free",
-        file: `Generated via exam_generator.html`,
-        time: new Date().toLocaleString()
-      };
-
-      let uploads = JSON.parse(localStorage.getItem("uploads") || "[]");
-      uploads.push(upload);
-      localStorage.setItem("uploads", JSON.stringify(uploads));
-
-      alert("Saved to Admin Uploads! You can now view it in admin_upload.html.");
-    }
-  </script>
+  <div class="center-title">HIGH STARS AIMERS</div>
+  <div class="subtitle">ALWAYS AIM TO THE SKY</div>  <div class="paper-info">
+    <div id="subject-code">121/1 MATHEMATICS ALT A</div>
+    <div id="paper-label">Paper 1</div>
+  </div>  <div class="exam-date" id="exam-date">Aug. 2025 — 2½ hours</div>  <div class="info-fields">
+    <div>Name ....................................................................................   Index Number ........................................</div>
+    <div>Date ................................................................................................................................</div>
+  </div>  <div class="instructions">
+    <strong>Instructions to Candidates</strong><br>
+    (a) Write your name and index number in the spaces provided above.<br>
+    (b) Sign and write the date of the examination as shown above.<br>
+    (c) Answer all the questions in <strong>Section I</strong> and only five questions from <strong>Section II</strong>.<br>
+    (d) Show all the steps in your calculations, giving your answers at each stage below each question.<br>
+    (e) Marks may be awarded for correct working even if the final answer is wrong.<br>
+    (f) This paper consists of 19 printed pages.<br>
+    (g) <strong>Candidates should check the question paper to ascertain that all pages are printed as indicated and no questions are missing.</strong><br>
+    (h) <strong>Candidates should answer all questions in English.</strong>
+  </div>  <div class="section-label">For Examiner's Use Only</div>
+  <table class="section-table">
+    <tr>
+      <th colspan="16">Section I</th>
+    </tr>
+    <tr>
+      <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td>
+      <td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td>
+    </tr>
+  </table>  <div class="section-label">Section II</div>
+  <table class="section-table">
+    <tr>
+      <td style="height: 40px"></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+  </table>  <div class="grand-total">Grand Total</div>
 </body>
 </html>
