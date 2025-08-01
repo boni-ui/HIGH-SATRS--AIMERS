@@ -71,10 +71,61 @@
       font-weight: bold;
       margin-top: 10px;
     }
+    .generator-form {
+      margin-bottom: 40px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      background: #fff;
+    }
+    .generator-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .generator-form select,
+    .generator-form input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+    }
+    .generator-form button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #2a2e92;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <div class="logo">
+  <div class="generator-form">
+    <label for="subject">Select Subject:</label>
+    <select id="subject">
+      <option value="Math">Mathematics</option>
+      <option value="Biology">Biology</option>
+      <option value="Chemistry">Chemistry</option>
+      <option value="Physics">Physics</option>
+    </select><label for="form">Select Form Level:</label>
+<select id="form">
+  <option>Form 1</option>
+  <option>Form 2</option>
+  <option>Form 3</option>
+  <option>Form 4</option>
+</select>
+
+<label for="paper">Select Paper:</label>
+<select id="paper">
+  <option value="1">Paper 1</option>
+  <option value="2">Paper 2</option>
+</select>
+
+<label for="date">Exam Date (e.g., Aug. 2025):</label>
+<input type="text" id="date" placeholder="Aug. 2025">
+
+<button onclick="generateExamHeader()">Generate Exam</button>
+
+  </div>  <div class="logo">
     <img src="https://i.postimg.cc/Y0qgyY8n/star-icon.png" alt="Star">
   </div>
   <div class="center-title">HIGH STARS AIMERS</div>
@@ -108,6 +159,25 @@
     <tr>
       <td style="height: 40px"></td><td></td><td></td><td></td><td></td><td></td>
     </tr>
-  </table>  <div class="grand-total">Grand Total</div>
-</body>
+  </table>  <div class="grand-total">Grand Total</div>  <script>
+    function generateExamHeader() {
+      const subject = document.getElementById('subject').value;
+      const paper = document.getElementById('paper').value;
+      const date = document.getElementById('date').value;
+
+      const codes = {
+        Math: '121',
+        Biology: '231',
+        Chemistry: '233',
+        Physics: '232'
+      };
+
+      const code = codes[subject] + '/' + paper;
+      const title = subject.toUpperCase() + ' ALT A';
+
+      document.getElementById('subject-code').textContent = `${code} ${title}`;
+      document.getElementById('paper-label').textContent = `Paper ${paper}`;
+      document.getElementById('exam-date').textContent = `${date} — 2½ hours`;
+    }
+  </script></body>
 </html>
