@@ -1,183 +1,200 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exam Generator - High Stars Aimers</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KCSE Exam Generator - High Stars Aimers</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
       font-family: 'Times New Roman', serif;
-      padding: 40px;
       background: #fdfaf6;
       color: #000;
-    }
-    .logo {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .logo img {
-      width: 60px;
+      padding: 40px;
     }
     .center-title {
       text-align: center;
       font-weight: bold;
-      margin-bottom: 10px;
       font-size: 28px;
+      margin-bottom: 10px;
     }
     .subtitle {
       text-align: center;
       font-size: 18px;
       margin-bottom: 20px;
     }
-    .paper-info {
+    .info {
       display: flex;
       justify-content: space-between;
-      font-size: 18px;
       font-weight: bold;
+      font-size: 18px;
       margin-bottom: 10px;
     }
     .exam-date {
       font-size: 16px;
       margin-bottom: 20px;
     }
-    .info-fields {
-      margin-bottom: 30px;
-    }
-    .info-fields div {
-      margin-bottom: 12px;
+    .fields div {
+      margin-bottom: 10px;
     }
     .instructions {
+      font-size: 15px;
       margin-bottom: 30px;
       line-height: 1.6;
-      font-size: 15px;
     }
-    .section-table {
-      border: 1px solid #000;
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    .section-table th,
-    .section-table td {
-      border: 1px solid #000;
-      text-align: center;
-      padding: 8px;
-    }
-    .section-label {
-      font-weight: bold;
+    .table, .answers, .questions {
       margin-top: 20px;
     }
-    .grand-total {
-      float: right;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-    .generator-form {
-      margin-bottom: 40px;
-      padding: 20px;
-      border: 1px solid #ccc;
-      background: #fff;
-    }
-    .generator-form label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    .generator-form select,
-    .generator-form input {
+    .section-table {
       width: 100%;
-      padding: 8px;
-      margin-bottom: 15px;
+      border-collapse: collapse;
+      margin-bottom: 10px;
     }
-    .generator-form button {
+    .section-table th, .section-table td {
+      border: 1px solid black;
+      padding: 5px;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      font-family: 'Times New Roman', serif;
+      font-size: 16px;
+      padding: 10px;
+    }
+    button {
       padding: 10px 20px;
       font-size: 16px;
       background: #2a2e92;
       color: white;
       border: none;
       cursor: pointer;
+      margin: 10px 0;
+    }
+    select, input {
+      padding: 8px;
+      margin: 10px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
-  <div class="generator-form">
-    <label for="subject">Select Subject:</label>
-    <select id="subject">
-      <option value="Math">Mathematics</option>
-      <option value="Biology">Biology</option>
-      <option value="Chemistry">Chemistry</option>
-      <option value="Physics">Physics</option>
-    </select><label for="form">Select Form Level:</label>
-<select id="form">
-  <option>Form 1</option>
-  <option>Form 2</option>
-  <option>Form 3</option>
-  <option>Form 4</option>
-</select>
+  <div>
+    <label>Subject:
+      <select id="subject">
+        <option value="Mathematics">Mathematics</option>
+        <option value="Biology">Biology</option>
+        <option value="Chemistry">Chemistry</option>
+        <option value="Physics">Physics</option>
+      </select>
+    </label>
+    <label>Form:
+      <select id="form">
+        <option value="1">Form 1</option>
+        <option value="2">Form 2</option>
+        <option value="3">Form 3</option>
+        <option value="4">Form 4</option>
+      </select>
+    </label>
+    <label>Paper:
+      <select id="paper">
+        <option value="1">Paper 1</option>
+        <option value="2">Paper 2</option>
+      </select>
+    </label>
+    <label>Date:
+      <input type="text" id="examDate" value="Aug. 2025">
+    </label>
+    <button onclick="generateExam()">Generate KCSE Exam</button>
+    <button onclick="downloadPDF()">Download as PDF</button>
+  </div>  <div id="examContent">
+    <div class="center-title">HIGH STARS AIMERS</div>
+    <div class="subtitle">ALWAYS AIM TO THE SKY</div><div class="info">
+  <div id="subjectCode">121/1 MATHEMATICS ALT A</div>
+  <div id="paperLabel">Paper 1</div>
+</div>
+<div class="exam-date" id="examDateLabel">Aug. 2025 — 2½ hours</div>
 
-<label for="paper">Select Paper:</label>
-<select id="paper">
-  <option value="1">Paper 1</option>
-  <option value="2">Paper 2</option>
-</select>
+<div class="fields">
+  <div>Name ....................................................................................   Index Number ........................................</div>
+  <div>Date ................................................................................................................................</div>
+</div>
 
-<label for="date">Exam Date (e.g., Aug. 2025):</label>
-<input type="text" id="date" placeholder="Aug. 2025">
+<div class="instructions">
+  <strong>Instructions to Candidates</strong><br>
+  (a) Write your name and index number in the spaces provided above.<br>
+  (b) Sign and write the date of the examination as shown above.<br>
+  (c) Answer all the questions in <strong>Section I</strong> and only five questions from <strong>Section II</strong>.<br>
+  (d) Show all the steps in your calculations, giving your answers at each stage below each question.<br>
+  (e) Marks may be awarded for correct working even if the final answer is wrong.<br>
+  (f) This paper consists of 19 printed pages.<br>
+  (g) Candidates should check the question paper to ascertain that all pages are printed as indicated and no questions are missing.<br>
+  (h) Candidates should answer all questions in English.
+</div>
 
-<button onclick="generateExamHeader()">Generate Exam</button>
-
-  </div>  <div class="logo">
-    <img src="https://i.postimg.cc/Y0qgyY8n/star-icon.png" alt="Star">
-  </div>
-  <div class="center-title">HIGH STARS AIMERS</div>
-  <div class="subtitle">ALWAYS AIM TO THE SKY</div>  <div class="paper-info">
-    <div id="subject-code">121/1 MATHEMATICS ALT A</div>
-    <div id="paper-label">Paper 1</div>
-  </div>  <div class="exam-date" id="exam-date">Aug. 2025 — 2½ hours</div>  <div class="info-fields">
-    <div>Name ....................................................................................   Index Number ........................................</div>
-    <div>Date ................................................................................................................................</div>
-  </div>  <div class="instructions">
-    <strong>Instructions to Candidates</strong><br>
-    (a) Write your name and index number in the spaces provided above.<br>
-    (b) Sign and write the date of the examination as shown above.<br>
-    (c) Answer all the questions in <strong>Section I</strong> and only five questions from <strong>Section II</strong>.<br>
-    (d) Show all the steps in your calculations, giving your answers at each stage below each question.<br>
-    (e) Marks may be awarded for correct working even if the final answer is wrong.<br>
-    (f) This paper consists of 19 printed pages.<br>
-    (g) <strong>Candidates should check the question paper to ascertain that all pages are printed as indicated and no questions are missing.</strong><br>
-    (h) <strong>Candidates should answer all questions in English.</strong>
-  </div>  <div class="section-label">For Examiner's Use Only</div>
+<div class="table">
+  <strong>For Examiner's Use Only</strong>
   <table class="section-table">
-    <tr>
-      <th colspan="16">Section I</th>
-    </tr>
-    <tr>
-      <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td>
-      <td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td>
-    </tr>
-  </table>  <div class="section-label">Section II</div>
+    <tr><th colspan="16">Section I</th></tr>
+    <tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td></tr>
+  </table>
   <table class="section-table">
-    <tr>
-      <td style="height: 40px"></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-  </table>  <div class="grand-total">Grand Total</div>  <script>
-    function generateExamHeader() {
-      const subject = document.getElementById('subject').value;
-      const paper = document.getElementById('paper').value;
-      const date = document.getElementById('date').value;
+    <tr><th colspan="6">Section II</th></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+</div>
 
-      const codes = {
-        Math: '121',
-        Biology: '231',
-        Chemistry: '233',
-        Physics: '232'
+<div class="questions" id="questions">
+  <h3>SECTION I (50 marks)</h3>
+  <p>1. Expand (2x – 3)(x + 5). (2 marks)</p>
+  <p>2. Solve for x: 2x + 3 = 9. (2 marks)</p>
+  <p>3. Find the area of a triangle with base 5 cm and height 8 cm. (2 marks)</p>
+  <p>...</p>
+
+  <h3>SECTION II (50 marks)</h3>
+  <p>Answer only five questions.</p>
+  <p>17. The table below shows marks scored by 10 students in a test. Draw a bar graph. (10 marks)</p>
+  <p>18. A school spent Ksh 40,000 on textbooks. If Math books were 25% of the cost, how much did they cost? (10 marks)</p>
+  <p>...</p>
+</div>
+
+<div class="answers" id="answers">
+  <h3>MARKING SCHEME</h3>
+  <p>1. 2x² + 10x – 3x – 15 = 2x² + 7x – 15 ✔ (2 marks)</p>
+  <p>2. 2x + 3 = 9 → x = 3 ✔ (2 marks)</p>
+  <p>3. Area = ½ × 5 × 8 = 20 cm² ✔ (2 marks)</p>
+  <p>...</p>
+</div>
+
+  </div>  <script>
+    function generateExam() {
+      const subject = document.getElementById("subject").value;
+      const form = document.getElementById("form").value;
+      const paper = document.getElementById("paper").value;
+      const date = document.getElementById("examDate").value;
+
+      const subjectCodes = {
+        Mathematics: "121",
+        Biology: "231",
+        Chemistry: "233",
+        Physics: "232"
       };
 
-      const code = codes[subject] + '/' + paper;
-      const title = subject.toUpperCase() + ' ALT A';
+      document.getElementById("subjectCode").textContent = `${subjectCodes[subject]}/${paper} ${subject.toUpperCase()} ALT A`;
+      document.getElementById("paperLabel").textContent = `Paper ${paper}`;
+      document.getElementById("examDateLabel").textContent = `${date} — 2½ hours`;
+    }
 
-      document.getElementById('subject-code').textContent = `${code} ${title}`;
-      document.getElementById('paper-label').textContent = `Paper ${paper}`;
-      document.getElementById('exam-date').textContent = `${date} — 2½ hours`;
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.html(document.getElementById("examContent"), {
+        callback: function (pdf) {
+          pdf.save("kcse_exam.pdf");
+        },
+        x: 10,
+        y: 10,
+        html2canvas: { scale: 0.5 }
+      });
     }
   </script></body>
 </html>
