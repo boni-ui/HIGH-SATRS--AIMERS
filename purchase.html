@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Purchase - High Stars Aimers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f6fc;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background-color: #2a2e92;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 90%;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    h2 {
+      color: #2a2e92;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .download-btn {
+      display: none;
+      background-color: green;
+      color: white;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .whatsapp-btn {
+      background-color: #25D366;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #1da851;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      margin-top: 40px;
+      color: #666;
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: #2a2e92;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Purchase to Download</h1>
+  </div>
+
+  <div class="container">
+    <h2 id="fileTitle">Preparing file...</h2>
+    <p><strong>Pay via MPESA to:</strong> <span style="color:green">254116136780</span></p>
+    <p><strong>Price:</strong> <span id="price">Loading...</span></p>
+
+    <label for="code">Enter MPESA Transaction Code:</label>
+    <input type="text" id="code" placeholder="e.g. QAS12X8Y90" required>
+
+    <a id="whatsappLink" target="_blank">
+      <button class="whatsapp-btn">Validate via WhatsApp</button>
+    </a>
+
+    <button id="downloadBtn" class="download-btn">⬇ Download File</button>
+
+    <a href="home.html" class="back-link">← Back to Home</a>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 High Stars Aimers
+  </div>
+
+  <script>
+    const item = JSON.parse(localStorage.getItem("selectedItem") || "null");
+    const isPremium = JSON.parse(localStorage.getItem("isPremium") || "null");
+
+    const fileTitle = document.getElementById("fileTitle");
+    const price = document.getElementById("price");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const whatsappLink = document.getElementById("whatsappLink");
+
+    if (!item) {
+      fileTitle.innerText = "No file selected!";
+      price.innerText = "-";
+    } else {
+      fileTitle.innerText = `${item.subject} (${item.title})`;
+      price.innerText = item.price;
+
+      document.getElementById("code").addEventListener("input", (e) => {
+        const code = e.target.value.trim().toUpperCase();
+        if (code.length >= 8) {
+          whatsappLink.href = `https://wa.me/254116136780?text=Hi, I paid for "${item.title}" (Subject: ${item.subject}) via MPESA. My code is ${code}`;
+        }
+      });
+
+      if (isPremium && new Date() < new Date(isPremium.expiry)) {
+        // Auto-download for premium users
+        downloadBtn.style.display = "inline-block";
+        downloadBtn.onclick = () => {
+          const a = document.createElement("a");
+          a.href = item.file;
+          a.download = item.title;
+          a.click();
+        };
+      } else {
+        // Allow user to click download only after WhatsApp validation
+        whatsappLink.onclick = () => {
+          alert("Once you have sent the code, come back and click Download.");
+          downloadBtn.style.display = "inline-block";
+          downloadBtn.onclick = () => {
+            const a = document.createElement("a");
+            a.href = item.file;
+            a.download = item.title;
+            a.click();
+          };
+        };
+      }
+    }
+  </script>
+
+</body>
+</html>
