@@ -62,16 +62,6 @@
         text-decoration: none;
         margin-left: 5px;
     }
-    .nav-links {
-        text-align: center;
-        margin-top: 18px;
-    }
-    .nav-links a {
-        color: #ff9800;
-        text-decoration: none;
-        margin: 0 10px;
-        font-size: 13px;
-    }
     .password-wrapper {
         position: relative;
     }
@@ -103,11 +93,7 @@
         </div>
         <p><a href="#" style="color:#aaa;font-size:12px;">Forgot your password?</a></p>
         <button onclick="signIn()">Login</button>
-        <div class="signup-link">Signup <a href="signup1.html">here</a></div>
-        <div class="nav-links">
-            <a href="home1.html">Home</a> | 
-            <a href="index1.html">Index</a>
-        </div>
+        <div class="signup-link">Signup <a href="signup.html">here</a></div>
         <p class="error" id="errorMsg"></p>
     </div>
 </div>
@@ -133,7 +119,7 @@
 
         if (username === savedUsername && password === savedPassword) {
             localStorage.setItem("loggedInUser", JSON.stringify({ username }));
-            window.location.href = "home1.html"; // Link to your destination HTML
+            window.location.href = "home.html"; // Link to your destination HTML
         } else {
             document.getElementById("errorMsg").textContent = "Incorrect username or password.";
         }
