@@ -6,78 +6,115 @@
 <title>Login</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-    body {
-        background: #232526;
-        font-family: Arial, sans-serif;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
+    * {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    body {
+        background: radial-gradient(circle at top, #0a0f1f, #000);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: white;
     }
     .login-container {
-        background: #232526;
-        border-radius: 10px;
-        padding: 40px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-        width: 300px;
+        position: relative;
+        width: 350px;
+        padding: 40px 30px;
+        background: rgba(0,0,0,0.85);
+        border-radius: 15px;
+        text-align: center;
+        overflow: hidden;
+    }
+    .login-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(#00f0ff 0deg, transparent 120deg);
+        animation: rotate 4s linear infinite;
+        z-index: 0;
+    }
+    .login-container::after {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        background: rgba(0,0,0,0.9);
+        border-radius: 15px;
+        z-index: 1;
+    }
+    @keyframes rotate {
+        100% { transform: rotate(360deg); }
+    }
+    .login-box {
+        position: relative;
+        z-index: 2;
     }
     .login-box h2 {
-        text-align: center;
-        color: #eee;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
+        color: #00f0ff;
     }
     .login-box input {
         width: 100%;
-        padding: 10px 12px;
-        margin: 8px 0;
-        border-radius: 5px;
-        border: none;
-        background: #333;
-        color: #eee;
-        font-size: 15px;
-    }
-    .login-box button {
-        width: 100%;
         padding: 10px;
-        background: #ff9800;
-        border: none;
-        border-radius: 5px;
-        color: #fff;
-        font-size: 16px;
-        cursor: pointer;
-        margin-top: 16px;
-    }
-    .login-box button:hover {
-        background: #e68900;
-    }
-    .signup-link {
-        color: #aaa;
+        margin: 10px 0;
+        background: transparent;
+        border: 2px solid #00f0ff;
+        border-radius: 25px;
+        color: white;
         text-align: center;
-        margin-top: 12px;
-        font-size: 14px;
-    }
-    .signup-link a {
-        color: #ff9800;
-        text-decoration: none;
-        margin-left: 5px;
+        outline: none;
     }
     .password-wrapper {
         position: relative;
     }
-    .password-wrapper .toggle-password {
+    .toggle-password {
         position: absolute;
+        right: 15px;
         top: 50%;
-        right: 12px;
         transform: translateY(-50%);
         cursor: pointer;
-        color: #aaa;
+        color: #00f0ff;
+    }
+    .login-box button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 25px;
+        background: #00f0ff;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .login-box button:hover {
+        background: #00c0cc;
+    }
+    .signup-link {
+        margin-top: 15px;
+        font-size: 14px;
+    }
+    .signup-link a {
+        color: #00f0ff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .signup-link a:hover {
+        text-decoration: underline;
     }
     .error {
-        color: #ff5252;
-        text-align: center;
+        color: red;
         margin-top: 10px;
-        font-size: 13px;
+        font-size: 14px;
     }
 </style>
 </head>
@@ -93,7 +130,7 @@
         </div>
         <p><a href="#" style="color:#aaa;font-size:12px;">Forgot your password?</a></p>
         <button onclick="signIn()">Login</button>
-        <div class="signup-link">Signup <a href="signup.html">here</a></div>
+        <div class="signup-link">Signup <a href="#">here</a></div>
         <p class="error" id="errorMsg"></p>
     </div>
 </div>
@@ -113,13 +150,12 @@
         const username = document.getElementById("username").value.trim();
         const password = document.getElementById("password").value.trim();
 
-        // Your details, as requested
         const savedUsername = "boni";
         const savedPassword = "bonimbugua5077";
 
         if (username === savedUsername && password === savedPassword) {
             localStorage.setItem("loggedInUser", JSON.stringify({ username }));
-            window.location.href = "home.html"; // Link to your destination HTML
+            window.location.href = "home.html";
         } else {
             document.getElementById("errorMsg").textContent = "Incorrect username or password.";
         }
