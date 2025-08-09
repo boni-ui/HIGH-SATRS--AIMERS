@@ -28,6 +28,8 @@
         text-align: center;
         overflow: hidden;
     }
+
+    /* Rotating glowing border */
     .login-container::before {
         content: '';
         position: absolute;
@@ -47,6 +49,8 @@
         filter: blur(12px);
         z-index: 0;
     }
+
+    /* Inner black background */
     .login-container::after {
         content: '';
         position: absolute;
@@ -58,6 +62,7 @@
         border-radius: 15px;
         z-index: 1;
     }
+
     @keyframes rotate {
         100% { transform: rotate(360deg); }
     }
@@ -65,6 +70,7 @@
         0%, 100% { opacity: 0.6; }
         50% { opacity: 1; }
     }
+
     .login-box {
         position: relative;
         z-index: 2;
@@ -86,7 +92,14 @@
         outline: none;
         transition: 0.3s;
     }
-    .login-box input;
+    .login-box input:focus {
+        box-shadow: 0 0 15px #00f0ff;
+    }
+    .password-wrapper {
+        position: relative;
+    }
+    .toggle-password {
+        position: absolute;
         right: 15px;
         top: 50%;
         transform: translateY(-50%);
@@ -121,20 +134,6 @@
     .signup-link a:hover {
         text-decoration: underline;
     }
-    .nav-links {
-        margin-top: 15px;
-        font-size: 14px;
-        text-align: center;
-    }
-    .nav-links a {
-        color: #00f0ff;
-        text-decoration: none;
-        margin: 0 7px;
-        font-weight: bold;
-    }
-    .nav-links a:hover {
-        text-decoration: underline;
-    }
     .error {
         color: red;
         margin-top: 10px;
@@ -154,11 +153,7 @@
         </div>
         <p><a href="#" style="color:#aaa;font-size:12px;">Forgot your password?</a></p>
         <button onclick="signIn()">Login</button>
-        <div class="signup-link">Signup <a href="signup1.html">here</a></div>
-        <div class="nav-links">
-            <a href="home1.html">Home</a> | 
-            <a href="index1.html">Index</a>
-        </div>
+        <div class="signup-link">Signup <a href="#">here</a></div>
         <p class="error" id="errorMsg"></p>
     </div>
 </div>
@@ -183,7 +178,7 @@
 
         if (username === savedUsername && password === savedPassword) {
             localStorage.setItem("loggedInUser", JSON.stringify({ username }));
-            window.location.href = "home1.html";
+            window.location.href = "home.html";
         } else {
             document.getElementById("errorMsg").textContent = "Incorrect username or password.";
         }
