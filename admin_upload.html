@@ -67,40 +67,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 25px;
-      height: 100%;
-      background: linear-gradient(0deg, 
-        #ff0000, #ff4500, #ffa500, #ffff00, 
-        #adff2f, #00ff7f, #00ffff, #0080ff, 
-        #8a2be2, #ff1493, #ff0000);
-      background-size: 100% 400%;
-      animation: rainbowRotate 6s ease infinite;
-      border-radius: 0 25px 25px 0;
-      z-index: 1;
-    }
-
-    .container-wrapper::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 25px;
-      height: 100%;
-      background: linear-gradient(0deg, 
-        #ff0000, #ff4500, #ffa500, #ffff00, 
-        #adff2f, #00ff7f, #00ffff, #0080ff, 
-        #8a2be2, #ff1493, #ff0000);
-      background-size: 100% 400%;
-      animation: rainbowRotate 6s ease infinite;
-      border-radius: 25px 0 0 25px;
-      z-index: 1;
-    }
-
-    .container-wrapper .rainbow-top {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
+      width: 100vw;
       height: 25px;
       background: linear-gradient(90deg, 
         #ff0000, #ff4500, #ffa500, #ffff00, 
@@ -108,7 +75,52 @@
         #8a2be2, #ff1493, #ff0000);
       background-size: 400% 100%;
       animation: rainbowRotate 6s ease infinite;
-      border-radius: 0 0 25px 25px;
+      z-index: 1;
+    }
+
+    .container-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      height: 25px;
+      background: linear-gradient(90deg, 
+        #ff0000, #ff4500, #ffa500, #ffff00, 
+        #adff2f, #00ff7f, #00ffff, #0080ff, 
+        #8a2be2, #ff1493, #ff0000);
+      background-size: 400% 100%;
+      animation: rainbowRotate 6s ease infinite;
+      z-index: 1;
+    }
+
+    .container-wrapper .rainbow-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 25px;
+      height: 100vh;
+      background: linear-gradient(0deg, 
+        #ff0000, #ff4500, #ffa500, #ffff00, 
+        #adff2f, #00ff7f, #00ffff, #0080ff, 
+        #8a2be2, #ff1493, #ff0000);
+      background-size: 100% 400%;
+      animation: rainbowRotate 6s ease infinite;
+      z-index: 1;
+    }
+
+    .container-wrapper .rainbow-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 25px;
+      height: 100vh;
+      background: linear-gradient(0deg, 
+        #ff0000, #ff4500, #ffa500, #ffff00, 
+        #adff2f, #00ff7f, #00ffff, #0080ff, 
+        #8a2be2, #ff1493, #ff0000);
+      background-size: 100% 400%;
+      animation: rainbowRotate 6s ease infinite;
       z-index: 1;
     }
 
@@ -126,14 +138,16 @@
 
     .container {
       background: white;
-      padding: 25px;
-      margin: 25px 25px 25px 25px;
+      padding: 50px 50px 25px 50px;
+      margin: 0;
       border-radius: 0;
       box-shadow: none;
       position: relative;
       z-index: 2;
-      min-height: calc(100vh - 50px);
+      min-height: 100vh;
+      width: 100vw;
       overflow-y: visible;
+      box-sizing: border-box;
     }
 
     body.dark .container {
@@ -143,8 +157,9 @@
 
     h2 {
       color: #2a2e92;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       text-shadow: 0 0 5px rgba(0,0,0,0.1);
+      font-size: 28px;
     }
     body.dark h2 {
       color: #00e0ff;
@@ -153,33 +168,37 @@
 
     form label {
       display: block;
-      margin-top: 15px;
+      margin-top: 20px;
+      margin-bottom: 8px;
       font-weight: bold;
+      font-size: 16px;
     }
     form input,
     form select {
       width: 100%;
-      padding: 10px;
-      margin-top: 6px;
+      padding: 15px;
+      margin-top: 10px;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 8px;
       transition: 0.3s;
       box-sizing: border-box;
+      font-size: 16px;
     }
     form input:focus, form select:focus {
       border-color: #2a2e92;
       box-shadow: 0 0 8px #2a2e92;
     }
     form button {
-      margin-top: 20px;
+      margin-top: 30px;
       background-color: #2a2e92;
       color: white;
       border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      border-radius: 6px;
+      padding: 15px 25px;
+      font-size: 18px;
+      border-radius: 8px;
       cursor: pointer;
       transition: 0.3s;
+      width: 100%;
     }
     form button:hover {
       background-color: #1e2070;
@@ -188,7 +207,7 @@
     }
 
     .uploads {
-      margin-top: 40px;
+      margin-top: 50px;
     }
     table {
       width: 100%;
@@ -196,9 +215,10 @@
       margin-top: 15px;
     }
     th, td {
-      padding: 12px;
+      padding: 15px 12px;
       border: 1px solid #ccc;
       text-align: left;
+      font-size: 14px;
     }
     th {
       background-color: #2a2e92;
@@ -240,20 +260,22 @@
       gap: 10px;
     }
     .top-bar input {
-      padding: 8px;
+      padding: 12px;
       flex: 1;
-      border-radius: 6px;
+      border-radius: 8px;
       border: 1px solid #ccc;
+      font-size: 16px;
     }
     .top-bar button {
       background: #2a2e92;
       color: white;
       border: none;
-      padding: 8px 15px;
-      border-radius: 6px;
+      padding: 12px 20px;
+      border-radius: 8px;
       cursor: pointer;
       transition: 0.3s;
       white-space: nowrap;
+      font-size: 16px;
     }
     .top-bar button:hover {
       background: #1e2070;
@@ -279,23 +301,16 @@
     @media (max-width: 768px) {
       .container-wrapper::before,
       .container-wrapper::after {
-        width: 20px;
-        border-radius: 20px;
-      }
-      .container-wrapper::before {
-        border-radius: 0 20px 20px 0;
-      }
-      .container-wrapper::after {
-        border-radius: 20px 0 0 20px;
-      }
-      .container-wrapper .rainbow-top {
         height: 20px;
-        border-radius: 0 0 20px 20px;
+      }
+      .container-wrapper .rainbow-left,
+      .container-wrapper .rainbow-right {
+        width: 20px;
       }
       .container {
-        padding: 15px;
-        margin: 20px 20px 20px 20px;
-        min-height: calc(100vh - 40px);
+        padding: 30px 30px 20px 30px;
+        min-height: 100vh;
+        width: 100vw;
       }
       .top-bar {
         flex-direction: column;
@@ -312,8 +327,8 @@
     
     @media (min-width: 769px) {
       .container {
-        max-width: none;
-        width: calc(100vw - 50px);
+        width: 100vw;
+        min-height: 100vh;
       }
     }
   </style>
@@ -325,7 +340,8 @@
   </header>
 
   <div class="container-wrapper">
-    <div class="rainbow-top"></div>
+    <div class="rainbow-left"></div>
+    <div class="rainbow-right"></div>
     <div class="container">
       <h2>Upload Past Paper / Note</h2>
       <form id="uploadForm" onsubmit="return handleUpload(event)">
