@@ -1,135 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 350px;
-            margin: 80px auto;
-            background: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-        .password-container {
-            position: relative;
-        }
-        .password-container i {
-            position: absolute;
-            right: 10px;
-            top: 38%;
-            cursor: pointer;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            background: #007BFF;
-            color: white;
-            border: none;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        p {
-            text-align: center;
-            margin-top: 15px;
-        }
-        a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        #errorMsg {
-            color: red;
-            font-size: 14px;
-            margin-top: 8px;
-            text-align: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    body {
+        background: radial-gradient(circle at top, #0a0f1f, #000);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: white;
+    }
+    .login-container {
+        position: relative;
+        width: 350px;
+        padding: 40px 30px;
+        border-radius: 15px;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    /* Rotating glowing border */
+    .login-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(
+            #ff0000,
+            #ff00ff,
+            #00ffff,
+            #00ff00,
+            #ffff00,
+            #ff0000
+        );
+        animation: rotate 4s linear infinite, pulse 2s ease-in-out infinite;
+        filter: blur(12px);
+        z-index: 0;
+    }
+
+    /* Inner black background */
+    .login-container::after {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        background: rgba(0,0,0,0.9);
+        border-radius: 15px;
+        z-index: 1;
+    }
+
+    @keyframes rotate {
+        100% { transform: rotate(360deg); }
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+    }
+
+    .login-box {
+        position: relative;
+        z-index: 2;
+    }
+    .login-box h2 {
+        margin-bottom: 20px;
+        color: #00f0ff;
+        text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+    }
+    .login-box input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        background: transparent;
+        border: 2px solid #00f0ff;
+        border-radius: 25px;
+        color: white;
+        text-align: center;
+        outline: none;
+        transition: 0.3s;
+    }
+    .login-box input:focus {
+        box-shadow: 0 0 15px #00f0ff;
+    }
+    .password-wrapper {
+        position: relative;
+    }
+    .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #00f0ff;
+    }
+    .login-box button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 25px;
+        background: #00f0ff;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .login-box button:hover {
+        background: #00c0cc;
+        box-shadow: 0 0 20px #00f0ff;
+    }
+    .signup-link {
+        margin-top: 15px;
+        font-size: 14px;
+    }
+    .signup-link a {
+        color: #00f0ff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .signup-link a:hover {
+        text-decoration: underline;
+    }
+    .error {
+        color: red;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Sign In</h2>
-        
-        <label for="username">Username</label>
-        <input type="text" id="username" placeholder="Enter username">
-
-        <label for="password">Password</label>
-        <div class="password-container">
-            <input type="password" id="password" placeholder="Enter password">
-            <i class="fas fa-eye" id="togglePassword"></i>
+<div class="login-container">
+    <div class="login-box">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Email">
+        <div class="password-wrapper">
+            <input type="password" id="password" placeholder="Password">
+            <i class="fas fa-eye toggle-password" id="togglePassword"></i>
         </div>
-
-        <div id="errorMsg"></div>
-
+        <p><a href="#" style="color:#aaa;font-size:12px;">Forgot your password?</a></p>
         <button onclick="signIn()">Login</button>
-
-        <p>Don't have an account? <a href="signup1.html">Signup here</a></p>
+        <div class="signup-link">Signup <a href="signup1.html">here</a></div>
+        <p class="error" id="errorMsg"></p>
     </div>
+</div>
 
-    <script>
-        // Redirect if already logged in
-        if (localStorage.getItem("loggedInUser")) {
-            window.location.href = "home.html";
+<script>
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+
+    togglePassword.addEventListener("click", function () {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        this.classList.toggle("fa-eye");
+        this.classList.toggle("fa-eye-slash");
+    });
+
+    function signIn() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        const savedUsername = "boni";
+        const savedPassword = "bonimbugua5077";
+
+        if (username === savedUsername && password === savedPassword) {
+            localStorage.setItem("loggedInUser", JSON.stringify({ username }));
+            window.location.href = "home.html"; // redirect to home
+        } else {
+            document.getElementById("errorMsg").textContent = "Incorrect username or password.";
         }
-
-        const togglePassword = document.getElementById("togglePassword");
-        const passwordInput = document.getElementById("password");
-
-        togglePassword.addEventListener("click", function () {
-            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-            passwordInput.setAttribute("type", type);
-            this.classList.toggle("fa-eye");
-            this.classList.toggle("fa-eye-slash");
-        });
-
-        function signIn() {
-            const username = document.getElementById("username").value.trim();
-            const password = document.getElementById("password").value.trim();
-
-            const savedUsername = "boni";
-            const savedPassword = "bonimbugua5077";
-
-            if (username === savedUsername && password === savedPassword) {
-                localStorage.setItem("loggedInUser", JSON.stringify({ username }));
-                window.location.href = "home.html"; // ✅ Go to home.html
-            } else {
-                document.getElementById("errorMsg").textContent = "Incorrect username or password.";
-            }
-        }
-    </script>
+    }
+</script>
 
 </body>
 </html>
