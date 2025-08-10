@@ -2,94 +2,177 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact - High Stars Aimers</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f8fb;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
 
-    .header {
-      background-color: #2a2e92;
+    body {
+      background: radial-gradient(circle at top, #0a0f1f, #000);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       color: white;
-      padding: 15px;
-      text-align: center;
+      overflow: hidden;
+      position: relative;
     }
 
+    /* Background particles */
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .particle {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: float 10s infinite ease-in-out;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      50% { opacity: 0.7; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* Glowing animated border */
     .container {
-      background-color: white;
-      margin: 30px auto;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 40px;
+      border-radius: 50px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(#ff0000,#ff00ff,#00ffff,#00ff00,#ffff00,#ff0000);
+      animation: rotate 4s linear infinite, pulse 2s ease-in-out infinite;
+      filter: blur(20px);
+      border-radius: 50px;
+      z-index: 0;
+    }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      background: rgba(0, 0, 0, 0.85);
+      border-radius: 40px;
+      z-index: 1;
+    }
+
+    @keyframes rotate { 100% { transform: rotate(360deg); } }
+    @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
       padding: 20px;
-      max-width: 90%;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
+      text-align: center;
+      animation: fadeIn 1.5s ease forwards;
+      opacity: 0;
     }
 
-    h2 {
-      color: #2a2e92;
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
 
-    p {
-      font-size: 16px;
-      margin: 10px 0;
+    h1 {
+      color: #00f0ff;
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
     }
+
+    .info {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,240,255,0.5);
+      margin-bottom: 30px;
+    }
+
+    .info p { font-size: 18px; margin: 10px 0; }
+    .info a { color: #00f0ff; text-decoration: none; }
 
     .back-btn {
       display: inline-block;
-      margin-top: 20px;
+      margin-top: 15px;
       padding: 10px 20px;
-      background-color: #2a2e92;
-      color: white;
+      background-color: #00f0ff;
+      color: black;
       text-decoration: none;
-      border-radius: 6px;
+      border-radius: 25px;
+      font-weight: bold;
+      transition: 0.3s;
     }
-
     .back-btn:hover {
-      background-color: #1e2478;
+      background-color: #00c0cc;
+      box-shadow: 0 0 20px #00f0ff;
     }
 
     footer {
-      margin-top: 40px;
-      background-color: white;
+      margin-top: auto;
       padding: 20px 0;
-      text-align: center;
-      border-top: 1px solid #ccc;
+      z-index: 2;
     }
+
+    footer p { margin-bottom: 10px; font-size: 16px; }
 
     .social-icons a {
-      margin: 0 10px;
+      margin: 0 8px;
       font-size: 24px;
       text-decoration: none;
+      transition: 0.3s;
     }
-
     .fab.fa-facebook { color: #3b5998; }
     .fab.fa-instagram { color: #e4405f; }
     .fab.fa-twitter { color: #1da1f2; }
     .fab.fa-youtube { color: #ff0000; }
     .fab.fa-tiktok { color: black; }
     .fab.fa-whatsapp { color: #25d366; }
+    .social-icons a:hover { transform: scale(1.2); }
   </style>
 </head>
 <body>
 
-  <div class="header">
+<div class="particles"></div>
+
+<div class="container">
+  <div class="content">
     <h1>Contact Us</h1>
-  </div>
 
-  <div class="container">
-    <h2>High Stars Aimers</h2>
-    <p><strong>Email:</strong> <a href="mailto:highstarsaimersexamnotes@gmail.com" style="color:#2a2e92; text-decoration: none;">highstarsaimersexamnotes@gmail.com</a></p>
-    <p><strong>Phone:</strong> +(254) 116136780</p>
-    <p><strong>Location:</strong> Nyandarua, Kenya</p>
-
-    <a class="back-btn" href="home.html">⬅ Back to Home</a>
+    <div class="info">
+      <p><strong>Email:</strong> <a href="mailto:highstarsaimersexamnotes@gmail.com">highstarsaimersexamnotes@gmail.com</a></p>
+      <p><strong>Phone:</strong> +(254) 116136780</p>
+      <p><strong>Location:</strong> Nyandarua, Kenya</p>
+      <a class="back-btn" href="home.html">⬅ Back to Home</a>
+    </div>
   </div>
 
   <footer>
@@ -103,6 +186,22 @@
       <a href="https://wa.me/254116136780" target="_blank"><i class="fab fa-whatsapp"></i></a>
     </div>
   </footer>
+</div>
+
+<script>
+  const particleContainer = document.querySelector('.particles');
+  for (let i = 0; i < 40; i++) {
+    let particle = document.createElement('div');
+    let size = Math.random() * 5 + 2;
+    particle.classList.add('particle');
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    particle.style.left = `${Math.random() * 100}%`;
+    particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+    particle.style.animationDelay = `${Math.random() * 5}s`;
+    particleContainer.appendChild(particle);
+  }
+</script>
 
 </body>
 </html>
