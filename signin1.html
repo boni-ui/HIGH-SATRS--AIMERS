@@ -3,58 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - High Stars Aimers</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Sign In</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 350px;
+            margin: 80px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .password-container {
+            position: relative;
+        }
+        .password-container i {
+            position: absolute;
+            right: 10px;
+            top: 38%;
+            cursor: pointer;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        p {
+            text-align: center;
+            margin-top: 15px;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        #errorMsg {
+            color: red;
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>HIGH STARS AIMERS</h1>
-        <nav>
-            <ul>
-                <li><a href="index1.html">Home</a></li>
-                <li><a href="signin1.html" class="active">Sign In</a></li>
-                <li><a href="signup1.html">Sign Up</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
+    <div class="container">
         <h2>Sign In</h2>
-        <form id="signinForm">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+        
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter username">
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+        <label for="password">Password</label>
+        <div class="password-container">
+            <input type="password" id="password" placeholder="Enter password">
+            <i class="fas fa-eye" id="togglePassword"></i>
+        </div>
 
-            <button type="submit">Sign In</button>
-        </form>
+        <div id="errorMsg"></div>
 
-        <p>Don't have an account? <a href="signup1.html">Sign up here</a></p>
-    </main>
+        <button onclick="signIn()">Login</button>
 
-    <footer>
-        <p>&copy; 2025 High Stars Aimers</p>
-    </footer>
+        <p>Don't have an account? <a href="signup1.html">Signup here</a></p>
+    </div>
 
     <script>
-        document.getElementById('signinForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Redirect if already logged in
+        if (localStorage.getItem("loggedInUser")) {
+            window.location.href = "home.html";
+        }
 
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("password");
 
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(u => u.email === email && u.password === password);
-
-            if (user) {
-                alert('Sign in successful!');
-                window.location.href = "index1.html"; // Redirect to home after login
-            } else {
-                alert('Invalid email or password.');
-            }
+        togglePassword.addEventListener("click", function () {
+            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+            passwordInput.setAttribute("type", type);
+            this.classList.toggle("fa-eye");
+            this.classList.toggle("fa-eye-slash");
         });
+
+        function signIn() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            const savedUsername = "boni";
+            const savedPassword = "bonimbugua5077";
+
+            if (username === savedUsername && password === savedPassword) {
+                localStorage.setItem("loggedInUser", JSON.stringify({ username }));
+                window.location.href = "home.html"; // ✅ Go to home.html
+            } else {
+                document.getElementById("errorMsg").textContent = "Incorrect username or password.";
+            }
+        }
     </script>
 
 </body>
