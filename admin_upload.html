@@ -56,6 +56,7 @@
       position: relative;
       z-index: 2;
       user-select: none;
+      flex-shrink: 0;
     }
     @keyframes gradientMove {
       0% { background-position: 0% 50%; }
@@ -63,7 +64,7 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Rainbow border container with ~5mm glowing boundary */
+    /* Rainbow border container with bigger glowing boundary */
     .container-wrapper {
       flex: 1;
       margin: 10px;
@@ -76,7 +77,10 @@
       background-size: 400% 400%;
       animation: rainbowRotate 6s ease infinite;
       position: relative;
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      /* Remove scrolling here */
+      /* overflow-y: auto; */
     }
 
     @keyframes rainbowRotate {
@@ -94,8 +98,11 @@
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
       position: relative;
       z-index: 1;
-      max-height: 100%;
-      overflow-y: auto;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      /* Remove scrolling here */
+      /* overflow-y: auto; */
     }
 
     body.dark .container {
@@ -109,6 +116,7 @@
       margin-bottom: 20px;
       text-shadow: 0 0 5px rgba(0,0,0,0.1);
       font-size: 1.3rem;
+      flex-shrink: 0;
     }
     body.dark h2 {
       color: #00e0ff;
@@ -152,6 +160,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      flex-shrink: 0;
     }
     form button:hover {
       background-color: #1e2070;
@@ -163,6 +172,10 @@
     .uploads {
       margin-top: 30px;
       font-size: 0.9rem;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0; /* allow flex children to shrink */
     }
     .top-bar {
       display: flex;
@@ -170,6 +183,7 @@
       align-items: center;
       margin-bottom: 15px;
       gap: 10px;
+      flex-shrink: 0;
     }
     .top-bar input {
       padding: 8px;
@@ -198,22 +212,41 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-top: 0;
       font-size: 0.85rem;
       table-layout: fixed;
       word-wrap: break-word;
+      flex: 1 1 auto;
+      display: block;
+      overflow-y: auto;
+      max-height: 280px; /* adjust as needed */
+      border: 1px solid #ccc;
+    }
+    thead, tbody, tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+    }
+    tbody {
+      display: block;
+      overflow-y: auto;
+      max-height: 240px; /* adjust to fit better */
     }
     th, td {
       padding: 8px;
       border: 1px solid #ccc;
       text-align: left;
       vertical-align: middle;
+      user-select: text;
     }
     th {
       background-color: #2a2e92;
       color: white;
       cursor: pointer;
       user-select: none;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
     tr {
       opacity: 0;
@@ -234,6 +267,7 @@
       color: gray;
       text-align: center;
       user-select: none;
+      flex-shrink: 0;
     }
     .action-btns i {
       margin-right: 8px;
@@ -258,6 +292,7 @@
       color: white;
       transition: 0.3s;
       user-select: none;
+      z-index: 3;
     }
     .dark-toggle:hover {
       transform: rotate(20deg);
@@ -448,11 +483,4 @@
       a.click();
     }
 
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark");
-    }
-
-    window.onload = displayUploads;
-  </script>
-</body>
-</html>
+    function toggle
