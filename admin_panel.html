@@ -4,16 +4,94 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Panel - High Stars Aimers</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 40px;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #0a0f1f, #000);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
       text-align: center;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 40px;
+      border-radius: 50px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    /* Rotating glowing border */
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(
+        #ff0000,
+        #ff00ff,
+        #00ffff,
+        #00ff00,
+        #ffff00,
+        #ff0000
+      );
+      animation: rotate 4s linear infinite, pulse 2s ease-in-out infinite;
+      filter: blur(25px);
+      border-radius: 60px;
+      z-index: 0;
+    }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      bottom: 15px;
+      background: rgba(0, 0, 0, 0.85);
+      border-radius: 45px;
+      z-index: 1;
+    }
+
+    @keyframes rotate {
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 600px;
     }
 
     h1 {
-      color: #2a2e92;
+      color: #00f0ff;
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
     }
 
     .panel {
@@ -27,41 +105,74 @@
     .panel a {
       padding: 15px 25px;
       font-size: 18px;
-      background-color: #2a2e92;
-      color: white;
+      background-color: #00f0ff;
+      color: black;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: 30px;
       width: 250px;
       text-align: center;
+      font-weight: bold;
+      transition: 0.3s;
     }
 
     .panel a:hover {
-      background-color: #1e2478;
+      background-color: #00c0cc;
+      box-shadow: 0 0 25px #00f0ff;
+      transform: scale(1.05);
     }
 
     .auth {
-      margin-top: 100px;
+      margin-top: 50px;
+    }
+
+    .auth p {
+      margin-bottom: 10px;
+    }
+
+    .password-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 250px;
     }
 
     .auth input {
       padding: 10px;
       font-size: 16px;
-      width: 250px;
+      width: 100%;
       margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #00f0ff;
+      cursor: pointer;
+      font-size: 16px;
     }
 
     .auth button {
       padding: 10px 20px;
       font-size: 16px;
-      background: #2a2e92;
-      color: white;
+      background: #00f0ff;
+      color: black;
       border: none;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: 25px;
+      font-weight: bold;
+      transition: 0.3s;
     }
 
     .auth button:hover {
-      background: #1e2478;
+      background: #00c0cc;
+      box-shadow: 0 0 20px #00f0ff;
+      transform: scale(1.05);
     }
 
     .error {
@@ -72,40 +183,55 @@
 </head>
 <body>
 
-  <h1>High Stars Aimers - Admin Panel</h1>
+<div class="container">
+  <div class="content">
+    <h1>High Stars Aimers - Admin Panel</h1>
 
-  <div class="auth" id="auth">
-    <p>Enter Admin Password to Continue:</p>
-    <input type="password" id="adminPass" placeholder="Enter password..." />
-    <br>
-    <button onclick="checkPassword()">Login</button>
-    <div id="error" class="error"></div>
+    <div class="auth" id="auth">
+      <p>Enter Admin Password to Continue:</p>
+      <div class="password-wrapper">
+        <input type="password" id="adminPass" placeholder="Enter password..." />
+        <i class="fas fa-eye toggle-password" onclick="togglePassword('adminPass', this)"></i>
+      </div>
+      <br>
+      <button onclick="checkPassword()">Login</button>
+      <div id="error" class="error"></div>
+    </div>
+
+    <div class="panel" id="panel">
+      <a href="home.html" target="_blank">🏠 Home</a>
+      <a href="admin_upload.html" target="_blank">⬆️ Upload Content</a>
+      <a href="subscribe.html" target="_blank">⭐ Subscription System</a>
+      <a href="purchase.html" target="_blank">💰 Purchase System</a>
+      <a href="profile.html" target="_blank">👤 Profile Page</a>
+      <a href="contact.html" target="_blank">📞 Contact Page</a>
+      <a href="exam_generator.html" target="_blank">🧠 Exam Generator</a>
+    </div>
   </div>
+</div>
 
-  <div class="panel" id="panel">
-    <a href="home.html" target="_blank">🏠 Home</a>
-    <a href="admin_upload.html" target="_blank">⬆️ Upload Content</a>
-    <a href="subscribe.html" target="_blank">⭐ Subscription System</a>
-    <a href="purchase.html" target="_blank">💰 Purchase System</a>
-    <a href="profile.html" target="_blank">👤 Profile Page</a>
-    <a href="contact.html" target="_blank">📞 Contact Page</a>
-    <a href="exam_generator.html" target="_blank">🧠 Exam Generator</a> <!-- ✅ NEW LINK -->
-  </div>
+<script>
+  const correctPassword = "bonimbugua5077";
 
-  <script>
-    const correctPassword = "bonimbugua5077"; // Change to your secret password
-
-    function checkPassword() {
-      const input = document.getElementById("adminPass").value;
-      const error = document.getElementById("error");
-      if (input === correctPassword) {
-        document.getElementById("auth").style.display = "none";
-        document.getElementById("panel").style.display = "flex";
-      } else {
-        error.textContent = "Incorrect password!";
-      }
+  function checkPassword() {
+    const input = document.getElementById("adminPass").value;
+    const error = document.getElementById("error");
+    if (input === correctPassword) {
+      document.getElementById("auth").style.display = "none";
+      document.getElementById("panel").style.display = "flex";
+    } else {
+      error.textContent = "Incorrect password!";
     }
-  </script>
+  }
+
+  function togglePassword(fieldId, icon) {
+    const field = document.getElementById(fieldId);
+    const type = field.getAttribute("type") === "password" ? "text" : "password";
+    field.setAttribute("type", type);
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
+  }
+</script>
 
 </body>
 </html>
