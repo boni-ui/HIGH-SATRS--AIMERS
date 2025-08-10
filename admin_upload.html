@@ -2,8 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- 
   <title>Admin Upload - High Stars Aimers</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -17,28 +15,72 @@
       background-color: #1e1e2f;
       color: white;
     }
+
+    /* Animated gradient header */
     header {
-      background-color: #2a2e92;
+      background: linear-gradient(270deg, #2a2e92, #6f42c1, #2a2e92);
+      background-size: 600% 600%;
+      animation: gradientMove 8s ease infinite;
       color: white;
       padding: 20px;
       text-align: center;
       font-size: 24px;
+      position: relative;
+      z-index: 2;
     }
-    .container {
-      max-width: 900px;
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Rainbow gradient border container */
+    .container-wrapper {
+      max-width: 920px;
       margin: 30px auto;
+      padding: 10px;
+      border-radius: 25px;
+      background: linear-gradient(45deg, 
+        #ff0000, #ff4500, #ffa500, #ffff00, 
+        #adff2f, #00ff7f, #00ffff, #0080ff, 
+        #8a2be2, #ff1493, #ff0000);
+      background-size: 400% 400%;
+      animation: rainbowRotate 6s ease infinite;
+      position: relative;
+    }
+
+    @keyframes rainbowRotate {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 100% 0%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
       background: white;
       padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 1;
     }
+
     body.dark .container {
       background-color: #2d2d44;
+      box-shadow: 0 0 20px rgba(0,255,255,0.3);
     }
+
     h2 {
       color: #2a2e92;
       margin-bottom: 20px;
+      text-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
+    body.dark h2 {
+      color: #00e0ff;
+      text-shadow: 0 0 10px #00e0ff;
+    }
+
     form label {
       display: block;
       margin-top: 15px;
@@ -51,6 +93,12 @@
       margin-top: 6px;
       border: 1px solid #ccc;
       border-radius: 6px;
+      transition: 0.3s;
+      box-sizing: border-box;
+    }
+    form input:focus, form select:focus {
+      border-color: #2a2e92;
+      box-shadow: 0 0 8px #2a2e92;
     }
     form button {
       margin-top: 20px;
@@ -61,7 +109,14 @@
       font-size: 16px;
       border-radius: 6px;
       cursor: pointer;
+      transition: 0.3s;
     }
+    form button:hover {
+      background-color: #1e2070;
+      box-shadow: 0 0 15px #2a2e92;
+      transform: scale(1.05);
+    }
+
     .uploads {
       margin-top: 40px;
     }
@@ -80,6 +135,13 @@
       color: white;
       cursor: pointer;
     }
+    tr {
+      opacity: 0;
+      animation: fadeIn 0.6s forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
     .success-message {
       color: green;
       margin-top: 10px;
@@ -93,16 +155,23 @@
     .action-btns i {
       margin-right: 8px;
       cursor: pointer;
+      transition: 0.3s;
+    }
+    .action-btns i:hover {
+      color: #00e0ff;
+      text-shadow: 0 0 10px #00e0ff;
+      transform: scale(1.2);
     }
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
+      gap: 10px;
     }
     .top-bar input {
       padding: 8px;
-      width: 60%;
+      flex: 1;
       border-radius: 6px;
       border: 1px solid #ccc;
     }
@@ -113,11 +182,45 @@
       padding: 8px 15px;
       border-radius: 6px;
       cursor: pointer;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+    .top-bar button:hover {
+      background: #1e2070;
+      box-shadow: 0 0 10px #2a2e92;
     }
     .dark-toggle {
       float: right;
       margin-top: -40px;
       margin-right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: white;
+      transition: 0.3s;
+    }
+    .dark-toggle:hover {
+      transform: rotate(20deg);
+      color: #00e0ff;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container-wrapper {
+        margin: 15px;
+        padding: 8px;
+      }
+      .container {
+        padding: 20px;
+      }
+      .top-bar {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .top-bar input {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -127,55 +230,57 @@
     <button class="dark-toggle" onclick="toggleDarkMode()">🌓</button>
   </header>
 
-  <div class="container">
-    <h2>Upload Past Paper / Note</h2>
-    <form id="uploadForm" onsubmit="return handleUpload(event)">
-      <label for="title">Title</label>
-      <input type="text" id="title" required placeholder="e.g., HIGH STARS AIMERS MATH 001">
+  <div class="container-wrapper">
+    <div class="container">
+      <h2>Upload Past Paper / Note</h2>
+      <form id="uploadForm" onsubmit="return handleUpload(event)">
+        <label for="title">Title</label>
+        <input type="text" id="title" required placeholder="e.g., HIGH STARS AIMERS MATH 001">
 
-      <label for="type">Type</label>
-      <select id="type" required>
-        <option value="">-- Select --</option>
-        <option value="paper">Past Paper</option>
-        <option value="note">Note</option>
-      </select>
+        <label for="type">Type</label>
+        <select id="type" required>
+          <option value="">-- Select --</option>
+          <option value="paper">Past Paper</option>
+          <option value="note">Note</option>
+        </select>
 
-      <label for="year">Year</label>
-      <input type="number" id="year" min="2010" max="2025" required>
+        <label for="year">Year</label>
+        <input type="number" id="year" min="2010" max="2025" required>
 
-      <label for="subject">Subject</label>
-      <input type="text" id="subject" required placeholder="e.g., Chemistry">
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" required placeholder="e.g., Chemistry">
 
-      <label for="price">Price (KSH)</label>
-      <input type="number" id="price" required min="0" placeholder="e.g., 60">
+        <label for="price">Price (KSH)</label>
+        <input type="number" id="price" required min="0" placeholder="e.g., 60">
 
-      <label for="file">File Upload</label>
-      <input type="file" id="file" required>
+        <label for="file">File Upload</label>
+        <input type="file" id="file" required>
 
-      <button type="submit"><i class="fas fa-upload"></i> Upload</button>
-      <div class="success-message" id="successMsg"></div>
-    </form>
+        <button type="submit"><i class="fas fa-upload"></i> Upload</button>
+        <div class="success-message" id="successMsg"></div>
+      </form>
 
-    <div class="uploads">
-      <h2>Uploaded Files</h2>
-      <div class="top-bar">
-        <input type="text" id="search" onkeyup="filterUploads()" placeholder="Search by title, subject, year...">
-        <button onclick="exportToCSV()">📄 Export CSV</button>
+      <div class="uploads">
+        <h2>Uploaded Files</h2>
+        <div class="top-bar">
+          <input type="text" id="search" onkeyup="filterUploads()" placeholder="Search by title, subject, year...">
+          <button onclick="exportToCSV()">📄 Export CSV</button>
+        </div>
+        <table id="uploadTable">
+          <thead>
+            <tr>
+              <th onclick="sortTable(0)">Title</th>
+              <th onclick="sortTable(1)">Type</th>
+              <th onclick="sortTable(2)">Year</th>
+              <th onclick="sortTable(3)">Subject</th>
+              <th onclick="sortTable(4)">Price</th>
+              <th onclick="sortTable(5)">Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
-      <table id="uploadTable">
-        <thead>
-          <tr>
-            <th onclick="sortTable(0)">Title</th>
-            <th onclick="sortTable(1)">Type</th>
-            <th onclick="sortTable(2)">Year</th>
-            <th onclick="sortTable(3)">Subject</th>
-            <th onclick="sortTable(4)">Price</th>
-            <th onclick="sortTable(5)">Time</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
     </div>
   </div>
 
