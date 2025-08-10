@@ -3,20 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <title>Admin Upload - High Stars Aimers</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    body {
+    /* Reset and base */
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #333; /* phone background/frame outside */
+      display: flex;
+      justify-content: center;
+      align-items: center;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f4fa;
-      transition: background-color 0.3s, color 0.3s;
     }
     body.dark {
-      background-color: #1e1e2f;
+      background-color: #111;
       color: white;
     }
 
-    /* Animated gradient header */
+    /* Phone screen container */
+    .phone-screen {
+      width: 375px;          /* typical iPhone width */
+      height: 667px;         /* typical iPhone 8 height */
+      background-color: #f0f4fa;
+      border-radius: 40px;
+      box-shadow:
+        0 0 0 16px #000,   /* outer frame border */
+        0 20px 40px rgba(0,0,0,0.6); /* shadow */
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    body.dark .phone-screen {
+      background-color: #1e1e2f;
+      color: white;
+      box-shadow:
+        0 0 0 16px #000,
+        0 20px 40px rgba(0,255,255,0.3);
+    }
+
+    /* Your existing styles are nested inside the phone screen */
+    /* So, slightly adjust body styles to target .phone-screen > * instead */
+
+    /* Header */
     header {
       background: linear-gradient(270deg, #2a2e92, #6f42c1, #2a2e92);
       background-size: 600% 600%;
@@ -24,9 +55,10 @@
       color: white;
       padding: 20px;
       text-align: center;
-      font-size: 24px;
+      font-size: 20px;
       position: relative;
       z-index: 2;
+      user-select: none;
     }
     @keyframes gradientMove {
       0% { background-position: 0% 50%; }
@@ -34,19 +66,20 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Rainbow gradient border container */
+    /* Rainbow border container with bigger glowing boundary */
     .container-wrapper {
-      max-width: 920px;
-      margin: 30px auto;
-      padding: 10px;
-      border-radius: 25px;
-      background: linear-gradient(45deg, 
-        #ff0000, #ff4500, #ffa500, #ffff00, 
-        #adff2f, #00ff7f, #00ffff, #0080ff, 
+      flex: 1;
+      margin: 10px;
+      padding: 30px; /* Increased from 10px to 30px */
+      border-radius: 30px; /* Increased from 25px to 30px */
+      background: linear-gradient(45deg,
+        #ff0000, #ff4500, #ffa500, #ffff00,
+        #adff2f, #00ff7f, #00ffff, #0080ff,
         #8a2be2, #ff1493, #ff0000);
       background-size: 400% 400%;
       animation: rainbowRotate 6s ease infinite;
       position: relative;
+      overflow-y: auto;
     }
 
     @keyframes rainbowRotate {
@@ -59,11 +92,13 @@
 
     .container {
       background: white;
-      padding: 25px;
+      padding: 20px; /* You can keep this or adjust */
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
       position: relative;
       z-index: 1;
+      max-height: 100%;
+      overflow-y: auto;
     }
 
     body.dark .container {
@@ -71,20 +106,24 @@
       box-shadow: 0 0 20px rgba(0,255,255,0.3);
     }
 
+    /* Typography */
     h2 {
       color: #2a2e92;
       margin-bottom: 20px;
       text-shadow: 0 0 5px rgba(0,0,0,0.1);
+      font-size: 1.3rem;
     }
     body.dark h2 {
       color: #00e0ff;
       text-shadow: 0 0 10px #00e0ff;
     }
 
+    /* Form */
     form label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
+      font-size: 0.9rem;
     }
     form input,
     form select {
@@ -95,10 +134,12 @@
       border-radius: 6px;
       transition: 0.3s;
       box-sizing: border-box;
+      font-size: 0.9rem;
     }
     form input:focus, form select:focus {
       border-color: #2a2e92;
       box-shadow: 0 0 8px #2a2e92;
+      outline: none;
     }
     form button {
       margin-top: 20px;
@@ -106,10 +147,14 @@
       color: white;
       border: none;
       padding: 12px 20px;
-      font-size: 16px;
+      font-size: 1rem;
       border-radius: 6px;
       cursor: pointer;
       transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     form button:hover {
       background-color: #1e2070;
@@ -117,50 +162,10 @@
       transform: scale(1.05);
     }
 
+    /* Uploads section */
     .uploads {
-      margin-top: 40px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      padding: 12px;
-      border: 1px solid #ccc;
-      text-align: left;
-    }
-    th {
-      background-color: #2a2e92;
-      color: white;
-      cursor: pointer;
-    }
-    tr {
-      opacity: 0;
-      animation: fadeIn 0.6s forwards;
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-    .success-message {
-      color: green;
-      margin-top: 10px;
-    }
-    .footer-note {
-      margin-top: 50px;
-      font-size: 13px;
-      color: gray;
-      text-align: center;
-    }
-    .action-btns i {
-      margin-right: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .action-btns i:hover {
-      color: #00e0ff;
-      text-shadow: 0 0 10px #00e0ff;
-      transform: scale(1.2);
+      margin-top: 30px;
+      font-size: 0.9rem;
     }
     .top-bar {
       display: flex;
@@ -174,6 +179,7 @@
       flex: 1;
       border-radius: 6px;
       border: 1px solid #ccc;
+      font-size: 0.9rem;
     }
     .top-bar button {
       background: #2a2e92;
@@ -184,108 +190,162 @@
       cursor: pointer;
       transition: 0.3s;
       white-space: nowrap;
+      font-size: 0.9rem;
     }
     .top-bar button:hover {
       background: #1e2070;
       box-shadow: 0 0 10px #2a2e92;
     }
+
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      table-layout: fixed;
+      word-wrap: break-word;
+    }
+    th, td {
+      padding: 8px;
+      border: 1px solid #ccc;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      background-color: #2a2e92;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+    tr {
+      opacity: 0;
+      animation: fadeIn 0.6s forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .success-message {
+      color: green;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+    .footer-note {
+      margin: 15px 0 10px 0;
+      font-size: 11px;
+      color: gray;
+      text-align: center;
+      user-select: none;
+    }
+    .action-btns i {
+      margin-right: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .action-btns i:hover {
+      color: #00e0ff;
+      text-shadow: 0 0 10px #00e0ff;
+      transform: scale(1.2);
+    }
+
+    /* Dark mode toggle button */
     .dark-toggle {
-      float: right;
-      margin-top: -40px;
-      margin-right: 10px;
+      position: absolute;
+      top: 18px;
+      right: 18px;
       background: transparent;
       border: none;
-      font-size: 18px;
+      font-size: 20px;
       cursor: pointer;
       color: white;
       transition: 0.3s;
+      user-select: none;
     }
     .dark-toggle:hover {
       transform: rotate(20deg);
       color: #00e0ff;
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .container-wrapper {
-        margin: 15px;
-        padding: 8px;
-      }
-      .container {
-        padding: 20px;
-      }
-      .top-bar {
-        flex-direction: column;
-        gap: 10px;
-      }
-      .top-bar input {
-        width: 100%;
-      }
+    /* Scrollbar for container-wrapper */
+    .container-wrapper::-webkit-scrollbar {
+      width: 6px;
+    }
+    .container-wrapper::-webkit-scrollbar-thumb {
+      background-color: rgba(42,46,146,0.5);
+      border-radius: 3px;
     }
   </style>
 </head>
 <body>
-  <header>
-    Admin Panel - Upload Center
-    <button class="dark-toggle" onclick="toggleDarkMode()">🌓</button>
-  </header>
+  <div class="phone-screen">
+    <header>
+      Admin Panel - Upload Center
+      <button class="dark-toggle" onclick="toggleDarkMode()">🌓</button>
+    </header>
 
-  <div class="container-wrapper">
-    <div class="container">
-      <h2>Upload Past Paper / Note</h2>
-      <form id="uploadForm" onsubmit="return handleUpload(event)">
-        <label for="title">Title</label>
-        <input type="text" id="title" required placeholder="e.g., HIGH STARS AIMERS MATH 001">
+    <div class="container-wrapper">
+      <div class="container">
+        <h2>Upload Past Paper / Note</h2>
+        <form id="uploadForm" onsubmit="return handleUpload(event)">
+          <label for="title">Title</label>
+          <input type="text" id="title" required placeholder="e.g., HIGH STARS AIMERS MATH 001" />
 
-        <label for="type">Type</label>
-        <select id="type" required>
-          <option value="">-- Select --</option>
-          <option value="paper">Past Paper</option>
-          <option value="note">Note</option>
-        </select>
+          <label for="type">Type</label>
+          <select id="type" required>
+            <option value="">-- Select --</option>
+            <option value="paper">Past Paper</option>
+            <option value="note">Note</option>
+          </select>
 
-        <label for="year">Year</label>
-        <input type="number" id="year" min="2010" max="2025" required>
+          <label for="year">Year</label>
+          <input type="number" id="year" min="2010" max="2025" required />
 
-        <label for="subject">Subject</label>
-        <input type="text" id="subject" required placeholder="e.g., Chemistry">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" required placeholder="e.g., Chemistry" />
 
-        <label for="price">Price (KSH)</label>
-        <input type="number" id="price" required min="0" placeholder="e.g., 60">
+          <label for="price">Price (KSH)</label>
+          <input type="number" id="price" required min="0" placeholder="e.g., 60" />
 
-        <label for="file">File Upload</label>
-        <input type="file" id="file" required>
+          <label for="file">File Upload</label>
+          <input type="file" id="file" required />
 
-        <button type="submit"><i class="fas fa-upload"></i> Upload</button>
-        <div class="success-message" id="successMsg"></div>
-      </form>
+          <button type="submit"><i class="fas fa-upload"></i> Upload</button>
+          <div class="success-message" id="successMsg"></div>
+        </form>
 
-      <div class="uploads">
-        <h2>Uploaded Files</h2>
-        <div class="top-bar">
-          <input type="text" id="search" onkeyup="filterUploads()" placeholder="Search by title, subject, year...">
-          <button onclick="exportToCSV()">📄 Export CSV</button>
+        <div class="uploads">
+          <h2>Uploaded Files</h2>
+          <div class="top-bar">
+            <input
+              type="text"
+              id="search"
+              onkeyup="filterUploads()"
+              placeholder="Search by title, subject, year..."
+            />
+            <button onclick="exportToCSV()">📄 Export CSV</button>
+          </div>
+          <table id="uploadTable">
+            <thead>
+              <tr>
+                <th onclick="sortTable(0)">Title</th>
+                <th onclick="sortTable(1)">Type</th>
+                <th onclick="sortTable(2)">Year</th>
+                <th onclick="sortTable(3)">Subject</th>
+                <th onclick="sortTable(4)">Price</th>
+                <th onclick="sortTable(5)">Time</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
-        <table id="uploadTable">
-          <thead>
-            <tr>
-              <th onclick="sortTable(0)">Title</th>
-              <th onclick="sortTable(1)">Type</th>
-              <th onclick="sortTable(2)">Year</th>
-              <th onclick="sortTable(3)">Subject</th>
-              <th onclick="sortTable(4)">Price</th>
-              <th onclick="sortTable(5)">Time</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
       </div>
     </div>
-  </div>
 
-  <div class="footer-note">
-    High Stars Aimers Admin Portal | Managed by Boni Mbugua
+    <div class="footer-note">
+      High Stars Aimers Admin Portal | Managed by Boni Mbugua
+    </div>
   </div>
 
   <script>
@@ -307,6 +367,7 @@
       displayUploads();
       document.getElementById("uploadForm").reset();
       document.getElementById("successMsg").textContent = "Upload successful!";
+      setTimeout(() => (document.getElementById("successMsg").textContent = ""), 3000);
     }
 
     function displayUploads() {
@@ -363,7 +424,7 @@
     function filterUploads() {
       const input = document.getElementById("search").value.toLowerCase();
       const rows = document.querySelectorAll("#uploadTable tbody tr");
-      rows.forEach(row => {
+      rows.forEach((row) => {
         row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
       });
     }
@@ -371,14 +432,16 @@
     function sortTable(colIndex) {
       const table = document.getElementById("uploadTable");
       const rows = Array.from(table.rows).slice(1);
-      const sorted = rows.sort((a, b) => a.cells[colIndex].innerText.localeCompare(b.cells[colIndex].innerText));
+      const sorted = rows.sort((a, b) =>
+        a.cells[colIndex].innerText.localeCompare(b.cells[colIndex].innerText)
+      );
       table.tBodies[0].append(...sorted);
     }
 
     function exportToCSV() {
       const uploads = JSON.parse(localStorage.getItem("uploads") || "[]");
       let csv = "Title,Type,Year,Subject,Price,Time\n";
-      uploads.forEach(u => {
+      uploads.forEach((u) => {
         csv += `${u.title},${u.type},${u.year},${u.subject},${u.price},${u.time}\n`;
       });
       const blob = new Blob([csv], { type: "text/csv" });
