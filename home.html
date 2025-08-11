@@ -2,57 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  
   <title>High Stars Aimers - Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+        --primary-color: #2a2e92;
+        --secondary-color: #00f0ff;
+        --text-light: #e0e0e0;
+        --background-dark: #0a0f1f;
+        --card-background: rgba(35, 40, 60, 0.8);
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { height: 100%; font-family: 'Segoe UI', sans-serif; }
     body {
       display: flex;
       flex-direction: column;
-      background: url('https://i.postimg.cc/MpH2Cjc6/file-00000000a8046230bc1b196305d9b3b4-conversation-id-685a6dbd-5aa8-800e-a943-4ac4d1da4bea-message-i.png') no-repeat center center fixed;
-      background-size: cover;
-      color: #333;
+      background: linear-gradient(145deg, #101525, #0a0f1f);
+      color: var(--text-light);
     }
     .header {
-      background-color: #2a2e92;
-      color: white;
+      background-color: var(--background-dark);
+      border-bottom: 2px solid var(--secondary-color);
       padding: 15px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
-    .header h1 { font-size: 20px; }
+    .header h1 { 
+      font-size: 24px;
+      color: var(--secondary-color);
+      text-shadow: 0 0 5px var(--secondary-color);
+    }
     .menu-btn {
       font-size: 26px;
       background: none;
-      color: white;
+      color: var(--secondary-color);
       border: none;
       cursor: pointer;
+      transition: color 0.3s;
     }
+    .menu-btn:hover { color: white; }
     .dropdown {
       display: none;
-      background-color: white;
+      background-color: var(--card-background);
       position: absolute;
       right: 20px;
       top: 60px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      border-radius: 6px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+      border-radius: 8px;
       overflow: hidden;
       z-index: 1000;
+      border: 1px solid var(--secondary-color);
+      min-width: 180px;
     }
     .dropdown button {
       width: 100%;
       padding: 12px;
-      background: white;
+      background: none;
       border: none;
       text-align: left;
       font-size: 16px;
+      color: var(--text-light);
       cursor: pointer;
+      transition: background-color 0.3s;
     }
-    .dropdown button:hover { background-color: #f0f0f0; }
+    .dropdown button:hover { background-color: rgba(0, 240, 255, 0.2); }
     .main-buttons {
       margin: 50px auto 30px;
       display: flex;
@@ -61,38 +81,60 @@
       flex-wrap: wrap;
     }
     .main-buttons button {
-      padding: 20px 40px;
+      padding: 15px 30px;
       font-size: 18px;
-      background-color: #2a2e92;
+      background-color: var(--primary-color);
       color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
-    .main-buttons button:hover { background-color: #1e2478; }
+    .main-buttons button:hover {
+      background-color: #1e2478;
+      transform: translateY(-3px);
+    }
     .table-section {
       display: none;
       padding: 20px;
-      background-color: rgba(255, 255, 255, 0.92);
+      background-color: var(--card-background);
+      backdrop-filter: blur(5px);
       margin: 30px auto;
       border-radius: 10px;
       width: 90%;
       max-width: 900px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 240, 255, 0.2);
     }
+    h2 { color: var(--secondary-color); margin-bottom: 20px; }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
     th, td {
-      padding: 10px;
+      padding: 12px;
       text-align: left;
-      border: 1px solid #ccc;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: rgba(0, 0, 0, 0.2);
     }
     th {
-      background-color: #2a2e92;
+      background-color: var(--primary-color);
       color: white;
     }
+    td button, td a button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      transition: background-color 0.3s;
+    }
+    td button:first-of-type { background-color: var(--primary-color); }
+    td button:first-of-type:hover { background-color: #1e2478; }
+    td a button { background-color: var(--secondary-color); color: #333;}
+    td a button:hover { background-color: #00c0cc; }
     .modal {
       display: none;
       position: fixed;
@@ -101,20 +143,22 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.5);
+      background-color: rgba(0,0,0,0.7);
       justify-content: center;
       align-items: center;
     }
     .modal-content {
-      background: white;
+      background: var(--background-dark);
+      color: var(--text-light);
       padding: 30px;
       border-radius: 8px;
       text-align: center;
+      border: 1px solid var(--secondary-color);
     }
     .close-btn {
       margin-top: 15px;
       padding: 10px 20px;
-      background-color: #2a2e92;
+      background-color: var(--primary-color);
       color: white;
       border: none;
       border-radius: 6px;
@@ -122,22 +166,26 @@
     }
     .footer {
       margin-top: auto;
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: var(--background-dark);
       padding: 20px;
       text-align: center;
-      border-top: 1px solid #ccc;
+      border-top: 2px solid var(--secondary-color);
+      color: #aaa;
     }
     .social-icons a {
       margin: 0 10px;
       font-size: 22px;
       text-decoration: none;
+      color: var(--secondary-color);
+      transition: transform 0.3s;
     }
+    .social-icons a:hover { transform: scale(1.2); }
     .footer-links {
       margin-top: 15px;
       font-size: 14px;
     }
     .footer-links a {
-      color: #2a2e92;
+      color: var(--secondary-color);
       text-decoration: none;
       margin: 0 8px;
     }
@@ -146,9 +194,24 @@
     .fab.fa-instagram { color: #e4405f; }
     .fab.fa-twitter { color: #1da1f2; }
     .fab.fa-youtube { color: #ff0000; }
-    .fab.fa-tiktok { color: black; }
+    .fab.fa-tiktok { color: #fff; }
     .fab.fa-whatsapp { color: #25D366; }
   </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:cf7610de84f0b2262ce027",
+      measurementId: "G-X475KTSH5J"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
 </head>
 <body>
   <div class="header">
@@ -169,7 +232,9 @@
   <div id="papers" class="table-section">
     <h2>Past Papers</h2>
     <table>
-      <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
+      <thead>
+        <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
+      </thead>
       <tbody id="papersTable"></tbody>
     </table>
   </div>
@@ -177,7 +242,9 @@
   <div id="notes" class="table-section">
     <h2>Notes</h2>
     <table>
-      <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
+      <thead>
+        <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
+      </thead>
       <tbody id="notesTable"></tbody>
     </table>
   </div>
@@ -192,12 +259,12 @@
   <div class="footer">
     <p>Follow Boni Mbugua:</p>
     <div class="social-icons">
-      <a href="https://www.facebook.com/profile.php?id=61579327734565" target=" target="_blank"><i class="fab fa-facebook"></i></a>
-      <a href="https://www.instagram.com/boni.mbugua?igsh=MWF3MmI0N29leDdzeA==" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="https://x.com/mbugua_bon60636?s=09" target="_blank"><i class="fab fa-twitter"></i></a>
-      <a href="https://youtube.com/@boniMbugua" target="_blank"><i class="fab fa-youtube"></i></a>
-      <a href="https://tiktok.com/@boniMbugua346" target="_blank"><i class="fab fa-tiktok"></i></a>
-      <a href="https://wa.me/254116136780" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://www.facebook.com/profile.php?id=61579327734565" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/boni.mbugua?igsh=MWF3MmI0N29leDdzeA==" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://x.com/mbugua_bon60636?s=09" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="https://youtube.com/@boniMbugua" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://tiktok.com/@boniMbugua346" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://wa.me/254116136780" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
     <div class="footer-links">
       <a href="privacy.html">Privacy & Policy</a> |
@@ -211,9 +278,14 @@
       menu.style.display = menu.style.display === "block" ? "none" : "block";
     }
 
+    // Corrected logout function to use Firebase
     function logout() {
-      localStorage.removeItem("loggedInUser");
-      window.location.href = "signin1.html";
+      firebase.auth().signOut().then(() => {
+        // Sign-out successful, redirect to sign-in page
+        window.location.href = "signin1.html";
+      }).catch((error) => {
+        console.error("Sign Out Error:", error);
+      });
     }
 
     function showSection(id) {
@@ -237,6 +309,8 @@
       papersTable.innerHTML = "";
       notesTable.innerHTML = "";
 
+      // Assuming 'uploads' data is still coming from localStorage.
+      // For a more robust app, this data should be fetched from a database like Firebase Firestore.
       const uploads = JSON.parse(localStorage.getItem("uploads") || "[]");
 
       uploads.forEach(item => {
@@ -257,7 +331,16 @@
       });
     }
 
-    populateTables();
+    // Check auth state to ensure user is logged in
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in.
+        populateTables();
+      } else {
+        // No user is signed in. Redirect to login page.
+        window.location.href = "signin1.html";
+      }
+    });
   </script>
 </body>
 </html>
