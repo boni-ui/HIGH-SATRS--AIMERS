@@ -153,7 +153,7 @@
         transform: translateY(-3px);
         background-color: #1e2478;
     }
-    .announcements, .featured-content, .progress-tracker, .quote-of-day {
+    .announcements, .featured-content, .progress-tracker, .quote-of-day, .daily-quiz, .study-timer, .todo-list, .tips-of-day, .quick-links, .recent-activity, .user-achievements, .featured-resource, .upcoming-events {
         background-color: var(--card-background);
         padding: 20px;
         border-radius: 10px;
@@ -277,6 +277,8 @@
       border-radius: 8px;
       text-align: center;
       border: 1px solid var(--secondary-color);
+      width: 90%;
+      max-width: 500px;
     }
     .close-btn {
       margin-top: 15px;
@@ -359,7 +361,7 @@
 
     #inspirationalQuote {
         animation: breathing-pulse 4s infinite ease-in-out;
-        display: block; /* Ensures the animation applies correctly to the text */
+        display: block;
     }
 
     @keyframes breathing-pulse {
@@ -422,6 +424,45 @@
         transition: color 0.3s;
     }
     .social-sharing a:hover { color: white; }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .daily-quiz-options button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid var(--secondary-color);
+        background-color: transparent;
+        color: var(--text-light);
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .daily-quiz-options button:hover {
+        background-color: rgba(0, 240, 255, 0.1);
+    }
+    .daily-quiz-options button.correct { background-color: #28a745; border-color: #28a745; }
+    .daily-quiz-options button.incorrect { background-color: #dc3545; border-color: #dc3545; }
+    .study-timer-display { font-size: 2.5rem; text-align: center; color: var(--secondary-color); }
+    .study-timer-controls { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+    .study-timer-controls button { padding: 8px 16px; font-size: 1rem; border-radius: 5px; border: none; cursor: pointer; }
+    .todo-list ul { list-style: none; margin-top: 15px; }
+    .todo-list li { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .todo-list .delete-btn { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 1.2rem; }
+    .quick-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; text-align: center; }
+    .quick-links-grid a { text-decoration: none; color: var(--text-light); }
+    .quick-links-grid .icon-box { background: var(--primary-color); padding: 15px; border-radius: 8px; transition: transform 0.3s; }
+    .quick-links-grid .icon-box:hover { transform: translateY(-5px); }
+    .recent-activity ul { list-style: none; }
+    .recent-activity li { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; }
+    .user-achievements .badges { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+    .user-achievements .badge { width: 50px; height: 50px; background: var(--secondary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--background-dark); font-size: 1.5rem; }
+    .upcoming-events ul { list-style: none; margin-top: 15px; }
+    .upcoming-events li { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -497,153 +538,62 @@
         <span id="inspirationalQuote">"The best way to predict the future is to create it."</span>
     </div>
 
-    <div id="papers" class="table-section">
-      <h2>Past Papers</h2>
-      <table>
-        <thead>
-          <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
-        </thead>
-        <tbody id="papersTable"></tbody>
-      </table>
-    </div>
+    <div class="card-grid">
+        <div class="daily-quiz">
+            <h3>Daily Quiz</h3>
+            <p id="quizQuestion">What is the formula for water?</p>
+            <div class="daily-quiz-options">
+                <button data-answer="H2O" class="quiz-option">H₂O</button>
+                <button data-answer="CO2" class="quiz-option">CO₂</button>
+                <button data-answer="O2" class="quiz-option">O₂</button>
+            </div>
+            <p id="quizFeedback" style="margin-top: 10px;"></p>
+        </div>
 
-    <div id="notes" class="table-section">
-      <h2>Notes</h2>
-      <table>
-        <thead>
-          <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
-        </thead>
-        <tbody id="notesTable"></tbody>
-      </table>
-    </div>
+        <div class="study-timer">
+            <h3>Study Timer</h3>
+            <div id="timerDisplay" class="study-timer-display">25:00</div>
+            <div class="study-timer-controls">
+                <button id="startTimerBtn">Start</button>
+                <button id="pauseTimerBtn">Pause</button>
+                <button id="resetTimerBtn">Reset</button>
+            </div>
+        </div>
+        
+        <div class="todo-list">
+            <h3>To-Do List</h3>
+            <div class="search-bar" style="margin-bottom: 0;">
+                <input type="text" id="todoInput" placeholder="Add a new task...">
+                <button id="addTodoBtn">Add</button>
+            </div>
+            <ul id="todoListItems"></ul>
+        </div>
+        
+        <div class="tips-of-day">
+            <h3>Today's Tip</h3>
+            <span id="studyTip">"Break down large tasks into smaller, manageable chunks."</span>
+        </div>
+        
+        <div class="quick-links">
+            <h3>Quick Links</h3>
+            <div class="quick-links-grid">
+                <a href="#"><div class="icon-box"><i class="fas fa-chart-line"></i><span>Stats</span></div></a>
+                <a href="#"><div class="icon-box"><i class="fas fa-comments"></i><span>Forum</span></div></a>
+                <a href="#"><div class="icon-box"><i class="fas fa-gift"></i><span>Rewards</span></div></a>
+                <a href="#"><div class="icon-box"><i class="fas fa-cog"></i><span>Settings</span></div></a>
+            </div>
+        </div>
 
-    <div id="modal" class="modal">
-      <div class="modal-content">
-        <p id="modalText"></p>
-        <button class="close-btn" onclick="closeModal()">Close</button>
-      </div>
-    </div>
-  </main>
-
-  <div class="footer">
-    <p>Follow Boni Mbugua:</p>
-    <div class="social-icons">
-      <a href="https://www.facebook.com/profile.php?id=61579327734565" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-      <a href="https://www.instagram.com/boni.mbugua?igsh=MWF3MmI0N29leDdzeA==" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="https://x.com/mbugua_bon60636?s=09" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-      <a href="https://youtube.com/@boniMbugua" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-      <a href="https://tiktok.com/@boniMbugua346" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-      <a href="https://wa.me/254116136780" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-    </div>
-    <div class="footer-links">
-      <a href="privacy.html">Privacy & Policy</a> |
-      <a href="contact.html">Contact</a>
-    </div>
-  </div>
-
-  <button class="fab-button" onclick="window.location.href='contact.html'">
-    <i class="fas fa-question"></i>
-  </button>
-
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById("dropdown");
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
-    
-    function logout() {
-      firebase.auth().signOut().then(() => {
-        window.location.href = "signin1.html";
-      }).catch((error) => {
-        console.error("Sign Out Error:", error);
-      });
-    }
-
-    function showSection(id) {
-      document.querySelectorAll('.table-section').forEach(section => {
-        section.style.display = 'none';
-      });
-      document.getElementById(id).style.display = 'block';
-    }
-
-    function viewItem(year, subject) {
-      document.getElementById("modalText").textContent = `You are viewing: ${subject} (${year})`;
-      document.getElementById("modal").style.display = "flex";
-    }
-
-    function closeModal() {
-      document.getElementById("modal").style.display = "none";
-    }
-
-    function populateTables() {
-      const papersTable = document.getElementById("papersTable");
-      const notesTable = document.getElementById("notesTable");
-      papersTable.innerHTML = "";
-      notesTable.innerHTML = "";
-
-      const uploads = JSON.parse(localStorage.getItem("uploads") || "[]");
-
-      uploads.forEach(item => {
-        const row = `
-          <tr>
-            <td>${item.year}</td>
-            <td>${item.subject}</td>
-            <td>${item.price}</td>
-            <td><button onclick="viewItem('${item.year}', '${item.subject}')">👁 View</button></td>
-            <td><a href="${item.file}" download><button>⬇ Download</button></a></td>
-          </tr>`;
-
-        if (item.type === "paper") {
-          papersTable.innerHTML += row;
-        } else if (item.type === "note") {
-          notesTable.innerHTML += row;
-        }
-      });
-    }
-    
-    function toggleTheme() {
-        const html = document.documentElement;
-        const toggleIcon = document.querySelector('.theme-toggle-button i');
-        if (html.classList.contains('light-mode')) {
-            html.classList.remove('light-mode');
-            toggleIcon.classList.remove('fa-moon');
-            toggleIcon.classList.add('fa-sun');
-        } else {
-            html.classList.add('light-mode');
-            toggleIcon.classList.remove('fa-sun');
-            toggleIcon.classList.add('fa-moon');
-        }
-    }
-
-    const quotes = [
-        "The best way to predict the future is to create it.",
-        "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-        "The only way to do great work is to love what you do.",
-        "Believe you can and you're halfway there.",
-        "Your only limit is your mind.",
-        "Don't wait for opportunity. Create it.",
-        "The future belongs to those who believe in the beauty of their dreams.",
-        "The secret of getting ahead is getting started.",
-        "Dream big and dare to fail."
-    ];
-
-    function changeQuote() {
-        const quoteElement = document.getElementById('inspirationalQuote');
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        quoteElement.textContent = `"${quotes[randomIndex]}"`;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        changeQuote();
-        setInterval(changeQuote, 19000);
-
-        // Event listeners for the quick action buttons
-        document.getElementById('profileBtn').addEventListener('click', () => {
-            window.location.href = 'profile.html';
-        });
-
-        document.getElementById('papersBtn').addEventListener('click', () => {
-            showSection('papers');
-        });
-
-        documen
+        <div class="recent-activity">
+            <h3>Recent Activity</h3>
+            <ul id="activityFeed">
+                <li>Viewed: KCSE 2023 Math Paper</li>
+                <li>Downloaded: Chemistry Notes (Form 4)</li>
+                <li>Completed: Daily Quiz</li>
+            </ul>
+        </div>
+        
+        <div class="user-achievements">
+            <h3>Your Achievements</h3>
+            <div class="badges">
+                <div class="badge"><i class="fas fa-star
