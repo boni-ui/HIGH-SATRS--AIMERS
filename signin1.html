@@ -133,11 +133,13 @@
         color: red;
         margin-top: 10px;
         font-size: 14px;
+        display: none; /* Initially hidden */
     }
     .success {
         color: #00ff99;
         margin-top: 10px;
         font-size: 14px;
+        display: none; /* Initially hidden */
     }
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -154,6 +156,7 @@
     measurementId: "G-X475KTSH5J"
   };
   firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 </script>
 </head>
 <body>
@@ -161,7 +164,7 @@
 <div class="login-container">
     <div class="login-box">
         <h2>Login</h2>
-        <input type="email" id="username" placeholder="Email" required>
+        <input type="email" id="email" placeholder="Email" required>
         <div class="password-wrapper">
             <input type="password" id="password" placeholder="Password" required>
             <i class="fas fa-eye toggle-password" id="togglePassword"></i>
@@ -176,9 +179,22 @@
 </div>
 
 <script>
-    // Password show/hide toggle
-    const togglePassword = document.getElementById("togglePassword");
+    const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
+    const errorMsg = document.getElementById("errorMsg");
+    const togglePassword = document.getElementById("togglePassword");
+    const forgotPasswordLink = document.getElementById('forgot-password-link');
+    const forgotPasswordError = document.getElementById('forgot-password-error');
+    const forgotPasswordSuccess = document.getElementById('forgot-password-success');
+
+    // Check for existing user session on page load
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        window.location.href = "home.html";
+      }
+    });
+
+    // Password show/hide toggle
     togglePassword.addEventListener("click", function () {
         const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
         passwordInput.setAttribute("type", type);
@@ -188,45 +204,78 @@
 
     // Firebase sign-in
     function signIn() {
-        const email = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value.trim();
-        document.getElementById("errorMsg").textContent = "";
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+        errorMsg.textContent = "";
+        errorMsg.style.display = 'none';
 
         if (!email || !password) {
-            document.getElementById("errorMsg").textContent = "Please enter both email and password.";
+            errorMsg.textContent = "Please enter both email and password.";
+            errorMsg.style.display = 'block';
             return;
         }
 
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        auth.signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
-                // Successful login: redirect to dashboard
-                window.location.href = "home.html";
+                // The onAuthStateChanged listener will handle the redirection.
             })
             .catch((error) => {
-                document.getElementById("errorMsg").textContent = error.message;
+                let message = "An unknown error occurred. Please try again.";
+                switch(error.code) {
+                  case 'auth/wrong-password':
+                    message = 'Incorrect password. Please try again.';
+                    break;
+                  case 'auth/user-not-found':
+                    message = 'No account found with that email.';
+                    break;
+                  case 'auth/invalid-email':
+                    message = 'Invalid email address format.';
+                    break;
+                  case 'auth/network-request-failed':
+                    message = 'Network error. Check your internet connection.';
+                    break;
+                  default:
+                    console.error('Login error:', error.message);
+                }
+                errorMsg.textContent = message;
+                errorMsg.style.display = 'block';
             });
     }
 
     // Forgot Password logic
-    document.getElementById('forgot-password-link').onclick = function(e) {
+    forgotPasswordLink.onclick = function(e) {
         e.preventDefault();
-        const email = document.getElementById('username').value.trim();
-        const errorDiv = document.getElementById('forgot-password-error');
-        const successDiv = document.getElementById('forgot-password-success');
-        errorDiv.textContent = "";
-        successDiv.textContent = "";
+        const email = emailInput.value.trim();
+        forgotPasswordError.textContent = "";
+        forgotPasswordSuccess.textContent = "";
+        forgotPasswordError.style.display = 'none';
+        forgotPasswordSuccess.style.display = 'none';
 
         if (!email) {
-            errorDiv.textContent = "Please enter your email address above first.";
+            forgotPasswordError.textContent = "Please enter your email address above first.";
+            forgotPasswordError.style.display = 'block';
             return;
         }
 
-        firebase.auth().sendPasswordResetEmail(email)
+        auth.sendPasswordResetEmail(email)
             .then(() => {
-                successDiv.textContent = "Password reset email sent! Check your inbox.";
+                forgotPasswordSuccess.textContent = "Password reset email sent! Check your inbox.";
+                forgotPasswordSuccess.style.display = 'block';
             })
             .catch(error => {
-                errorDiv.textContent = error.message;
+                let message = "An error occurred. Please try again.";
+                switch(error.code) {
+                  case 'auth/user-not-found':
+                    message = 'No account found with that email.';
+                    break;
+                  case 'auth/invalid-email':
+                    message = 'Invalid email address format.';
+                    break;
+                  default:
+                    console.error('Password reset error:', error.message);
+                }
+                forgotPasswordError.textContent = message;
+                forgotPasswordError.style.display = 'block';
             });
     };
 </script>
