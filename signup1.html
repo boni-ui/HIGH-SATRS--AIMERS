@@ -198,12 +198,13 @@
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
-                message.style.color = "green";
-                message.textContent = "Account created successfully! Redirecting...";
-
-                setTimeout(() => {
-                    window.location.href = "signin1.html";
-                }, 2000);
+                const user = userCredential.user;
+                user.sendEmailVerification().then(() => {
+                    message.style.color = "green";
+                    message.textContent = "Account created successfully! A verification email has been sent. Please check your inbox and log in after verifying.";
+                    // Optionally, you can sign out the user here to force them to log in after verifying.
+                    firebase.auth().signOut();
+                });
             })
             .catch((error) => {
                 message.style.color = "red";
