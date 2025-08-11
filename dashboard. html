@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dashboard - High Stars Aimers</title>
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
@@ -12,11 +13,17 @@
   <button id="logout-btn">Log Out</button>
 
   <script>
-    // Initialize Firebase like before
-    const firebaseConfig = { /* same config */ };
+    // TODO: Replace with your Firebase project config!
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      // ...other config fields
+    };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
+    // Show current user, or redirect if not signed in
     auth.onAuthStateChanged(user => {
       if (user) {
         document.getElementById('user-info').innerText = 'Logged in as: ' + user.email;
@@ -25,6 +32,7 @@
       }
     });
 
+    // Log out button
     document.getElementById('logout-btn').onclick = () => {
       auth.signOut().then(() => window.location.href = 'auth.html');
     };
