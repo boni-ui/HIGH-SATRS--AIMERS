@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- 
   <title>High Stars Aimers - Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -13,14 +12,27 @@
         --text-light: #e0e0e0;
         --background-dark: #0a0f1f;
         --card-background: rgba(35, 40, 60, 0.8);
+        --dark-mode-bg: #0a0f1f;
+        --light-mode-bg: #f4f4f9;
+        --light-mode-text: #333;
+    }
+    html.light-mode {
+        --text-light: #333;
+        --background-dark: #f4f4f9;
+        --card-background: rgba(255, 255, 255, 0.9);
+        --header-bg: #fff;
+        --footer-bg: #fff;
+        --primary-color: #2a2e92;
+        --secondary-color: #00f0ff;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { height: 100%; font-family: 'Segoe UI', sans-serif; }
     body {
       display: flex;
       flex-direction: column;
-      background: linear-gradient(145deg, #101525, #0a0f1f);
+      background: linear-gradient(145deg, var(--dark-mode-bg), var(--background-dark));
       color: var(--text-light);
+      transition: background-color 0.3s, color 0.3s;
     }
     .header {
       background-color: var(--background-dark);
@@ -73,6 +85,117 @@
       transition: background-color 0.3s;
     }
     .dropdown button:hover { background-color: rgba(0, 240, 255, 0.2); }
+
+    .main-content {
+        padding: 20px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+    }
+    .welcome-banner {
+        text-align: center;
+        padding: 20px;
+        background-color: var(--primary-color);
+        border-radius: 10px;
+        color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    .welcome-banner h2 {
+        font-size: 2rem;
+        margin-bottom: 5px;
+    }
+    .user-info-card {
+        background-color: var(--card-background);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border: 1px solid var(--secondary-color);
+    }
+    .user-info-card .profile-pic {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+    }
+    .user-info-card .details h3 {
+        margin-bottom: 5px;
+        color: var(--secondary-color);
+    }
+    .quick-actions {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    .quick-actions button {
+        padding: 12px 25px;
+        font-size: 16px;
+        border-radius: 25px;
+        border: none;
+        background-color: var(--primary-color);
+        color: white;
+        cursor: pointer;
+        transition: transform 0.3s, background-color 0.3s;
+    }
+    .quick-actions button:hover {
+        transform: translateY(-3px);
+        background-color: #1e2478;
+    }
+    .announcements, .featured-content, .progress-tracker, .quote-of-day {
+        background-color: var(--card-background);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(0, 240, 255, 0.2);
+    }
+    .progress-bar {
+        height: 10px;
+        background-color: rgba(255,255,255,0.2);
+        border-radius: 5px;
+        margin-top: 10px;
+        overflow: hidden;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        width: 75%; /* Example progress */
+        background-color: var(--secondary-color);
+        border-radius: 5px;
+    }
+    .search-bar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .search-bar input {
+        flex-grow: 1;
+        padding: 10px 15px;
+        border-radius: 25px;
+        border: 2px solid var(--secondary-color);
+        background-color: rgba(0, 0, 0, 0.2);
+        color: var(--text-light);
+        outline: none;
+    }
+    .search-bar button {
+        padding: 10px 20px;
+        border: none;
+        background-color: var(--secondary-color);
+        color: var(--background-dark);
+        border-radius: 25px;
+        cursor: pointer;
+    }
+    
     .main-buttons {
       margin: 50px auto 30px;
       display: flex;
@@ -196,6 +319,92 @@
     .fab.fa-youtube { color: #ff0000; }
     .fab.fa-tiktok { color: #fff; }
     .fab.fa-whatsapp { color: #25D366; }
+
+    /* New Features Styling */
+    .announcement-banner {
+        padding: 10px;
+        background-color: var(--secondary-color);
+        color: #333;
+        text-align: center;
+        font-weight: bold;
+        border-radius: 5px;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+    .featured-card {
+        background: var(--card-background);
+        border: 1px solid rgba(0, 240, 255, 0.2);
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .featured-card h3 {
+        color: var(--secondary-color);
+        margin-bottom: 10px;
+    }
+    .quote-of-day {
+        background-color: var(--card-background);
+        border: 1px solid rgba(0, 240, 255, 0.2);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        font-style: italic;
+    }
+    .fab-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s;
+    }
+    .fab-button:hover { transform: scale(1.1); }
+    .theme-toggle-button {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--card-background);
+        color: var(--secondary-color);
+        border: 2px solid var(--secondary-color);
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s;
+    }
+    .theme-toggle-button:hover { background-color: var(--primary-color); }
+    
+    .social-sharing {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .social-sharing a {
+        font-size: 20px;
+        color: var(--secondary-color);
+        transition: color 0.3s;
+    }
+    .social-sharing a:hover { color: white; }
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -214,6 +423,10 @@
   </script>
 </head>
 <body>
+  <button class="theme-toggle-button" onclick="toggleTheme()">
+    <i class="fas fa-sun"></i>
+  </button>
+  
   <div class="header">
     <h1>High Stars Aimers</h1>
     <button class="menu-btn" onclick="toggleMenu()">⋮</button>
@@ -224,37 +437,76 @@
     <button onclick="window.location.href='privacy.html'">🔒 Privacy & Policy</button>
     <button onclick="logout()">🚪 Sign Out</button>
   </div>
-  <div class="main-buttons">
-    <button onclick="showSection('papers')">Past Papers</button>
-    <button onclick="showSection('notes')">Notes</button>
-  </div>
-
-  <div id="papers" class="table-section">
-    <h2>Past Papers</h2>
-    <table>
-      <thead>
-        <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
-      </thead>
-      <tbody id="papersTable"></tbody>
-    </table>
-  </div>
-
-  <div id="notes" class="table-section">
-    <h2>Notes</h2>
-    <table>
-      <thead>
-        <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
-      </thead>
-      <tbody id="notesTable"></tbody>
-    </table>
-  </div>
-
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <p id="modalText"></p>
-      <button class="close-btn" onclick="closeModal()">Close</button>
+  
+  <main class="main-content">
+    <div class="announcement-banner">
+        New updates are here! Check out the latest past papers.
     </div>
-  </div>
+    
+    <div class="user-info-card">
+        <div class="profile-pic">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="details">
+            <h3 id="welcomeMessage">Welcome, User!</h3>
+            <p>Email: <span id="userEmail">Loading...</span></p>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <button onclick="window.location.href='profile.html'"><i class="fas fa-user-circle"></i> My Profile</button>
+        <button onclick="showSection('papers')"><i class="fas fa-book"></i> Past Papers</button>
+        <button onclick="showSection('notes')"><i class="fas fa-clipboard-list"></i> Notes</button>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" placeholder="Search for papers or notes...">
+        <button><i class="fas fa-search"></i></button>
+    </div>
+
+    <div class="progress-tracker">
+        <h3>Your Progress</h3>
+        <div class="progress-bar">
+            <div class="progress-bar-fill"></div>
+        </div>
+    </div>
+    
+    <div class="featured-content">
+        <h3>Featured Content</h3>
+        <p>Get the latest KCSE 2024 Math Paper!</p>
+    </div>
+
+    <div class="quote-of-day">
+        "The best way to predict the future is to create it."
+    </div>
+
+    <div id="papers" class="table-section">
+      <h2>Past Papers</h2>
+      <table>
+        <thead>
+          <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
+        </thead>
+        <tbody id="papersTable"></tbody>
+      </table>
+    </div>
+
+    <div id="notes" class="table-section">
+      <h2>Notes</h2>
+      <table>
+        <thead>
+          <tr><th>Year</th><th>Subject</th><th>Price</th><th>View</th><th>Download</th></tr>
+        </thead>
+        <tbody id="notesTable"></tbody>
+      </table>
+    </div>
+
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <p id="modalText"></p>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </main>
 
   <div class="footer">
     <p>Follow Boni Mbugua:</p>
@@ -272,16 +524,18 @@
     </div>
   </div>
 
+  <button class="fab-button" onclick="window.location.href='contact.html'">
+    <i class="fas fa-question"></i>
+  </button>
+
   <script>
     function toggleMenu() {
       const menu = document.getElementById("dropdown");
       menu.style.display = menu.style.display === "block" ? "none" : "block";
     }
-
-    // Corrected logout function to use Firebase
+    
     function logout() {
       firebase.auth().signOut().then(() => {
-        // Sign-out successful, redirect to sign-in page
         window.location.href = "signin1.html";
       }).catch((error) => {
         console.error("Sign Out Error:", error);
@@ -289,9 +543,10 @@
     }
 
     function showSection(id) {
-      document.getElementById("papers").style.display = "none";
-      document.getElementById("notes").style.display = "none";
-      document.getElementById(id).style.display = "block";
+      document.querySelectorAll('.table-section').forEach(section => {
+        section.style.display = 'none';
+      });
+      document.getElementById(id).style.display = 'block';
     }
 
     function viewItem(year, subject) {
@@ -309,8 +564,6 @@
       papersTable.innerHTML = "";
       notesTable.innerHTML = "";
 
-      // Assuming 'uploads' data is still coming from localStorage.
-      // For a more robust app, this data should be fetched from a database like Firebase Firestore.
       const uploads = JSON.parse(localStorage.getItem("uploads") || "[]");
 
       uploads.forEach(item => {
@@ -330,14 +583,27 @@
         }
       });
     }
+    
+    function toggleTheme() {
+        const html = document.documentElement;
+        const toggleIcon = document.querySelector('.theme-toggle-button i');
+        if (html.classList.contains('light-mode')) {
+            html.classList.remove('light-mode');
+            toggleIcon.classList.remove('fa-moon');
+            toggleIcon.classList.add('fa-sun');
+        } else {
+            html.classList.add('light-mode');
+            toggleIcon.classList.remove('fa-sun');
+            toggleIcon.classList.add('fa-moon');
+        }
+    }
 
-    // Check auth state to ensure user is logged in
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        // User is signed in.
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('welcomeMessage').textContent = `Welcome, ${user.email.split('@')[0]}!`;
         populateTables();
       } else {
-        // No user is signed in. Redirect to login page.
         window.location.href = "signin1.html";
       }
     });
