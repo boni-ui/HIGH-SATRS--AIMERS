@@ -356,6 +356,23 @@
         text-align: center;
         font-style: italic;
     }
+
+    #inspirationalQuote {
+        animation: breathing-pulse 4s infinite ease-in-out;
+        display: block; /* Ensures the animation applies correctly to the text */
+    }
+
+    @keyframes breathing-pulse {
+        0%, 100% {
+            transform: scale(1);
+            text-shadow: 0 0 5px var(--secondary-color), 0 0 10px var(--secondary-color);
+        }
+        50% {
+            transform: scale(1.05);
+            text-shadow: 0 0 10px var(--secondary-color), 0 0 20px var(--secondary-color);
+        }
+    }
+
     .fab-button {
         position: fixed;
         bottom: 20px;
@@ -598,7 +615,6 @@
         }
     }
 
-    // New JavaScript for rotating quotes
     const quotes = [
         "The best way to predict the future is to create it.",
         "Success is not final, failure is not fatal: it is the courage to continue that counts.",
@@ -617,10 +633,9 @@
         quoteElement.textContent = `"${quotes[randomIndex]}"`;
     }
 
-    // Call changeQuote initially and then every 19 seconds
     document.addEventListener('DOMContentLoaded', () => {
-        changeQuote(); // Set initial quote
-        setInterval(changeQuote, 19000); // Change quote every 19 seconds
+        changeQuote();
+        setInterval(changeQuote, 19000);
     });
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -628,10 +643,3 @@
         document.getElementById('userEmail').textContent = user.email;
         document.getElementById('welcomeMessage').textContent = `Welcome, ${user.email.split('@')[0]}!`;
         populateTables();
-      } else {
-        window.location.href = "signin1.html";
-      }
-    });
-  </script>
-</body>
-</html>
