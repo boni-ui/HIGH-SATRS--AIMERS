@@ -519,7 +519,7 @@
     </div>
 
     <div class="search-bar">
-        <input type="text" placeholder="Search for papers or notes...">
+        <input type="text" id="searchInput" placeholder="Search for papers or notes...">
         <button><i class="fas fa-search"></i></button>
     </div>
 
@@ -578,20 +578,16 @@
         <div class="quick-links">
             <h3>Quick Links</h3>
             <div class="quick-links-grid">
-                <a href="#"><div class="icon-box"><i class="fas fa-chart-line"></i><span>Stats</span></div></a>
-                <a href="#"><div class="icon-box"><i class="fas fa-comments"></i><span>Forum</span></div></a>
-                <a href="#"><div class="icon-box"><i class="fas fa-gift"></i><span>Rewards</span></div></a>
-                <a href="#"><div class="icon-box"><i class="fas fa-cog"></i><span>Settings</span></div></a>
+                <a href="#" onclick="showQuickLinkModal('Stats')"><div class="icon-box"><i class="fas fa-chart-line"></i><span>Stats</span></div></a>
+                <a href="#" onclick="showQuickLinkModal('Forum')"><div class="icon-box"><i class="fas fa-comments"></i><span>Forum</span></div></a>
+                <a href="#" onclick="showQuickLinkModal('Rewards')"><div class="icon-box"><i class="fas fa-gift"></i><span>Rewards</span></div></a>
+                <a href="#" onclick="showQuickLinkModal('Settings')"><div class="icon-box"><i class="fas fa-cog"></i><span>Settings</span></div></a>
             </div>
         </div>
 
         <div class="recent-activity">
             <h3>Recent Activity</h3>
-            <ul id="activityFeed">
-                <li>Viewed: KCSE 2023 Math Paper</li>
-                <li>Downloaded: Chemistry Notes (Form 4)</li>
-                <li>Completed: Daily Quiz</li>
-            </ul>
+            <ul id="activityFeed"></ul>
         </div>
         
         <div class="user-achievements">
@@ -605,4 +601,4 @@
         
         <div class="featured-resource">
             <h3>Featured Resource</h3>
-            <p>Master your biology with our compreh
+            <p>Master your biology with our comprehen
