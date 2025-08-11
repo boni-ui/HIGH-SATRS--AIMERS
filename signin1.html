@@ -151,7 +151,9 @@
             <input type="password" id="password" placeholder="Password">
             <i class="fas fa-eye toggle-password" id="togglePassword"></i>
         </div>
-        <p><a href="#" style="color:#aaa;font-size:12px;">Forgot your password?</a></p>
+        <p><a href="#" id="forgot-password-link" style="color:#aaa;font-size:12px;">Forgot your password?</a></p>
+<div class="error" id="forgot-password-error"></div>
+<div class="success" id="forgot-password-success"></div>
         <button onclick="signIn()">Login</button>
         <div class="signup-link">Signup <a href="signup1.html">here</a></div>
         <p class="error" id="errorMsg"></p>
