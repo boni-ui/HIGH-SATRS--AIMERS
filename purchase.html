@@ -19,13 +19,43 @@
       text-align: center;
     }
 
+    /* Container with glowing & breathing effect */
     .container {
+      position: relative;
       max-width: 90%;
       margin: 30px auto;
       background: white;
       padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
+      border-radius: 12px;
+      overflow: hidden;
+      z-index: 1;
+      animation: growPulse 3s ease-in-out infinite;
+    }
+
+    /* Glowing gradient border */
+    .container::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(270deg, #ff004c, #00f7ff, #25D366, #ff004c);
+      background-size: 600% 600%;
+      border-radius: 14px;
+      z-index: -1;
+      animation: borderGlow 6s ease infinite;
+    }
+
+    @keyframes borderGlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes growPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
     }
 
     h2 {
@@ -146,7 +176,6 @@
       });
 
       if (isPremium && new Date() < new Date(isPremium.expiry)) {
-        // Auto-download for premium users
         downloadBtn.style.display = "inline-block";
         downloadBtn.onclick = () => {
           const a = document.createElement("a");
@@ -155,7 +184,6 @@
           a.click();
         };
       } else {
-        // Allow user to click download only after WhatsApp validation
         whatsappLink.onclick = () => {
           alert("Once you have sent the code, come back and click Download.");
           downloadBtn.style.display = "inline-block";
