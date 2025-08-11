@@ -477,7 +477,7 @@
     </div>
 
     <div class="quote-of-day">
-        "The best way to predict the future is to create it."
+        <span id="inspirationalQuote">"The best way to predict the future is to create it."</span>
     </div>
 
     <div id="papers" class="table-section">
@@ -514,99 +514,4 @@
       <a href="https://www.facebook.com/profile.php?id=61579327734565" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
       <a href="https://www.instagram.com/boni.mbugua?igsh=MWF3MmI0N29leDdzeA==" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
       <a href="https://x.com/mbugua_bon60636?s=09" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-      <a href="https://youtube.com/@boniMbugua" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-      <a href="https://tiktok.com/@boniMbugua346" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-      <a href="https://wa.me/254116136780" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-    </div>
-    <div class="footer-links">
-      <a href="privacy.html">Privacy & Policy</a> |
-      <a href="contact.html">Contact</a>
-    </div>
-  </div>
-
-  <button class="fab-button" onclick="window.location.href='contact.html'">
-    <i class="fas fa-question"></i>
-  </button>
-
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById("dropdown");
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
-    
-    function logout() {
-      firebase.auth().signOut().then(() => {
-        window.location.href = "signin1.html";
-      }).catch((error) => {
-        console.error("Sign Out Error:", error);
-      });
-    }
-
-    function showSection(id) {
-      document.querySelectorAll('.table-section').forEach(section => {
-        section.style.display = 'none';
-      });
-      document.getElementById(id).style.display = 'block';
-    }
-
-    function viewItem(year, subject) {
-      document.getElementById("modalText").textContent = `You are viewing: ${subject} (${year})`;
-      document.getElementById("modal").style.display = "flex";
-    }
-
-    function closeModal() {
-      document.getElementById("modal").style.display = "none";
-    }
-
-    function populateTables() {
-      const papersTable = document.getElementById("papersTable");
-      const notesTable = document.getElementById("notesTable");
-      papersTable.innerHTML = "";
-      notesTable.innerHTML = "";
-
-      const uploads = JSON.parse(localStorage.getItem("uploads") || "[]");
-
-      uploads.forEach(item => {
-        const row = `
-          <tr>
-            <td>${item.year}</td>
-            <td>${item.subject}</td>
-            <td>${item.price}</td>
-            <td><button onclick="viewItem('${item.year}', '${item.subject}')">👁 View</button></td>
-            <td><a href="${item.file}" download><button>⬇ Download</button></a></td>
-          </tr>`;
-
-        if (item.type === "paper") {
-          papersTable.innerHTML += row;
-        } else if (item.type === "note") {
-          notesTable.innerHTML += row;
-        }
-      });
-    }
-    
-    function toggleTheme() {
-        const html = document.documentElement;
-        const toggleIcon = document.querySelector('.theme-toggle-button i');
-        if (html.classList.contains('light-mode')) {
-            html.classList.remove('light-mode');
-            toggleIcon.classList.remove('fa-moon');
-            toggleIcon.classList.add('fa-sun');
-        } else {
-            html.classList.add('light-mode');
-            toggleIcon.classList.remove('fa-sun');
-            toggleIcon.classList.add('fa-moon');
-        }
-    }
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        document.getElementById('userEmail').textContent = user.email;
-        document.getElementById('welcomeMessage').textContent = `Welcome, ${user.email.split('@')[0]}!`;
-        populateTables();
-      } else {
-        window.location.href = "signin1.html";
-      }
-    });
-  </script>
-</body>
-</html>
+      <a href="https://youtube.com/@boniMbugua" target="_blank" aria-label="YouTube
