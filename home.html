@@ -95,6 +95,21 @@
         max-width: 1200px;
         margin: 0 auto;
         width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+    .main-content::before {
+        content: '';
+        position: absolute;
+        top: -10%; left: -10%;
+        width: 120%; height: 120%;
+        background: radial-gradient(circle, rgba(0, 240, 255, 0.1) 0%, transparent 60%);
+        animation: subtle-glow 20s ease-in-out infinite alternate;
+        z-index: -1;
+    }
+    @keyframes subtle-glow {
+        0% { transform: scale(1) rotate(0deg); opacity: 0.1; }
+        100% { transform: scale(1.2) rotate(360deg); opacity: 0.2; }
     }
     .welcome-banner {
         text-align: center;
@@ -334,7 +349,7 @@
         0%, 100% { opacity: 1; }
         50% { opacity: 0.8; }
     }
-    .featured-card {
+    .featured-content {
         background: var(--card-background);
         border: 1px solid rgba(0, 240, 255, 0.2);
         border-radius: 10px;
@@ -344,7 +359,7 @@
         align-items: center;
         text-align: center;
     }
-    .featured-card h3 {
+    .featured-content h3 {
         color: var(--secondary-color);
         margin-bottom: 10px;
     }
@@ -440,7 +455,7 @@
   
   <main class="main-content">
     <div class="announcement-banner">
-        New updates are here! Check out the latest past papers.
+        <span id="announcementText">New updates are here! Check out the latest past papers.</span>
     </div>
     
     <div class="user-info-card">
@@ -472,8 +487,13 @@
     </div>
     
     <div class="featured-content">
-        <h3>Featured Content</h3>
-        <p>Get the latest KCSE 2024 Math Paper!</p>
+        <h3>Featured Content: Mathematics Past Paper 2024</h3>
+        <p>A comprehensive paper to test your skills. <span>(Approx. 15 min read)</span></p>
+        <div class="social-sharing">
+            <a href="#" aria-label="Share on Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="#" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
     </div>
 
     <div class="quote-of-day">
@@ -514,4 +534,103 @@
       <a href="https://www.facebook.com/profile.php?id=61579327734565" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
       <a href="https://www.instagram.com/boni.mbugua?igsh=MWF3MmI0N29leDdzeA==" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
       <a href="https://x.com/mbugua_bon60636?s=09" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-      <a href="https://youtube.com/@boniMbugua" target="_blank" aria-label="YouTube
+      <a href="https://youtube.com/@boniMbugua" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://tiktok.com/@boniMbugua346" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://wa.me/254116136780" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy & Policy</a> |
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+
+  <button class="fab-button" onclick="window.location.href='contact.html'">
+    <i class="fas fa-question"></i>
+  </button>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("dropdown");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+    
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "signin1.html";
+      }).catch((error) => {
+        console.error("Sign Out Error:", error);
+      });
+    }
+
+    function showSection(id) {
+      document.querySelectorAll('.table-section').forEach(section => {
+        section.style.display = 'none';
+      });
+      document.getElementById(id).style.display = 'block';
+    }
+
+    function viewItem(year, subject) {
+      document.getElementById("modalText").textContent = `You are viewing: ${subject} (${year})`;
+      document.getElementById("modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    function populateTables() {
+      const papersTable = document.getElementById("papersTable");
+      const notesTable = document.getElementById("notesTable");
+      papersTable.innerHTML = "";
+      notesTable.innerHTML = "";
+
+      const uploads = JSON.parse(localStorage.getItem("uploads") || "[]");
+
+      uploads.forEach(item => {
+        const row = `
+          <tr>
+            <td>${item.year}</td>
+            <td>${item.subject}</td>
+            <td>${item.price}</td>
+            <td><button onclick="viewItem('${item.year}', '${item.subject}')">👁 View</button></td>
+            <td><a href="${item.file}" download><button>⬇ Download</button></a></td>
+          </tr>`;
+
+        if (item.type === "paper") {
+          papersTable.innerHTML += row;
+        } else if (item.type === "note") {
+          notesTable.innerHTML += row;
+        }
+      });
+    }
+    
+    function toggleTheme() {
+        const html = document.documentElement;
+        const toggleIcon = document.querySelector('.theme-toggle-button i');
+        if (html.classList.contains('light-mode')) {
+            html.classList.remove('light-mode');
+            toggleIcon.classList.remove('fa-moon');
+            toggleIcon.classList.add('fa-sun');
+        } else {
+            html.classList.add('light-mode');
+            toggleIcon.classList.remove('fa-sun');
+            toggleIcon.classList.add('fa-moon');
+        }
+    }
+
+    // New JavaScript for dynamic welcome message and rotating quotes/announcements
+    const quotes = [
+        "The best way to predict the future is to create it.",
+        "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+        "The only way to do great work is to love what you do.",
+        "Believe you can and you're halfway there.",
+        "Your only limit is your mind.",
+        "Don't wait for opportunity. Create it.",
+        "The future belongs to those who believe in the beauty of their dreams.",
+        "The secret of getting ahead is getting started.",
+        "Dream big and dare to fail."
+    ];
+
+    const announcements = [
+        "New updates are here! Check out the latest past papers.",
+      
