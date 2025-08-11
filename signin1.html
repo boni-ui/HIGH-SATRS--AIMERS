@@ -6,6 +6,7 @@
 <title>Login</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+    /* ... your existing styles ... */
     * {
         margin: 0;
         padding: 0;
@@ -28,8 +29,6 @@
         text-align: center;
         overflow: hidden;
     }
-
-    /* Rotating glowing border */
     .login-container::before {
         content: '';
         position: absolute;
@@ -49,8 +48,6 @@
         filter: blur(12px);
         z-index: 0;
     }
-
-    /* Inner black background */
     .login-container::after {
         content: '';
         position: absolute;
@@ -62,7 +59,6 @@
         border-radius: 15px;
         z-index: 1;
     }
-
     @keyframes rotate {
         100% { transform: rotate(360deg); }
     }
@@ -70,7 +66,6 @@
         0%, 100% { opacity: 0.6; }
         50% { opacity: 1; }
     }
-
     .login-box {
         position: relative;
         z-index: 2;
@@ -139,21 +134,39 @@
         margin-top: 10px;
         font-size: 14px;
     }
+    .success {
+        color: #00ff99;
+        margin-top: 10px;
+        font-size: 14px;
+    }
 </style>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    // Replace the following with your Firebase project configuration!
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    // ...other config values
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
 </head>
 <body>
 
 <div class="login-container">
     <div class="login-box">
         <h2>Login</h2>
-        <input type="text" id="username" placeholder="Email">
+        <input type="email" id="username" placeholder="Email" required>
         <div class="password-wrapper">
-            <input type="password" id="password" placeholder="Password">
+            <input type="password" id="password" placeholder="Password" required>
             <i class="fas fa-eye toggle-password" id="togglePassword"></i>
         </div>
         <p><a href="#" id="forgot-password-link" style="color:#aaa;font-size:12px;">Forgot your password?</a></p>
-<div class="error" id="forgot-password-error"></div>
-<div class="success" id="forgot-password-success"></div>
+        <div class="error" id="forgot-password-error"></div>
+        <div class="success" id="forgot-password-success"></div>
         <button onclick="signIn()">Login</button>
         <div class="signup-link">Signup <a href="signup1.html">here</a></div>
         <p class="error" id="errorMsg"></p>
@@ -161,9 +174,9 @@
 </div>
 
 <script>
+    // Password show/hide toggle
     const togglePassword = document.getElementById("togglePassword");
     const passwordInput = document.getElementById("password");
-
     togglePassword.addEventListener("click", function () {
         const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
         passwordInput.setAttribute("type", type);
@@ -171,20 +184,49 @@
         this.classList.toggle("fa-eye-slash");
     });
 
+    // Firebase sign-in
     function signIn() {
-        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("username").value.trim();
         const password = document.getElementById("password").value.trim();
+        document.getElementById("errorMsg").textContent = "";
 
-        const savedUsername = "boni";
-        const savedPassword = "bonimbugua5077";
-
-        if (username === savedUsername && password === savedPassword) {
-            localStorage.setItem("loggedInUser", JSON.stringify({ username }));
-            window.location.href = "home.html"; // redirect to home
-        } else {
-            document.getElementById("errorMsg").textContent = "Incorrect username or password.";
+        if (!email || !password) {
+            document.getElementById("errorMsg").textContent = "Please enter both email and password.";
+            return;
         }
+
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Successful login: redirect to dashboard
+                window.location.href = "home.html";
+            })
+            .catch((error) => {
+                document.getElementById("errorMsg").textContent = error.message;
+            });
     }
+
+    // Forgot Password logic
+    document.getElementById('forgot-password-link').onclick = function(e) {
+        e.preventDefault();
+        const email = document.getElementById('username').value.trim();
+        const errorDiv = document.getElementById('forgot-password-error');
+        const successDiv = document.getElementById('forgot-password-success');
+        errorDiv.textContent = "";
+        successDiv.textContent = "";
+
+        if (!email) {
+            errorDiv.textContent = "Please enter your email address above first.";
+            return;
+        }
+
+        firebase.auth().sendPasswordResetEmail(email)
+            .then(() => {
+                successDiv.textContent = "Password reset email sent! Check your inbox.";
+            })
+            .catch(error => {
+                errorDiv.textContent = error.message;
+            });
+    };
 </script>
 
 </body>
