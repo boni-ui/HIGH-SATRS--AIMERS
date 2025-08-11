@@ -1,311 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Admin Upload - High Stars Aimers</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
-<style>
-  /* Reset and base */
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background-color: #333; /* phone background/frame outside */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Segoe UI', sans-serif;
-  }
-  body.dark {
-    background-color: #111;
-    color: white;
-  }
-
-  /* Phone screen container */
-  .phone-screen {
-    width: 375px;
-    height: 667px;
-    background-color: #f0f4fa;
-    border-radius: 40px;
-    box-shadow: 0 0 0 16px #000, 0 20px 40px rgba(0, 0, 0, 0.6);
-    overflow-y: auto; /* Enable vertical scrolling */
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
-  body.dark .phone-screen {
-    background-color: #1e1e2f;
-    color: white;
-    box-shadow: 0 0 0 16px #000, 0 20px 40px rgba(0, 255, 255, 0.3);
-  }
-
-  /* Header */
-  header {
-    background: linear-gradient(270deg, #2a2e92, #6f42c1, #2a2e92);
-    background-size: 600% 600%;
-    animation: gradientMove 8s ease infinite;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    font-size: 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    user-select: none;
-    flex-shrink: 0;
-  }
-  @keyframes gradientMove {
-    0% {
-      background-position: 0% 50%;
+  <meta charset="UTF-8" />
+  <title>Admin Upload - High Stars Aimers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    /* Reset and base */
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #333; /* phone background/frame outside */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
     }
-    50% {
-      background-position: 100% 50%;
+    body.dark {
+      background-color: #111;
+      color: white;
     }
-    100% {
-      background-position: 0% 50%;
+
+    /* Phone screen container */
+    .phone-screen {
+      width: 375px;
+      height: 667px;
+      background-color: #f0f4fa;
+      border-radius: 40px;
+      box-shadow: 0 0 0 16px #000, 0 20px 40px rgba(0, 0, 0, 0.6);
+      overflow-y: auto; /* Enable vertical scrolling */
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
-  }
-
-  /* Rainbow border container */
-  .container-wrapper {
-    margin: 10px;
-    padding: 20px;
-    border-radius: 30px;
-    background: linear-gradient(
-      45deg,
-      #ff0000,
-      #ff4500,
-      #ffa500,
-      #ffff00,
-      #adff2f,
-      #00ff7f,
-      #00ffff,
-      #0080ff,
-      #8a2be2,
-      #ff1493,
-      #ff0000
-    );
-    background-size: 400% 400%;
-    animation: rainbowRotate 6s ease infinite;
-    position: relative;
-    flex-grow: 1;
-  }
-
-  @keyframes rainbowRotate {
-    0% {
-      background-position: 0% 50%;
+    body.dark .phone-screen {
+      background-color: #1e1e2f;
+      color: white;
+      box-shadow: 0 0 0 16px #000, 0 20px 40px rgba(0, 255, 255, 0.3);
     }
-    25% {
-      background-position: 100% 0%;
+
+    /* Header */
+    header {
+      background: linear-gradient(270deg, #2a2e92, #6f42c1, #2a2e92);
+      background-size: 600% 600%;
+      animation: gradientMove 8s ease infinite;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      user-select: none;
+      flex-shrink: 0;
     }
-    50% {
-      background-position: 100% 100%;
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
     }
-    75% {
-      background-position: 0% 100%;
+
+    /* Rainbow border container */
+    .container-wrapper {
+      margin: 10px;
+      padding: 20px;
+      border-radius: 30px;
+      background: linear-gradient(
+        45deg,
+        #ff0000,
+        #ff4500,
+        #ffa500,
+        #ffff00,
+        #adff2f,
+        #00ff7f,
+        #00ffff,
+        #0080ff,
+        #8a2be2,
+        #ff1493,
+        #ff0000
+      );
+      background-size: 400% 400%;
+      animation: rainbowRotate 6s ease infinite;
+      position: relative;
+      flex-grow: 1;
     }
-    100% {
-      background-position: 0% 50%;
+
+    @keyframes rainbowRotate {
+      0% {
+        background-position: 0% 50%;
+      }
+      25% {
+        background-position: 100% 0%;
+      }
+      50% {
+        background-position: 100% 100%;
+      }
+      75% {
+        background-position: 0% 100%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
     }
-  }
 
-  .container {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 1;
-  }
-
-  body.dark .container {
-    background-color: #2d2d44;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-  }
-
-  /* Typography */
-  h2 {
-    color: #2a2e92;
-    margin-bottom: 20px;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    font-size: 1.3rem;
-  }
-  body.dark h2 {
-    color: #00e0ff;
-    text-shadow: 0 0 10px #00e0ff;
-  }
-
-  /* Form */
-  form label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-  form input,
-  form select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    transition: 0.3s;
-    box-sizing: border-box;
-    font-size: 0.9rem;
-  }
-  form input:focus,
-  form select:focus {
-    border-color: #2a2e92;
-    box-shadow: 0 0 8px #2a2e92;
-    outline: none;
-  }
-  form button {
-    margin-top: 20px;
-    background-color: #2a2e92;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    font-size: 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  form button:hover {
-    background-color: #1e2070;
-    box-shadow: 0 0 15px #2a2e92;
-    transform: scale(1.05);
-  }
-
-  /* Uploads section */
-  .uploads {
-    margin-top: 30px;
-    font-size: 0.9rem;
-  }
-  .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    gap: 10px;
-  }
-  .top-bar input {
-    padding: 8px;
-    flex: 1;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 0.9rem;
-  }
-  .top-bar button {
-    background: #2a2e92;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-    white-space: nowrap;
-    font-size: 0.9rem;
-  }
-  .top-bar button:hover {
-    background: #1e2070;
-    box-shadow: 0 0 10px #2a2e92;
-  }
-
-  /* Table styling */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    font-size: 0.85rem;
-    table-layout: fixed;
-    word-wrap: break-word;
-  }
-  th,
-  td {
-    padding: 8px;
-    border: 1px solid #ccc;
-    text-align: left;
-    vertical-align: middle;
-  }
-  th {
-    background-color: #2a2e92;
-    color: white;
-    cursor: pointer;
-    user-select: none;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  tr {
-    opacity: 0;
-    animation: fadeIn 0.6s forwards;
-  }
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 1;
     }
-  }
 
-  .success-message {
-    color: green;
-    margin-top: 10px;
-    font-size: 0.9rem;
-  }
-  .footer-note {
-    margin: 15px 0 10px 0;
-    font-size: 11px;
-    color: gray;
-    text-align: center;
-    user-select: none;
-  }
-  .action-btns i {
-    margin-right: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  .action-btns i:hover {
-    color: #00e0ff;
-    text-shadow: 0 0 10px #00e0ff;
-    transform: scale(1.2);
-  }
+    body.dark .container {
+      background-color: #2d2d44;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
 
-  /* Dark mode toggle button */
-  .dark-toggle {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: white;
-    transition: 0.3s;
-    user-select: none;
-    z-index: 100;
-  }
-  .dark-toggle:hover {
-    transform: rotate(20deg);
-    color: #00e0ff;
-  }
+    /* Typography */
+    h2 {
+      color: #2a2e92;
+      margin-bottom: 20px;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      font-size: 1.3rem;
+    }
+    body.dark h2 {
+      color: #00e0ff;
+      text-shadow: 0 0 10px #00e0ff;
+    }
 
-  /* Scrollbar for phone-screen */
-  .phone-screen::-webkit-scrollbar {
-    width: 8px;
-  }
-  .phone-screen::-webkit-scrollbar-thumb {
-    background-color: rgba(42, 46, 146, 0.5);
-    border-radius: 4px;
-  }
-</style>
+    /* Form */
+    form label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: 0.3s;
+      box-sizing: border-box;
+      font-size: 0.9rem;
+    }
+    form input:focus,
+    form select:focus {
+      border-color: #2a2e92;
+      box-shadow: 0 0 8px #2a2e92;
+      outline: none;
+    }
+    form button {
+      margin-top: 20px;
+      background-color: #2a2e92;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    form button:hover {
+      background-color: #1e2070;
+      box-shadow: 0 0 15px #2a2e92;
+      transform: scale(1.05);
+    }
+
+    /* Uploads section */
+    .uploads {
+      margin-top: 30px;
+      font-size: 0.9rem;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 10px;
+    }
+    .top-bar input {
+      padding: 8px;
+      flex: 1;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.9rem;
+    }
+    .top-bar button {
+      background: #2a2e92;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+      white-space: nowrap;
+      font-size: 0.9rem;
+    }
+    .top-bar button:hover {
+      background: #1e2070;
+      box-shadow: 0 0 10px #2a2e92;
+    }
+
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      table-layout: fixed;
+      word-wrap: break-word;
+    }
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid #ccc;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      background-color: #2a2e92;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    tr {
+      opacity: 0;
+      animation: fadeIn 0.6s forwards;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .success-message {
+      color: green;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+    .error-message {
+      color: red;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+    .footer-note {
+      margin: 15px 0 10px 0;
+      font-size: 11px;
+      color: gray;
+      text-align: center;
+      user-select: none;
+    }
+    .action-btns i {
+      margin-right: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .action-btns i:hover {
+      color: #00e0ff;
+      text-shadow: 0 0 10px #00e0ff;
+      transform: scale(1.2);
+    }
+    .progress-bar-container {
+      width: 100%;
+      background-color: #f3f3f3;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    .progress-bar {
+      width: 0%;
+      height: 20px;
+      background-color: #4caf50;
+      text-align: center;
+      line-height: 20px;
+      color: white;
+      border-radius: 5px;
+    }
+
+
+    /* Dark mode toggle button */
+    .dark-toggle {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: white;
+      transition: 0.3s;
+      user-select: none;
+      z-index: 100;
+    }
+    .dark-toggle:hover {
+      transform: rotate(20deg);
+      color: #00e0ff;
+    }
+
+    /* Scrollbar for phone-screen */
+    .phone-screen::-webkit-scrollbar {
+      width: 8px;
+    }
+    .phone-screen::-webkit-scrollbar-thumb {
+      background-color: rgba(42, 46, 146, 0.5);
+      border-radius: 4px;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 </head>
 <body>
   <div class="phone-screen">
@@ -317,7 +341,7 @@
     <div class="container-wrapper">
       <div class="container">
         <h2>Upload Past Paper / Note</h2>
-        <form id="uploadForm" onsubmit="return handleUpload(event)">
+        <form id="uploadForm">
           <label for="title">Title</label>
           <input
             type="text"
@@ -349,6 +373,13 @@
             <i class="fas fa-upload"></i> Upload
           </button>
           <div class="success-message" id="successMsg"></div>
+          <div class="error-message" id="errorMsg"></div>
+          <div id="progressBarContainer" style="display:none;">
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <span id="progressText">0%</span>
+          </div>
         </form>
 
         <div class="uploads">
@@ -386,25 +417,79 @@
   </div>
 
   <script>
+    // Firebase configuration (replace with your own)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:cf7610de84f0b2262ce027",
+      measurementId: "G-X475KTSH5J"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const storage = firebase.storage();
+
     function handleUpload(event) {
       event.preventDefault();
+
       const title = document.getElementById('title').value;
       const type = document.getElementById('type').value;
       const year = document.getElementById('year').value;
       const subject = document.getElementById('subject').value;
       const price = document.getElementById('price').value;
       const fileInput = document.getElementById('file');
-      const file = URL.createObjectURL(fileInput.files[0]);
-      const time = new Date().toLocaleString();
+      const file = fileInput.files[0];
+      
+      const successMsg = document.getElementById('successMsg');
+      const errorMsg = document.getElementById('errorMsg');
+      const progressBarContainer = document.getElementById('progressBarContainer');
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
 
-      const upload = { title, type, year, subject, price, file, time };
-      const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
-      uploads.push(upload);
-      localStorage.setItem('uploads', JSON.stringify(uploads));
-      displayUploads();
-      document.getElementById('uploadForm').reset();
-      document.getElementById('successMsg').textContent = 'Upload successful!';
-      setTimeout(() => (document.getElementById('successMsg').textContent = ''), 3000);
+      successMsg.textContent = '';
+      errorMsg.textContent = '';
+      progressBarContainer.style.display = 'block';
+
+      if (!file) {
+        errorMsg.textContent = 'Please select a file to upload.';
+        progressBarContainer.style.display = 'none';
+        return;
+      }
+
+      const fileName = `${type}_${title}_${new Date().getTime()}`;
+      const storageRef = storage.ref(`uploads/${fileName}`);
+      const uploadTask = storageRef.put(file);
+
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          progressBar.style.width = progress + '%';
+          progressText.textContent = `${Math.round(progress)}%`;
+        },
+        (error) => {
+          console.error('Upload failed:', error);
+          errorMsg.textContent = 'Upload failed! Please check console for details.';
+          progressBarContainer.style.display = 'none';
+        },
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            const time = new Date().toLocaleString();
+            const upload = { title, type, year, subject, price, file: downloadURL, time };
+            
+            const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
+            uploads.push(upload);
+            localStorage.setItem('uploads', JSON.stringify(uploads));
+            
+            displayUploads();
+            document.getElementById('uploadForm').reset();
+            successMsg.textContent = 'Upload successful!';
+            progressBarContainer.style.display = 'none';
+            setTimeout(() => (successMsg.textContent = ''), 3000);
+          });
+        }
+      );
     }
 
     function displayUploads() {
@@ -492,7 +577,10 @@
       document.body.classList.toggle('dark');
     }
 
-    window.onload = displayUploads;
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('uploadForm').addEventListener('submit', handleUpload);
+      displayUploads();
+    });
   </script>
 </body>
 </html>
