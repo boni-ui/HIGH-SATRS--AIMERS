@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,6 +12,24 @@
       background: url('https://i.postimg.cc/MpH2Cjc6/file-00000000a8046230bc1b196305d9b3b4-conversation-id-685a6dbd-5aa8-800e-a943-4ac4d1da4bea-message-i.png') no-repeat center center fixed;
       background-size: cover;
       color: #333;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Full-page breathing glowing border */
+    body::before {
+      content: "";
+      position: fixed;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      background: linear-gradient(270deg, #ff004c, #00f7ff, #25D366, #ff004c);
+      background-size: 600% 600%;
+      border-radius: 20px;
+      z-index: 9999;
+      pointer-events: none;
+      animation: borderGlow 6s ease infinite, growPulse 3s ease-in-out infinite;
     }
 
     /* Container with glowing & growing animation */
@@ -28,7 +46,7 @@
       animation: growPulse 3s ease-in-out infinite;
     }
 
-    /* Glowing border effect */
+    /* Glowing border effect inside container */
     .container::before {
       content: "";
       position: absolute;
@@ -49,7 +67,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Pulse scale animation for growing/shrinking effect */
     @keyframes growPulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.03); }
