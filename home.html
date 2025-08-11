@@ -471,9 +471,9 @@
     </div>
 
     <div class="quick-actions">
-        <button onclick="window.location.href='profile.html'"><i class="fas fa-user-circle"></i> My Profile</button>
-        <button onclick="showSection('papers')"><i class="fas fa-book"></i> Past Papers</button>
-        <button onclick="showSection('notes')"><i class="fas fa-clipboard-list"></i> Notes</button>
+        <button id="profileBtn"><i class="fas fa-user-circle"></i> My Profile</button>
+        <button id="papersBtn"><i class="fas fa-book"></i> Past Papers</button>
+        <button id="notesBtn"><i class="fas fa-clipboard-list"></i> Notes</button>
     </div>
 
     <div class="search-bar">
@@ -636,10 +636,14 @@
     document.addEventListener('DOMContentLoaded', () => {
         changeQuote();
         setInterval(changeQuote, 19000);
-    });
 
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        document.getElementById('userEmail').textContent = user.email;
-        document.getElementById('welcomeMessage').textContent = `Welcome, ${user.email.split('@')[0]}!`;
-        populateTables();
+        // Event listeners for the quick action buttons
+        document.getElementById('profileBtn').addEventListener('click', () => {
+            window.location.href = 'profile.html';
+        });
+
+        document.getElementById('papersBtn').addEventListener('click', () => {
+            showSection('papers');
+        });
+
+        documen
