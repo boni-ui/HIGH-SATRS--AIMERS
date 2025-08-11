@@ -13,12 +13,15 @@
   <button id="logout-btn">Log Out</button>
 
   <script>
-    // TODO: Replace with your Firebase project config!
+    // Your Firebase project config
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      // ...other config fields
+      apiKey: "AIzaSyC1aadbta20jiWeB6zdg-3s8pMSsUnuM8c",
+      authDomain: "high-stars-aimers.firebaseapp.com",
+      projectId: "high-stars-aimers",
+      storageBucket: "high-stars-aimers.firebasestorage.app",
+      messagingSenderId: "392032940366",
+      appId: "1:392032940366:web:de409902ce3229d427ae1f",
+      measurementId: "G-WT9ZSCZWCB"
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
