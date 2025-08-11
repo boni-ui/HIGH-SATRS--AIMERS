@@ -23,7 +23,7 @@
         --header-bg: #fff;
         --footer-bg: #fff;
         --primary-color: #2a2e92;
-        --secondary-color: #00f0ff;
+        --secondary-color: #0080ff;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { height: 100%; font-family: 'Segoe UI', sans-serif; }
@@ -219,7 +219,7 @@
       transform: translateY(-3px);
     }
     .table-section {
-      display: none;
+      display: none; /* Initially hidden */
       padding: 20px;
       background-color: var(--card-background);
       backdrop-filter: blur(5px);
@@ -479,6 +479,7 @@
       measurementId: "G-X475KTSH5J"
     };
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
   </script>
 </head>
 <body>
@@ -521,6 +522,38 @@
     <div class="search-bar">
         <input type="text" id="searchInput" placeholder="Search for papers or notes...">
         <button><i class="fas fa-search"></i></button>
+    </div>
+
+    <div id="past-papers-section" class="table-section">
+      <h2>Past Papers</h2>
+      <table id="papers-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Subject</th>
+            <th>Price (KSH)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="notes-section" class="table-section">
+      <h2>Notes</h2>
+      <table id="notes-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Subject</th>
+            <th>Price (KSH)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
     <div class="progress-tracker">
@@ -581,24 +614,4 @@
                 <a href="#" onclick="showQuickLinkModal('Stats')"><div class="icon-box"><i class="fas fa-chart-line"></i><span>Stats</span></div></a>
                 <a href="#" onclick="showQuickLinkModal('Forum')"><div class="icon-box"><i class="fas fa-comments"></i><span>Forum</span></div></a>
                 <a href="#" onclick="showQuickLinkModal('Rewards')"><div class="icon-box"><i class="fas fa-gift"></i><span>Rewards</span></div></a>
-                <a href="#" onclick="showQuickLinkModal('Settings')"><div class="icon-box"><i class="fas fa-cog"></i><span>Settings</span></div></a>
-            </div>
-        </div>
-
-        <div class="recent-activity">
-            <h3>Recent Activity</h3>
-            <ul id="activityFeed"></ul>
-        </div>
-        
-        <div class="user-achievements">
-            <h3>Your Achievements</h3>
-            <div class="badges">
-                <div class="badge"><i class="fas fa-star"></i></div>
-                <div class="badge"><i class="fas fa-medal"></i></div>
-                <div class="badge"><i class="fas fa-trophy"></i></div>
-            </div>
-        </div>
-        
-        <div class="featured-resource">
-            <h3>Featured Resource</h3>
-            <p>Master your biology with our comprehen
+                <a href="#
