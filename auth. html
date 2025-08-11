@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auth - High Stars Aimers</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <h1>Sign Up / Sign In</h1>
+
+  <div id="auth-forms">
+    <h2>Sign Up</h2>
+    <input id="signup-email" type="email" placeholder="Email" required>
+    <input id="signup-password" type="password" placeholder="Password" required>
+    <button id="signup-btn">Sign Up</button>
+
+    <h2>Sign In</h2>
+    <input id="signin-email" type="email" placeholder="Email" required>
+    <input id="signin-password" type="password" placeholder="Password" required>
+    <button id="signin-btn">Sign In</button>
+  </div>
+
+  <script>
+    // 1. Initialize Firebase
+    const firebaseConfig = {
+      // Your Firebase config here
+      apiKey: "...",
+      authDomain: "...",
+      projectId: "...",
+      appId: "..."
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Utility: Basic input validation
+    function isValidEmail(email) {
+      return /\S+@\S+\.\S+/.test(email);
+    }
+
+    // 2. Sign-up handler
+    document.getElementById('signup-btn').onclick = () => {
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value;
+      if (!isValidEmail(email)) return alert('Invalid email');
+      if (password.length < 6) return alert('Password must be at least 6 characters');
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => alert('Sign-up successful!'))
+        .catch(err => alert('Sign-up error: ' + err.message));
+    };
+
+    // 3. Sign-in handler
+    document.getElementById('signin-btn').onclick = () => {
+      const email = document.getElementById('signin-email').value.trim();
+      const password = document.getElementById('signin-password').value;
+      if (!isValidEmail(email)) return alert('Invalid email');
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => window.location.href = 'dashboard.html')
+        .catch(err => alert('Sign-in error: ' + err.message));
+    };
+
+    // 4. Monitor auth state
+    auth.onAuthStateChanged(user => {
+      if (user) console.log('User signed in:', user.email);
+      else console.log('Not signed in');
+    });
+  </script>
+</body>
+</html>
