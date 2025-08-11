@@ -442,11 +442,12 @@
         cursor: pointer;
         transition: background-color 0.3s;
     }
-    .daily-quiz-options button:hover {
+    .daily-quiz-options button:hover:not(:disabled) {
         background-color: rgba(0, 240, 255, 0.1);
     }
-    .daily-quiz-options button.correct { background-color: #28a745; border-color: #28a745; }
-    .daily-quiz-options button.incorrect { background-color: #dc3545; border-color: #dc3545; }
+    .daily-quiz-options button.correct { background-color: #28a745; border-color: #28a745; color: #fff; }
+    .daily-quiz-options button.incorrect { background-color: #dc3545; border-color: #dc3545; color: #fff; }
+    .daily-quiz-options button:disabled { cursor: not-allowed; opacity: 0.6; }
     .study-timer-display { font-size: 2.5rem; text-align: center; color: var(--secondary-color); }
     .study-timer-controls { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
     .study-timer-controls button { padding: 8px 16px; font-size: 1rem; border-radius: 5px; border: none; cursor: pointer; }
@@ -541,11 +542,11 @@
     <div class="card-grid">
         <div class="daily-quiz">
             <h3>Daily Quiz</h3>
-            <p id="quizQuestion">What is the formula for water?</p>
-            <div class="daily-quiz-options">
-                <button data-answer="H2O" class="quiz-option">H₂O</button>
-                <button data-answer="CO2" class="quiz-option">CO₂</button>
-                <button data-answer="O2" class="quiz-option">O₂</button>
+            <p id="quizQuestion">Loading quiz...</p>
+            <div class="daily-quiz-options" id="quizOptions">
+                <button class="quiz-option"></button>
+                <button class="quiz-option"></button>
+                <button class="quiz-option"></button>
             </div>
             <p id="quizFeedback" style="margin-top: 10px;"></p>
         </div>
@@ -596,4 +597,12 @@
         <div class="user-achievements">
             <h3>Your Achievements</h3>
             <div class="badges">
-                <div class="badge"><i class="fas fa-star
+                <div class="badge"><i class="fas fa-star"></i></div>
+                <div class="badge"><i class="fas fa-medal"></i></div>
+                <div class="badge"><i class="fas fa-trophy"></i></div>
+            </div>
+        </div>
+        
+        <div class="featured-resource">
+            <h3>Featured Resource</h3>
+            <p>Master your biology with our compreh
