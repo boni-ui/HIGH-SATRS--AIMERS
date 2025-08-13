@@ -250,6 +250,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
   
@@ -260,7 +261,7 @@
     </button>
   </div>
   
-  <main>
+  <main style="display:none;" id="adminMain">
     <div class="admin-container">
       
       <div class="card upload-form-card">
@@ -359,9 +360,16 @@
     };
 
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
     const storage = firebase.storage();
+    const db = firebase.firestore();
+    const resourcesCollection = db.collection('resources');
+
+    // Specify the authorized admin email address
+    const adminEmail = 'mbuguaboniface611@gmail.com'; 
 
     // DOM Elements
+    const adminMain = document.getElementById('adminMain');
     const uploadForm = document.getElementById('uploadForm');
     const titleInput = document.getElementById('title');
     const typeInput = document.getElementById('type');
@@ -384,7 +392,7 @@
       }
     }
 
-    function handleUpload(event) {
+    async function handleUpload(event) {
       event.preventDefault();
 
       const title = titleInput.value;
@@ -404,7 +412,8 @@
         return;
       }
 
-      const fileName = `${type}_${title.replace(/ /g, '_')}_${new Date().getTime()}`;
+      // Generate a unique file name
+      const fileName = `${type}_${title.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().getTime()}`;
       const storageRef = storage.ref(`uploads/${fileName}`);
       const uploadTask = storageRef.put(file);
 
@@ -419,68 +428,72 @@
           showMessage(errorMsg, 'Upload failed! Please check the browser console for details.', false);
           progressBarContainer.style.display = 'none';
         },
-        () => {
-          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            const time = new Date().toLocaleString();
-            const upload = { title, type, year, subject, price, file: downloadURL, time };
+        async () => {
+          try {
+            const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
             
-            const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
-            uploads.push(upload);
-            localStorage.setItem('uploads', JSON.stringify(uploads));
+            await resourcesCollection.add({
+              title,
+              type,
+              year,
+              subject,
+              price: Number(price),
+              file: downloadURL,
+              fileName, // Store file name to enable deletion from storage later
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            });
             
-            displayUploads();
             uploadForm.reset();
             showMessage(successMsg, 'Upload successful!');
             progressBarContainer.style.display = 'none';
-          });
+          } catch (e) {
+            console.error("Error adding document: ", e);
+            showMessage(errorMsg, 'Database save failed! Check the console.', false);
+          }
         }
       );
     }
 
-    function displayUploads() {
-      uploadTableBody.innerHTML = '';
-      const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
-
-      uploads.forEach((u, i) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${u.title}</td>
-          <td>${u.type}</td>
-          <td>${u.year}</td>
-          <td>${u.subject}</td>
-          <td>${u.price}</td>
-          <td class="action-btns">
-            <i class="fas fa-eye" title="View" onclick="window.open('${u.file}')"></i>
-            <i class="fas fa-download" title="Download" onclick="downloadFile('${u.file}', '${u.title}')"></i>
-            <i class="fas fa-edit" title="Edit" onclick="editUpload(${i})"></i>
-            <i class="fas fa-trash" title="Delete" onclick="deleteUpload(${i})"></i>
-          </td>`;
-        uploadTableBody.appendChild(row);
-      });
+    // Live update the table using Firestore snapshots
+    function setupRealtimeListener() {
+        resourcesCollection.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+            uploadTableBody.innerHTML = '';
+            snapshot.forEach(doc => {
+                const u = doc.data();
+                const docId = doc.id;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${u.title}</td>
+                <td>${u.type}</td>
+                <td>${u.year}</td>
+                <td>${u.subject}</td>
+                <td>${u.price}</td>
+                <td class="action-btns">
+                    <i class="fas fa-eye" title="View" onclick="window.open('${u.file}')"></i>
+                    <i class="fas fa-download" title="Download" onclick="downloadFile('${u.file}', '${u.title}')"></i>
+                    <i class="fas fa-trash" title="Delete" onclick="deleteUpload('${docId}', '${u.fileName}')"></i>
+                </td>`;
+                uploadTableBody.appendChild(row);
+            });
+        });
     }
 
-    function deleteUpload(index) {
-      if (confirm('Are you sure you want to delete this file?')) {
-        const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
-        uploads.splice(index, 1);
-        localStorage.setItem('uploads', JSON.stringify(uploads));
-        displayUploads();
+    async function deleteUpload(docId, fileName) {
+      if (confirm('Are you sure you want to delete this file and its data? This action is permanent.')) {
+        try {
+          // Delete the file from Firebase Storage
+          const fileRef = storage.ref(`uploads/${fileName}`);
+          await fileRef.delete();
+          
+          // Delete the document from Firestore
+          await resourcesCollection.doc(docId).delete();
+
+          showMessage(successMsg, 'File and database entry deleted successfully!');
+        } catch (e) {
+          console.error("Error deleting document or file: ", e);
+          showMessage(errorMsg, 'Deletion failed! Check the console for details.', false);
+        }
       }
-    }
-
-    function editUpload(index) {
-      const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
-      const u = uploads[index];
-      titleInput.value = u.title;
-      typeInput.value = u.type;
-      yearInput.value = u.year;
-      subjectInput.value = u.subject;
-      priceInput.value = u.price;
-      
-      deleteUpload(index);
-      
-      // Note: File input cannot be programmatically set for security reasons.
-      // The user will need to re-select the file on re-upload.
     }
 
     function downloadFile(url, fileName) {
@@ -510,23 +523,37 @@
     }
 
     function exportToCSV() {
-      const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
-      let csv = 'Title,Type,Year,Subject,Price\n';
-      uploads.forEach((u) => {
-        csv += `${u.title},${u.type},${u.year},${u.subject},${u.price}\n`;
+      // Logic for exporting to CSV
+      resourcesCollection.get().then(snapshot => {
+        let csv = 'Title,Type,Year,Subject,Price\n';
+        snapshot.forEach(doc => {
+            const u = doc.data();
+            csv += `${u.title},${u.type},${u.year},${u.subject},${u.price}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'high_stars_aimers_uploads.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }).catch(e => {
+          console.error("Error exporting to CSV: ", e);
+          showMessage(errorMsg, 'Failed to export CSV. Check console.', false);
       });
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'high_stars_aimers_uploads.csv';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      uploadForm.addEventListener('submit', handleUpload);
-      displayUploads();
+      // Admin authentication check
+      auth.onAuthStateChanged(user => {
+        if (user && user.email === adminEmail) {
+          adminMain.style.display = 'flex';
+          uploadForm.addEventListener('submit', handleUpload);
+          setupRealtimeListener();
+        } else {
+          window.location.href = 'home.html';
+        }
+      });
     });
   </script>
 </body>
