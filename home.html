@@ -6,9 +6,6 @@
   <title>High Stars Aimers - Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* ------------------------------------- */
-    /* Base & Utilities            */
-    /* ------------------------------------- */
     :root {
         --primary-color: #2a2e92;
         --secondary-color: #00f0ff;
@@ -24,19 +21,12 @@
         font-family: 'Segoe UI', sans-serif;
         color: var(--text-light);
         background-color: var(--background-dark);
-        transition: background-color 0.3s, color 0.3s;
     }
     * { box-sizing: border-box; }
     h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
     a { text-decoration: none; color: var(--secondary-color); }
-    main {
-        display: flex;
-        height: calc(100vh - 60px);
-    }
+    main { display: flex; height: calc(100vh - 60px); }
     
-    /* ------------------------------------- */
-    /* Header                 */
-    /* ------------------------------------- */
     .header {
         display: flex;
         justify-content: space-between;
@@ -45,57 +35,10 @@
         background-color: var(--background-dark);
         border-bottom: 2px solid var(--secondary-color);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
         height: 60px;
     }
-    .header h1 {
-        font-size: 24px;
-        margin: 0;
-    }
-    .header .user-menu {
-        position: relative;
-    }
-    .user-menu .profile-btn {
-        background: none;
-        border: none;
-        color: var(--secondary-color);
-        font-size: 26px;
-        cursor: pointer;
-        transition: color 0.3s;
-    }
-    .user-menu .profile-btn:hover { color: white; }
-    .dropdown-menu {
-        position: absolute;
-        top: 40px;
-        right: 0;
-        background-color: var(--card-background);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        display: none;
-        flex-direction: column;
-        z-index: 1000;
-        min-width: 180px;
-        overflow: hidden;
-    }
-    .dropdown-menu button {
-        background: none;
-        border: none;
-        color: var(--text-light);
-        padding: 12px 15px;
-        text-align: left;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        font-size: 16px;
-    }
-    .dropdown-menu button:hover { background-color: rgba(0, 240, 255, 0.2); }
-    .dropdown-menu button i { margin-right: 10px; }
-
-    /* ------------------------------------- */
-    /* Sidebar (Left Column)       */
-    /* ------------------------------------- */
+    .header h1 { font-size: 24px; margin: 0; }
+    
     .sidebar {
         width: 300px;
         background-color: rgba(10, 15, 31, 0.9);
@@ -120,26 +63,11 @@
         object-fit: cover;
     }
     .user-profile h3 { margin-top: 10px; font-size: 1.5rem; }
-    .user-profile p { font-size: 0.9rem; color: #aaa; }
     .sidebar-section {
         background: var(--card-background);
         border-radius: 10px;
         padding: 20px;
         border: 1px solid var(--border-color);
-    }
-    .sidebar-section h4 { margin-top: 0; }
-    .progress-bar {
-        height: 10px;
-        background-color: rgba(255,255,255,0.2);
-        border-radius: 5px;
-        margin-top: 10px;
-        overflow: hidden;
-    }
-    .progress-bar-fill {
-        height: 100%;
-        width: 75%; /* Example progress */
-        background-color: var(--secondary-color);
-        border-radius: 5px;
     }
     .quick-links-grid {
         display: grid;
@@ -147,31 +75,21 @@
         gap: 10px;
         text-align: center;
     }
-    .quick-links-grid a {
+    .quick-links-grid button {
         display: block;
+        width: 100%;
         padding: 15px 10px;
         background: var(--primary-color);
+        border: none;
+        color: white;
         border-radius: 8px;
+        cursor: pointer;
         transition: transform 0.3s;
         font-size: 0.9rem;
     }
-    .quick-links-grid a:hover { transform: translateY(-5px); background: #1e2478; }
+    .quick-links-grid button:hover { transform: translateY(-5px); background: #1e2478; }
     .quick-links-grid i { font-size: 1.5rem; margin-bottom: 5px; display: block; }
-    .study-timer-display { font-size: 2.5rem; text-align: center; }
-    .study-timer-controls { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-    .study-timer-controls button {
-        padding: 8px 16px;
-        font-size: 1rem;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        background-color: var(--primary-color);
-        color: white;
-    }
-
-    /* ------------------------------------- */
-    /* Main Content (Right Column) */
-    /* ------------------------------------- */
+    
     .content-area {
         flex-grow: 1;
         padding: 20px;
@@ -189,32 +107,42 @@
         text-align: center;
         font-weight: bold;
         border-radius: 8px;
-        animation: pulse 2s infinite;
     }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
-    .search-bar {
+    
+    .selection-container {
         display: flex;
-        gap: 10px;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
     }
-    .search-bar input {
-        flex-grow: 1;
-        padding: 10px 20px;
-        border-radius: 25px;
-        border: 2px solid var(--secondary-color);
-        background-color: rgba(0, 0, 0, 0.2);
-        color: var(--text-light);
-        outline: none;
-    }
-    .search-bar button {
-        padding: 10px 20px;
-        border: none;
-        background-color: var(--secondary-color);
-        color: var(--background-dark);
-        border-radius: 25px;
+    
+    .explore-section {
+        background: var(--card-background);
+        border-radius: 10px;
+        padding: 20px;
+        border: 1px solid var(--border-color);
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: transform 0.3s;
+        text-align: center;
     }
-    .search-bar button:hover { background-color: #00c0cc; }
+    .explore-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
+    }
+    
+    .back-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+        align-self: flex-start;
+    }
+    .back-btn:hover { background: #1e2478; }
+    
     .resource-card {
         background: var(--card-background);
         border-radius: 10px;
@@ -228,19 +156,14 @@
         text-align: center;
     }
     .resource-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2); }
-    .resource-card h4 {
-        margin: 0;
-        font-size: 1.2rem;
-    }
-    .resource-card .meta {
-        font-size: 0.9rem;
-        color: #aaa;
-    }
+    .resource-card h4 { margin: 0; font-size: 1.2rem; }
+    .resource-card .meta { font-size: 0.9rem; color: #aaa; }
     .resource-card .meta span { margin-right: 15px; }
     .resource-card .actions {
         display: flex;
         gap: 10px;
         margin-top: 10px;
+        justify-content: center;
     }
     .resource-card .actions button {
         padding: 8px 15px;
@@ -263,39 +186,6 @@
         border: 2px solid var(--secondary-color);
     }
 
-    .explore-section {
-        background: var(--card-background);
-        border-radius: 10px;
-        padding: 20px;
-        border: 1px solid var(--border-color);
-    }
-    .back-btn {
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    .back-btn:hover {
-        background: #1e2478;
-    }
-    .selection-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-        max-width: 900px;
-    }
-    .hidden {
-        display: none;
-    }
-
-    /* ------------------------------------- */
-    /* Footer                */
-    /* ------------------------------------- */
     .footer {
         padding: 20px;
         background-color: var(--background-dark);
@@ -311,9 +201,13 @@
     }
     .social-icons a:hover { transform: scale(1.2); }
 
-    /* ------------------------------------- */
-    /* Responsive               */
-    /* ------------------------------------- */
+    /* View states */
+    .view-home { display: block; }
+    .view-subjects { display: none; }
+    .view-years { display: none; }
+    .view-terms { display: none; }
+    .view-resources { display: none; }
+    
     @media (max-width: 900px) {
         main { flex-direction: column; }
         .sidebar {
@@ -329,17 +223,8 @@
             width: 45%;
             margin-bottom: 15px;
         }
-        .user-profile img { width: 60px; height: 60px; }
-        .user-profile h3 { font-size: 1.2rem; }
-        .user-profile p { display: none; }
-    }
-    @media (max-width: 600px) {
-        .sidebar { flex-direction: column; }
-        .sidebar .user-profile, .sidebar-section { width: 100%; }
-        .header h1 { font-size: 20px; }
     }
   </style>
-
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 </head>
@@ -347,14 +232,10 @@
   
   <div class="header">
     <h1>High Stars Aimers</h1>
-    <div class="user-menu">
-        <button class="profile-btn" onclick="toggleDropdown()"><i class="fas fa-user-circle"></i></button>
-        <div id="dropdownMenu" class="dropdown-menu">
-            <button onclick="window.location.href='profile.html'"><i class="fas fa-user-cog"></i> Profile Settings</button>
-            <button onclick="window.location.href='contact.html'"><i class="fas fa-headset"></i> Support</button>
-            <button onclick="window.location.href='privacy.html'"><i class="fas fa-shield-alt"></i> Privacy & Policy</button>
-            <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
-        </div>
+    <div>
+        <button onclick="logout()" style="background: var(--primary-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+            <i class="fas fa-sign-out-alt"></i> Sign Out
+        </button>
     </div>
   </div>
   
@@ -362,97 +243,89 @@
     <aside class="sidebar">
         <div class="user-profile">
             <img id="userProfilePic" src="https://i.postimg.cc/85z11v37/user-profile-pic.png" alt="Profile Picture">
-            <h3 id="welcomeMessage">Welcome, Learner!</h3>
-            <p id="userEmail">Loading...</p>
+            <h3 id="welcomeMessage">Welcome, User!</h3>
+            <p id="userEmail">student@email.com</p>
         </div>
         
         <div class="sidebar-section">
             <h4>Quick Links</h4>
             <div class="quick-links-grid">
-                <a href="#" onclick="showSubjects()"><i class="fas fa-microscope"></i><span>STEM Hub</span></a>
-                <a href="#" onclick="showQuiz()"><i class="fas fa-question-circle"></i><span>Quiz</span></a>
-                <a href="#" onclick="showFlashcards()"><i class="fas fa-layer-group"></i><span>Flashcards</span></a>
-                <a href="#" onclick="showStudyPlanner()"><i class="fas fa-calendar-alt"></i><span>Planner</span></a>
-                <a href="#" onclick="showNotes()"><i class="fas fa-sticky-note"></i><span>Notes</span></a>
-                <a href="#" onclick="showForum()"><i class="fas fa-comments"></i><span>Forum</span></a>
-                <a href="#" onclick="showLeaderboard()"><i class="fas fa-medal"></i><span>Ranking</span></a>
-                <a href="#" onclick="showProgress()"><i class="fas fa-chart-line"></i><span>Progress</span></a>
-                <a href="#" onclick="showPractice()"><i class="fas fa-pencil-ruler"></i><span>Practice</span></a>
-                <a href="#" onclick="showStudyTimer()"><i class="fas fa-clock"></i><span>Timer</span></a>
+                <button onclick="showHome()"><i class="fas fa-home"></i><span>Home</span></button>
+                <button onclick="showSubjects()"><i class="fas fa-book"></i><span>Browse</span></button>
+                <button onclick="alert('Quiz feature coming soon!')"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
+                <button onclick="alert('Timer feature coming soon!')"><i class="fas fa-clock"></i><span>Timer</span></button>
             </div>
         </div>
         
         <div class="sidebar-section">
             <h4>Today's Tip</h4>
-            <p id="studyTip">"Break down large tasks into smaller, manageable chunks."</p>
+            <p>"Break down large tasks into smaller, manageable chunks."</p>
         </div>
     </aside>
     
     <div class="content-area">
         <div class="announcement-banner">
-            <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest resources.
+            <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
         </div>
         
-        <div id="dynamic-content-section">
-             <h2 id="dynamic-content-title"></h2>
-             <div id="selection-container" class="selection-container">
-                 </div>
+        <div id="home-view" class="view-home">
+            <h2>Featured Content</h2>
+            <div class="resource-card featured-resource">
+                <h4>KCSE 2024 Mathematics Paper</h4>
+                <p style="font-style: italic; color: #ccc;">A comprehensive paper from the latest KCSE exams, focusing on core concepts.</p>
+                <div class="meta">
+                    <span><i class="fas fa-calendar-alt"></i> Year: 2024</span>
+                    <span><i class="fas fa-tag"></i> Subject: Mathematics</span>
+                    <span><i class="fas fa-dollar-sign"></i> Price: Free</span>
+                </div>
+                <div class="actions">
+                    <button class="view-btn"><i class="fas fa-eye"></i> View</button>
+                    <button class="download-btn" onclick="downloadFile('https://example.com/math2024.pdf', 'KCSE_2024_Mathematics.pdf')"><i class="fas fa-download"></i> Download</button>
+                </div>
+            </div>
+            
+            <h2>Browse Resources</h2>
+            <div class="resource-card" onclick="showSubjects()">
+                <h4><i class="fas fa-search"></i> Browse by Subject</h4>
+                <p>Explore our comprehensive collection of past papers organized by subject, year, and term.</p>
+            </div>
         </div>
 
-        <div id="resource-display-section" style="display: none;">
-            <button class="back-btn" onclick="showSubjects()">
-                <i class="fas fa-arrow-left"></i> Back to STEM Hub
+        <div id="subjects-view" class="view-subjects">
+            <h2>Browse by Subject</h2>
+            <button class="back-btn" onclick="showHome()">
+                <i class="fas fa-home"></i> Back to Home
             </button>
-            <h2 id="resources-title">Filtered Resources</h2>
-            <div id="resource-container" class="selection-container">
+            <div class="selection-container" id="subjects-container">
                 </div>
         </div>
-        
-        <div id="quiz-section" class="hidden">
-            <h2>Quiz</h2>
-            <p>Challenge yourself with quizzes on various topics!</p>
-            </div>
 
-        <div id="flashcards-section" class="hidden">
-            <h2>Flashcards</h2>
-            <p>Review key terms and concepts with our interactive flashcards.</p>
-            </div>
+        <div id="years-view" class="view-years">
+            <h2 id="years-title">Browse by Year</h2>
+            <button class="back-btn" onclick="showSubjects()">
+                <i class="fas fa-arrow-left"></i> Back to Subjects
+            </button>
+            <div class="selection-container" id="years-container">
+                </div>
+        </div>
 
-        <div id="study-planner-section" class="hidden">
-            <h2>Study Planner</h2>
-            <p>Plan your study schedule and set your goals here.</p>
-            </div>
+        <div id="terms-view" class="view-terms">
+            <h2 id="terms-title">Browse by Term</h2>
+            <button class="back-btn" onclick="showYears(currentSubject)">
+                <i class="fas fa-arrow-left"></i> Back to Years
+            </button>
+            <div class="selection-container" id="terms-container">
+                </div>
+        </div>
 
-        <div id="notes-section" class="hidden">
-            <h2>My Notes</h2>
-            <p>Take and save your personal study notes.</p>
-            </div>
-
-        <div id="forum-section" class="hidden">
-            <h2>Discussion Forum</h2>
-            <p>Connect with other students and discuss your studies.</p>
-            </div>
-
-        <div id="leaderboard-section" class="hidden">
-            <h2>Leaderboard</h2>
-            <p>See how you rank against other learners!</p>
-            </div>
-
-        <div id="progress-section" class="hidden">
-            <h2>My Progress</h2>
-            <p>Track your learning journey and view your achievements.</p>
-            </div>
-
-        <div id="practice-section" class="hidden">
-            <h2>Practice Exercises</h2>
-            <p>Work through a variety of practice questions to test your knowledge.</p>
-            </div>
-        
-        <div id="study-timer-section" class="hidden">
-            <h2>Study Timer</h2>
-            <p>Use the timer to focus on your studies.</p>
-            </div>
-        
+        <div id="resources-view" class="view-resources">
+            <h2 id="resources-title">Resources</h2>
+            <button class="back-btn" onclick="showTerms(currentSubject, currentYear)">
+                <i class="fas fa-arrow-left"></i> Back to Terms
+            </button>
+            <div class="selection-container" id="resources-container">
+                </div>
+        </div>
     </div>
   </main>
   
@@ -468,10 +341,11 @@
     <div class="footer-links">
       <a href="#">About Us</a> | <a href="#">FAQs</a> | <a href="#">Terms & Conditions</a>
     </div>
-    <p>&copy; <span id="currentYear"></span> High Stars Aimers. All Rights Reserved.</p>
+    <p>&copy; 2024 High Stars Aimers. All Rights Reserved.</p>
   </footer>
 
   <script>
+    // ADDED: Firebase configuration and initialization
     const firebaseConfig = {
       apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
       authDomain: "high-stars-aimers-5972f.firebaseapp.com",
@@ -484,82 +358,177 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    const dropdownMenu = document.getElementById('dropdownMenu');
-    const dynamicContentSection = document.getElementById('dynamic-content-section');
-    const resourceDisplaySection = document.getElementById('resource-display-section');
-    const selectionContainer = document.getElementById('selection-container');
-    const resourceContainer = document.getElementById('resource-container');
-    const dynamicContentTitle = document.getElementById('dynamic-content-title');
-    const welcomeMessage = document.getElementById('welcomeMessage');
-    const userEmail = document.getElementById('userEmail');
-    const userProfilePic = document.getElementById('userProfilePic');
+    // Global variables to track current state
+    let currentSubject = '';
+    let currentYear = '';
+    let currentTerm = '';
 
-    // Select all new feature sections
-    const allFeatureSections = [
-        document.getElementById('quiz-section'),
-        document.getElementById('flashcards-section'),
-        document.getElementById('study-planner-section'),
-        document.getElementById('notes-section'),
-        document.getElementById('forum-section'),
-        document.getElementById('leaderboard-section'),
-        document.getElementById('progress-section'),
-        document.getElementById('practice-section'),
-        document.getElementById('study-timer-section')
+    // Sample resources data
+    const sampleResources = [
+        { name: "Mathematics Paper 1", type: "Exam Paper", subject: "Mathematics", year: "2024", term: "Term 1", url: "https://example.com/math1.pdf" },
+        { name: "Mathematics Paper 2", type: "Exam Paper", subject: "Mathematics", year: "2024", term: "Term 1", url: "https://example.com/math2.pdf" },
+        { name: "English Paper 1", type: "Exam Paper", subject: "English", year: "2024", term: "Term 1", url: "https://example.com/english1.pdf" },
+        { name: "Physics Paper 1", type: "Exam Paper", subject: "Science", year: "2023", term: "Term 2", url: "https://example.com/physics1.pdf" },
     ];
 
-    function hideAllSections() {
-        dynamicContentSection.style.display = 'none';
-        resourceDisplaySection.style.display = 'none';
-        allFeatureSections.forEach(section => section.classList.add('hidden'));
+    // View management functions
+    function hideAllViews() {
+        document.getElementById('home-view').style.display = 'none';
+        document.getElementById('subjects-view').style.display = 'none';
+        document.getElementById('years-view').style.display = 'none';
+        document.getElementById('terms-view').style.display = 'none';
+        document.getElementById('resources-view').style.display = 'none';
     }
 
-    function toggleDropdown() {
-      dropdownMenu.style.display = dropdownMenu.style.display === 'flex' ? 'none' : 'flex';
+    function showHome() {
+        console.log('Showing home view');
+        hideAllViews();
+        document.getElementById('home-view').style.display = 'block';
     }
 
+    // UPDATED: Function to show STEM subjects dynamically
+    function showSubjects() {
+        console.log('Showing subjects view');
+        hideAllViews();
+        document.getElementById('subjects-view').style.display = 'block';
+
+        const subjectsContainer = document.getElementById('subjects-container');
+        subjectsContainer.innerHTML = '';
+        
+        // This is the STEM-only list you requested
+        const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Studies", "Technical Drawing", "General Science"];
+        subjects.forEach(subject => {
+            subjectsContainer.innerHTML += `
+                <div class="explore-section" onclick="showYears('${subject}')">
+                    <h4><i class="fas fa-book"></i> ${subject}</h4>
+                    <p>Browse ${subject} past papers and resources</p>
+                </div>
+            `;
+        });
+    }
+
+    function showYears(subject) {
+        console.log('Showing years for:', subject);
+        currentSubject = subject;
+        hideAllViews();
+        
+        document.getElementById('years-title').textContent = `Browse ${subject} by Year`;
+        document.getElementById('years-view').style.display = 'block';
+        
+        const yearsContainer = document.getElementById('years-container');
+        yearsContainer.innerHTML = '';
+        
+        const years = [2024, 2023, 2022, 2021, 2020];
+        years.forEach(year => {
+            yearsContainer.innerHTML += `
+                <div class="explore-section" onclick="showTerms('${subject}', '${year}')">
+                    <h4><i class="fas fa-calendar-alt"></i> ${year}</h4>
+                    <p>${subject} papers from ${year}</p>
+                </div>
+            `;
+        });
+    }
+
+    function showTerms(subject, year) {
+        console.log('Showing terms for:', subject, year);
+        currentSubject = subject;
+        currentYear = year;
+        hideAllViews();
+        
+        document.getElementById('terms-title').textContent = `Browse ${subject} ${year} by Term`;
+        document.getElementById('terms-view').style.display = 'block';
+        
+        const termsContainer = document.getElementById('terms-container');
+        termsContainer.innerHTML = '';
+        
+        const terms = ["Term 1", "Term 2", "Term 3"];
+        terms.forEach(term => {
+            termsContainer.innerHTML += `
+                <div class="explore-section" onclick="showResources('${subject}', '${year}', '${term}')">
+                    <h4><i class="fas fa-folder"></i> ${term}</h4>
+                    <p>${subject} ${year} ${term} papers</p>
+                </div>
+            `;
+        });
+    }
+
+    function showResources(subject, year, term) {
+        console.log('Showing resources for:', subject, year, term);
+        currentSubject = subject;
+        currentYear = year;
+        currentTerm = term;
+        hideAllViews();
+        
+        document.getElementById('resources-title').textContent = `${subject} ${year} ${term} Resources`;
+        document.getElementById('resources-view').style.display = 'block';
+        
+        const resourcesContainer = document.getElementById('resources-container');
+        resourcesContainer.innerHTML = '';
+        
+        // Filter resources based on criteria
+        const filteredResources = sampleResources.filter(resource => 
+            resource.subject === subject && resource.year === year && resource.term === term
+        );
+        
+        if (filteredResources.length === 0) {
+            resourcesContainer.innerHTML = `
+                <div class="resource-card">
+                    <h4>No resources found</h4>
+                    <p>No resources available for ${subject} ${year} ${term}. Check back later for updates.</p>
+                </div>
+            `;
+        } else {
+            filteredResources.forEach(resource => {
+                resourcesContainer.innerHTML += `
+                    <div class="resource-card">
+                        <h4>${resource.name}</h4>
+                        <div class="meta">
+                            <span><i class="fas fa-tag"></i> Type: ${resource.type}</span>
+                            <span><i class="fas fa-calendar"></i> ${resource.year} ${resource.term}</span>
+                        </div>
+                        <div class="actions">
+                            <button class="view-btn"><i class="fas fa-eye"></i> View</button>
+                            <button class="download-btn" onclick="downloadFile('${resource.url}', '${resource.name}.pdf')"><i class="fas fa-download"></i> Download</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    }
+
+    function downloadFile(url, fileName) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    // UPDATED: Logout function now uses Firebase authentication
     function logout() {
       auth.signOut().then(() => {
         window.location.href = 'signin1.html';
       });
     }
 
-    function showSubjects() {
-        hideAllSections();
-        dynamicContentTitle.textContent = "Browse by Subject (STEM)";
-        selectionContainer.innerHTML = '';
-        const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Studies", "Technical Drawing", "General Science"];
-        subjects.forEach(subject => {
-            selectionContainer.innerHTML += `
-                <div class="resource-card explore-section" onclick="showYears('${subject}')">
-                    <h4>${subject}</h4>
-                </div>
-            `;
+    // UPDATED: Initialize the page with Firebase authentication check
+    document.addEventListener('DOMContentLoaded', () => {
+        const year = new Date().getFullYear();
+        document.querySelector('p:last-of-type').textContent = `© ${year} High Stars Aimers. All Rights Reserved.`;
+        
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('welcomeMessage').textContent = `Welcome, ${user.displayName || 'Learner'}!`;
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userProfilePic').src = user.photoURL || 'https://i.postimg.cc/85z11v37/user-profile-pic.png';
+                showHome();
+            } else {
+                window.location.href = 'signin1.html';
+            }
         });
-        dynamicContentSection.style.display = 'block';
-    }
+    });
+  </script>
 
-    function showYears(subject) {
-        hideAllSections();
-        dynamicContentTitle.textContent = `Browse ${subject} by Year`;
-        selectionContainer.innerHTML = '';
-        const years = [2024, 2023, 2022];
-        selectionContainer.innerHTML += `<button class="back-btn" onclick="showSubjects()"><i class="fas fa-arrow-left"></i> Back to Subjects</button>`;
-        years.forEach(year => {
-            selectionContainer.innerHTML += `
-                <div class="resource-card explore-section" onclick="showTerms('${subject}', '${year}')">
-                    <h4>${year}</h4>
-                </div>
-            `;
-        });
-        dynamicContentSection.style.display = 'block';
-    }
-
-    function showTerms(subject, year) {
-        hideAllSections();
-        dynamicContentTitle.textContent = `Browse ${subject} ${year} by Term`;
-        selectionContainer.innerHTML = '';
-        const terms = ["Term 1", "Term 2", "Term 3"];
-        selectionContainer.innerHTML += `<button class="back-btn" onclick="showYears('${subject}')"><i class="fas fa-arrow-left"></i> Back to Years</button>`;
-        terms.forEach(term => {
-            selectionContainer.innerHTML += `
-                <div class="resource-card explore-section" onclick="show
+</body>
+</html>
