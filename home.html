@@ -26,7 +26,7 @@
     h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
     a { text-decoration: none; color: var(--secondary-color); }
     main { display: flex; height: calc(100vh - 60px); }
-    
+
     .header {
         display: flex;
         justify-content: space-between;
@@ -38,7 +38,7 @@
         height: 60px;
     }
     .header h1 { font-size: 24px; margin: 0; }
-    
+
     .sidebar {
         width: 300px;
         background-color: rgba(10, 15, 31, 0.9);
@@ -89,7 +89,7 @@
     }
     .quick-links-grid button:hover { transform: translateY(-5px); background: #1e2478; }
     .quick-links-grid i { font-size: 1.5rem; margin-bottom: 5px; display: block; }
-    
+
     .content-area {
         flex-grow: 1;
         padding: 20px;
@@ -108,14 +108,14 @@
         font-weight: bold;
         border-radius: 8px;
     }
-    
+
     .selection-container {
         display: flex;
         flex-direction: column;
         gap: 15px;
         width: 100%;
     }
-    
+
     .explore-section {
         background: var(--card-background);
         border-radius: 10px;
@@ -129,7 +129,7 @@
         transform: translateY(-5px);
         box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
     }
-    
+
     .back-btn {
         background: var(--primary-color);
         color: white;
@@ -142,7 +142,7 @@
         align-self: flex-start;
     }
     .back-btn:hover { background: #1e2478; }
-    
+
     .resource-card {
         background: var(--card-background);
         border-radius: 10px;
@@ -207,7 +207,7 @@
     .view-years { display: none; }
     .view-terms { display: none; }
     .view-resources { display: none; }
-    
+
     @media (max-width: 900px) {
         main { flex-direction: column; }
         .sidebar {
@@ -229,7 +229,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-  
+
   <div class="header">
     <h1>High Stars Aimers</h1>
     <div>
@@ -238,7 +238,7 @@
         </button>
     </div>
   </div>
-  
+
   <main>
     <aside class="sidebar">
         <div class="user-profile">
@@ -246,7 +246,7 @@
             <h3 id="welcomeMessage">Welcome, User!</h3>
             <p id="userEmail">student@email.com</p>
         </div>
-        
+
         <div class="sidebar-section">
             <h4>Quick Links</h4>
             <div class="quick-links-grid">
@@ -256,79 +256,64 @@
                 <button onclick="alert('Timer feature coming soon!')"><i class="fas fa-clock"></i><span>Timer</span></button>
             </div>
         </div>
-        
+
         <div class="sidebar-section">
             <h4>Today's Tip</h4>
             <p>"Break down large tasks into smaller, manageable chunks."</p>
         </div>
     </aside>
-    
+
     <div class="content-area">
         <div class="announcement-banner">
             <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
         </div>
-        
+
         <div id="home-view" class="view-home">
-            <h2>Featured Content</h2>
-            <div class="resource-card featured-resource">
-                <h4>KCSE 2024 Mathematics Paper</h4>
-                <p style="font-style: italic; color: #ccc;">A comprehensive paper from the latest KCSE exams, focusing on core concepts.</p>
-                <div class="meta">
-                    <span><i class="fas fa-calendar-alt"></i> Year: 2024</span>
-                    <span><i class="fas fa-tag"></i> Subject: Mathematics</span>
-                    <span><i class="fas fa-dollar-sign"></i> Price: Free</span>
-                </div>
-                <div class="actions">
-                    <button class="view-btn"><i class="fas fa-eye"></i> View</button>
-                    <button class="download-btn" onclick="downloadFile('https://example.com/math2024.pdf', 'KCSE_2024_Mathematics.pdf')"><i class="fas fa-download"></i> Download</button>
-                </div>
-            </div>
-            
-            <h2>Browse Resources</h2>
+            <h2>browse resources</h2>
             <div class="resource-card" onclick="showSubjects()">
-                <h4><i class="fas fa-search"></i> Browse by Subject</h4>
-                <p>Explore our comprehensive collection of past papers organized by subject, year, and term.</p>
+                <h4><i class="fas fa-search"></i> browse by subject</h4>
+                <p>explore our comprehensive collection of past papers organized by subject, year, and term.</p>
             </div>
         </div>
 
         <div id="subjects-view" class="view-subjects">
-            <h2>Browse by Subject</h2>
+            <h2>browse by subject</h2>
             <button class="back-btn" onclick="showHome()">
-                <i class="fas fa-home"></i> Back to Home
+                <i class="fas fa-home"></i> back to home
             </button>
             <div class="selection-container" id="subjects-container">
                 </div>
         </div>
 
         <div id="years-view" class="view-years">
-            <h2 id="years-title">Browse by Year</h2>
+            <h2 id="years-title">browse by year</h2>
             <button class="back-btn" onclick="showSubjects()">
-                <i class="fas fa-arrow-left"></i> Back to Subjects
+                <i class="fas fa-arrow-left"></i> back to subjects
             </button>
             <div class="selection-container" id="years-container">
                 </div>
         </div>
 
         <div id="terms-view" class="view-terms">
-            <h2 id="terms-title">Browse by Term</h2>
+            <h2 id="terms-title">browse by term</h2>
             <button class="back-btn" onclick="showYears(currentSubject)">
-                <i class="fas fa-arrow-left"></i> Back to Years
+                <i class="fas fa-arrow-left"></i> back to years
             </button>
             <div class="selection-container" id="terms-container">
                 </div>
         </div>
 
         <div id="resources-view" class="view-resources">
-            <h2 id="resources-title">Resources</h2>
+            <h2 id="resources-title">resources</h2>
             <button class="back-btn" onclick="showTerms(currentSubject, currentYear)">
-                <i class="fas fa-arrow-left"></i> Back to Terms
+                <i class="fas fa-arrow-left"></i> back to terms
             </button>
             <div class="selection-container" id="resources-container">
                 </div>
         </div>
     </div>
   </main>
-  
+
   <footer class="footer">
     <div class="social-icons">
       <a href="#"><i class="fab fa-facebook"></i></a>
@@ -394,7 +379,7 @@
 
         const subjectsContainer = document.getElementById('subjects-container');
         subjectsContainer.innerHTML = '';
-        
+
         // This is the STEM-only list you requested
         const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Studies", "Technical Drawing", "General Science"];
         subjects.forEach(subject => {
@@ -411,13 +396,13 @@
         console.log('Showing years for:', subject);
         currentSubject = subject;
         hideAllViews();
-        
+
         document.getElementById('years-title').textContent = `Browse ${subject} by Year`;
         document.getElementById('years-view').style.display = 'block';
-        
+
         const yearsContainer = document.getElementById('years-container');
         yearsContainer.innerHTML = '';
-        
+
         const years = [2024, 2023, 2022, 2021, 2020];
         years.forEach(year => {
             yearsContainer.innerHTML += `
@@ -434,13 +419,13 @@
         currentSubject = subject;
         currentYear = year;
         hideAllViews();
-        
+
         document.getElementById('terms-title').textContent = `Browse ${subject} ${year} by Term`;
         document.getElementById('terms-view').style.display = 'block';
-        
+
         const termsContainer = document.getElementById('terms-container');
         termsContainer.innerHTML = '';
-        
+
         const terms = ["Term 1", "Term 2", "Term 3"];
         terms.forEach(term => {
             termsContainer.innerHTML += `
@@ -458,18 +443,18 @@
         currentYear = year;
         currentTerm = term;
         hideAllViews();
-        
+
         document.getElementById('resources-title').textContent = `${subject} ${year} ${term} Resources`;
         document.getElementById('resources-view').style.display = 'block';
-        
+
         const resourcesContainer = document.getElementById('resources-container');
         resourcesContainer.innerHTML = '';
-        
+
         // Filter resources based on criteria
-        const filteredResources = sampleResources.filter(resource => 
+        const filteredResources = sampleResources.filter(resource =>
             resource.subject === subject && resource.year === year && resource.term === term
         );
-        
+
         if (filteredResources.length === 0) {
             resourcesContainer.innerHTML = `
                 <div class="resource-card">
@@ -516,7 +501,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const year = new Date().getFullYear();
         document.querySelector('p:last-of-type').textContent = `© ${year} High Stars Aimers. All Rights Reserved.`;
-        
+
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('welcomeMessage').textContent = `Welcome, ${user.displayName || 'Learner'}!`;
