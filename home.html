@@ -362,24 +362,23 @@
     <aside class="sidebar">
         <div class="user-profile">
             <img id="userProfilePic" src="https://i.postimg.cc/85z11v37/user-profile-pic.png" alt="Profile Picture">
-            <h3 id="welcomeMessage">Welcome, User!</h3>
+            <h3 id="welcomeMessage">Welcome, Learner!</h3>
             <p id="userEmail">Loading...</p>
-        </div>
-        
-        <div class="sidebar-section">
-            <h4>My Progress</h4>
-            <div class="progress-bar">
-                <div class="progress-bar-fill" style="width: 75%;"></div>
-            </div>
-            <small>75% of your learning goals completed!</small>
         </div>
         
         <div class="sidebar-section">
             <h4>Quick Links</h4>
             <div class="quick-links-grid">
-                <a href="#" onclick="showMainContent()"><i class="fas fa-home"></i><span>Home</span></a>
-                <a href="#" onclick="alert('Quiz feature coming soon!')"><i class="fas fa-question-circle"></i><span>Quiz</span></a>
-                <a href="#" onclick="alert('Timer feature coming soon!')"><i class="fas fa-clock"></i><span>Timer</span></a>
+                <a href="#" onclick="showSubjects()"><i class="fas fa-microscope"></i><span>STEM Hub</span></a>
+                <a href="#" onclick="showQuiz()"><i class="fas fa-question-circle"></i><span>Quiz</span></a>
+                <a href="#" onclick="showFlashcards()"><i class="fas fa-layer-group"></i><span>Flashcards</span></a>
+                <a href="#" onclick="showStudyPlanner()"><i class="fas fa-calendar-alt"></i><span>Planner</span></a>
+                <a href="#" onclick="showNotes()"><i class="fas fa-sticky-note"></i><span>Notes</span></a>
+                <a href="#" onclick="showForum()"><i class="fas fa-comments"></i><span>Forum</span></a>
+                <a href="#" onclick="showLeaderboard()"><i class="fas fa-medal"></i><span>Ranking</span></a>
+                <a href="#" onclick="showProgress()"><i class="fas fa-chart-line"></i><span>Progress</span></a>
+                <a href="#" onclick="showPractice()"><i class="fas fa-pencil-ruler"></i><span>Practice</span></a>
+                <a href="#" onclick="showStudyTimer()"><i class="fas fa-clock"></i><span>Timer</span></a>
             </div>
         </div>
         
@@ -391,24 +390,7 @@
     
     <div class="content-area">
         <div class="announcement-banner">
-            <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
-        </div>
-        
-        <div id="featured-content-section">
-            <h2 id="content-title">Featured Content</h2>
-            <div class="resource-card featured-resource">
-                <h4>KCSE 2024 Mathematics Paper</h4>
-                <p style="font-style: italic; color: #ccc;">A comprehensive paper from the latest KCSE exams, focusing on core concepts.</p>
-                <div class="meta">
-                    <span><i class="fas fa-calendar-alt"></i> Year: 2024</span>
-                    <span><i class="fas fa-tag"></i> Subject: Mathematics</span>
-                    <span><i class="fas fa-dollar-sign"></i> Price: Free</span>
-                </div>
-                <div class="actions">
-                    <button class="view-btn"><i class="fas fa-eye"></i> View</button>
-                    <button class="download-btn" onclick="downloadFile()"><i class="fas fa-download"></i> Download</button>
-                </div>
-            </div>
+            <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest resources.
         </div>
         
         <div id="dynamic-content-section">
@@ -419,12 +401,58 @@
 
         <div id="resource-display-section" style="display: none;">
             <button class="back-btn" onclick="showSubjects()">
-                <i class="fas fa-arrow-left"></i> Back to Subjects
+                <i class="fas fa-arrow-left"></i> Back to STEM Hub
             </button>
             <h2 id="resources-title">Filtered Resources</h2>
             <div id="resource-container" class="selection-container">
                 </div>
         </div>
+        
+        <div id="quiz-section" class="hidden">
+            <h2>Quiz</h2>
+            <p>Challenge yourself with quizzes on various topics!</p>
+            </div>
+
+        <div id="flashcards-section" class="hidden">
+            <h2>Flashcards</h2>
+            <p>Review key terms and concepts with our interactive flashcards.</p>
+            </div>
+
+        <div id="study-planner-section" class="hidden">
+            <h2>Study Planner</h2>
+            <p>Plan your study schedule and set your goals here.</p>
+            </div>
+
+        <div id="notes-section" class="hidden">
+            <h2>My Notes</h2>
+            <p>Take and save your personal study notes.</p>
+            </div>
+
+        <div id="forum-section" class="hidden">
+            <h2>Discussion Forum</h2>
+            <p>Connect with other students and discuss your studies.</p>
+            </div>
+
+        <div id="leaderboard-section" class="hidden">
+            <h2>Leaderboard</h2>
+            <p>See how you rank against other learners!</p>
+            </div>
+
+        <div id="progress-section" class="hidden">
+            <h2>My Progress</h2>
+            <p>Track your learning journey and view your achievements.</p>
+            </div>
+
+        <div id="practice-section" class="hidden">
+            <h2>Practice Exercises</h2>
+            <p>Work through a variety of practice questions to test your knowledge.</p>
+            </div>
+        
+        <div id="study-timer-section" class="hidden">
+            <h2>Study Timer</h2>
+            <p>Use the timer to focus on your studies.</p>
+            </div>
+        
     </div>
   </main>
   
@@ -457,26 +485,33 @@
     const auth = firebase.auth();
 
     const dropdownMenu = document.getElementById('dropdownMenu');
-    const featuredContentSection = document.getElementById('featured-content-section');
     const dynamicContentSection = document.getElementById('dynamic-content-section');
     const resourceDisplaySection = document.getElementById('resource-display-section');
-    const dynamicContentTitle = document.getElementById('dynamic-content-title');
     const selectionContainer = document.getElementById('selection-container');
     const resourceContainer = document.getElementById('resource-container');
+    const dynamicContentTitle = document.getElementById('dynamic-content-title');
     const welcomeMessage = document.getElementById('welcomeMessage');
     const userEmail = document.getElementById('userEmail');
+    const userProfilePic = document.getElementById('userProfilePic');
 
-    // State management for navigation
-    let currentSubject = null;
-    let currentYear = null;
-
-    // Sample data for demonstration. You will replace this with real data later.
-    const sampleResources = [
-        { title: 'KCSE 2023 Mathematics Paper 1', subject: 'Mathematics', year: 2023, term: 'Term 1', price: 'KSH 50', file: 'https://example.com/math_paper_1.pdf' },
-        { title: 'KCSE 2023 Mathematics Paper 2', subject: 'Mathematics', year: 2023, term: 'Term 1', price: 'KSH 50', file: 'https://example.com/math_paper_2.pdf' },
-        { title: 'KCSE 2023 Physics Paper 1', subject: 'Physics', year: 2023, term: 'Term 1', price: 'KSH 50', file: 'https://example.com/physics_paper_1.pdf' },
-        { title: 'KCSE 2022 Mathematics Paper 1', subject: 'Mathematics', year: 2022, term: 'Term 1', price: 'KSH 50', file: 'https://example.com/math_paper_1_2022.pdf' }
+    // Select all new feature sections
+    const allFeatureSections = [
+        document.getElementById('quiz-section'),
+        document.getElementById('flashcards-section'),
+        document.getElementById('study-planner-section'),
+        document.getElementById('notes-section'),
+        document.getElementById('forum-section'),
+        document.getElementById('leaderboard-section'),
+        document.getElementById('progress-section'),
+        document.getElementById('practice-section'),
+        document.getElementById('study-timer-section')
     ];
+
+    function hideAllSections() {
+        dynamicContentSection.style.display = 'none';
+        resourceDisplaySection.style.display = 'none';
+        allFeatureSections.forEach(section => section.classList.add('hidden'));
+    }
 
     function toggleDropdown() {
       dropdownMenu.style.display = dropdownMenu.style.display === 'flex' ? 'none' : 'flex';
@@ -487,80 +522,44 @@
         window.location.href = 'signin1.html';
       });
     }
-    
-    function downloadFile(url, fileName) {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
-    
-    function showMainContent() {
-        featuredContentSection.style.display = 'block';
-        dynamicContentSection.style.display = 'none';
-        resourceDisplaySection.style.display = 'none';
-        showSubjects();
-    }
 
     function showSubjects() {
-        featuredContentSection.style.display = 'none';
-        dynamicContentSection.style.display = 'block';
-        resourceDisplaySection.style.display = 'none';
-
-        dynamicContentTitle.textContent = "Explore Subjects";
+        hideAllSections();
+        dynamicContentTitle.textContent = "Browse by Subject (STEM)";
         selectionContainer.innerHTML = '';
-        
-        const subjects = ['Physics', 'Chemistry', 'Biology', 'Mathematics'];
+        const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Studies", "Technical Drawing", "General Science"];
         subjects.forEach(subject => {
-            const card = document.createElement('div');
-            card.className = 'resource-card';
-            card.innerHTML = `<h4>${subject}</h4>`;
-            card.onclick = () => showYears(subject);
-            selectionContainer.appendChild(card);
+            selectionContainer.innerHTML += `
+                <div class="resource-card explore-section" onclick="showYears('${subject}')">
+                    <h4>${subject}</h4>
+                </div>
+            `;
         });
+        dynamicContentSection.style.display = 'block';
     }
 
     function showYears(subject) {
-        currentSubject = subject;
-        dynamicContentTitle.textContent = `Select Year for ${subject}`;
+        hideAllSections();
+        dynamicContentTitle.textContent = `Browse ${subject} by Year`;
         selectionContainer.innerHTML = '';
-        
-        const backBtn = document.createElement('button');
-        backBtn.className = 'back-btn';
-        backBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Subjects';
-        backBtn.onclick = showSubjects;
-        selectionContainer.appendChild(backBtn);
-        
-        for (let i = 2025; i >= 2015; i--) {
-            const card = document.createElement('div');
-            card.className = 'resource-card';
-            card.innerHTML = `<h4>Year ${i}</h4>`;
-            card.onclick = () => showTerms(subject, i);
-            selectionContainer.appendChild(card);
-        }
+        const years = [2024, 2023, 2022];
+        selectionContainer.innerHTML += `<button class="back-btn" onclick="showSubjects()"><i class="fas fa-arrow-left"></i> Back to Subjects</button>`;
+        years.forEach(year => {
+            selectionContainer.innerHTML += `
+                <div class="resource-card explore-section" onclick="showTerms('${subject}', '${year}')">
+                    <h4>${year}</h4>
+                </div>
+            `;
+        });
+        dynamicContentSection.style.display = 'block';
     }
 
     function showTerms(subject, year) {
-        currentYear = year;
-        dynamicContentTitle.textContent = `Select Term for ${subject} ${year}`;
+        hideAllSections();
+        dynamicContentTitle.textContent = `Browse ${subject} ${year} by Term`;
         selectionContainer.innerHTML = '';
-        
-        const backBtn = document.createElement('button');
-        backBtn.className = 'back-btn';
-        backBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Years';
-        backBtn.onclick = () => showYears(subject);
-        selectionContainer.appendChild(backBtn);
-
-        const terms = ['Term 1', 'Term 2', 'Term 3'];
+        const terms = ["Term 1", "Term 2", "Term 3"];
+        selectionContainer.innerHTML += `<button class="back-btn" onclick="showYears('${subject}')"><i class="fas fa-arrow-left"></i> Back to Years</button>`;
         terms.forEach(term => {
-            const card = document.createElement('div');
-            card.className = 'resource-card';
-            card.innerHTML = `<h4>${term}</h4>`;
-            card.onclick = () => showFilteredResources(subject, year, term);
-            selectionContainer.appendChild(card);
-        });
-    }
-
-    function showFilteredReso
+            selectionContainer.innerHTML += `
+                <div class="resource-card explore-section" onclick="show
