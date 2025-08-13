@@ -224,7 +224,8 @@
         flex-direction: column;
         gap: 10px;
         transition: transform 0.3s;
-        cursor: pointer; /* Added for clickable cards */
+        cursor: pointer;
+        text-align: center;
     }
     .resource-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2); }
     .resource-card h4 {
@@ -281,11 +282,15 @@
     .back-btn:hover {
         background: #1e2478;
     }
-    .selection-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    .selection-container {
+        display: flex;
+        flex-direction: column;
         gap: 15px;
-        text-align: center;
+        width: 100%;
+        max-width: 900px;
+    }
+    .hidden {
+        display: none;
     }
 
     /* ------------------------------------- */
@@ -332,7 +337,6 @@
         .sidebar { flex-direction: column; }
         .sidebar .user-profile, .sidebar-section { width: 100%; }
         .header h1 { font-size: 20px; }
-        .selection-grid { grid-template-columns: 1fr; }
     }
   </style>
 
@@ -409,7 +413,7 @@
         
         <div id="dynamic-content-section">
              <h2 id="dynamic-content-title"></h2>
-             <div id="selection-grid" class="selection-grid">
+             <div id="selection-container" class="selection-container">
                  </div>
         </div>
 
@@ -418,7 +422,7 @@
                 <i class="fas fa-arrow-left"></i> Back to Subjects
             </button>
             <h2 id="resources-title">Filtered Resources</h2>
-            <div id="resource-grid" class="selection-grid">
+            <div id="resource-container" class="selection-container">
                 </div>
         </div>
     </div>
@@ -457,14 +461,22 @@
     const dynamicContentSection = document.getElementById('dynamic-content-section');
     const resourceDisplaySection = document.getElementById('resource-display-section');
     const dynamicContentTitle = document.getElementById('dynamic-content-title');
-    const selectionGrid = document.getElementById('selection-grid');
-    const resourceGrid = document.getElementById('resource-grid');
+    const selectionContainer = document.getElementById('selection-container');
+    const resourceContainer = document.getElementById('resource-container');
     const welcomeMessage = document.getElementById('welcomeMessage');
     const userEmail = document.getElementById('userEmail');
 
     // State management for navigation
     let currentSubject = null;
     let currentYear = null;
+
+    // Sample data for demonstration. You will replace this with real data later.
+    const sampleResources = [
+        { title: 'KCSE 2023 Mathematics Paper 1', subject: 'Mathematics', year: 2023, term: 'Term 1', price: 'KSH 50', file: 'https://example.com/math_paper_1.pdf' },
+        { title: 'KCSE 2023 Mathematics Paper 2', subject: 'Mathematics', year: 2023, term: 'Term 1', price: 'KSH 50', file: 'https://example.com/math_paper_2.pdf' },
+        { title: 'KCSE 2023 Physics Paper 1', subject: 'Physics', year: 2023, term: 'Term 1', price: 'KSH 50', file: 'https://example.com/physics_paper_1.pdf' },
+        { title: 'KCSE 2022 Mathematics Paper 1', subject: 'Mathematics', year: 2022, term: 'Term 1', price: 'KSH 50', file: 'https://example.com/math_paper_1_2022.pdf' }
+    ];
 
     function toggleDropdown() {
       dropdownMenu.style.display = dropdownMenu.style.display === 'flex' ? 'none' : 'flex';
@@ -498,7 +510,7 @@
         resourceDisplaySection.style.display = 'none';
 
         dynamicContentTitle.textContent = "Explore Subjects";
-        selectionGrid.innerHTML = '';
+        selectionContainer.innerHTML = '';
         
         const subjects = ['Physics', 'Chemistry', 'Biology', 'Mathematics'];
         subjects.forEach(subject => {
@@ -506,40 +518,40 @@
             card.className = 'resource-card';
             card.innerHTML = `<h4>${subject}</h4>`;
             card.onclick = () => showYears(subject);
-            selectionGrid.appendChild(card);
+            selectionContainer.appendChild(card);
         });
     }
 
     function showYears(subject) {
         currentSubject = subject;
         dynamicContentTitle.textContent = `Select Year for ${subject}`;
-        selectionGrid.innerHTML = '';
+        selectionContainer.innerHTML = '';
         
         const backBtn = document.createElement('button');
         backBtn.className = 'back-btn';
         backBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Subjects';
         backBtn.onclick = showSubjects;
-        selectionGrid.appendChild(backBtn);
+        selectionContainer.appendChild(backBtn);
         
         for (let i = 2025; i >= 2015; i--) {
             const card = document.createElement('div');
             card.className = 'resource-card';
             card.innerHTML = `<h4>Year ${i}</h4>`;
             card.onclick = () => showTerms(subject, i);
-            selectionGrid.appendChild(card);
+            selectionContainer.appendChild(card);
         }
     }
 
     function showTerms(subject, year) {
         currentYear = year;
         dynamicContentTitle.textContent = `Select Term for ${subject} ${year}`;
-        selectionGrid.innerHTML = '';
+        selectionContainer.innerHTML = '';
         
         const backBtn = document.createElement('button');
         backBtn.className = 'back-btn';
         backBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Years';
         backBtn.onclick = () => showYears(subject);
-        selectionGrid.appendChild(backBtn);
+        selectionContainer.appendChild(backBtn);
 
         const terms = ['Term 1', 'Term 2', 'Term 3'];
         terms.forEach(term => {
@@ -547,25 +559,8 @@
             card.className = 'resource-card';
             card.innerHTML = `<h4>${term}</h4>`;
             card.onclick = () => showFilteredResources(subject, year, term);
-            selectionGrid.appendChild(card);
+            selectionContainer.appendChild(card);
         });
     }
 
-    function showFilteredResources(subject, year, term) {
-        dynamicContentSection.style.display = 'none';
-        resourceDisplaySection.style.display = 'block';
-        
-        document.getElementById('resources-title').textContent = `${subject} ${year} ${term}`;
-        resourceGrid.innerHTML = '';
-        
-        const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
-        const filtered = uploads.filter(u => u.subject === subject && u.year == year);
-
-        if (filtered.length === 0) {
-            resourceGrid.innerHTML = '<p style="text-align: center; width: 100%;">No resources found for this selection.</p>';
-        } else {
-            filtered.forEach(u => {
-                const card = document.createElement('div');
-                card.className = 'resource-card';
-                card.innerHTML = `
-                    <
+    function showFilteredReso
