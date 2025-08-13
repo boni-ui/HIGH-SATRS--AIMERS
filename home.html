@@ -31,7 +31,7 @@
     a { text-decoration: none; color: var(--secondary-color); }
     main {
         display: flex;
-        height: calc(100vh - 60px); /* Adjust for header height */
+        height: calc(100vh - 60px);
     }
     
     /* ------------------------------------- */
@@ -224,6 +224,7 @@
         flex-direction: column;
         gap: 10px;
         transition: transform 0.3s;
+        cursor: pointer; /* Added for clickable cards */
     }
     .resource-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2); }
     .resource-card h4 {
@@ -260,7 +261,33 @@
         background: linear-gradient(45deg, #1e2478, #2a2e92);
         border: 2px solid var(--secondary-color);
     }
-    
+
+    .explore-section {
+        background: var(--card-background);
+        border-radius: 10px;
+        padding: 20px;
+        border: 1px solid var(--border-color);
+    }
+    .back-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .back-btn:hover {
+        background: #1e2478;
+    }
+    .selection-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        text-align: center;
+    }
+
     /* ------------------------------------- */
     /* Footer                */
     /* ------------------------------------- */
@@ -305,6 +332,7 @@
         .sidebar { flex-direction: column; }
         .sidebar .user-profile, .sidebar-section { width: 100%; }
         .header h1 { font-size: 20px; }
+        .selection-grid { grid-template-columns: 1fr; }
     }
   </style>
 
@@ -345,10 +373,9 @@
         <div class="sidebar-section">
             <h4>Quick Links</h4>
             <div class="quick-links-grid">
-                <a href="#" onclick="showContent('past-papers')"><i class="fas fa-book-open"></i><span>Papers</span></a>
-                <a href="#" onclick="showContent('notes')"><i class="fas fa-clipboard-list"></i><span>Notes</span></a>
-                <a href="#" onclick="showContent('quiz')"><i class="fas fa-question-circle"></i><span>Quiz</span></a>
-                <a href="#" onclick="showContent('timer')"><i class="fas fa-clock"></i><span>Timer</span></a>
+                <a href="#" onclick="showMainContent()"><i class="fas fa-home"></i><span>Home</span></a>
+                <a href="#" onclick="alert('Quiz feature coming soon!')"><i class="fas fa-question-circle"></i><span>Quiz</span></a>
+                <a href="#" onclick="alert('Timer feature coming soon!')"><i class="fas fa-clock"></i><span>Timer</span></a>
             </div>
         </div>
         
@@ -363,16 +390,11 @@
             <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
         </div>
         
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search for papers or notes...">
-            <button><i class="fas fa-search"></i> Search</button>
-        </div>
-        
-        <div id="content-display">
+        <div id="featured-content-section">
             <h2 id="content-title">Featured Content</h2>
-            
             <div class="resource-card featured-resource">
                 <h4>KCSE 2024 Mathematics Paper</h4>
+                <p style="font-style: italic; color: #ccc;">A comprehensive paper from the latest KCSE exams, focusing on core concepts.</p>
                 <div class="meta">
                     <span><i class="fas fa-calendar-alt"></i> Year: 2024</span>
                     <span><i class="fas fa-tag"></i> Subject: Mathematics</span>
@@ -380,44 +402,24 @@
                 </div>
                 <div class="actions">
                     <button class="view-btn"><i class="fas fa-eye"></i> View</button>
-                    <button class="download-btn"><i class="fas fa-download"></i> Download</button>
+                    <button class="download-btn" onclick="downloadFile()"><i class="fas fa-download"></i> Download</button>
                 </div>
             </div>
-            
-            </div>
-
-        <div id="past-papers-section" class="table-section" style="display: none;">
-            <h2>Past Papers</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Year</th>
-                        <th>Subject</th>
-                        <th>Price</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="papers-table-body">
-                    </tbody>
-            </table>
+        </div>
+        
+        <div id="dynamic-content-section">
+             <h2 id="dynamic-content-title"></h2>
+             <div id="selection-grid" class="selection-grid">
+                 </div>
         </div>
 
-        <div id="notes-section" class="table-section" style="display: none;">
-            <h2>Notes</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Year</th>
-                        <th>Subject</th>
-                        <th>Price</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="notes-table-body">
-                    </tbody>
-            </table>
+        <div id="resource-display-section" style="display: none;">
+            <button class="back-btn" onclick="showSubjects()">
+                <i class="fas fa-arrow-left"></i> Back to Subjects
+            </button>
+            <h2 id="resources-title">Filtered Resources</h2>
+            <div id="resource-grid" class="selection-grid">
+                </div>
         </div>
     </div>
   </main>
@@ -438,7 +440,6 @@
   </footer>
 
   <script>
-    // Initialize Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
       authDomain: "high-stars-aimers-5972f.firebaseapp.com",
@@ -451,90 +452,120 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // DOM Elements
     const dropdownMenu = document.getElementById('dropdownMenu');
-    const contentDisplay = document.getElementById('content-display');
-    const papersSection = document.getElementById('past-papers-section');
-    const notesSection = document.getElementById('notes-section');
-    const papersTableBody = document.getElementById('papers-table-body');
-    const notesTableBody = document.getElementById('notes-table-body');
+    const featuredContentSection = document.getElementById('featured-content-section');
+    const dynamicContentSection = document.getElementById('dynamic-content-section');
+    const resourceDisplaySection = document.getElementById('resource-display-section');
+    const dynamicContentTitle = document.getElementById('dynamic-content-title');
+    const selectionGrid = document.getElementById('selection-grid');
+    const resourceGrid = document.getElementById('resource-grid');
     const welcomeMessage = document.getElementById('welcomeMessage');
     const userEmail = document.getElementById('userEmail');
 
-    // Toggle dropdown menu
+    // State management for navigation
+    let currentSubject = null;
+    let currentYear = null;
+
     function toggleDropdown() {
       dropdownMenu.style.display = dropdownMenu.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    // Logout function
     function logout() {
       auth.signOut().then(() => {
         window.location.href = 'signin1.html';
       });
     }
+    
+    function downloadFile(url, fileName) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    
+    function showMainContent() {
+        featuredContentSection.style.display = 'block';
+        dynamicContentSection.style.display = 'none';
+        resourceDisplaySection.style.display = 'none';
+        showSubjects();
+    }
 
-    // Show specific content section
-    function showContent(sectionId) {
-        papersSection.style.display = 'none';
-        notesSection.style.display = 'none';
-        contentDisplay.style.display = 'none';
+    function showSubjects() {
+        featuredContentSection.style.display = 'none';
+        dynamicContentSection.style.display = 'block';
+        resourceDisplaySection.style.display = 'none';
 
-        if (sectionId === 'past-papers') {
-            papersSection.style.display = 'block';
-            loadResources('papers');
-        } else if (sectionId === 'notes') {
-            notesSection.style.display = 'block';
-            loadResources('notes');
-        } else if (sectionId === 'quiz' || sectionId === 'timer') {
-             // Future implementation for quiz and timer display
-            alert(`Feature for ${sectionId} coming soon!`);
-        } else {
-             contentDisplay.style.display = 'block';
+        dynamicContentTitle.textContent = "Explore Subjects";
+        selectionGrid.innerHTML = '';
+        
+        const subjects = ['Physics', 'Chemistry', 'Biology', 'Mathematics'];
+        subjects.forEach(subject => {
+            const card = document.createElement('div');
+            card.className = 'resource-card';
+            card.innerHTML = `<h4>${subject}</h4>`;
+            card.onclick = () => showYears(subject);
+            selectionGrid.appendChild(card);
+        });
+    }
+
+    function showYears(subject) {
+        currentSubject = subject;
+        dynamicContentTitle.textContent = `Select Year for ${subject}`;
+        selectionGrid.innerHTML = '';
+        
+        const backBtn = document.createElement('button');
+        backBtn.className = 'back-btn';
+        backBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Subjects';
+        backBtn.onclick = showSubjects;
+        selectionGrid.appendChild(backBtn);
+        
+        for (let i = 2025; i >= 2015; i--) {
+            const card = document.createElement('div');
+            card.className = 'resource-card';
+            card.innerHTML = `<h4>Year ${i}</h4>`;
+            card.onclick = () => showTerms(subject, i);
+            selectionGrid.appendChild(card);
         }
     }
 
-    // Load resources from LocalStorage and display in table
-    function loadResources(type) {
-        const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
-        const filteredUploads = uploads.filter(u => u.type === type);
-        const tableBody = type === 'papers' ? papersTableBody : notesTableBody;
-        tableBody.innerHTML = '';
+    function showTerms(subject, year) {
+        currentYear = year;
+        dynamicContentTitle.textContent = `Select Term for ${subject} ${year}`;
+        selectionGrid.innerHTML = '';
+        
+        const backBtn = document.createElement('button');
+        backBtn.className = 'back-btn';
+        backBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Years';
+        backBtn.onclick = () => showYears(subject);
+        selectionGrid.appendChild(backBtn);
 
-        filteredUploads.forEach(u => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${u.title}</td>
-                <td>${u.year}</td>
-                <td>${u.subject}</td>
-                <td>${u.price}</td>
-                <td>
-                    <button class="view-btn"><i class="fas fa-eye"></i> View</button>
-                    <button class="download-btn"><i class="fas fa-download"></i> Download</button>
-                </td>
-            `;
-            tableBody.appendChild(row);
+        const terms = ['Term 1', 'Term 2', 'Term 3'];
+        terms.forEach(term => {
+            const card = document.createElement('div');
+            card.className = 'resource-card';
+            card.innerHTML = `<h4>${term}</h4>`;
+            card.onclick = () => showFilteredResources(subject, year, term);
+            selectionGrid.appendChild(card);
         });
     }
 
-    // On page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const year = new Date().getFullYear();
-        document.getElementById('currentYear').textContent = year;
+    function showFilteredResources(subject, year, term) {
+        dynamicContentSection.style.display = 'none';
+        resourceDisplaySection.style.display = 'block';
+        
+        document.getElementById('resources-title').textContent = `${subject} ${year} ${term}`;
+        resourceGrid.innerHTML = '';
+        
+        const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
+        const filtered = uploads.filter(u => u.subject === subject && u.year == year);
 
-        // Check user authentication
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                welcomeMessage.textContent = `Welcome, ${user.displayName || 'Learner'}!`;
-                userEmail.textContent = user.email;
-            } else {
-                window.location.href = 'signin1.html';
-            }
-        });
-
-        // Initialize with default content
-        showContent('featured');
-    });
-  </script>
-
-</body>
-</html>
+        if (filtered.length === 0) {
+            resourceGrid.innerHTML = '<p style="text-align: center; width: 100%;">No resources found for this selection.</p>';
+        } else {
+            filtered.forEach(u => {
+                const card = document.createElement('div');
+                card.className = 'resource-card';
+                card.innerHTML = `
+                    <
