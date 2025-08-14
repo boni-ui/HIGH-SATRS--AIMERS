@@ -15,7 +15,6 @@
         --border-color: rgba(0, 240, 255, 0.2);
     }
     html, body {
-        /* Removed height: 100%; */
         margin: 0;
         padding: 0;
         font-family: 'Segoe UI', sans-serif;
@@ -27,8 +26,7 @@
     a { text-decoration: none; color: var(--secondary-color); }
     main { 
         display: flex; 
-        /* Removed height: calc(100vh - 60px); */
-        min-height: calc(100vh - 60px); /* Added min-height to ensure it fills the viewport */
+        min-height: calc(100vh - 60px); 
     }
 
     .header {
@@ -40,7 +38,7 @@
         border-bottom: 2px solid var(--secondary-color);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         height: 60px;
-        position: sticky; /* Optional: Make header stick to the top */
+        position: sticky;
         top: 0;
         z-index: 1000;
     }
@@ -51,11 +49,10 @@
         background-color: rgba(10, 15, 31, 0.9);
         padding: 20px;
         border-right: 1px solid var(--border-color);
-        /* Removed overflow-y: auto; */
         display: flex;
         flex-direction: column;
         gap: 20px;
-        position: sticky; /* Optional: Make sidebar stick */
+        position: sticky;
         top: 60px;
         height: fit-content;
     }
@@ -103,7 +100,6 @@
     .content-area {
         flex-grow: 1;
         padding: 20px;
-        /* Removed overflow-y: auto; */
         display: flex;
         flex-direction: column;
         gap: 25px;
@@ -211,7 +207,6 @@
     }
     .social-icons a:hover { transform: scale(1.2); }
 
-    /* View states */
     .view-home { display: block; }
     .view-subjects { display: none; }
     .view-years { display: none; }
@@ -224,14 +219,13 @@
             width: 100%;
             border-right: none;
             border-bottom: 1px solid var(--border-color);
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            flex-direction: column; /* Ensure vertical stacking on small screens */
+            flex-wrap: nowrap;
             padding: 15px;
             position: static;
         }
         .sidebar .user-profile, .sidebar-section {
-            width: 45%;
+            width: 100%;
             margin-bottom: 15px;
         }
     }
