@@ -325,7 +325,7 @@
     }
     /* View states for dynamic content */
     /* All views are hidden by default, except the one displayed on page load */
-    .view-home, .view-subjects, .view-years, .view-terms, .view-resources { display: none; }
+    .view-home, .view-subjects, .view-years, .view-terms, .view-resources, .view-quiz, .view-timer { display: none; }
     .view-home { display: block; }
 
     /* Additional professional styling for new elements */
@@ -363,44 +363,38 @@
         </div>
 
         <div class="sidebar-section">
-            <h4>Quick Links</h4>
-            <div class="quick-links-grid">
-                <button onclick="showHome()"><i class="fas fa-home"></i><span>Home</span></button>
-                <button onclick="showSubjects()"><i class="fas fa-book"></i><span>Browse</span></button>
-                <button onclick="showQuiz()"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
-                <button onclick="showTimer()"><i class="fas fa-clock"></i><span>Timer</span></button>
-            </div>
-        </div>
-
-        <div class="sidebar-section">
             <h4>Today's Tip</h4>
             <p>"Break down large tasks into smaller, manageable chunks."</p>
         </div>
     </aside>
 
     <div class="content-area">
-        <div class="hero-section">
-            <h2>Your Journey to Academic Excellence Starts Here</h2>
-            <p>Access a world of past papers, quizzes, and study tools to ace your exams.</p>
-            <button onclick="showSubjects()">
-                Start Browse <i class="fas fa-arrow-right"></i>
-            </button>
-        </div>
-
-        <div class="search-section">
-            <input type="text" id="searchInput" placeholder="Search for a subject, year, or topic...">
-            <button onclick="searchResources()">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-        
-        <div class="sidebar-section">
-            <h4><i class="fas fa-history"></i> Recently Viewed</h4>
-            <p>Mathematics Term 1 2024</p>
-            <p>Physics Term 3 2023</p>
-        </div>
-
         <div id="home-view" class="view-home">
+            <div class="announcement-banner">
+                <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
+            </div>
+
+            <div class="hero-section">
+                <h2>Your Journey to Academic Excellence Starts Here</h2>
+                <p>Access a world of past papers, quizzes, and study tools to ace your exams.</p>
+                <button onclick="showSubjects()">
+                    Start Browse <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="search-section">
+                <input type="text" id="searchInput" placeholder="Search for a subject, year, or topic...">
+                <button onclick="searchResources()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-section">
+                <h4><i class="fas fa-history"></i> Recently Viewed</h4>
+                <p>Mathematics Term 1 2024</p>
+                <p>Physics Term 3 2023</p>
+            </div>
+
             <h2>browse resources</h2>
             <div class="resource-card" onclick="showSubjects()">
                 <h4><i class="fas fa-search"></i> browse by subject</h4>
@@ -444,7 +438,7 @@
             </div>
         </div>
 
-        <div id="quiz-view" class="view-quiz" style="display: none;">
+        <div id="quiz-view" class="view-quiz">
             <h2>Quiz Master</h2>
             <button class="back-btn" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back to Home</button>
             <div class="resource-card">
@@ -453,7 +447,7 @@
             </div>
         </div>
 
-        <div id="timer-view" class="view-timer" style="display: none;">
+        <div id="timer-view" class="view-timer">
             <h2>Study Timer</h2>
             <button class="back-btn" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back to Home</button>
             <div class="timer-card">
@@ -585,4 +579,12 @@
     function showYears(subject) {
         console.log('Showing years for:', subject);
         currentSubject = subject;
-       
+        hideAllViews();
+
+        document.getElementById('years-title').textContent = `Browse ${subject} by Year`;
+        document.getElementById('years-view').style.display = 'block';
+
+        const yearsContainer = document.getElementById('years-container');
+        yearsContainer.innerHTML = '';
+
+        const years = [2024, 2023, 2022, 2021
