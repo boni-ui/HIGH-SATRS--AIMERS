@@ -76,26 +76,6 @@
         padding: 20px;
         border: 1px solid var(--border-color);
     }
-    .quick-links-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-        gap: 10px;
-        text-align: center;
-    }
-    .quick-links-grid button {
-        display: block;
-        width: 100%;
-        padding: 15px 10px;
-        background: var(--primary-color);
-        border: none;
-        color: white;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: transform 0.3s;
-        font-size: 0.9rem;
-    }
-    .quick-links-grid button:hover { transform: translateY(-5px); background: #1e2478; }
-    .quick-links-grid i { font-size: 1.5rem; margin-bottom: 5px; display: block; }
 
     .content-area {
         flex-grow: 1;
@@ -219,7 +199,7 @@
             width: 100%;
             border-right: none;
             border-bottom: 1px solid var(--border-color);
-            flex-direction: column; /* Ensure vertical stacking on small screens */
+            flex-direction: column;
             flex-wrap: nowrap;
             padding: 15px;
             position: static;
@@ -251,16 +231,6 @@
             <img id="userProfilePic" src="https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg" alt="Profile Picture">
             <h3 id="welcomeMessage">Welcome, User!</h3>
             <p id="userEmail">student@email.com</p>
-        </div>
-
-        <div class="sidebar-section">
-            <h4>Quick Links</h4>
-            <div class="quick-links-grid">
-                <button onclick="showHome()"><i class="fas fa-home"></i><span>Home</span></button>
-                <button onclick="showSubjects()"><i class="fas fa-book"></i><span>Browse</span></button>
-                <button onclick="alert('Quiz feature coming soon!')"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
-                <button onclick="alert('Timer feature coming soon!')"><i class="fas fa-clock"></i><span>Timer</span></button>
-            </div>
         </div>
 
         <div class="sidebar-section">
