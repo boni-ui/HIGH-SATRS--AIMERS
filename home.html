@@ -21,7 +21,7 @@
         font-family: 'Segoe UI', sans-serif;
         color: var(--text-light);
         background-color: var(--background-dark);
-        overflow-x: hidden; /* Prevents horizontal scrollbar */
+        overflow-x: hidden;
     }
     * { box-sizing: border-box; }
     h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
@@ -29,7 +29,7 @@
     
     /* Layout Structure - Scrollable Page */
     main { 
-        display: flex; 
+        display: flex;
         min-height: calc(100vh - 60px); 
     }
 
@@ -261,7 +261,7 @@
         color: #ccc;
     }
 
-    /* Timer Styles */
+    /* New Timer styles */
     .timer-card {
         background: var(--card-background);
         border-radius: 10px;
@@ -305,7 +305,7 @@
     }
     .social-icons a:hover { transform: scale(1.2); }
 
-    /* Mobile Responsive Styles (Fixing the "half the page" issue) */
+    /* Fix: Mobile Responsive Styles */
     @media (max-width: 900px) {
         main { flex-direction: column; }
         .sidebar {
@@ -324,8 +324,20 @@
         .sidebar-section { width: 100%; margin-bottom: 15px; }
     }
     /* View states for dynamic content */
+    /* All views are hidden by default, except the one displayed on page load */
     .view-home, .view-subjects, .view-years, .view-terms, .view-resources { display: none; }
     .view-home { display: block; }
+
+    /* Additional professional styling for new elements */
+    #feedback-form textarea {
+        background: rgba(10, 15, 31, 0.8); 
+        color: white; 
+        border: 1px solid var(--border-color); 
+        border-radius: 5px; 
+        padding: 10px;
+        height: 100px;
+        resize: vertical;
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -353,9 +365,10 @@
         <div class="sidebar-section">
             <h4>Quick Links</h4>
             <div class="quick-links-grid">
-                <button onclick="scrollToSection('browse-section')"><i class="fas fa-book"></i><span>Browse</span></button>
-                <button onclick="scrollToSection('quiz-section')"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
-                <button onclick="scrollToSection('timer-section')"><i class="fas fa-clock"></i><span>Timer</span></button>
+                <button onclick="showHome()"><i class="fas fa-home"></i><span>Home</span></button>
+                <button onclick="showSubjects()"><i class="fas fa-book"></i><span>Browse</span></button>
+                <button onclick="showQuiz()"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
+                <button onclick="showTimer()"><i class="fas fa-clock"></i><span>Timer</span></button>
             </div>
         </div>
 
@@ -369,7 +382,7 @@
         <div class="hero-section">
             <h2>Your Journey to Academic Excellence Starts Here</h2>
             <p>Access a world of past papers, quizzes, and study tools to ace your exams.</p>
-            <button onclick="scrollToSection('browse-section')">
+            <button onclick="showSubjects()">
                 Start Browse <i class="fas fa-arrow-right"></i>
             </button>
         </div>
@@ -387,14 +400,25 @@
             <p>Physics Term 3 2023</p>
         </div>
 
-        <h2 id="browse-section">Browse by Subject</h2>
+        <div id="home-view" class="view-home">
+            <h2>browse resources</h2>
+            <div class="resource-card" onclick="showSubjects()">
+                <h4><i class="fas fa-search"></i> browse by subject</h4>
+                <p>explore our comprehensive collection of past papers organized by subject, year, and term.</p>
+            </div>
+        </div>
+
         <div id="subjects-view" class="view-subjects">
+            <h2>browse by subject</h2>
+            <button class="back-btn" onclick="showHome()">
+                <i class="fas fa-home"></i> back to home
+            </button>
             <div class="selection-container" id="subjects-container">
             </div>
         </div>
 
         <div id="years-view" class="view-years">
-            <h2 id="years-title">Browse by Year</h2>
+            <h2 id="years-title">browse by year</h2>
             <button class="back-btn" onclick="showSubjects()">
                 <i class="fas fa-arrow-left"></i> back to subjects
             </button>
@@ -403,7 +427,7 @@
         </div>
 
         <div id="terms-view" class="view-terms">
-            <h2 id="terms-title">Browse by Term</h2>
+            <h2 id="terms-title">browse by term</h2>
             <button class="back-btn" onclick="showYears(currentSubject)">
                 <i class="fas fa-arrow-left"></i> back to years
             </button>
@@ -412,7 +436,7 @@
         </div>
 
         <div id="resources-view" class="view-resources">
-            <h2 id="resources-title">Resources</h2>
+            <h2 id="resources-title">resources</h2>
             <button class="back-btn" onclick="showTerms(currentSubject, currentYear)">
                 <i class="fas fa-arrow-left"></i> back to terms
             </button>
@@ -420,28 +444,34 @@
             </div>
         </div>
 
-        <h2 id="quiz-section">Quiz Master</h2>
-        <div class="resource-card">
-            <h4>Quiz Coming Soon!</h4>
-            <p>A fun and interactive quiz section is under development. Stay tuned for updates!</p>
+        <div id="quiz-view" class="view-quiz" style="display: none;">
+            <h2>Quiz Master</h2>
+            <button class="back-btn" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back to Home</button>
+            <div class="resource-card">
+                <h4>Quiz Coming Soon!</h4>
+                <p>A fun and interactive quiz section is under development. Stay tuned for updates!</p>
+            </div>
         </div>
 
-        <h2 id="timer-section">Study Timer</h2>
-        <div class="timer-card">
-            <h4>Set a Study Session Timer</h4>
-            <p>Use the timer below to manage your study time effectively.</p>
-            <div class="timer-display" id="timer-display">00:00:00</div>
-            <div class="timer-controls">
-                <button class="start-btn" onclick="startTimer()"><i class="fas fa-play"></i> Start</button>
-                <button class="stop-btn" onclick="stopTimer()"><i class="fas fa-stop"></i> Stop</button>
-                <button class="reset-btn" onclick="resetTimer()"><i class="fas fa-redo"></i> Reset</button>
+        <div id="timer-view" class="view-timer" style="display: none;">
+            <h2>Study Timer</h2>
+            <button class="back-btn" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back to Home</button>
+            <div class="timer-card">
+                <h4>Set a Study Session Timer</h4>
+                <p>Use the timer below to manage your study time effectively.</p>
+                <div class="timer-display" id="timer-display">00:00:00</div>
+                <div class="timer-controls">
+                    <button class="start-btn" onclick="startTimer()"><i class="fas fa-play"></i> Start</button>
+                    <button class="stop-btn" onclick="stopTimer()"><i class="fas fa-stop"></i> Stop</button>
+                    <button class="reset-btn" onclick="resetTimer()"><i class="fas fa-redo"></i> Reset</button>
+                </div>
             </div>
         </div>
         
         <div class="sidebar-section">
             <h4><i class="fas fa-comment-alt"></i> Give Us Feedback</h4>
             <form id="feedback-form" style="display: flex; flex-direction: column; gap: 10px;">
-                <textarea placeholder="Your feedback..." style="background: rgba(10, 15, 31, 0.8); color: white; border: 1px solid var(--border-color); border-radius: 5px; padding: 10px;"></textarea>
+                <textarea placeholder="Your feedback..."></textarea>
                 <button type="submit" style="background: var(--primary-color); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">
                     Submit
                 </button>
@@ -517,31 +547,20 @@
         updateTimerDisplay();
     }
     
-    // New function to scroll to a specific section
-    function scrollToSection(sectionId) {
-        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
-    }
-    
-    // New search function (dummy for now)
-    function searchResources() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        // Here you would implement your full search logic
-        alert(`Searching for: ${query}`);
-    }
-
     function hideAllViews() {
+        document.getElementById('home-view').style.display = 'none';
         document.getElementById('subjects-view').style.display = 'none';
         document.getElementById('years-view').style.display = 'none';
         document.getElementById('terms-view').style.display = 'none';
         document.getElementById('resources-view').style.display = 'none';
+        document.getElementById('quiz-view').style.display = 'none';
+        document.getElementById('timer-view').style.display = 'none';
     }
-    
+
     function showHome() {
+        console.log('Showing home view');
         hideAllViews();
-        document.getElementById('subjects-view').style.display = 'block';
-        document.getElementById('years-view').style.display = 'none';
-        document.getElementById('terms-view').style.display = 'none';
-        document.getElementById('resources-view').style.display = 'none';
+        document.getElementById('home-view').style.display = 'block';
     }
 
     function showSubjects() {
@@ -566,23 +585,4 @@
     function showYears(subject) {
         console.log('Showing years for:', subject);
         currentSubject = subject;
-        hideAllViews();
-
-        document.getElementById('years-title').textContent = `Browse ${subject} by Year`;
-        document.getElementById('years-view').style.display = 'block';
-
-        const yearsContainer = document.getElementById('years-container');
-        yearsContainer.innerHTML = '';
-
-        const years = [2024, 2023, 2022, 2021, 2020];
-        years.forEach(year => {
-            yearsContainer.innerHTML += `
-                <div class="explore-section" onclick="showTerms('${subject}', '${year}')">
-                    <h4><i class="fas fa-calendar-alt"></i> ${year}</h4>
-                    <p>${subject} papers from ${year}</p>
-                </div>
-            `;
-        });
-    }
-
-    functi
+       
