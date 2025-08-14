@@ -250,6 +250,31 @@
                 <h4><i class="fas fa-search"></i> browse by subject</h4>
                 <p>explore our comprehensive collection of past papers organized by subject, year, and term.</p>
             </div>
+            
+            <div class="resource-card" onclick="alert('Notes feature coming soon!')">
+                <h4><i class="fas fa-sticky-note"></i> my notes</h4>
+                <p>create and organize your personal study notes and ideas.</p>
+            </div>
+
+            <div class="resource-card" onclick="alert('Quiz feature coming soon!')">
+                <h4><i class="fas fa-question-circle"></i> quiz master</h4>
+                <p>test your knowledge with interactive quizzes on various topics.</p>
+            </div>
+
+            <div class="resource-card" onclick="alert('Study timer feature coming soon!')">
+                <h4><i class="fas fa-stopwatch"></i> study timer</h4>
+                <p>use the Pomodoro timer to manage your study sessions effectively.</p>
+            </div>
+
+            <div class="resource-card" onclick="alert('Ask a question feature coming soon!')">
+                <h4><i class="fas fa-comments"></i> ask a question</h4>
+                <p>get answers from the community or instructors on your study queries.</p>
+            </div>
+
+            <div class="resource-card" onclick="alert('Report a bug feature coming soon!')">
+                <h4><i class="fas fa-bug"></i> report a bug</h4>
+                <p>help us improve by reporting any issues or bugs you find.</p>
+            </div>
         </div>
 
         <div id="subjects-view" class="view-subjects">
@@ -345,7 +370,6 @@
         const subjectsContainer = document.getElementById('subjects-container');
         subjectsContainer.innerHTML = '';
 
-        // Updated array with only STEM subjects
         const subjects = ["Mathematics", "Physics", "Chemistry", "Biology"];
         subjects.forEach(subject => {
             subjectsContainer.innerHTML += `
