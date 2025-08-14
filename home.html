@@ -261,34 +261,6 @@
         color: #ccc;
     }
 
-    /* New Timer styles */
-    .timer-card {
-        background: var(--card-background);
-        border-radius: 10px;
-        padding: 30px;
-        text-align: center;
-        margin-top: 20px;
-        border: 1px solid var(--border-color);
-    }
-    .timer-display {
-        font-size: 4rem;
-        font-weight: bold;
-        color: var(--secondary-color);
-        margin-bottom: 20px;
-    }
-    .timer-controls button {
-        padding: 12px 25px;
-        font-size: 1rem;
-        font-weight: bold;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-        margin: 0 10px;
-    }
-    .start-btn { background-color: #28a745; color: white; }
-    .stop-btn { background-color: #dc3545; color: white; }
-    .reset-btn { background-color: #007bff; color: white; }
-
     /* Footer */
     .footer {
         padding: 20px;
@@ -325,8 +297,9 @@
     }
     /* View states for dynamic content */
     /* All views are hidden by default, except the one displayed on page load */
-    .view-home, .view-subjects, .view-years, .view-terms, .view-resources, .view-quiz, .view-timer { display: none; }
+    .view-home, .view-subjects, .view-years, .view-terms, .view-resources { display: none; }
     .view-home { display: block; }
+    .view-quiz, .view-timer { display: none; }
 
     /* Additional professional styling for new elements */
     #feedback-form textarea {
@@ -437,30 +410,6 @@
             <div class="selection-container" id="resources-container">
             </div>
         </div>
-
-        <div id="quiz-view" class="view-quiz">
-            <h2>Quiz Master</h2>
-            <button class="back-btn" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back to Home</button>
-            <div class="resource-card">
-                <h4>Quiz Coming Soon!</h4>
-                <p>A fun and interactive quiz section is under development. Stay tuned for updates!</p>
-            </div>
-        </div>
-
-        <div id="timer-view" class="view-timer">
-            <h2>Study Timer</h2>
-            <button class="back-btn" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back to Home</button>
-            <div class="timer-card">
-                <h4>Set a Study Session Timer</h4>
-                <p>Use the timer below to manage your study time effectively.</p>
-                <div class="timer-display" id="timer-display">00:00:00</div>
-                <div class="timer-controls">
-                    <button class="start-btn" onclick="startTimer()"><i class="fas fa-play"></i> Start</button>
-                    <button class="stop-btn" onclick="stopTimer()"><i class="fas fa-stop"></i> Stop</button>
-                    <button class="reset-btn" onclick="resetTimer()"><i class="fas fa-redo"></i> Reset</button>
-                </div>
-            </div>
-        </div>
         
         <div class="sidebar-section">
             <h4><i class="fas fa-comment-alt"></i> Give Us Feedback</h4>
@@ -506,40 +455,6 @@
     let currentSubject = '';
     let currentYear = '';
     let currentTerm = '';
-
-    // Timer variables
-    let timerInterval;
-    let timerSeconds = 0;
-    const timerDisplay = document.getElementById('timer-display');
-
-    function updateTimerDisplay() {
-        const hours = Math.floor(timerSeconds / 3600);
-        const minutes = Math.floor((timerSeconds % 3600) / 60);
-        const seconds = timerSeconds % 60;
-
-        const pad = (num) => String(num).padStart(2, '0');
-        timerDisplay.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-    }
-
-    function startTimer() {
-        if (!timerInterval) {
-            timerInterval = setInterval(() => {
-                timerSeconds++;
-                updateTimerDisplay();
-            }, 1000);
-        }
-    }
-
-    function stopTimer() {
-        clearInterval(timerInterval);
-        timerInterval = null;
-    }
-
-    function resetTimer() {
-        stopTimer();
-        timerSeconds = 0;
-        updateTimerDisplay();
-    }
     
     function hideAllViews() {
         document.getElementById('home-view').style.display = 'none';
@@ -547,8 +462,6 @@
         document.getElementById('years-view').style.display = 'none';
         document.getElementById('terms-view').style.display = 'none';
         document.getElementById('resources-view').style.display = 'none';
-        document.getElementById('quiz-view').style.display = 'none';
-        document.getElementById('timer-view').style.display = 'none';
     }
 
     function showHome() {
@@ -587,4 +500,76 @@
         const yearsContainer = document.getElementById('years-container');
         yearsContainer.innerHTML = '';
 
-        const years = [2024, 2023, 2022, 2021
+        const years = [2024, 2023, 2022, 2021, 2020];
+        years.forEach(year => {
+            yearsContainer.innerHTML += `
+                <div class="explore-section" onclick="showTerms('${subject}', '${year}')">
+                    <h4><i class="fas fa-calendar-alt"></i> ${year}</h4>
+                    <p>${subject} papers from ${year}</p>
+                </div>
+            `;
+        });
+    }
+
+    function showTerms(subject, year) {
+        console.log('Showing terms for:', subject, year);
+        currentSubject = subject;
+        currentYear = year;
+        hideAllViews();
+
+        document.getElementById('terms-title').textContent = `Browse ${subject} ${year} by Term`;
+        document.getElementById('terms-view').style.display = 'block';
+
+        const termsContainer = document.getElementById('terms-container');
+        termsContainer.innerHTML = '';
+
+        const terms = ["Term 1", "Term 2", "Term 3"];
+        terms.forEach(term => {
+            termsContainer.innerHTML += `
+                <div class="explore-section" onclick="showResources('${subject}', '${year}', '${term}')">
+                    <h4><i class="fas fa-folder"></i> ${term}</h4>
+                    <p>${subject} ${year} ${term} papers</p>
+                </div>
+            `;
+        });
+    }
+
+    function showResources(subject, year, term) {
+        console.log('Showing resources for:', subject, year, term);
+        currentSubject = subject;
+        currentYear = year;
+        currentTerm = term;
+        hideAllViews();
+
+        document.getElementById('resources-title').textContent = `${subject} ${year} ${term} Resources`;
+        document.getElementById('resources-view').style.display = 'block';
+
+        const resourcesContainer = document.getElementById('resources-container');
+        resourcesContainer.innerHTML = '';
+
+        db.collection('resources')
+          .where('subject', '==', subject)
+          .where('year', '==', year)
+          .where('term', '==', term)
+          .orderBy('createdAt', 'desc')
+          .get()
+          .then(querySnapshot => {
+            if (querySnapshot.empty) {
+                resourcesContainer.innerHTML = `
+                    <div class="resource-card">
+                        <h4>No resources found</h4>
+                        <p>No resources available for ${subject} ${year} ${term}. Check back later for updates.</p>
+                    </div>
+                `;
+            } else {
+                querySnapshot.forEach(doc => {
+                    const resource = doc.data();
+                    resourcesContainer.innerHTML += `
+                        <div class="resource-card">
+                            <h4>${resource.name}</h4>
+                            <div class="meta">
+                                <span><i class="fas fa-tag"></i> Type: ${resource.type}</span>
+                                <span><i class="fas fa-calendar"></i> ${resource.year} ${resource.term}</span>
+                            </div>
+                            <div class="actions">
+                                <a href="${resource.url}" target="_blank" class="view-btn"><i class="fas fa-eye"></i> V
