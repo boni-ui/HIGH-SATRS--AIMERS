@@ -483,7 +483,6 @@
             }
         });
 
-        // Today's Tip alternating functionality
         const tips = [
             "Break down large tasks into smaller, manageable chunks.",
             "Use the Pomodoro Technique: study for 25 minutes, then take a 5-minute break.",
@@ -499,8 +498,8 @@
             tipIndex = (tipIndex + 1) % tips.length;
         }
 
-        updateTip(); // Show the first tip immediately
-        setInterval(updateTip, 5000); // Change the tip every 5 seconds
+        updateTip();
+        setInterval(updateTip, 60000); // Changed to 60000ms for 1 minute
     });
   </script>
 
