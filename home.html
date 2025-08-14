@@ -227,6 +227,7 @@
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -254,6 +255,9 @@
                 <button onclick="showSubjects()"><i class="fas fa-book"></i><span>Browse</span></button>
                 <button onclick="alert('Quiz feature coming soon!')"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
                 <button onclick="alert('Timer feature coming soon!')"><i class="fas fa-clock"></i><span>Timer</span></button>
+                <a href="admin-upload.html">
+                    <button><i class="fas fa-user-shield"></i><span>Admin</span></button>
+                </a>
             </div>
         </div>
 
@@ -330,7 +334,6 @@
   </footer>
 
   <script>
-    // ADDED: Firebase configuration and initialization
     const firebaseConfig = {
       apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
       authDomain: "high-stars-aimers-5972f.firebaseapp.com",
@@ -342,21 +345,12 @@
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    // Global variables to track current state
     let currentSubject = '';
     let currentYear = '';
     let currentTerm = '';
 
-    // Sample resources data
-    const sampleResources = [
-        { name: "Mathematics Paper 1", type: "Exam Paper", subject: "Mathematics", year: "2024", term: "Term 1", url: "https://example.com/math1.pdf" },
-        { name: "Mathematics Paper 2", type: "Exam Paper", subject: "Mathematics", year: "2024", term: "Term 1", url: "https://example.com/math2.pdf" },
-        { name: "English Paper 1", type: "Exam Paper", subject: "English", year: "2024", term: "Term 1", url: "https://example.com/english1.pdf" },
-        { name: "Physics Paper 1", type: "Exam Paper", subject: "Science", year: "2023", term: "Term 2", url: "https://example.com/physics1.pdf" },
-    ];
-
-    // View management functions
     function hideAllViews() {
         document.getElementById('home-view').style.display = 'none';
         document.getElementById('subjects-view').style.display = 'none';
@@ -371,7 +365,6 @@
         document.getElementById('home-view').style.display = 'block';
     }
 
-    // UPDATED: Function to show STEM subjects dynamically
     function showSubjects() {
         console.log('Showing subjects view');
         hideAllViews();
@@ -380,7 +373,6 @@
         const subjectsContainer = document.getElementById('subjects-container');
         subjectsContainer.innerHTML = '';
 
-        // This is the STEM-only list you requested
         const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Studies", "Technical Drawing", "General Science"];
         subjects.forEach(subject => {
             subjectsContainer.innerHTML += `
@@ -450,35 +442,43 @@
         const resourcesContainer = document.getElementById('resources-container');
         resourcesContainer.innerHTML = '';
 
-        // Filter resources based on criteria
-        const filteredResources = sampleResources.filter(resource =>
-            resource.subject === subject && resource.year === year && resource.term === term
-        );
-
-        if (filteredResources.length === 0) {
-            resourcesContainer.innerHTML = `
-                <div class="resource-card">
-                    <h4>No resources found</h4>
-                    <p>No resources available for ${subject} ${year} ${term}. Check back later for updates.</p>
-                </div>
-            `;
-        } else {
-            filteredResources.forEach(resource => {
-                resourcesContainer.innerHTML += `
+        db.collection('resources')
+          .where('subject', '==', subject)
+          .where('year', '==', year)
+          .where('term', '==', term)
+          .orderBy('createdAt', 'desc')
+          .get()
+          .then(querySnapshot => {
+            if (querySnapshot.empty) {
+                resourcesContainer.innerHTML = `
                     <div class="resource-card">
-                        <h4>${resource.name}</h4>
-                        <div class="meta">
-                            <span><i class="fas fa-tag"></i> Type: ${resource.type}</span>
-                            <span><i class="fas fa-calendar"></i> ${resource.year} ${resource.term}</span>
-                        </div>
-                        <div class="actions">
-                            <button class="view-btn"><i class="fas fa-eye"></i> View</button>
-                            <button class="download-btn" onclick="downloadFile('${resource.url}', '${resource.name}.pdf')"><i class="fas fa-download"></i> Download</button>
-                        </div>
+                        <h4>No resources found</h4>
+                        <p>No resources available for ${subject} ${year} ${term}. Check back later for updates.</p>
                     </div>
                 `;
-            });
-        }
+            } else {
+                querySnapshot.forEach(doc => {
+                    const resource = doc.data();
+                    resourcesContainer.innerHTML += `
+                        <div class="resource-card">
+                            <h4>${resource.name}</h4>
+                            <div class="meta">
+                                <span><i class="fas fa-tag"></i> Type: ${resource.type}</span>
+                                <span><i class="fas fa-calendar"></i> ${resource.year} ${resource.term}</span>
+                            </div>
+                            <div class="actions">
+                                <a href="${resource.url}" target="_blank" class="view-btn"><i class="fas fa-eye"></i> View</a>
+                                <a href="${resource.url}" download="${resource.name}.pdf" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+          })
+          .catch(error => {
+            console.error("Error getting documents: ", error);
+            resourcesContainer.innerHTML = `<p>Error loading resources. Please try again.</p>`;
+          });
     }
 
     function downloadFile(url, fileName) {
@@ -490,14 +490,12 @@
         document.body.removeChild(a);
     }
 
-    // UPDATED: Logout function now uses Firebase authentication
     function logout() {
       auth.signOut().then(() => {
         window.location.href = 'signin1.html';
       });
     }
 
-    // UPDATED: Initialize the page with Firebase authentication check
     document.addEventListener('DOMContentLoaded', () => {
         const year = new Date().getFullYear();
         document.querySelector('p:last-of-type').textContent = `© ${year} High Stars Aimers. All Rights Reserved.`;
