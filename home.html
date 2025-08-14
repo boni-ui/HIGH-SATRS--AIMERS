@@ -172,6 +172,48 @@
         border: 2px solid var(--secondary-color);
     }
 
+    /* New Timer Styles */
+    .timer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        padding: 20px;
+        background: var(--card-background);
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+    }
+    #timer-display {
+        font-size: 4rem;
+        font-weight: bold;
+        color: var(--secondary-color);
+    }
+    .timer-controls button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin: 0 5px;
+    }
+    #start-btn { background-color: #28a745; color: white; }
+    #start-btn:hover { background-color: #218838; }
+    #stop-btn { background-color: #dc3545; color: white; }
+    #stop-btn:hover { background-color: #c82333; }
+    #reset-btn { background-color: #ffc107; color: black; }
+    #reset-btn:hover { background-color: #e0a800; }
+
+    #timer-tip {
+        margin-top: 20px;
+        padding: 10px;
+        font-style: italic;
+        color: #aaa;
+        min-height: 40px; /* Prevents layout shift */
+    }
+
     .footer {
         padding: 20px;
         background-color: var(--background-dark);
@@ -192,6 +234,7 @@
     .view-years { display: none; }
     .view-terms { display: none; }
     .view-resources { display: none; }
+    .view-timer { display: none; }
 
     @media (max-width: 900px) {
         main { flex-direction: column; }
@@ -261,7 +304,7 @@
                 <p>test your knowledge with interactive quizzes on various topics.</p>
             </div>
 
-            <div class="resource-card" onclick="alert('Study timer feature coming soon!')">
+            <div class="resource-card" onclick="showStudyTimer()">
                 <h4><i class="fas fa-stopwatch"></i> study timer</h4>
                 <p>use the Pomodoro timer to manage your study sessions effectively.</p>
             </div>
@@ -276,6 +319,25 @@
                 <p>help us improve by reporting any issues or bugs you find.</p>
             </div>
         </div>
+
+        <div id="timer-view" class="view-timer">
+            <button class="back-btn" onclick="showHome()">
+                <i class="fas fa-home"></i> back to home
+            </button>
+            <div class="timer-container">
+                <h2>Study Timer</h2>
+                <div id="timer-display">25:00</div>
+                <div class="timer-controls">
+                    <button id="start-btn" onclick="startTimer()">Start</button>
+                    <button id="stop-btn" onclick="stopTimer()" disabled>Stop</button>
+                    <button id="reset-btn" onclick="resetTimer()">Reset</button>
+                </div>
+                <div id="timer-tip" class="sidebar-section">
+                    <p id="timer-tip-text">"Set clear goals for each 25-minute session before you start."</p>
+                </div>
+            </div>
+        </div>
+
 
         <div id="subjects-view" class="view-subjects">
             <h2>browse by subject</h2>
@@ -354,6 +416,7 @@
         document.getElementById('years-view').style.display = 'none';
         document.getElementById('terms-view').style.display = 'none';
         document.getElementById('resources-view').style.display = 'none';
+        document.getElementById('timer-view').style.display = 'none';
     }
 
     function showHome() {
@@ -493,40 +556,11 @@
       });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const year = new Date().getFullYear();
-        document.querySelector('p:last-of-type').textContent = `© ${year} High Stars Aimers. All Rights Reserved.`;
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('welcomeMessage').textContent = `Welcome, ${user.displayName || 'Learner'}!`;
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userProfilePic').src = user.photoURL || 'https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg';
-                showHome();
-            } else {
-                window.location.href = 'signin1.html';
-            }
-        });
-
-        const tips = [
-            "Break down large tasks into smaller, manageable chunks.",
-            "Use the Pomodoro Technique: study for 25 minutes, then take a 5-minute break.",
-            "Review your notes regularly to reinforce your memory.",
-            "Find a quiet, comfortable space to study without distractions.",
-            "Teach a concept to someone else to solidify your understanding."
-        ];
-        let tipIndex = 0;
-        const tipElement = document.getElementById('today-tip-text');
-        
-        function updateTip() {
-            tipElement.textContent = `"${tips[tipIndex]}"`;
-            tipIndex = (tipIndex + 1) % tips.length;
-        }
-
-        updateTip();
-        setInterval(updateTip, 60000);
-    });
-  </script>
-
-</body>
-</html>
+    // Timer functionality
+    let timer;
+    let timerDuration = 25 * 60; // 25 minutes in seconds
+    let isTimerRunning = false;
+    const timerDisplay = document.getElementById('timer-display');
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const resetBtn = do
