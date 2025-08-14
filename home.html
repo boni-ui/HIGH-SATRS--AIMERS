@@ -235,7 +235,7 @@
 
         <div class="sidebar-section">
             <h4>Today's Tip</h4>
-            <p>"Break down large tasks into smaller, manageable chunks."</p>
+            <p id="today-tip-text">"Break down large tasks into smaller, manageable chunks."</p>
         </div>
     </aside>
 
@@ -482,6 +482,25 @@
                 window.location.href = 'signin1.html';
             }
         });
+
+        // Today's Tip alternating functionality
+        const tips = [
+            "Break down large tasks into smaller, manageable chunks.",
+            "Use the Pomodoro Technique: study for 25 minutes, then take a 5-minute break.",
+            "Review your notes regularly to reinforce your memory.",
+            "Find a quiet, comfortable space to study without distractions.",
+            "Teach a concept to someone else to solidify your understanding."
+        ];
+        let tipIndex = 0;
+        const tipElement = document.getElementById('today-tip-text');
+        
+        function updateTip() {
+            tipElement.textContent = `"${tips[tipIndex]}"`;
+            tipIndex = (tipIndex + 1) % tips.length;
+        }
+
+        updateTip(); // Show the first tip immediately
+        setInterval(updateTip, 5000); // Change the tip every 5 seconds
     });
   </script>
 
