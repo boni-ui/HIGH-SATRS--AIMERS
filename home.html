@@ -253,13 +253,16 @@
         }
     }
   </style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
   <div class="header">
     <h1>High Stars Aimers</h1>
     <div>
-        <button onclick="alert('Signed out!')" style="background: var(--primary-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+        <button onclick="logout()" style="background: var(--primary-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
             <i class="fas fa-sign-out-alt"></i> Sign Out
         </button>
     </div>
@@ -269,8 +272,8 @@
     <aside class="sidebar">
         <div class="user-profile">
             <img id="userProfilePic" src="https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg" alt="Profile Picture">
-            <h3 id="welcomeMessage">Welcome, Learner!</h3>
-            <p id="userEmail">learner@email.com</p>
+            <h3 id="welcomeMessage">Welcome, User!</h3>
+            <p id="userEmail">student@email.com</p>
         </div>
 
         <div class="sidebar-section">
@@ -390,6 +393,19 @@
   </footer>
 
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:cf7610de84f0b2262ce027",
+      measurementId: "G-X475KTSH5J"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
     let currentSubject = '';
     let currentYear = '';
     let currentTerm = '';
@@ -404,15 +420,19 @@
     }
 
     function showHome() {
+        console.log('Showing home view');
         hideAllViews();
         document.getElementById('home-view').style.display = 'block';
     }
 
     function showSubjects() {
+        console.log('Showing subjects view');
         hideAllViews();
         document.getElementById('subjects-view').style.display = 'block';
+
         const subjectsContainer = document.getElementById('subjects-container');
         subjectsContainer.innerHTML = '';
+
         const subjects = ["Mathematics", "Physics", "Chemistry", "Biology"];
         subjects.forEach(subject => {
             subjectsContainer.innerHTML += `
@@ -425,12 +445,16 @@
     }
 
     function showYears(subject) {
+        console.log('Showing years for:', subject);
         currentSubject = subject;
         hideAllViews();
+
         document.getElementById('years-title').textContent = `Browse ${subject} by Year`;
         document.getElementById('years-view').style.display = 'block';
+
         const yearsContainer = document.getElementById('years-container');
         yearsContainer.innerHTML = '';
+
         const years = [2024, 2023, 2022, 2021, 2020];
         years.forEach(year => {
             yearsContainer.innerHTML += `
@@ -443,13 +467,17 @@
     }
 
     function showTerms(subject, year) {
+        console.log('Showing terms for:', subject, year);
         currentSubject = subject;
         currentYear = year;
         hideAllViews();
+
         document.getElementById('terms-title').textContent = `Browse ${subject} ${year} by Term`;
         document.getElementById('terms-view').style.display = 'block';
+
         const termsContainer = document.getElementById('terms-container');
         termsContainer.innerHTML = '';
+
         const terms = ["Term 1", "Term 2", "Term 3"];
         terms.forEach(term => {
             termsContainer.innerHTML += `
@@ -462,91 +490,77 @@
     }
 
     function showResources(subject, year, term) {
+        console.log('Showing resources for:', subject, year, term);
         currentSubject = subject;
         currentYear = year;
         currentTerm = term;
         hideAllViews();
+
         document.getElementById('resources-title').textContent = `${subject} ${year} ${term} Resources`;
         document.getElementById('resources-view').style.display = 'block';
+
         const resourcesContainer = document.getElementById('resources-container');
         resourcesContainer.innerHTML = '';
-        resourcesContainer.innerHTML = `
-            <div class="resource-card">
-                <h4>No resources found</h4>
-                <p>No resources available in this simplified test version. If navigation worked, the issue is with the Firebase integration.</p>
-            </div>
-        `;
+
+        db.collection('resources')
+          .where('subject', '==', subject)
+          .where('year', '==', year)
+          .where('term', '==', term)
+          .orderBy('createdAt', 'desc')
+          .get()
+          .then(querySnapshot => {
+            if (querySnapshot.empty) {
+                resourcesContainer.innerHTML = `
+                    <div class="resource-card">
+                        <h4>No resources found</h4>
+                        <p>No resources available for ${subject} ${year} ${term}. Check back later for updates.</p>
+                    </div>
+                `;
+            } else {
+                querySnapshot.forEach(doc => {
+                    const resource = doc.data();
+                    resourcesContainer.innerHTML += `
+                        <div class="resource-card">
+                            <h4>${resource.name}</h4>
+                            <div class="meta">
+                                <span><i class="fas fa-tag"></i> Type: ${resource.type}</span>
+                                <span><i class="fas fa-calendar"></i> ${resource.year} ${resource.term}</span>
+                            </div>
+                            <div class="actions">
+                                <a href="${resource.url}" target="_blank" class="view-btn"><i class="fas fa-eye"></i> View</a>
+                                <a href="${resource.url}" download="${resource.name}.pdf" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+          })
+          .catch(error => {
+            console.error("Error getting documents: ", error);
+            resourcesContainer.innerHTML = `<p>Error loading resources. Please try again.</p>`;
+          });
     }
 
+    function downloadFile(url, fileName) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = 'signin1.html';
+      });
+    }
+
+    // Timer functionality
     let timer;
-    let timerDuration = 25 * 60;
+    let timerDuration = 25 * 60; // 25 minutes in seconds
     let isTimerRunning = false;
     const timerDisplay = document.getElementById('timer-display');
     const startBtn = document.getElementById('start-btn');
     const stopBtn = document.getElementById('stop-btn');
-    const resetBtn = document.getElementById('reset-btn');
-    const timerTipElement = document.getElementById('timer-tip-text');
-
-    function updateTimerDisplay() {
-        const minutes = Math.floor(timerDuration / 60);
-        const seconds = timerDuration % 60;
-        timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }
-
-    function startTimer() {
-        if (isTimerRunning) return;
-        isTimerRunning = true;
-        startBtn.disabled = true;
-        stopBtn.disabled = false;
-        timer = setInterval(() => {
-            timerDuration--;
-            updateTimerDisplay();
-            if (timerDuration <= 0) {
-                clearInterval(timer);
-                alert("Time's up! Take a short break.");
-                isTimerRunning = false;
-                startBtn.disabled = false;
-                stopBtn.disabled = true;
-            }
-        }, 1000);
-    }
-
-    function stopTimer() {
-        clearInterval(timer);
-        isTimerRunning = false;
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-    }
-
-    function resetTimer() {
-        clearInterval(timer);
-        isTimerRunning = false;
-        timerDuration = 25 * 60;
-        updateTimerDisplay();
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-    }
-
-    function showStudyTimer() {
-        hideAllViews();
-        document.getElementById('timer-view').style.display = 'block';
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        showHome();
-        const year = new Date().getFullYear();
-        document.querySelector('p:last-of-type').textContent = `© ${year} High Stars Aimers. All Rights Reserved.`;
-
-        const timerTips = ["Set clear goals for each 25-minute session.", "Eliminate all distractions.", "Use your 5-minute break to stretch."];
-        let timerTipIndex = 0;
-        function updateTimerTip() {
-            timerTipElement.textContent = `"${timerTips[timerTipIndex]}"`;
-            timerTipIndex = (timerTipIndex + 1) % timerTips.length;
-        }
-        updateTimerTip();
-        setInterval(updateTimerTip, 10000);
-    });
-  </script>
-
-</body>
-</html>
+    const resetBtn = do
