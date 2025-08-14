@@ -6,6 +6,7 @@
   <title>High Stars Aimers - Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* 1. Overall Layout & Colors */
     :root {
         --primary-color: #2a2e92;
         --secondary-color: #00f0ff;
@@ -25,7 +26,12 @@
     * { box-sizing: border-box; }
     h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
     a { text-decoration: none; color: var(--secondary-color); }
-    main { display: flex; min-height: 100vh; }
+    
+    /* 1.1 Making the whole page scrollable */
+    main { 
+      display: flex;
+      min-height: calc(100vh - 60px); 
+    }
 
     .header {
         display: flex;
@@ -99,12 +105,12 @@
     .content-area {
         flex-grow: 1;
         padding: 20px;
-        overflow-y: auto;
         display: flex;
         flex-direction: column;
         gap: 25px;
         max-width: 900px;
         margin: 0 auto;
+        overflow-y: auto;
     }
     .announcement-banner {
         padding: 15px;
@@ -244,6 +250,7 @@
     .stop-btn { background-color: #dc3545; color: white; }
     .reset-btn { background-color: #007bff; color: white; }
 
+    /* 3. Mobile View Fix */
     @media (max-width: 900px) {
         main { flex-direction: column; }
         .sidebar {
@@ -258,7 +265,8 @@
             position: static;
         }
         .sidebar .user-profile { width: 100%; }
-        .sidebar-section { width: 45%; margin-bottom: 15px; }
+        /* Fix: Remove width to allow sections to stack */
+        .sidebar-section { width: 100%; margin-bottom: 15px; }
     }
     /* View states */
     .view-home, .view-subjects, .view-years, .view-terms, .view-resources, .view-quiz, .view-timer { display: none; }
@@ -290,9 +298,9 @@
         <div class="sidebar-section">
             <h4>Quick Links</h4>
             <div class="quick-links-grid">
-                <button onclick="showSubjects()"><i class="fas fa-book"></i><span>Browse</span></button>
-                <button onclick="showQuiz()"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
-                <button onclick="showTimer()"><i class="fas fa-clock"></i><span>Timer</span></button>
+                <button onclick="scrollToSection('browse')"><i class="fas fa-book"></i><span>Browse</span></button>
+                <button onclick="scrollToSection('quiz')"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
+                <button onclick="scrollToSection('timer')"><i class="fas fa-clock"></i><span>Timer</span></button>
             </div>
         </div>
 
@@ -306,9 +314,24 @@
         <div class="announcement-banner">
             <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
         </div>
+
+        <div class="hero-section" style="text-align: center; background-image: linear-gradient(rgba(42, 46, 146, 0.7), rgba(0, 240, 255, 0.2)), url('https://i.postimg.cc/Kz4Y6kXp/study-banner.jpg'); background-size: cover; background-position: center; padding: 50px; border-radius: 10px;">
+            <h2>Your Journey to Academic Excellence Starts Here</h2>
+            <p>Access a world of past papers, quizzes, and study tools to ace your exams.</p>
+            <button onclick="scrollToSection('browse')" style="padding: 12px 25px; font-size: 1.1rem; background-color: var(--secondary-color); color: var(--background-dark); border: none; border-radius: 25px; margin-top: 15px; cursor: pointer; font-weight: bold;">
+                Start Browse <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
         
+        <div class="search-section" style="display: flex; gap: 10px;">
+            <input type="text" id="searchInput" placeholder="Search for a subject, year, or topic..." style="flex-grow: 1; padding: 12px; border-radius: 25px; border: 1px solid var(--border-color); background: rgba(35, 40, 60, 0.8); color: white;">
+            <button onclick="searchResources()" style="padding: 12px 25px; border-radius: 25px; background: var(--primary-color); color: white; border: none; cursor: pointer;">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <h2 id="browse">Browse Resources</h2>
         <div id="subjects-view" class="view-subjects">
-            <h2>browse by subject</h2>
             <div class="selection-container" id="subjects-container">
                 </div>
         </div>
@@ -339,19 +362,17 @@
             <div class="selection-container" id="resources-container">
                 </div>
         </div>
-
-        <div id="quiz-view" class="view-quiz">
-            <h2>Quiz Master</h2>
-            <button class="back-btn" onclick="showSubjects()"><i class="fas fa-arrow-left"></i> Back to Subjects</button>
+        
+        <h2 id="quiz">Quiz Master</h2>
+        <div id="quiz-view">
             <div class="resource-card">
                 <h4>Quiz Coming Soon!</h4>
                 <p>A fun and interactive quiz section is under development. Stay tuned for updates!</p>
             </div>
         </div>
 
-        <div id="timer-view" class="view-timer">
-            <h2>Study Timer</h2>
-            <button class="back-btn" onclick="showSubjects()"><i class="fas fa-arrow-left"></i> Back to Subjects</button>
+        <h2 id="timer">Study Timer</h2>
+        <div id="timer-view">
             <div class="timer-card">
                 <h4>Set a Study Session Timer</h4>
                 <p>Use the timer below to manage your study time effectively.</p>
@@ -438,8 +459,6 @@
         document.getElementById('years-view').style.display = 'none';
         document.getElementById('terms-view').style.display = 'none';
         document.getElementById('resources-view').style.display = 'none';
-        document.getElementById('quiz-view').style.display = 'none';
-        document.getElementById('timer-view').style.display = 'none';
     }
 
     function showSubjects() {
@@ -539,32 +558,4 @@
                     resourcesContainer.innerHTML += `
                         <div class="resource-card">
                             <h4>${resource.name}</h4>
-                            <div class="meta">
-                                <span><i class="fas fa-tag"></i> Type: ${resource.type}</span>
-                                <span><i class="fas fa-calendar"></i> ${resource.year} ${resource.term}</span>
-                            </div>
-                            <div class="actions">
-                                <a href="${resource.url}" target="_blank" class="view-btn"><i class="fas fa-eye"></i> View</a>
-                                <a href="${resource.url}" download="${resource.name}.pdf" class="download-btn"><i class="fas fa-download"></i> Download</a>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-          })
-          .catch(error => {
-            console.error("Error getting documents: ", error);
-            resourcesContainer.innerHTML = `<p>Error loading resources. Please try again.</p>`;
-          });
-    }
-
-    function showQuiz() {
-        console.log('Showing quiz view');
-        hideAllViews();
-        document.getElementById('quiz-view').style.display = 'block';
-    }
-
-    function showTimer() {
-        console.log('Showing timer view');
-        hideAllViews();
-        document.getElementById('timer-view').style.display = 'block
+                            <div class="
