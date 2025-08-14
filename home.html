@@ -15,7 +15,7 @@
         --border-color: rgba(0, 240, 255, 0.2);
     }
     html, body {
-        height: 100%;
+        /* Removed height: 100%; */
         margin: 0;
         padding: 0;
         font-family: 'Segoe UI', sans-serif;
@@ -25,7 +25,11 @@
     * { box-sizing: border-box; }
     h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
     a { text-decoration: none; color: var(--secondary-color); }
-    main { display: flex; height: calc(100vh - 60px); }
+    main { 
+        display: flex; 
+        /* Removed height: calc(100vh - 60px); */
+        min-height: calc(100vh - 60px); /* Added min-height to ensure it fills the viewport */
+    }
 
     .header {
         display: flex;
@@ -36,6 +40,9 @@
         border-bottom: 2px solid var(--secondary-color);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         height: 60px;
+        position: sticky; /* Optional: Make header stick to the top */
+        top: 0;
+        z-index: 1000;
     }
     .header h1 { font-size: 24px; margin: 0; }
 
@@ -44,10 +51,13 @@
         background-color: rgba(10, 15, 31, 0.9);
         padding: 20px;
         border-right: 1px solid var(--border-color);
-        overflow-y: auto;
+        /* Removed overflow-y: auto; */
         display: flex;
         flex-direction: column;
         gap: 20px;
+        position: sticky; /* Optional: Make sidebar stick */
+        top: 60px;
+        height: fit-content;
     }
     .sidebar .user-profile {
         text-align: center;
@@ -93,7 +103,7 @@
     .content-area {
         flex-grow: 1;
         padding: 20px;
-        overflow-y: auto;
+        /* Removed overflow-y: auto; */
         display: flex;
         flex-direction: column;
         gap: 25px;
@@ -218,6 +228,7 @@
             flex-wrap: wrap;
             justify-content: space-around;
             padding: 15px;
+            position: static;
         }
         .sidebar .user-profile, .sidebar-section {
             width: 45%;
