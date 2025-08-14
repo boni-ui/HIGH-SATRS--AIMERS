@@ -16,17 +16,22 @@
         --border-color: rgba(0, 240, 255, 0.2);
     }
     html, body {
-        height: 100%;
         margin: 0;
         padding: 0;
         font-family: 'Segoe UI', sans-serif;
         color: var(--text-light);
         background-color: var(--background-dark);
+        overflow-x: hidden;
     }
     * { box-sizing: border-box; }
     h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
     a { text-decoration: none; color: var(--secondary-color); }
-    main { display: flex; height: calc(100vh - 60px); }
+    
+    /* Layout Structure - Scrollable Page */
+    main { 
+        display: flex;
+        min-height: calc(100vh - 60px); 
+    }
 
     /* Header */
     .header {
@@ -38,6 +43,9 @@
         border-bottom: 2px solid var(--secondary-color);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         height: 60px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
     }
     .header h1 { font-size: 24px; margin: 0; }
 
@@ -47,10 +55,13 @@
         background-color: rgba(10, 15, 31, 0.9);
         padding: 20px;
         border-right: 1px solid var(--border-color);
-        overflow-y: auto;
         display: flex;
         flex-direction: column;
         gap: 20px;
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
     }
     .sidebar .user-profile {
         text-align: center;
@@ -97,12 +108,12 @@
     .content-area {
         flex-grow: 1;
         padding: 20px;
-        overflow-y: auto;
         display: flex;
         flex-direction: column;
         gap: 25px;
         max-width: 900px;
         margin: 0 auto;
+        overflow-y: auto;
     }
 
     /* New professional sections */
@@ -237,6 +248,18 @@
         background-color: var(--secondary-color);
         color: var(--background-dark);
     }
+    .featured-resource {
+        background: linear-gradient(45deg, #1e2478, #2a2e92);
+        border: 2px solid var(--secondary-color);
+        cursor: default;
+    }
+    .featured-resource:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    .featured-resource .meta i {
+        color: #ccc;
+    }
 
     /* Footer */
     .footer {
@@ -254,16 +277,7 @@
     }
     .social-icons a:hover { transform: scale(1.2); }
 
-    /* View states for dynamic content */
-    /* All views are hidden by default, except the one displayed on page load */
-    .view-container { display: none; }
-    .view-home { display: block; }
-    .home-content {
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
-    }
-
+    /* Fix: Mobile Responsive Styles */
     @media (max-width: 900px) {
         main { flex-direction: column; }
         .sidebar {
@@ -277,10 +291,25 @@
             height: auto;
             position: static;
         }
-        .sidebar .user-profile, .sidebar-section {
-            width: 45%;
-            margin-bottom: 15px;
-        }
+        .sidebar .user-profile { width: 100%; }
+        /* Fix: Sidebar sections now take up full width on mobile */
+        .sidebar-section { width: 100%; margin-bottom: 15px; }
+    }
+    /* View states for dynamic content */
+    /* All views are hidden by default, except the one displayed on page load */
+    .view-home, .view-subjects, .view-years, .view-terms, .view-resources { display: none; }
+    .view-home { display: block; }
+    .view-quiz, .view-timer { display: none; }
+
+    /* Additional professional styling for new elements */
+    #feedback-form textarea {
+        background: rgba(10, 15, 31, 0.8); 
+        color: white; 
+        border: 1px solid var(--border-color); 
+        border-radius: 5px; 
+        padding: 10px;
+        height: 100px;
+        resize: vertical;
     }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -307,23 +336,13 @@
         </div>
 
         <div class="sidebar-section">
-            <h4>Quick Links</h4>
-            <div class="quick-links-grid">
-                <button onclick="showHome()"><i class="fas fa-home"></i><span>Home</span></button>
-                <button onclick="showSubjects()"><i class="fas fa-book"></i><span>Browse</span></button>
-                <button onclick="alert('Quiz feature coming soon!')"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
-                <button onclick="alert('Timer feature coming soon!')"><i class="fas fa-clock"></i><span>Timer</span></button>
-            </div>
-        </div>
-
-        <div class="sidebar-section">
             <h4>Today's Tip</h4>
             <p>"Break down large tasks into smaller, manageable chunks."</p>
         </div>
     </aside>
 
     <div class="content-area">
-        <div id="home-view" class="view-container view-home">
+        <div id="home-view" class="view-home">
             <div class="announcement-banner">
                 <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
             </div>
@@ -350,13 +369,13 @@
             </div>
 
             <h2>browse resources</h2>
-            <div class="resource-card" onclick="showSubjects()">
+            <div id="browseBySubjectCard" class="resource-card">
                 <h4><i class="fas fa-search"></i> browse by subject</h4>
                 <p>explore our comprehensive collection of past papers organized by subject, year, and term.</p>
             </div>
         </div>
 
-        <div id="subjects-view" class="view-container">
+        <div id="subjects-view" class="view-subjects">
             <h2>browse by subject</h2>
             <button class="back-btn" onclick="showHome()">
                 <i class="fas fa-home"></i> back to home
@@ -365,7 +384,7 @@
             </div>
         </div>
 
-        <div id="years-view" class="view-container">
+        <div id="years-view" class="view-years">
             <h2 id="years-title">browse by year</h2>
             <button class="back-btn" onclick="showSubjects()">
                 <i class="fas fa-arrow-left"></i> back to subjects
@@ -374,7 +393,7 @@
             </div>
         </div>
 
-        <div id="terms-view" class="view-container">
+        <div id="terms-view" class="view-terms">
             <h2 id="terms-title">browse by term</h2>
             <button class="back-btn" onclick="showYears(currentSubject)">
                 <i class="fas fa-arrow-left"></i> back to years
@@ -383,7 +402,7 @@
             </div>
         </div>
 
-        <div id="resources-view" class="view-container">
+        <div id="resources-view" class="view-resources">
             <h2 id="resources-title">resources</h2>
             <button class="back-btn" onclick="showTerms(currentSubject, currentYear)">
                 <i class="fas fa-arrow-left"></i> back to terms
@@ -436,12 +455,13 @@
     let currentSubject = '';
     let currentYear = '';
     let currentTerm = '';
-
+    
     function hideAllViews() {
-        const views = document.querySelectorAll('.view-container');
-        views.forEach(view => {
-            view.style.display = 'none';
-        });
+        document.getElementById('home-view').style.display = 'none';
+        document.getElementById('subjects-view').style.display = 'none';
+        document.getElementById('years-view').style.display = 'none';
+        document.getElementById('terms-view').style.display = 'none';
+        document.getElementById('resources-view').style.display = 'none';
     }
 
     function showHome() {
@@ -552,18 +572,4 @@
                                 <span><i class="fas fa-calendar"></i> ${resource.year} ${resource.term}</span>
                             </div>
                             <div class="actions">
-                                <a href="${resource.url}" target="_blank" class="view-btn"><i class="fas fa-eye"></i> View</a>
-                                <a href="${resource.url}" download="${resource.name}.pdf" class="download-btn"><i class="fas fa-download"></i> Download</a>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-          })
-          .catch(error => {
-            console.error("Error getting documents: ", error);
-            resourcesContainer.innerHTML = `<p>Error loading resources. Please try again.</p>`;
-          });
-    }
-
-    function searchResour
+                                <a href="${resource.url}" target="_blank" class="view-btn"><i class="fas fa-eye"></i> V
