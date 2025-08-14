@@ -15,17 +15,17 @@
         --border-color: rgba(0, 240, 255, 0.2);
     }
     html, body {
-        height: 100%;
         margin: 0;
         padding: 0;
         font-family: 'Segoe UI', sans-serif;
         color: var(--text-light);
         background-color: var(--background-dark);
+        overflow-x: hidden;
     }
     * { box-sizing: border-box; }
     h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
     a { text-decoration: none; color: var(--secondary-color); }
-    main { display: flex; height: calc(100vh - 60px); }
+    main { display: flex; min-height: 100vh; }
 
     .header {
         display: flex;
@@ -36,6 +36,9 @@
         border-bottom: 2px solid var(--secondary-color);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         height: 60px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
     }
     .header h1 { font-size: 24px; margin: 0; }
 
@@ -44,10 +47,13 @@
         background-color: rgba(10, 15, 31, 0.9);
         padding: 20px;
         border-right: 1px solid var(--border-color);
-        overflow-y: auto;
         display: flex;
         flex-direction: column;
         gap: 20px;
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
     }
     .sidebar .user-profile {
         text-align: center;
@@ -165,7 +171,8 @@
         margin-top: 10px;
         justify-content: center;
     }
-    .resource-card .actions button {
+    .resource-card .actions button,
+    .resource-card .actions a {
         padding: 8px 15px;
         border-radius: 20px;
         border: none;
@@ -184,6 +191,14 @@
     .featured-resource {
         background: linear-gradient(45deg, #1e2478, #2a2e92);
         border: 2px solid var(--secondary-color);
+        cursor: default;
+    }
+    .featured-resource:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    .featured-resource .meta i {
+        color: #ccc;
     }
 
     .footer {
@@ -201,12 +216,33 @@
     }
     .social-icons a:hover { transform: scale(1.2); }
 
-    /* View states */
-    .view-home { display: block; }
-    .view-subjects { display: none; }
-    .view-years { display: none; }
-    .view-terms { display: none; }
-    .view-resources { display: none; }
+    /* New Timer styles */
+    .timer-card {
+        background: var(--card-background);
+        border-radius: 10px;
+        padding: 30px;
+        text-align: center;
+        margin-top: 20px;
+        border: 1px solid var(--border-color);
+    }
+    .timer-display {
+        font-size: 4rem;
+        font-weight: bold;
+        color: var(--secondary-color);
+        margin-bottom: 20px;
+    }
+    .timer-controls button {
+        padding: 12px 25px;
+        font-size: 1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        margin: 0 10px;
+    }
+    .start-btn { background-color: #28a745; color: white; }
+    .stop-btn { background-color: #dc3545; color: white; }
+    .reset-btn { background-color: #007bff; color: white; }
 
     @media (max-width: 900px) {
         main { flex-direction: column; }
@@ -218,12 +254,15 @@
             flex-wrap: wrap;
             justify-content: space-around;
             padding: 15px;
+            height: auto;
+            position: static;
         }
-        .sidebar .user-profile, .sidebar-section {
-            width: 45%;
-            margin-bottom: 15px;
-        }
+        .sidebar .user-profile { width: 100%; }
+        .sidebar-section { width: 45%; margin-bottom: 15px; }
     }
+    /* View states */
+    .view-home, .view-subjects, .view-years, .view-terms, .view-resources, .view-quiz, .view-timer { display: none; }
+    .view-home { display: block; }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -251,10 +290,9 @@
         <div class="sidebar-section">
             <h4>Quick Links</h4>
             <div class="quick-links-grid">
-                <button onclick="showHome()"><i class="fas fa-home"></i><span>Home</span></button>
                 <button onclick="showSubjects()"><i class="fas fa-book"></i><span>Browse</span></button>
-                <button onclick="alert('Quiz feature coming soon!')"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
-                <button onclick="alert('Timer feature coming soon!')"><i class="fas fa-clock"></i><span>Timer</span></button>
+                <button onclick="showQuiz()"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
+                <button onclick="showTimer()"><i class="fas fa-clock"></i><span>Timer</span></button>
             </div>
         </div>
 
@@ -268,20 +306,9 @@
         <div class="announcement-banner">
             <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
         </div>
-
-        <div id="home-view" class="view-home">
-            <h2>browse resources</h2>
-            <div class="resource-card" onclick="showSubjects()">
-                <h4><i class="fas fa-search"></i> browse by subject</h4>
-                <p>explore our comprehensive collection of past papers organized by subject, year, and term.</p>
-            </div>
-        </div>
-
+        
         <div id="subjects-view" class="view-subjects">
             <h2>browse by subject</h2>
-            <button class="back-btn" onclick="showHome()">
-                <i class="fas fa-home"></i> back to home
-            </button>
             <div class="selection-container" id="subjects-container">
                 </div>
         </div>
@@ -311,6 +338,30 @@
             </button>
             <div class="selection-container" id="resources-container">
                 </div>
+        </div>
+
+        <div id="quiz-view" class="view-quiz">
+            <h2>Quiz Master</h2>
+            <button class="back-btn" onclick="showSubjects()"><i class="fas fa-arrow-left"></i> Back to Subjects</button>
+            <div class="resource-card">
+                <h4>Quiz Coming Soon!</h4>
+                <p>A fun and interactive quiz section is under development. Stay tuned for updates!</p>
+            </div>
+        </div>
+
+        <div id="timer-view" class="view-timer">
+            <h2>Study Timer</h2>
+            <button class="back-btn" onclick="showSubjects()"><i class="fas fa-arrow-left"></i> Back to Subjects</button>
+            <div class="timer-card">
+                <h4>Set a Study Session Timer</h4>
+                <p>Use the timer below to manage your study time effectively.</p>
+                <div class="timer-display" id="timer-display">00:00:00</div>
+                <div class="timer-controls">
+                    <button class="start-btn" onclick="startTimer()"><i class="fas fa-play"></i> Start</button>
+                    <button class="stop-btn" onclick="stopTimer()"><i class="fas fa-stop"></i> Stop</button>
+                    <button class="reset-btn" onclick="resetTimer()"><i class="fas fa-redo"></i> Reset</button>
+                </div>
+            </div>
         </div>
     </div>
   </main>
@@ -348,18 +399,47 @@
     let currentYear = '';
     let currentTerm = '';
 
+    // Timer variables
+    let timerInterval;
+    let timerSeconds = 0;
+    const timerDisplay = document.getElementById('timer-display');
+
+    function updateTimerDisplay() {
+        const hours = Math.floor(timerSeconds / 3600);
+        const minutes = Math.floor((timerSeconds % 3600) / 60);
+        const seconds = timerSeconds % 60;
+
+        const pad = (num) => String(num).padStart(2, '0');
+        timerDisplay.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    }
+
+    function startTimer() {
+        if (!timerInterval) {
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    function resetTimer() {
+        stopTimer();
+        timerSeconds = 0;
+        updateTimerDisplay();
+    }
+
     function hideAllViews() {
-        document.getElementById('home-view').style.display = 'none';
         document.getElementById('subjects-view').style.display = 'none';
         document.getElementById('years-view').style.display = 'none';
         document.getElementById('terms-view').style.display = 'none';
         document.getElementById('resources-view').style.display = 'none';
-    }
-
-    function showHome() {
-        console.log('Showing home view');
-        hideAllViews();
-        document.getElementById('home-view').style.display = 'block';
+        document.getElementById('quiz-view').style.display = 'none';
+        document.getElementById('timer-view').style.display = 'none';
     }
 
     function showSubjects() {
@@ -478,37 +558,13 @@
           });
     }
 
-    function downloadFile(url, fileName) {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+    function showQuiz() {
+        console.log('Showing quiz view');
+        hideAllViews();
+        document.getElementById('quiz-view').style.display = 'block';
     }
 
-    function logout() {
-      auth.signOut().then(() => {
-        window.location.href = 'signin1.html';
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const year = new Date().getFullYear();
-        document.querySelector('p:last-of-type').textContent = `© ${year} High Stars Aimers. All Rights Reserved.`;
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('welcomeMessage').textContent = `Welcome, ${user.displayName || 'Learner'}!`;
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userProfilePic').src = user.photoURL || 'https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg';
-                showHome();
-            } else {
-                window.location.href = 'signin1.html';
-            }
-        });
-    });
-  </script>
-
-</body>
-</html>
+    function showTimer() {
+        console.log('Showing timer view');
+        hideAllViews();
+        document.getElementById('timer-view').style.display = 'block
