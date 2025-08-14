@@ -345,7 +345,8 @@
         const subjectsContainer = document.getElementById('subjects-container');
         subjectsContainer.innerHTML = '';
 
-        const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Studies", "Technical Drawing", "General Science"];
+        // Updated array with only STEM subjects
+        const subjects = ["Mathematics", "Physics", "Chemistry", "Biology"];
         subjects.forEach(subject => {
             subjectsContainer.innerHTML += `
                 <div class="explore-section" onclick="showYears('${subject}')">
@@ -499,7 +500,7 @@
         }
 
         updateTip();
-        setInterval(updateTip, 60000); // Changed to 60000ms for 1 minute
+        setInterval(updateTip, 60000);
     });
   </script>
 
