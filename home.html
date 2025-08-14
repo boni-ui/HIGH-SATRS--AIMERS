@@ -26,7 +26,7 @@
     h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
     a { text-decoration: none; color: var(--secondary-color); }
     main { display: flex; height: calc(100vh - 60px); }
-    
+
     .header {
         display: flex;
         justify-content: space-between;
@@ -38,7 +38,7 @@
         height: 60px;
     }
     .header h1 { font-size: 24px; margin: 0; }
-    
+
     .sidebar {
         width: 300px;
         background-color: rgba(10, 15, 31, 0.9);
@@ -89,7 +89,7 @@
     }
     .quick-links-grid button:hover { transform: translateY(-5px); background: #1e2478; }
     .quick-links-grid i { font-size: 1.5rem; margin-bottom: 5px; display: block; }
-    
+
     .content-area {
         flex-grow: 1;
         padding: 20px;
@@ -108,14 +108,14 @@
         font-weight: bold;
         border-radius: 8px;
     }
-    
+
     .selection-container {
         display: flex;
         flex-direction: column;
         gap: 15px;
         width: 100%;
     }
-    
+
     .explore-section {
         background: var(--card-background);
         border-radius: 10px;
@@ -129,7 +129,7 @@
         transform: translateY(-5px);
         box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
     }
-    
+
     .back-btn {
         background: var(--primary-color);
         color: white;
@@ -142,7 +142,7 @@
         align-self: flex-start;
     }
     .back-btn:hover { background: #1e2478; }
-    
+
     .resource-card {
         background: var(--card-background);
         border-radius: 10px;
@@ -207,7 +207,7 @@
     .view-years { display: none; }
     .view-terms { display: none; }
     .view-resources { display: none; }
-    
+
     @media (max-width: 900px) {
         main { flex-direction: column; }
         .sidebar {
@@ -227,9 +227,10 @@
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  
+
   <div class="header">
     <h1>High Stars Aimers</h1>
     <div>
@@ -238,15 +239,15 @@
         </button>
     </div>
   </div>
-  
+
   <main>
     <aside class="sidebar">
         <div class="user-profile">
-            <img id="userProfilePic" src="https://i.postimg.cc/85z11v37/user-profile-pic.png" alt="Profile Picture">
+            <img id="userProfilePic" src="https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg" alt="Profile Picture">
             <h3 id="welcomeMessage">Welcome, User!</h3>
             <p id="userEmail">student@email.com</p>
         </div>
-        
+
         <div class="sidebar-section">
             <h4>Quick Links</h4>
             <div class="quick-links-grid">
@@ -254,81 +255,69 @@
                 <button onclick="showSubjects()"><i class="fas fa-book"></i><span>Browse</span></button>
                 <button onclick="alert('Quiz feature coming soon!')"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
                 <button onclick="alert('Timer feature coming soon!')"><i class="fas fa-clock"></i><span>Timer</span></button>
+                <a href="admin-upload.html">
+                    <button><i class="fas fa-user-shield"></i><span>Admin</span></button>
+                </a>
             </div>
         </div>
-        
+
         <div class="sidebar-section">
             <h4>Today's Tip</h4>
             <p>"Break down large tasks into smaller, manageable chunks."</p>
         </div>
     </aside>
-    
+
     <div class="content-area">
         <div class="announcement-banner">
             <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
         </div>
-        
+
         <div id="home-view" class="view-home">
-            <h2>Featured Content</h2>
-            <div class="resource-card featured-resource">
-                <h4>KCSE 2024 Mathematics Paper</h4>
-                <p style="font-style: italic; color: #ccc;">A comprehensive paper from the latest KCSE exams, focusing on core concepts.</p>
-                <div class="meta">
-                    <span><i class="fas fa-calendar-alt"></i> Year: 2024</span>
-                    <span><i class="fas fa-tag"></i> Subject: Mathematics</span>
-                    <span><i class="fas fa-dollar-sign"></i> Price: Free</span>
-                </div>
-                <div class="actions">
-                    <button class="view-btn"><i class="fas fa-eye"></i> View</button>
-                    <button class="download-btn" onclick="downloadFile('https://example.com/math2024.pdf', 'KCSE_2024_Mathematics.pdf')"><i class="fas fa-download"></i> Download</button>
-                </div>
-            </div>
-            
-            <h2>Browse Resources</h2>
+            <h2>browse resources</h2>
             <div class="resource-card" onclick="showSubjects()">
-                <h4><i class="fas fa-search"></i> Browse by Subject</h4>
-                <p>Explore our comprehensive collection of past papers organized by subject, year, and term.</p>
+                <h4><i class="fas fa-search"></i> browse by subject</h4>
+                <p>explore our comprehensive collection of past papers organized by subject, year, and term.</p>
             </div>
         </div>
 
         <div id="subjects-view" class="view-subjects">
-            <h2>Browse by Subject</h2>
+            <h2>browse by subject</h2>
             <button class="back-btn" onclick="showHome()">
-                <i class="fas fa-home"></i> Back to Home
+                <i class="fas fa-home"></i> back to home
             </button>
             <div class="selection-container" id="subjects-container">
                 </div>
         </div>
 
         <div id="years-view" class="view-years">
-            <h2 id="years-title">Browse by Year</h2>
+            <h2 id="years-title">browse by year</h2>
             <button class="back-btn" onclick="showSubjects()">
-                <i class="fas fa-arrow-left"></i> Back to Subjects
+                <i class="fas fa-arrow-left"></i> back to subjects
             </button>
             <div class="selection-container" id="years-container">
                 </div>
         </div>
 
         <div id="terms-view" class="view-terms">
-            <h2 id="terms-title">Browse by Term</h2>
+            <h2 id="terms-title">browse by term</h2>
             <button class="back-btn" onclick="showYears(currentSubject)">
-                <i class="fas fa-arrow-left"></i> Back to Years
+                <i class="fas fa-arrow-left"></i> back to years
             </button>
             <div class="selection-container" id="terms-container">
                 </div>
         </div>
 
         <div id="resources-view" class="view-resources">
-            <h2 id="resources-title">Resources</h2>
+            <h2 id="resources-title">resources</h2>
             <button class="back-btn" onclick="showTerms(currentSubject, currentYear)">
-                <i class="fas fa-arrow-left"></i> Back to Terms
+                <i class="fas fa-arrow-left"></i> back to terms
             </button>
             <div class="selection-container" id="resources-container">
                 </div>
         </div>
     </div>
   </main>
-  
+
   <footer class="footer">
     <div class="social-icons">
       <a href="#"><i class="fab fa-facebook"></i></a>
@@ -345,7 +334,6 @@
   </footer>
 
   <script>
-    // ADDED: Firebase configuration and initialization
     const firebaseConfig = {
       apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
       authDomain: "high-stars-aimers-5972f.firebaseapp.com",
@@ -357,21 +345,12 @@
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    // Global variables to track current state
     let currentSubject = '';
     let currentYear = '';
     let currentTerm = '';
 
-    // Sample resources data
-    const sampleResources = [
-        { name: "Mathematics Paper 1", type: "Exam Paper", subject: "Mathematics", year: "2024", term: "Term 1", url: "https://example.com/math1.pdf" },
-        { name: "Mathematics Paper 2", type: "Exam Paper", subject: "Mathematics", year: "2024", term: "Term 1", url: "https://example.com/math2.pdf" },
-        { name: "English Paper 1", type: "Exam Paper", subject: "English", year: "2024", term: "Term 1", url: "https://example.com/english1.pdf" },
-        { name: "Physics Paper 1", type: "Exam Paper", subject: "Science", year: "2023", term: "Term 2", url: "https://example.com/physics1.pdf" },
-    ];
-
-    // View management functions
     function hideAllViews() {
         document.getElementById('home-view').style.display = 'none';
         document.getElementById('subjects-view').style.display = 'none';
@@ -386,7 +365,6 @@
         document.getElementById('home-view').style.display = 'block';
     }
 
-    // UPDATED: Function to show STEM subjects dynamically
     function showSubjects() {
         console.log('Showing subjects view');
         hideAllViews();
@@ -394,8 +372,7 @@
 
         const subjectsContainer = document.getElementById('subjects-container');
         subjectsContainer.innerHTML = '';
-        
-        // This is the STEM-only list you requested
+
         const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Studies", "Technical Drawing", "General Science"];
         subjects.forEach(subject => {
             subjectsContainer.innerHTML += `
@@ -411,13 +388,13 @@
         console.log('Showing years for:', subject);
         currentSubject = subject;
         hideAllViews();
-        
+
         document.getElementById('years-title').textContent = `Browse ${subject} by Year`;
         document.getElementById('years-view').style.display = 'block';
-        
+
         const yearsContainer = document.getElementById('years-container');
         yearsContainer.innerHTML = '';
-        
+
         const years = [2024, 2023, 2022, 2021, 2020];
         years.forEach(year => {
             yearsContainer.innerHTML += `
@@ -434,13 +411,13 @@
         currentSubject = subject;
         currentYear = year;
         hideAllViews();
-        
+
         document.getElementById('terms-title').textContent = `Browse ${subject} ${year} by Term`;
         document.getElementById('terms-view').style.display = 'block';
-        
+
         const termsContainer = document.getElementById('terms-container');
         termsContainer.innerHTML = '';
-        
+
         const terms = ["Term 1", "Term 2", "Term 3"];
         terms.forEach(term => {
             termsContainer.innerHTML += `
@@ -458,42 +435,50 @@
         currentYear = year;
         currentTerm = term;
         hideAllViews();
-        
+
         document.getElementById('resources-title').textContent = `${subject} ${year} ${term} Resources`;
         document.getElementById('resources-view').style.display = 'block';
-        
+
         const resourcesContainer = document.getElementById('resources-container');
         resourcesContainer.innerHTML = '';
-        
-        // Filter resources based on criteria
-        const filteredResources = sampleResources.filter(resource => 
-            resource.subject === subject && resource.year === year && resource.term === term
-        );
-        
-        if (filteredResources.length === 0) {
-            resourcesContainer.innerHTML = `
-                <div class="resource-card">
-                    <h4>No resources found</h4>
-                    <p>No resources available for ${subject} ${year} ${term}. Check back later for updates.</p>
-                </div>
-            `;
-        } else {
-            filteredResources.forEach(resource => {
-                resourcesContainer.innerHTML += `
+
+        db.collection('resources')
+          .where('subject', '==', subject)
+          .where('year', '==', year)
+          .where('term', '==', term)
+          .orderBy('createdAt', 'desc')
+          .get()
+          .then(querySnapshot => {
+            if (querySnapshot.empty) {
+                resourcesContainer.innerHTML = `
                     <div class="resource-card">
-                        <h4>${resource.name}</h4>
-                        <div class="meta">
-                            <span><i class="fas fa-tag"></i> Type: ${resource.type}</span>
-                            <span><i class="fas fa-calendar"></i> ${resource.year} ${resource.term}</span>
-                        </div>
-                        <div class="actions">
-                            <button class="view-btn"><i class="fas fa-eye"></i> View</button>
-                            <button class="download-btn" onclick="downloadFile('${resource.url}', '${resource.name}.pdf')"><i class="fas fa-download"></i> Download</button>
-                        </div>
+                        <h4>No resources found</h4>
+                        <p>No resources available for ${subject} ${year} ${term}. Check back later for updates.</p>
                     </div>
                 `;
-            });
-        }
+            } else {
+                querySnapshot.forEach(doc => {
+                    const resource = doc.data();
+                    resourcesContainer.innerHTML += `
+                        <div class="resource-card">
+                            <h4>${resource.name}</h4>
+                            <div class="meta">
+                                <span><i class="fas fa-tag"></i> Type: ${resource.type}</span>
+                                <span><i class="fas fa-calendar"></i> ${resource.year} ${resource.term}</span>
+                            </div>
+                            <div class="actions">
+                                <a href="${resource.url}" target="_blank" class="view-btn"><i class="fas fa-eye"></i> View</a>
+                                <a href="${resource.url}" download="${resource.name}.pdf" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+          })
+          .catch(error => {
+            console.error("Error getting documents: ", error);
+            resourcesContainer.innerHTML = `<p>Error loading resources. Please try again.</p>`;
+          });
     }
 
     function downloadFile(url, fileName) {
@@ -505,23 +490,21 @@
         document.body.removeChild(a);
     }
 
-    // UPDATED: Logout function now uses Firebase authentication
     function logout() {
       auth.signOut().then(() => {
         window.location.href = 'signin1.html';
       });
     }
 
-    // UPDATED: Initialize the page with Firebase authentication check
     document.addEventListener('DOMContentLoaded', () => {
         const year = new Date().getFullYear();
         document.querySelector('p:last-of-type').textContent = `© ${year} High Stars Aimers. All Rights Reserved.`;
-        
+
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('welcomeMessage').textContent = `Welcome, ${user.displayName || 'Learner'}!`;
                 document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userProfilePic').src = user.photoURL || 'https://i.postimg.cc/85z11v37/user-profile-pic.png';
+                document.getElementById('userProfilePic').src = user.photoURL || 'https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg';
                 showHome();
             } else {
                 window.location.href = 'signin1.html';
