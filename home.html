@@ -6,7 +6,7 @@
   <title>High Stars Aimers - Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* 1. Overall Layout & Colors */
+    /* Global Variables and Base Styles */
     :root {
         --primary-color: #2a2e92;
         --secondary-color: #00f0ff;
@@ -21,18 +21,19 @@
         font-family: 'Segoe UI', sans-serif;
         color: var(--text-light);
         background-color: var(--background-dark);
-        overflow-x: hidden;
+        overflow-x: hidden; /* Prevents horizontal scrollbar */
     }
     * { box-sizing: border-box; }
     h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
     a { text-decoration: none; color: var(--secondary-color); }
     
-    /* 1.1 Making the whole page scrollable */
+    /* Layout Structure - Scrollable Page */
     main { 
-      display: flex;
-      min-height: calc(100vh - 60px); 
+        display: flex; 
+        min-height: calc(100vh - 60px); 
     }
 
+    /* Header */
     .header {
         display: flex;
         justify-content: space-between;
@@ -48,6 +49,7 @@
     }
     .header h1 { font-size: 24px; margin: 0; }
 
+    /* Sidebar */
     .sidebar {
         width: 300px;
         background-color: rgba(10, 15, 31, 0.9);
@@ -102,6 +104,7 @@
     .quick-links-grid button:hover { transform: translateY(-5px); background: #1e2478; }
     .quick-links-grid i { font-size: 1.5rem; margin-bottom: 5px; display: block; }
 
+    /* Main Content Area */
     .content-area {
         flex-grow: 1;
         padding: 20px;
@@ -112,6 +115,8 @@
         margin: 0 auto;
         overflow-y: auto;
     }
+
+    /* New professional sections */
     .announcement-banner {
         padding: 15px;
         background-color: var(--secondary-color);
@@ -119,6 +124,55 @@
         text-align: center;
         font-weight: bold;
         border-radius: 8px;
+    }
+
+    .hero-section {
+        text-align: center; 
+        background-image: linear-gradient(rgba(42, 46, 146, 0.7), rgba(0, 240, 255, 0.2)), url('https://i.postimg.cc/Kz4Y6kXp/study-banner.jpg'); 
+        background-size: cover; 
+        background-position: center; 
+        padding: 50px; 
+        border-radius: 10px;
+        color: var(--text-light);
+    }
+    .hero-section h2 { font-size: 2.5rem; }
+    .hero-section p { font-size: 1.2rem; margin-bottom: 20px; }
+    .hero-section button {
+        padding: 12px 25px; 
+        font-size: 1.1rem; 
+        background-color: var(--secondary-color); 
+        color: var(--background-dark); 
+        border: none; 
+        border-radius: 25px; 
+        cursor: pointer; 
+        font-weight: bold;
+        transition: transform 0.3s;
+    }
+    .hero-section button:hover { transform: translateY(-3px); }
+
+    .search-section {
+        display: flex;
+        gap: 10px;
+        background: var(--card-background);
+        border-radius: 10px;
+        padding: 15px;
+        border: 1px solid var(--border-color);
+    }
+    .search-section input {
+        flex-grow: 1;
+        padding: 12px;
+        border-radius: 25px;
+        border: 1px solid var(--border-color);
+        background: rgba(10, 15, 31, 0.8);
+        color: white;
+    }
+    .search-section button {
+        padding: 12px 25px;
+        border-radius: 25px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        cursor: pointer;
     }
 
     .selection-container {
@@ -207,22 +261,7 @@
         color: #ccc;
     }
 
-    .footer {
-        padding: 20px;
-        background-color: var(--background-dark);
-        text-align: center;
-        border-top: 2px solid var(--secondary-color);
-        color: #aaa;
-    }
-    .social-icons a {
-        margin: 0 10px;
-        font-size: 22px;
-        color: var(--secondary-color);
-        transition: transform 0.3s;
-    }
-    .social-icons a:hover { transform: scale(1.2); }
-
-    /* New Timer styles */
+    /* Timer Styles */
     .timer-card {
         background: var(--card-background);
         border-radius: 10px;
@@ -250,7 +289,23 @@
     .stop-btn { background-color: #dc3545; color: white; }
     .reset-btn { background-color: #007bff; color: white; }
 
-    /* 3. Mobile View Fix */
+    /* Footer */
+    .footer {
+        padding: 20px;
+        background-color: var(--background-dark);
+        text-align: center;
+        border-top: 2px solid var(--secondary-color);
+        color: #aaa;
+    }
+    .social-icons a {
+        margin: 0 10px;
+        font-size: 22px;
+        color: var(--secondary-color);
+        transition: transform 0.3s;
+    }
+    .social-icons a:hover { transform: scale(1.2); }
+
+    /* Mobile Responsive Styles (Fixing the "half the page" issue) */
     @media (max-width: 900px) {
         main { flex-direction: column; }
         .sidebar {
@@ -265,11 +320,11 @@
             position: static;
         }
         .sidebar .user-profile { width: 100%; }
-        /* Fix: Remove width to allow sections to stack */
+        /* Fix: Sidebar sections now take up full width on mobile */
         .sidebar-section { width: 100%; margin-bottom: 15px; }
     }
-    /* View states */
-    .view-home, .view-subjects, .view-years, .view-terms, .view-resources, .view-quiz, .view-timer { display: none; }
+    /* View states for dynamic content */
+    .view-home, .view-subjects, .view-years, .view-terms, .view-resources { display: none; }
     .view-home { display: block; }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -298,9 +353,9 @@
         <div class="sidebar-section">
             <h4>Quick Links</h4>
             <div class="quick-links-grid">
-                <button onclick="scrollToSection('browse')"><i class="fas fa-book"></i><span>Browse</span></button>
-                <button onclick="scrollToSection('quiz')"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
-                <button onclick="scrollToSection('timer')"><i class="fas fa-clock"></i><span>Timer</span></button>
+                <button onclick="scrollToSection('browse-section')"><i class="fas fa-book"></i><span>Browse</span></button>
+                <button onclick="scrollToSection('quiz-section')"><i class="fas fa-question-circle"></i><span>Quiz</span></button>
+                <button onclick="scrollToSection('timer-section')"><i class="fas fa-clock"></i><span>Timer</span></button>
             </div>
         </div>
 
@@ -311,78 +366,86 @@
     </aside>
 
     <div class="content-area">
-        <div class="announcement-banner">
-            <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
-        </div>
-
-        <div class="hero-section" style="text-align: center; background-image: linear-gradient(rgba(42, 46, 146, 0.7), rgba(0, 240, 255, 0.2)), url('https://i.postimg.cc/Kz4Y6kXp/study-banner.jpg'); background-size: cover; background-position: center; padding: 50px; border-radius: 10px;">
+        <div class="hero-section">
             <h2>Your Journey to Academic Excellence Starts Here</h2>
             <p>Access a world of past papers, quizzes, and study tools to ace your exams.</p>
-            <button onclick="scrollToSection('browse')" style="padding: 12px 25px; font-size: 1.1rem; background-color: var(--secondary-color); color: var(--background-dark); border: none; border-radius: 25px; margin-top: 15px; cursor: pointer; font-weight: bold;">
+            <button onclick="scrollToSection('browse-section')">
                 Start Browse <i class="fas fa-arrow-right"></i>
             </button>
         </div>
-        
-        <div class="search-section" style="display: flex; gap: 10px;">
-            <input type="text" id="searchInput" placeholder="Search for a subject, year, or topic..." style="flex-grow: 1; padding: 12px; border-radius: 25px; border: 1px solid var(--border-color); background: rgba(35, 40, 60, 0.8); color: white;">
-            <button onclick="searchResources()" style="padding: 12px 25px; border-radius: 25px; background: var(--primary-color); color: white; border: none; cursor: pointer;">
+
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="Search for a subject, year, or topic...">
+            <button onclick="searchResources()">
                 <i class="fas fa-search"></i>
             </button>
         </div>
+        
+        <div class="sidebar-section">
+            <h4><i class="fas fa-history"></i> Recently Viewed</h4>
+            <p>Mathematics Term 1 2024</p>
+            <p>Physics Term 3 2023</p>
+        </div>
 
-        <h2 id="browse">Browse Resources</h2>
+        <h2 id="browse-section">Browse by Subject</h2>
         <div id="subjects-view" class="view-subjects">
             <div class="selection-container" id="subjects-container">
-                </div>
+            </div>
         </div>
 
         <div id="years-view" class="view-years">
-            <h2 id="years-title">browse by year</h2>
+            <h2 id="years-title">Browse by Year</h2>
             <button class="back-btn" onclick="showSubjects()">
                 <i class="fas fa-arrow-left"></i> back to subjects
             </button>
             <div class="selection-container" id="years-container">
-                </div>
+            </div>
         </div>
 
         <div id="terms-view" class="view-terms">
-            <h2 id="terms-title">browse by term</h2>
+            <h2 id="terms-title">Browse by Term</h2>
             <button class="back-btn" onclick="showYears(currentSubject)">
                 <i class="fas fa-arrow-left"></i> back to years
             </button>
             <div class="selection-container" id="terms-container">
-                </div>
+            </div>
         </div>
 
         <div id="resources-view" class="view-resources">
-            <h2 id="resources-title">resources</h2>
+            <h2 id="resources-title">Resources</h2>
             <button class="back-btn" onclick="showTerms(currentSubject, currentYear)">
                 <i class="fas fa-arrow-left"></i> back to terms
             </button>
             <div class="selection-container" id="resources-container">
-                </div>
-        </div>
-        
-        <h2 id="quiz">Quiz Master</h2>
-        <div id="quiz-view">
-            <div class="resource-card">
-                <h4>Quiz Coming Soon!</h4>
-                <p>A fun and interactive quiz section is under development. Stay tuned for updates!</p>
             </div>
         </div>
 
-        <h2 id="timer">Study Timer</h2>
-        <div id="timer-view">
-            <div class="timer-card">
-                <h4>Set a Study Session Timer</h4>
-                <p>Use the timer below to manage your study time effectively.</p>
-                <div class="timer-display" id="timer-display">00:00:00</div>
-                <div class="timer-controls">
-                    <button class="start-btn" onclick="startTimer()"><i class="fas fa-play"></i> Start</button>
-                    <button class="stop-btn" onclick="stopTimer()"><i class="fas fa-stop"></i> Stop</button>
-                    <button class="reset-btn" onclick="resetTimer()"><i class="fas fa-redo"></i> Reset</button>
-                </div>
+        <h2 id="quiz-section">Quiz Master</h2>
+        <div class="resource-card">
+            <h4>Quiz Coming Soon!</h4>
+            <p>A fun and interactive quiz section is under development. Stay tuned for updates!</p>
+        </div>
+
+        <h2 id="timer-section">Study Timer</h2>
+        <div class="timer-card">
+            <h4>Set a Study Session Timer</h4>
+            <p>Use the timer below to manage your study time effectively.</p>
+            <div class="timer-display" id="timer-display">00:00:00</div>
+            <div class="timer-controls">
+                <button class="start-btn" onclick="startTimer()"><i class="fas fa-play"></i> Start</button>
+                <button class="stop-btn" onclick="stopTimer()"><i class="fas fa-stop"></i> Stop</button>
+                <button class="reset-btn" onclick="resetTimer()"><i class="fas fa-redo"></i> Reset</button>
             </div>
+        </div>
+        
+        <div class="sidebar-section">
+            <h4><i class="fas fa-comment-alt"></i> Give Us Feedback</h4>
+            <form id="feedback-form" style="display: flex; flex-direction: column; gap: 10px;">
+                <textarea placeholder="Your feedback..." style="background: rgba(10, 15, 31, 0.8); color: white; border: 1px solid var(--border-color); border-radius: 5px; padding: 10px;"></textarea>
+                <button type="submit" style="background: var(--primary-color); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">
+                    Submit
+                </button>
+            </form>
         </div>
     </div>
   </main>
@@ -453,9 +516,29 @@
         timerSeconds = 0;
         updateTimerDisplay();
     }
+    
+    // New function to scroll to a specific section
+    function scrollToSection(sectionId) {
+        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // New search function (dummy for now)
+    function searchResources() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        // Here you would implement your full search logic
+        alert(`Searching for: ${query}`);
+    }
 
     function hideAllViews() {
         document.getElementById('subjects-view').style.display = 'none';
+        document.getElementById('years-view').style.display = 'none';
+        document.getElementById('terms-view').style.display = 'none';
+        document.getElementById('resources-view').style.display = 'none';
+    }
+    
+    function showHome() {
+        hideAllViews();
+        document.getElementById('subjects-view').style.display = 'block';
         document.getElementById('years-view').style.display = 'none';
         document.getElementById('terms-view').style.display = 'none';
         document.getElementById('resources-view').style.display = 'none';
@@ -502,60 +585,4 @@
         });
     }
 
-    function showTerms(subject, year) {
-        console.log('Showing terms for:', subject, year);
-        currentSubject = subject;
-        currentYear = year;
-        hideAllViews();
-
-        document.getElementById('terms-title').textContent = `Browse ${subject} ${year} by Term`;
-        document.getElementById('terms-view').style.display = 'block';
-
-        const termsContainer = document.getElementById('terms-container');
-        termsContainer.innerHTML = '';
-
-        const terms = ["Term 1", "Term 2", "Term 3"];
-        terms.forEach(term => {
-            termsContainer.innerHTML += `
-                <div class="explore-section" onclick="showResources('${subject}', '${year}', '${term}')">
-                    <h4><i class="fas fa-folder"></i> ${term}</h4>
-                    <p>${subject} ${year} ${term} papers</p>
-                </div>
-            `;
-        });
-    }
-
-    function showResources(subject, year, term) {
-        console.log('Showing resources for:', subject, year, term);
-        currentSubject = subject;
-        currentYear = year;
-        currentTerm = term;
-        hideAllViews();
-
-        document.getElementById('resources-title').textContent = `${subject} ${year} ${term} Resources`;
-        document.getElementById('resources-view').style.display = 'block';
-
-        const resourcesContainer = document.getElementById('resources-container');
-        resourcesContainer.innerHTML = '';
-
-        db.collection('resources')
-          .where('subject', '==', subject)
-          .where('year', '==', year)
-          .where('term', '==', term)
-          .orderBy('createdAt', 'desc')
-          .get()
-          .then(querySnapshot => {
-            if (querySnapshot.empty) {
-                resourcesContainer.innerHTML = `
-                    <div class="resource-card">
-                        <h4>No resources found</h4>
-                        <p>No resources available for ${subject} ${year} ${term}. Check back later for updates.</p>
-                    </div>
-                `;
-            } else {
-                querySnapshot.forEach(doc => {
-                    const resource = doc.data();
-                    resourcesContainer.innerHTML += `
-                        <div class="resource-card">
-                            <h4>${resource.name}</h4>
-                            <div class="
+    functi
