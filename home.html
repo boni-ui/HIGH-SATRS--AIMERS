@@ -4,442 +4,181 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>High Stars Aimers - Home</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-        --primary-color: #2a2e92;
-        --secondary-color: #00f0ff;
-        --background-dark: #0a0f1f;
-        --card-background: rgba(35, 40, 60, 0.8);
-        --text-light: #e0e0e0;
-        --border-color: rgba(0, 240, 255, 0.2);
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+      text-align: center;
     }
-    html, body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Segoe UI', sans-serif;
-        color: var(--text-light);
-        background-color: var(--background-dark);
+    header {
+      background: blue;
+      color: white;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
     }
-    * { box-sizing: border-box; }
-    h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
-    a { text-decoration: none; color: var(--secondary-color); }
-    main { 
-        display: flex; 
-        min-height: calc(100vh - 60px); 
+    .banner {
+      background: red;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
     }
-
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: var(--background-dark);
-        border-bottom: 2px solid var(--secondary-color);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        height: 60px;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
+    .buttons {
+      margin: 20px;
     }
-    .header h1 { font-size: 24px; margin: 0; }
-
-    .sidebar {
-        width: 300px;
-        background-color: rgba(10, 15, 31, 0.9);
-        padding: 20px;
-        border-right: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        position: sticky;
-        top: 60px;
-        height: fit-content;
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      background: #333;
+      color: white;
+      cursor: pointer;
     }
-    .sidebar .user-profile {
-        text-align: center;
-        margin-bottom: 20px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid var(--border-color);
+    button:hover {
+      background: #555;
     }
-    .user-profile img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        border: 3px solid var(--secondary-color);
-        object-fit: cover;
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 90%;
+      background: white;
     }
-    .user-profile h3 { margin-top: 10px; font-size: 1.5rem; }
-    .sidebar-section {
-        background: var(--card-background);
-        border-radius: 10px;
-        padding: 20px;
-        border: 1px solid var(--border-color);
+    table th, table td {
+      border: 1px solid #ccc;
+      padding: 10px;
     }
-
-    .content-area {
-        flex-grow: 1;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-        max-width: 900px;
-        margin: 0 auto;
+    table th {
+      background: #eee;
     }
-    .announcement-banner {
-        padding: 15px;
-        background-color: var(--secondary-color);
-        color: #333;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 8px;
+    footer {
+      margin-top: 20px;
+      padding: 10px;
+      background: #222;
+      color: white;
     }
-
-    .selection-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
+    #subjectOptions {
+      margin: 10px;
+      display: none;
     }
-
-    .explore-section {
-        background: var(--card-background);
-        border-radius: 10px;
-        padding: 20px;
-        border: 1px solid var(--border-color);
-        cursor: pointer;
-        transition: transform 0.3s;
-        text-align: center;
-    }
-    .explore-section:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
-    }
-
-    .back-btn {
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        cursor: pointer;
-        transition: 0.3s;
-        align-self: flex-start;
-    }
-    .back-btn:hover { background: #1e2478; }
-
-    .resource-card {
-        background: var(--card-background);
-        border-radius: 10px;
-        padding: 20px;
-        border: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        transition: transform 0.3s;
-        cursor: pointer;
-        text-align: center;
-    }
-    .resource-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2); }
-    .resource-card h4 { margin: 0; font-size: 1.2rem; }
-    .resource-card .meta { font-size: 0.9rem; color: #aaa; }
-    .resource-card .meta span { margin-right: 15px; }
-    .resource-card .actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-        justify-content: center;
-    }
-    .resource-card .actions button {
-        padding: 8px 15px;
-        border-radius: 20px;
-        border: none;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background-color 0.3s;
-    }
-    .resource-card .actions .view-btn {
-        background-color: var(--primary-color);
-        color: white;
-    }
-    .resource-card .actions .download-btn {
-        background-color: var(--secondary-color);
-        color: var(--background-dark);
-    }
-    .featured-resource {
-        background: linear-gradient(45deg, #1e2478, #2a2e92);
-        border: 2px solid var(--secondary-color);
-    }
-
-    /* Timer Styles */
-    .timer-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 20px;
-        padding: 20px;
-        background: var(--card-background);
-        border-radius: 10px;
-        border: 1px solid var(--border-color);
-    }
-    #timer-display {
-        font-size: 4rem;
-        font-weight: bold;
-        color: var(--secondary-color);
-    }
-    .timer-controls button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        font-weight: bold;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        margin: 0 5px;
-    }
-    #start-btn { background-color: #28a745; color: white; }
-    #start-btn:hover { background-color: #218838; }
-    #stop-btn { background-color: #dc3545; color: white; }
-    #stop-btn:hover { background-color: #c82333; }
-    #reset-btn { background-color: #ffc107; color: black; }
-    #reset-btn:hover { background-color: #e0a800; }
-
-    #timer-tip {
-        margin-top: 20px;
-        padding: 10px;
-        font-style: italic;
-        color: #aaa;
-        min-height: 40px;
-    }
-
-    .footer {
-        padding: 20px;
-        background-color: var(--background-dark);
-        text-align: center;
-        border-top: 2px solid var(--secondary-color);
-        color: #aaa;
-    }
-    .social-icons a {
-        margin: 0 10px;
-        font-size: 22px;
-        color: var(--secondary-color);
-        transition: transform 0.3s;
-    }
-    .social-icons a:hover { transform: scale(1.2); }
-
-    .view-home { display: block; }
-    .view-subjects, .view-years, .view-terms, .view-resources, .view-timer { display: none; }
-
-    @media (max-width: 900px) {
-        main { flex-direction: column; }
-        .sidebar {
-            width: 100%;
-            border-right: none;
-            border-bottom: 1px solid var(--border-color);
-            padding: 15px;
-            position: static;
-        }
+    #clockDisplay {
+      margin: 10px;
+      font-weight: bold;
     }
   </style>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
+  <header>HIGH STARS AIMERS</header>
+  <div class="banner">Smart Way > Subscribe KSH 299 for Unlimited Downloads</div>
 
-  <div class="header">
-    <h1>High Stars Aimers</h1>
-    <div>
-        <button onclick="logout()" style="background: var(--primary-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
-            <i class="fas fa-sign-out-alt"></i> Sign Out
-        </button>
-    </div>
+  <div class="buttons">
+    <button onclick="showTable('notes')">Notes</button>
+    <button onclick="showTable('papers')">Past Papers</button>
+    <button onclick="toggleSubjects()">Browse by Subject</button>
+    <button onclick="showClock()">Clock</button>
   </div>
 
-  <main>
-    <aside class="sidebar">
-        <div class="user-profile">
-            <img id="userProfilePic" src="https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg" alt="Profile Picture">
-            <h3 id="welcomeMessage">Welcome, User!</h3>
-            <p id="userEmail">student@email.com</p>
-        </div>
+  <!-- Subject Options -->
+  <div id="subjectOptions"></div>
 
-        <div class="sidebar-section">
-            <h4>Today's Tip</h4>
-            <p id="today-tip-text">"Break down large tasks into smaller, manageable chunks."</p>
-        </div>
-    </aside>
+  <!-- Clock -->
+  <div id="clockDisplay"></div>
 
-    <div class="content-area">
-        <div class="announcement-banner">
-            <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
-        </div>
+  <!-- Notes Table -->
+  <table id="notesTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Year</th>
+        <th>Subject</th>
+        <th>Price</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-        <!-- Home View -->
-        <div id="home-view" class="view-home">
-            <h2>browse resources</h2>
-            <div class="resource-card" onclick="showSubjects()">
-                <h4><i class="fas fa-search"></i> browse by subject</h4>
-                <p>explore our comprehensive collection of past papers organized by subject, year, and term.</p>
-            </div>
-            
-            <div class="resource-card" onclick="alert('Notes feature coming soon!')">
-                <h4><i class="fas fa-sticky-note"></i> my notes</h4>
-                <p>create and organize your personal study notes and ideas.</p>
-            </div>
+  <!-- Papers Table -->
+  <table id="papersTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Year</th>
+        <th>Subject</th>
+        <th>Price</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-            <div class="resource-card" onclick="alert('Quiz feature coming soon!')">
-                <h4><i class="fas fa-question-circle"></i> quiz master</h4>
-                <p>test your knowledge with interactive quizzes on various topics.</p>
-            </div>
-
-            <div class="resource-card" onclick="showStudyTimer()">
-                <h4><i class="fas fa-stopwatch"></i> study timer</h4>
-                <p>use the Pomodoro timer to manage your study sessions effectively.</p>
-            </div>
-
-            <div class="resource-card" onclick="alert('Ask a question feature coming soon!')">
-                <h4><i class="fas fa-comments"></i> ask a question</h4>
-                <p>get answers from the community or instructors on your study queries.</p>
-            </div>
-
-            <div class="resource-card" onclick="alert('Report a bug feature coming soon!')">
-                <h4><i class="fas fa-bug"></i> report a bug</h4>
-                <p>help us improve by reporting any issues or bugs you find.</p>
-            </div>
-        </div>
-
-        <!-- Timer View -->
-        <div id="timer-view" class="view-timer">
-            <button class="back-btn" onclick="showHome()">
-                <i class="fas fa-home"></i> back to home
-            </button>
-            <div class="timer-container">
-                <h2>Study Timer</h2>
-                <div id="timer-display">25:00</div>
-                <div class="timer-controls">
-                    <button id="start-btn" onclick="startTimer()">Start</button>
-                    <button id="stop-btn" onclick="stopTimer()" disabled>Stop</button>
-                    <button id="reset-btn" onclick="resetTimer()">Reset</button>
-                </div>
-                <div id="timer-tip" class="sidebar-section">
-                    <p id="timer-tip-text">"Set clear goals for each 25-minute session before you start."</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Subjects View -->
-        <div id="subjects-view" class="view-subjects">
-            <h2>browse by subject</h2>
-            <button class="back-btn" onclick="showHome()">
-                <i class="fas fa-home"></i> back to home
-            </button>
-            <div class="selection-container" id="subjects-container"></div>
-        </div>
-
-        <!-- Years View -->
-        <div id="years-view" class="view-years">
-            <h2 id="years-title">browse by year</h2>
-            <button class="back-btn" onclick="showSubjects()">
-                <i class="fas fa-arrow-left"></i> back to subjects
-            </button>
-            <div class="selection-container" id="years-container"></div>
-        </div>
-
-        <!-- Terms View -->
-        <div id="terms-view" class="view-terms">
-            <h2 id="terms-title">browse by term</h2>
-            <button class="back-btn" onclick="showYears(currentSubject)">
-                <i class="fas fa-arrow-left"></i> back to years
-            </button>
-            <div class="selection-container" id="terms-container"></div>
-        </div>
-
-        <!-- Resources View -->
-        <div id="resources-view" class="view-resources">
-            <h2 id="resources-title">resources</h2>
-            <button class="back-btn" onclick="showTerms(currentSubject, currentYear)">
-                <i class="fas fa-arrow-left"></i> back to terms
-            </button>
-            <div class="selection-container" id="resources-container"></div>
-        </div>
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="social-icons">
-      <a href="#"><i class="fab fa-facebook"></i></a>
-      <a href="#"><i class="fab fa-instagram"></i></a>
-      <a href="#"><i class="fab fa-twitter"></i></a>
-      <a href="#"><i class="fab fa-youtube"></i></a>
-      <a href="#"><i class="fab fa-tiktok"></i></a>
-      <a href="#"><i class="fab fa-whatsapp"></i></a>
-    </div>
-    <div class="footer-links">
-      <a href="#">About Us</a> | <a href="#">FAQs</a> | <a href="#">Terms & Conditions</a>
-    </div>
-    <p>&copy; 2024 High Stars Aimers. All Rights Reserved.</p>
+  <footer>
+    <p>© 2025 High Stars Aimers | Contact us on WhatsApp</p>
   </footer>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
-      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
-      projectId: "high-stars-aimers-5972f",
-      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
-      messagingSenderId: "233345875942",
-      appId: "1:233345875942:web:cf7610de84f0b2262ce027",
-      measurementId: "G-X475KTSH5J"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+    // Load uploads from localStorage
+    let uploads = JSON.parse(localStorage.getItem("uploads")) || [];
 
-    let currentSubject = '';
-    let currentYear = '';
-    let currentTerm = '';
+    function showTable(type, subjectFilter = null) {
+      document.getElementById("notesTable").style.display = "none";
+      document.getElementById("papersTable").style.display = "none";
 
-    function hideAllViews() {
-        document.getElementById('home-view').style.display = 'none';
-        document.getElementById('subjects-view').style.display = 'none';
-        document.getElementById('years-view').style.display = 'none';
-        document.getElementById('terms-view').style.display = 'none';
-        document.getElementById('resources-view').style.display = 'none';
-        document.getElementById('timer-view').style.display = 'none';
+      let tableId = type === "notes" ? "notesTable" : "papersTable";
+      let table = document.getElementById(tableId);
+      let tbody = table.querySelector("tbody");
+      tbody.innerHTML = "";
+
+      let filtered = uploads.filter(u => u.type === type);
+      if (subjectFilter) {
+        filtered = filtered.filter(u => u.subject === subjectFilter);
+      }
+
+      filtered.forEach(u => {
+        let row = `<tr>
+          <td>${u.title}</td>
+          <td>${u.year}</td>
+          <td>${u.subject}</td>
+          <td>${u.price}</td>
+          <td><button onclick="alert('Download ${u.title}')">Download</button></td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+
+      table.style.display = "table";
     }
 
-    function showHome() {
-        hideAllViews();
-        document.getElementById('home-view').style.display = 'block';
-    }
-
-    function showSubjects() {
-        hideAllViews();
-        document.getElementById('subjects-view').style.display = 'block';
-        const subjectsContainer = document.getElementById('subjects-container');
-        subjectsContainer.innerHTML = '';
-        const subjects = ["Mathematics", "Physics", "Chemistry", "Biology"];
-        subjects.forEach(subject => {
-            subjectsContainer.innerHTML += `
-                <div class="explore-section" onclick="showYears('${subject}')">
-                    <h4><i class="fas fa-book"></i> ${subject}</h4>
-                    <p>Browse ${subject} past papers and resources</p>
-                </div>
-            `;
+    function toggleSubjects() {
+      let div = document.getElementById("subjectOptions");
+      if (div.style.display === "none") {
+        div.style.display = "block";
+        div.innerHTML = "";
+        let subjects = [...new Set(uploads.map(u => u.subject))];
+        if (subjects.length === 0) {
+          div.innerHTML = "<p>No subjects available.</p>";
+          return;
+        }
+        subjects.forEach(sub => {
+          let btn = document.createElement("button");
+          btn.textContent = sub;
+          btn.onclick = () => {
+            // When subject is clicked, show filtered results
+            showTable("notes", sub);
+            showTable("papers", sub);
+          };
+          div.appendChild(btn);
         });
+      } else {
+        div.style.display = "none";
+      }
     }
 
-    function showYears(subject) {
-        currentSubject = subject;
-        hideAllViews();
-        document.getElementById('years-title').textContent = `Browse ${subject} by Year`;
-        document.getElementById('years-view').style.display = 'block';
-        const yearsContainer = document.getElementById('years-container');
-        yearsContainer.innerHTML = '';
-        const years = [2024, 2023, 2022, 2021, 2020];
-        years.forEach(year => {
-            yearsContainer.innerHTML += `
-                <div class="explore-section" onclick="showTerms('${subject}', '${year}')">
-                    <
+    function showClock() {
+      let now = new Date();
+      document.getElementById("clockDisplay").textContent =
+        now.toLocaleDateString() + " " + now.toLocaleTimeString();
+    }
+  </script>
+</body>
+</html>
