@@ -3,185 +3,564 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>High Stars Aimers</title>
+  <title>High Stars Aimers - Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: url('background.jpg') no-repeat center center fixed;
-      background-size: cover;
-      margin: 0;
-      padding: 0;
-      text-align: center;
+    :root {
+        --primary-color: #2a2e92;
+        --secondary-color: #00f0ff;
+        --background-dark: #0a0f1f;
+        --card-background: rgba(35, 40, 60, 0.8);
+        --text-light: #e0e0e0;
+        --border-color: rgba(0, 240, 255, 0.2);
     }
-    header {
-      background: blue;
-      color: white;
-      padding: 20px;
-      font-size: 24px;
-      font-weight: bold;
+    html, body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+        color: var(--text-light);
+        background-color: var(--background-dark);
     }
-    .banner {
-      background: red;
-      color: white;
-      padding: 10px;
-      font-size: 18px;
-      font-weight: bold;
+    * { box-sizing: border-box; }
+    h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
+    a { text-decoration: none; color: var(--secondary-color); }
+    main { 
+        display: flex; 
+        min-height: calc(100vh - 60px); 
     }
-    .content {
-      margin: 20px;
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: var(--background-dark);
+        border-bottom: 2px solid var(--secondary-color);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        height: 60px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
     }
-    button {
-      background: red;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      border-radius: 5px;
+    .header h1 { font-size: 24px; margin: 0; }
+
+    .sidebar {
+        width: 300px;
+        background-color: rgba(10, 15, 31, 0.9);
+        padding: 20px;
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        position: sticky;
+        top: 60px;
+        height: fit-content;
     }
-    button:hover {
-      background: darkred;
+    .sidebar .user-profile {
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
     }
-    table {
-      width: 90%;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
+    .user-profile img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 3px solid var(--secondary-color);
+        object-fit: cover;
     }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 12px;
-      text-align: center;
+    .user-profile h3 { margin-top: 10px; font-size: 1.5rem; }
+    .sidebar-section {
+        background: var(--card-background);
+        border-radius: 10px;
+        padding: 20px;
+        border: 1px solid var(--border-color);
     }
-    th {
-      background: #f4f4f4;
-      cursor: pointer;
+
+    .content-area {
+        flex-grow: 1;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        max-width: 900px;
+        margin: 0 auto;
     }
-    footer {
-      background: blue;
-      color: white;
-      padding: 15px;
-      margin-top: 30px;
+    .announcement-banner {
+        padding: 15px;
+        background-color: var(--secondary-color);
+        color: #333;
+        text-align: center;
+        font-weight: bold;
+        border-radius: 8px;
     }
-    footer a {
-      color: white;
-      margin: 0 10px;
-      text-decoration: none;
+
+    .selection-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
     }
-    footer a:hover {
-      text-decoration: underline;
+
+    .explore-section {
+        background: var(--card-background);
+        border-radius: 10px;
+        padding: 20px;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: transform 0.3s;
+        text-align: center;
+    }
+    .explore-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
+    }
+
+    .back-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+        align-self: flex-start;
+    }
+    .back-btn:hover { background: #1e2478; }
+
+    .resource-card {
+        background: var(--card-background);
+        border-radius: 10px;
+        padding: 20px;
+        border: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition: transform 0.3s;
+        cursor: pointer;
+        text-align: center;
+    }
+    .resource-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2); }
+    .resource-card h4 { margin: 0; font-size: 1.2rem; }
+    .resource-card .meta { font-size: 0.9rem; color: #aaa; }
+    .resource-card .meta span { margin-right: 15px; }
+    .resource-card .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        justify-content: center;
+    }
+    .resource-card .actions button {
+        padding: 8px 15px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    .resource-card .actions .view-btn {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    .resource-card .actions .download-btn {
+        background-color: var(--secondary-color);
+        color: var(--background-dark);
+    }
+    .featured-resource {
+        background: linear-gradient(45deg, #1e2478, #2a2e92);
+        border: 2px solid var(--secondary-color);
+    }
+
+    /* New Timer Styles */
+    .timer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        padding: 20px;
+        background: var(--card-background);
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+    }
+    #timer-display {
+        font-size: 4rem;
+        font-weight: bold;
+        color: var(--secondary-color);
+    }
+    .timer-controls button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin: 0 5px;
+    }
+    #start-btn { background-color: #28a745; color: white; }
+    #start-btn:hover { background-color: #218838; }
+    #stop-btn { background-color: #dc3545; color: white; }
+    #stop-btn:hover { background-color: #c82333; }
+    #reset-btn { background-color: #ffc107; color: black; }
+    #reset-btn:hover { background-color: #e0a800; }
+
+    #timer-tip {
+        margin-top: 20px;
+        padding: 10px;
+        font-style: italic;
+        color: #aaa;
+        min-height: 40px; /* Prevents layout shift */
+    }
+
+    .footer {
+        padding: 20px;
+        background-color: var(--background-dark);
+        text-align: center;
+        border-top: 2px solid var(--secondary-color);
+        color: #aaa;
+    }
+    .social-icons a {
+        margin: 0 10px;
+        font-size: 22px;
+        color: var(--secondary-color);
+        transition: transform 0.3s;
+    }
+    .social-icons a:hover { transform: scale(1.2); }
+
+    .view-home { display: block; }
+    .view-subjects { display: none; }
+    .view-years { display: none; }
+    .view-terms { display: none; }
+    .view-resources { display: none; }
+    .view-timer { display: none; }
+
+    @media (max-width: 900px) {
+        main { flex-direction: column; }
+        .sidebar {
+            width: 100%;
+            border-right: none;
+            border-bottom: 1px solid var(--border-color);
+            flex-direction: column;
+            flex-wrap: nowrap;
+            padding: 15px;
+            position: static;
+        }
+        .sidebar .user-profile, .sidebar-section {
+            width: 100%;
+            margin-bottom: 15px;
+        }
     }
   </style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-<header>HIGH STARS AIMERS</header>
-<div class="banner">Smart Way > Subscribe KSH 299 for Unlimited Downloads</div>
+  <div class="header">
+    <h1>High Stars Aimers</h1>
+    <div>
+        <button onclick="logout()" style="background: var(--primary-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+            <i class="fas fa-sign-out-alt"></i> Sign Out
+        </button>
+    </div>
+  </div>
 
-<div class="content">
-  <button onclick="showPapers()">Past Papers</button>
-  <button onclick="showNotes()">Notes</button>
-  <button onclick="showSubjects()">Browse by Subject</button>
-  <button onclick="showYears()">Browse by Year</button>
-</div>
+  <main>
+    <aside class="sidebar">
+        <div class="user-profile">
+            <img id="userProfilePic" src="https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg" alt="Profile Picture">
+            <h3 id="welcomeMessage">Welcome, User!</h3>
+            <p id="userEmail">student@email.com</p>
+        </div>
 
-<div id="output"></div>
+        <div class="sidebar-section">
+            <h4>Today's Tip</h4>
+            <p id="today-tip-text">"Break down large tasks into smaller, manageable chunks."</p>
+        </div>
+    </aside>
 
-<footer>
-  <p>Follow Boni Mbugua:</p>
-  <a href="#">Facebook</a> |
-  <a href="#">Instagram</a> |
-  <a href="#">Twitter/X</a> |
-  <a href="#">YouTube</a> |
-  <a href="#">TikTok</a> |
-  <a href="#">WhatsApp</a> |
-  <a href="#">Privacy & Policy</a>
-</footer>
+    <div class="content-area">
+        <div class="announcement-banner">
+            <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
+        </div>
 
-<script>
-  function loadUploads() {
-    return JSON.parse(localStorage.getItem("uploads")) || [];
-  }
+        <div id="home-view" class="view-home">
+            <h2>browse resources</h2>
+            <div class="resource-card" onclick="showSubjects()">
+                <h4><i class="fas fa-search"></i> browse by subject</h4>
+                <p>explore our comprehensive collection of past papers organized by subject, year, and term.</p>
+            </div>
+            
+            <div class="resource-card" onclick="alert('Notes feature coming soon!')">
+                <h4><i class="fas fa-sticky-note"></i> my notes</h4>
+                <p>create and organize your personal study notes and ideas.</p>
+            </div>
 
-  function renderTable(data, title) {
-    if (data.length === 0) {
-      document.getElementById("output").innerHTML = `<h3>${title}</h3><p>No files available</p>`;
-      return;
+            <div class="resource-card" onclick="alert('Quiz feature coming soon!')">
+                <h4><i class="fas fa-question-circle"></i> quiz master</h4>
+                <p>test your knowledge with interactive quizzes on various topics.</p>
+            </div>
+
+            <div class="resource-card" onclick="showStudyTimer()">
+                <h4><i class="fas fa-stopwatch"></i> study timer</h4>
+                <p>use the Pomodoro timer to manage your study sessions effectively.</p>
+            </div>
+
+            <div class="resource-card" onclick="alert('Ask a question feature coming soon!')">
+                <h4><i class="fas fa-comments"></i> ask a question</h4>
+                <p>get answers from the community or instructors on your study queries.</p>
+            </div>
+
+            <div class="resource-card" onclick="alert('Report a bug feature coming soon!')">
+                <h4><i class="fas fa-bug"></i> report a bug</h4>
+                <p>help us improve by reporting any issues or bugs you find.</p>
+            </div>
+        </div>
+
+        <div id="timer-view" class="view-timer">
+            <button class="back-btn" onclick="showHome()">
+                <i class="fas fa-home"></i> back to home
+            </button>
+            <div class="timer-container">
+                <h2>Study Timer</h2>
+                <div id="timer-display">25:00</div>
+                <div class="timer-controls">
+                    <button id="start-btn" onclick="startTimer()">Start</button>
+                    <button id="stop-btn" onclick="stopTimer()" disabled>Stop</button>
+                    <button id="reset-btn" onclick="resetTimer()">Reset</button>
+                </div>
+                <div id="timer-tip" class="sidebar-section">
+                    <p id="timer-tip-text">"Set clear goals for each 25-minute session before you start."</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="subjects-view" class="view-subjects">
+            <h2>browse by subject</h2>
+            <button class="back-btn" onclick="showHome()">
+                <i class="fas fa-home"></i> back to home
+            </button>
+            <div class="selection-container" id="subjects-container">
+                </div>
+        </div>
+
+        <div id="years-view" class="view-years">
+            <h2 id="years-title">browse by year</h2>
+            <button class="back-btn" onclick="showSubjects()">
+                <i class="fas fa-arrow-left"></i> back to subjects
+            </button>
+            <div class="selection-container" id="years-container">
+                </div>
+        </div>
+
+        <div id="terms-view" class="view-terms">
+            <h2 id="terms-title">browse by term</h2>
+            <button class="back-btn" onclick="showYears(currentSubject)">
+                <i class="fas fa-arrow-left"></i> back to years
+            </button>
+            <div class="selection-container" id="terms-container">
+                </div>
+        </div>
+
+        <div id="resources-view" class="view-resources">
+            <h2 id="resources-title">resources</h2>
+            <button class="back-btn" onclick="showTerms(currentSubject, currentYear)">
+                <i class="fas fa-arrow-left"></i> back to terms
+            </button>
+            <div class="selection-container" id="resources-container">
+                </div>
+        </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-youtube"></i></a>
+      <a href="#"><i class="fab fa-tiktok"></i></a>
+      <a href="#"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <div class="footer-links">
+      <a href="#">About Us</a> | <a href="#">FAQs</a> | <a href="#">Terms & Conditions</a>
+    </div>
+    <p>&copy; 2024 High Stars Aimers. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:cf7610de84f0b2262ce027",
+      measurementId: "G-X475KTSH5J"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentSubject = '';
+    let currentYear = '';
+    let currentTerm = '';
+
+    function hideAllViews() {
+        document.getElementById('home-view').style.display = 'none';
+        document.getElementById('subjects-view').style.display = 'none';
+        document.getElementById('years-view').style.display = 'none';
+        document.getElementById('terms-view').style.display = 'none';
+        document.getElementById('resources-view').style.display = 'none';
+        document.getElementById('timer-view').style.display = 'none';
     }
-    let table = `<h3>${title}</h3><table><tr>
-        <th>Title</th><th>Subject</th><th>Year</th><th>Price</th><th>Action</th></tr>`;
-    data.forEach(file => {
-      table += `<tr>
-        <td>${file.title}</td>
-        <td>${file.subject}</td>
-        <td>${file.year}</td>
-        <td>${file.price ? "KSH " + file.price : "Free"}</td>
-        <td><a href="${file.file}" target="_blank">Download</a></td>
-      </tr>`;
-    });
-    table += `</table>`;
-    document.getElementById("output").innerHTML = table;
-  }
 
-  function showPapers() {
-    let uploads = loadUploads();
-    let papers = uploads.filter(f => f.type === "past_paper");
-    renderTable(papers, "Past Papers");
-  }
+    function showHome() {
+        console.log('Showing home view');
+        hideAllViews();
+        document.getElementById('home-view').style.display = 'block';
+    }
 
-  function showNotes() {
-    let uploads = loadUploads();
-    let notes = uploads.filter(f => f.type === "notes");
-    renderTable(notes, "Notes");
-  }
+    function showSubjects() {
+        console.log('Showing subjects view');
+        hideAllViews();
+        document.getElementById('subjects-view').style.display = 'block';
 
-  function showSubjects() {
-    let uploads = loadUploads();
-    let subjects = {};
-    uploads.forEach(f => {
-      if (!subjects[f.subject]) subjects[f.subject] = [];
-      subjects[f.subject].push(f);
-    });
+        const subjectsContainer = document.getElementById('subjects-container');
+        subjectsContainer.innerHTML = '';
 
-    let html = "<h3>Browse by Subject</h3>";
-    for (let subject in subjects) {
-      html += `<h4>${subject}</h4>`;
-      html += `<ul>`;
-      subjects[subject].forEach(file => {
-        html += `<li>${file.title} (${file.year}) - 
-        ${file.price ? "KSH " + file.price : "Free"} 
-        <a href="${file.file}" target="_blank">Download</a></li>`;
+        const subjects = ["Mathematics", "Physics", "Chemistry", "Biology"];
+        subjects.forEach(subject => {
+            subjectsContainer.innerHTML += `
+                <div class="explore-section" onclick="showYears('${subject}')">
+                    <h4><i class="fas fa-book"></i> ${subject}</h4>
+                    <p>Browse ${subject} past papers and resources</p>
+                </div>
+            `;
+        });
+    }
+
+    function showYears(subject) {
+        console.log('Showing years for:', subject);
+        currentSubject = subject;
+        hideAllViews();
+
+        document.getElementById('years-title').textContent = `Browse ${subject} by Year`;
+        document.getElementById('years-view').style.display = 'block';
+
+        const yearsContainer = document.getElementById('years-container');
+        yearsContainer.innerHTML = '';
+
+        const years = [2024, 2023, 2022, 2021, 2020];
+        years.forEach(year => {
+            yearsContainer.innerHTML += `
+                <div class="explore-section" onclick="showTerms('${subject}', '${year}')">
+                    <h4><i class="fas fa-calendar-alt"></i> ${year}</h4>
+                    <p>${subject} papers from ${year}</p>
+                </div>
+            `;
+        });
+    }
+
+    function showTerms(subject, year) {
+        console.log('Showing terms for:', subject, year);
+        currentSubject = subject;
+        currentYear = year;
+        hideAllViews();
+
+        document.getElementById('terms-title').textContent = `Browse ${subject} ${year} by Term`;
+        document.getElementById('terms-view').style.display = 'block';
+
+        const termsContainer = document.getElementById('terms-container');
+        termsContainer.innerHTML = '';
+
+        const terms = ["Term 1", "Term 2", "Term 3"];
+        terms.forEach(term => {
+            termsContainer.innerHTML += `
+                <div class="explore-section" onclick="showResources('${subject}', '${year}', '${term}')">
+                    <h4><i class="fas fa-folder"></i> ${term}</h4>
+                    <p>${subject} ${year} ${term} papers</p>
+                </div>
+            `;
+        });
+    }
+
+    function showResources(subject, year, term) {
+        console.log('Showing resources for:', subject, year, term);
+        currentSubject = subject;
+        currentYear = year;
+        currentTerm = term;
+        hideAllViews();
+
+        document.getElementById('resources-title').textContent = `${subject} ${year} ${term} Resources`;
+        document.getElementById('resources-view').style.display = 'block';
+
+        const resourcesContainer = document.getElementById('resources-container');
+        resourcesContainer.innerHTML = '';
+
+        db.collection('resources')
+          .where('subject', '==', subject)
+          .where('year', '==', year)
+          .where('term', '==', term)
+          .orderBy('createdAt', 'desc')
+          .get()
+          .then(querySnapshot => {
+            if (querySnapshot.empty) {
+                resourcesContainer.innerHTML = `
+                    <div class="resource-card">
+                        <h4>No resources found</h4>
+                        <p>No resources available for ${subject} ${year} ${term}. Check back later for updates.</p>
+                    </div>
+                `;
+            } else {
+                querySnapshot.forEach(doc => {
+                    const resource = doc.data();
+                    resourcesContainer.innerHTML += `
+                        <div class="resource-card">
+                            <h4>${resource.name}</h4>
+                            <div class="meta">
+                                <span><i class="fas fa-tag"></i> Type: ${resource.type}</span>
+                                <span><i class="fas fa-calendar"></i> ${resource.year} ${resource.term}</span>
+                            </div>
+                            <div class="actions">
+                                <a href="${resource.url}" target="_blank" class="view-btn"><i class="fas fa-eye"></i> View</a>
+                                <a href="${resource.url}" download="${resource.name}.pdf" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+          })
+          .catch(error => {
+            console.error("Error getting documents: ", error);
+            resourcesContainer.innerHTML = `<p>Error loading resources. Please try again.</p>`;
+          });
+    }
+
+    function downloadFile(url, fileName) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = 'signin1.html';
       });
-      html += `</ul>`;
     }
-    document.getElementById("output").innerHTML = html;
-  }
 
-  function showYears() {
-    let uploads = loadUploads();
-    let years = {};
-    uploads.forEach(f => {
-      if (!years[f.year]) years[f.year] = [];
-      years[f.year].push(f);
-    });
-
-    let html = "<h3>Browse by Year</h3>";
-    for (let year in years) {
-      html += `<h4>${year}</h4>`;
-      html += `<ul>`;
-      years[year].forEach(file => {
-        html += `<li>${file.title} (${file.subject}) - 
-        ${file.price ? "KSH " + file.price : "Free"} 
-        <a href="${file.file}" target="_blank">Download</a></li>`;
-      });
-      html += `</ul>`;
-    }
-    document.getElementById("output").innerHTML = html;
-  }
-</script>
-
-</body>
-</html>
+    // Timer functionality
+    let timer;
+    let timerDuration = 25 * 60; // 25 minutes in seconds
+    let isTimerRunning = false;
+    const timerDisplay = document.getElementById('timer-display');
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const resetBtn = do
