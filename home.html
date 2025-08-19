@@ -2,183 +2,104 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>High Stars Aimers - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f4;
-      text-align: center;
-    }
-    header {
-      background: blue;
-      color: white;
-      padding: 20px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .banner {
-      background: red;
-      color: white;
-      padding: 10px;
-      font-weight: bold;
-    }
-    .buttons {
-      margin: 20px;
-    }
-    button {
-      margin: 5px;
-      padding: 10px 15px;
-      border: none;
-      background: #333;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #555;
-    }
-    table {
-      margin: 20px auto;
-      border-collapse: collapse;
-      width: 90%;
-      background: white;
-    }
-    table th, table td {
-      border: 1px solid #ccc;
-      padding: 10px;
-    }
-    table th {
-      background: #eee;
-    }
-    footer {
-      margin-top: 20px;
-      padding: 10px;
-      background: #222;
-      color: white;
-    }
-    #subjectOptions {
-      margin: 10px;
-      display: none;
-    }
-    #clockDisplay {
-      margin: 10px;
-      font-weight: bold;
-    }
+    body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; }
+    h1 { background: blue; color: red; padding: 10px; }
+    h2 { background: red; color: white; padding: 8px; }
+    .btn { margin: 5px; padding: 10px 20px; background: blue; color: white; border: none; cursor: pointer; }
+    table { width: 90%; margin: 20px auto; border-collapse: collapse; background: white; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
+    th { background: #eee; }
   </style>
 </head>
 <body>
-  <header>HIGH STARS AIMERS</header>
-  <div class="banner">Smart Way > Subscribe KSH 299 for Unlimited Downloads</div>
 
-  <div class="buttons">
-    <button onclick="showTable('notes')">Notes</button>
-    <button onclick="showTable('papers')">Past Papers</button>
-    <button onclick="toggleSubjects()">Browse by Subject</button>
-    <button onclick="showClock()">Clock</button>
+  <h1>HIGH STARS AIMERS</h1>
+  <h2>Smart Way > Subscribe KSH 299...</h2>
+
+  <div>
+    <button class="btn" onclick="showNotes()">Notes</button>
+    <button class="btn" onclick="showPapers()">Past Papers</button>
+    <button class="btn" onclick="browseBySubject()">Browse by Subject</button>
+    <button class="btn" onclick="browseByYear()">Browse by Year</button>
+    <button class="btn" onclick="browseByClass()">Browse by Class</button>
+    <button class="btn" onclick="browseByClock()">Browse by Clock</button>
   </div>
 
-  <!-- Subject Options -->
-  <div id="subjectOptions"></div>
-
-  <!-- Clock -->
-  <div id="clockDisplay"></div>
-
-  <!-- Notes Table -->
-  <table id="notesTable" style="display:none;">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Year</th>
-        <th>Subject</th>
-        <th>Price</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <!-- Papers Table -->
-  <table id="papersTable" style="display:none;">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Year</th>
-        <th>Subject</th>
-        <th>Price</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <footer>
-    <p>© 2025 High Stars Aimers | Contact us on WhatsApp</p>
-  </footer>
+  <div id="content"></div>
 
   <script>
-    // Load uploads from localStorage
-    let uploads = JSON.parse(localStorage.getItem("uploads")) || [];
+    function loadUploads() {
+      return JSON.parse(localStorage.getItem("uploads")) || [];
+    }
 
-    function showTable(type, subjectFilter = null) {
-      document.getElementById("notesTable").style.display = "none";
-      document.getElementById("papersTable").style.display = "none";
-
-      let tableId = type === "notes" ? "notesTable" : "papersTable";
-      let table = document.getElementById(tableId);
-      let tbody = table.querySelector("tbody");
-      tbody.innerHTML = "";
-
-      let filtered = uploads.filter(u => u.type === type);
-      if (subjectFilter) {
-        filtered = filtered.filter(u => u.subject === subjectFilter);
+    function renderTable(data) {
+      if (data.length === 0) {
+        document.getElementById("content").innerHTML = "<p>No files found</p>";
+        return;
       }
 
-      filtered.forEach(u => {
-        let row = `<tr>
-          <td>${u.title}</td>
-          <td>${u.year}</td>
-          <td>${u.subject}</td>
-          <td>${u.price}</td>
-          <td><button onclick="alert('Download ${u.title}')">Download</button></td>
-        </tr>`;
-        tbody.innerHTML += row;
+      let html = "<table><tr><th>Title</th><th>Year</th><th>Subject</th><th>Class</th><th>Time</th><th>Price</th><th>Action</th></tr>";
+      data.forEach((item, i) => {
+        html += `<tr>
+                  <td>${item.title}</td>
+                  <td>${item.year}</td>
+                  <td>${item.subject}</td>
+                  <td>${item.class || "-"}</td>
+                  <td>${item.time || "-"}</td>
+                  <td>${item.price || "Free"}</td>
+                  <td><button onclick="alert('Download ${item.title}')">Download</button></td>
+                 </tr>`;
       });
-
-      table.style.display = "table";
+      html += "</table>";
+      document.getElementById("content").innerHTML = html;
     }
 
-    function toggleSubjects() {
-      let div = document.getElementById("subjectOptions");
-      if (div.style.display === "none") {
-        div.style.display = "block";
-        div.innerHTML = "";
-        let subjects = [...new Set(uploads.map(u => u.subject))];
-        if (subjects.length === 0) {
-          div.innerHTML = "<p>No subjects available.</p>";
-          return;
-        }
-        subjects.forEach(sub => {
-          let btn = document.createElement("button");
-          btn.textContent = sub;
-          btn.onclick = () => {
-            // When subject is clicked, show filtered results
-            showTable("notes", sub);
-            showTable("papers", sub);
-          };
-          div.appendChild(btn);
-        });
-      } else {
-        div.style.display = "none";
+    function showNotes() {
+      let uploads = loadUploads().filter(u => u.type === "notes");
+      renderTable(uploads);
+    }
+
+    function showPapers() {
+      let uploads = loadUploads().filter(u => u.type === "papers");
+      renderTable(uploads);
+    }
+
+    function browseBySubject() {
+      let uploads = loadUploads();
+      let subject = prompt("Enter subject to filter:");
+      if (subject) {
+        let filtered = uploads.filter(u => u.subject.toLowerCase() === subject.toLowerCase());
+        renderTable(filtered);
       }
     }
 
-    function showClock() {
-      let now = new Date();
-      document.getElementById("clockDisplay").textContent =
-        now.toLocaleDateString() + " " + now.toLocaleTimeString();
+    function browseByYear() {
+      let uploads = loadUploads();
+      let year = prompt("Enter year to filter:");
+      if (year) {
+        let filtered = uploads.filter(u => u.year == year);
+        renderTable(filtered);
+      }
+    }
+
+    function browseByClass() {
+      let uploads = loadUploads();
+      let cls = prompt("Enter class to filter:");
+      if (cls) {
+        let filtered = uploads.filter(u => (u.class || "").toLowerCase() === cls.toLowerCase());
+        renderTable(filtered);
+      }
+    }
+
+    function browseByClock() {
+      let uploads = loadUploads();
+      uploads.sort((a, b) => new Date(b.time) - new Date(a.time));
+      renderTable(uploads);
     }
   </script>
+
 </body>
 </html>
