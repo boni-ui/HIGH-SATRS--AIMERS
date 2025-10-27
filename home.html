@@ -254,6 +254,9 @@
     }
   </style>
   
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   </head>
 <body>
 
@@ -390,5 +393,22 @@
     <p>&copy; 2024 High Stars Aimers. All Rights Reserved.</p>
   </footer>
 
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:cf7610de84f0b2262ce027",
+      measurementId: "G-X475KTSH5J"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // NOTE: All application logic (like functions for navigation, timer, and user authentication) 
+    // must be added here or in a linked file for the page to be functional.
+  </script>
   </body>
 </html>
