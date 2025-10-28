@@ -1,94 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>High Stars Aimers - Past Papers</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-  --primary-color: #2a2e92;
-  --secondary-color: #00f0ff;
-  --background-dark: #0a0f1f;
-  --card-background: rgba(35, 40, 60, 0.8);
-  --text-light: #e0e0e0;
-  --border-color: rgba(0, 240, 255, 0.2);
-}
-html, body {
-  margin:0; padding:0;
-  font-family:'Segoe UI', sans-serif;
-  color: var(--text-light);
-  background-color: var(--background-dark);
-}
-.header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); border-bottom:2px solid var(--secondary-color);}
-.header a { color:white; text-decoration:none; }
-main { padding:30px; max-width: 1000px; margin:0 auto; }
-h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
-.paper-card { background: var(--card-background); padding: 12px 18px; margin-bottom: 10px; border-radius:10px; border:1px solid var(--border-color); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; text-align:left;}
-.paper-card:hover { transform: translateY(-2px); box-shadow:0 4px 12px rgba(0,240,255,0.2);}
-.paper-card a { color: var(--text-light); text-decoration:none; font-size:1rem;}
-.paper-card a:hover { color: var(--secondary-color);}
-.footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; margin-top:50px;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Stars Aimers - Papers View</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Use the same theme variables */
+    :root {
+      --primary-color: #2a2e92;
+      --secondary-color: #00f0ff;
+      --background-dark: #0a0f1f;
+      --text-light: #e0e0e0;
+      --border-color: rgba(0, 240, 255, 0.2);
+    }
+    body {
+      margin:0; padding:0;
+      font-family:'Segoe UI', sans-serif;
+      color: var(--text-light);
+      background-color: var(--background-dark);
+    }
+    .header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); border-bottom:2px solid var(--secondary-color); }
+    .header a { color:white; text-decoration:none; }
+    main { padding:30px; display:flex; flex-direction:column; align-items:center; gap:25px; }
+    h2 { color: var(--secondary-color); text-align:center; }
+    #paper-info {
+        background-color: var(--primary-color);
+        padding: 15px 30px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+        border: 1px solid var(--secondary-color);
+    }
+    #pdf-viewer-container {
+        width: 100%;
+        max-width: 900px;
+        height: 80vh; 
+        background-color: #1a1e2a;
+        border: 2px solid var(--secondary-color);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2em;
+    }
+    /* Simple footer style */
+    .footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; }
+  </style>
 </head>
 <body>
+  <div class="header">
+    <h1>High Stars Aimers</h1>
+    <a href="papers.html"><i class="fas fa-chevron-left"></i> Back to Subjects</a>
+  </div>
 
-<div class="header">
-  <h1>High Stars Aimers</h1>
-  <a href="papers.html"><i class="fas fa-arrow-left"></i> Back to Papers</a>
-</div>
+  <main>
+    <div id="paper-info">
+      <h2>Loading Paper...</h2>
+    </div>
 
-<main>
-<h2 id="page-title">Past Papers</h2>
-<div id="papers-container"></div>
-</main>
+    <div id="pdf-viewer-container">
+      PDF Viewer Area
+    </div>
+  </main>
+  
+  <footer class="footer">
+    &copy; 2025 High Stars Aimers. All Rights Reserved.
+  </footer>
 
-<footer class="footer">
-  &copy; 2025 High Stars Aimers. All Rights Reserved.
-</footer>
+  <script>
+    // Map to convert codes back to user-friendly display names
+    const displayNameMap = {
+      'math': 'Mathematics',
+      'eng': 'English',
+      'kis': 'Kiswahili',
+      'phy': 'Physics',
+      'chem': 'Chemistry',
+      'bio': 'Biology',
+      'geo': 'Geography',
+      'hist': 'History',
+      'cre': 'CRE',
+      'agric': 'Agriculture',
+      'biz': 'Business Studies',
+      'comp': 'Computer Studies',
+      'f1': 'Form 1',
+      'f2': 'Form 2',
+      'f3': 'Form 3',
+      'f4': 'Form 4'
+    };
 
-<script>
-// Define all subjects, forms, and dummy PDFs
-const papersData = {
-  "Mathematics": ["Form1","Form2","Form3","Form4"],
-  "English": ["Form1","Form2","Form3","Form4"],
-  "Kiswahili": ["Form1","Form2","Form3","Form4"],
-  "Physics": ["Form1","Form2","Form3","Form4"],
-  "Chemistry": ["Form1","Form2","Form3","Form4"],
-  "Biology": ["Form1","Form2","Form3","Form4"],
-  "Geography": ["Form1","Form2","Form3","Form4"],
-  "History": ["Form1","Form2","Form3","Form4"],
-  "CRE": ["Form1","Form2","Form3","Form4"],
-  "Business Studies": ["Form1","Form2","Form3","Form4"],
-  "Agriculture": ["Form1","Form2","Form3","Form4"],
-  "Computer Studies": ["Form1","Form2","Form3","Form4"]
-};
+    function loadPaper() {
+      // 1. Get the abbreviated parameters from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const subjectCode = urlParams.get('sub');
+      const formCode = urlParams.get('frm');
+      
+      const paperInfoDiv = document.getElementById('paper-info');
+      const pdfContainer = document.getElementById('pdf-viewer-container');
+      
+      if (subjectCode && formCode) {
+        
+        // 2. Construct the file path: [sub]-[frm].pdf (e.g., phy-f1.pdf)
+        // Ensure you have a folder named 'papers/' with your PDFs inside.
+        const pdfFileName = `${subjectCode}-${formCode}.pdf`;
+        const pdfFilePath = `papers/${pdfFileName}`;
+        
+        // 3. Get the friendly display names
+        const displaySubject = displayNameMap[subjectCode] || subjectCode;
+        const displayForm = displayNameMap[formCode] || formCode;
+        
+        // 4. Update the info header
+        paperInfoDiv.innerHTML = `
+          <h2>${displaySubject} Paper - ${displayForm}</h2>
+          <p>File being loaded: <strong>${pdfFileName}</strong></p>
+        `;
+        
+        // 5. Inject the PDF viewer element
+        pdfContainer.innerHTML = `
+          <object data="${pdfFilePath}" type="application/pdf" width="100%" height="100%">
+            <p style="color:red; text-align:center;">
+              Error loading PDF. Please ensure the file <strong>${pdfFileName}</strong> exists in the <strong>papers/</strong> folder. 
+              <br>Your browser may not support PDF embedding. <a href="${pdfFilePath}" style="color:var(--secondary-color);">Click here to download the file instead.</a>
+            </p>
+          </object>
+        `;
 
-// Read URL parameters
-const urlParams = new URLSearchParams(window.location.search);
-const subject = urlParams.get('subject'); // e.g., Physics
-const form = urlParams.get('form');       // e.g., Form1
-
-const container = document.getElementById('papers-container');
-const title = document.getElementById('page-title');
-
-if(subject && papersData[subject]) {
-    title.textContent = `${subject} - ${form ? form : 'All Forms'} Papers`;
+      } else {
+        // Handle case where parameters are missing
+        paperInfoDiv.innerHTML = `
+          <h2>Error!</h2>
+          <p>Subject or Form not specified in the URL. Please go back and select a paper.</p>
+        `;
+        pdfContainer.innerHTML = '';
+      }
+    }
     
-    let formsToShow = form ? [form] : papersData[subject];
-    
-    formsToShow.forEach(f => {
-        const div = document.createElement('div');
-        div.classList.add('paper-card');
-        const pdfLink = `pdfs/${subject.toLowerCase().replace(/ /g,'_')}_${f.toLowerCase()}_paper1.pdf`;
-        div.innerHTML = `<a href="${pdfLink}" target="_blank">${f} - Paper 1</a>`;
-        container.appendChild(div);
-    });
-} else {
-    title.textContent = "Select a valid subject";
-    container.innerHTML = "<p>No papers available for this subject.</p>";
-}
-</script>
-
+    // Run the function when the page loads
+    window.onload = loadPaper;
+  </script>
 </body>
 </html>
