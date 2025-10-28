@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High Stars Aimers - Past Papers</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary-color: #2a2e92;
+  --secondary-color: #00f0ff;
+  --background-dark: #0a0f1f;
+  --card-background: rgba(35, 40, 60, 0.8);
+  --text-light: #e0e0e0;
+  --border-color: rgba(0, 240, 255, 0.2);
+}
+html, body {
+  margin:0; padding:0;
+  font-family:'Segoe UI', sans-serif;
+  color: var(--text-light);
+  background-color: var(--background-dark);
+}
+.header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); border-bottom:2px solid var(--secondary-color);}
+.header a { color:white; text-decoration:none; }
+main { padding:30px; max-width: 1000px; margin:0 auto; }
+h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
+.paper-card { background: var(--card-background); padding: 12px 18px; margin-bottom: 10px; border-radius:10px; border:1px solid var(--border-color); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; text-align:left;}
+.paper-card:hover { transform: translateY(-2px); box-shadow:0 4px 12px rgba(0,240,255,0.2);}
+.paper-card a { color: var(--text-light); text-decoration:none; font-size:1rem;}
+.paper-card a:hover { color: var(--secondary-color);}
+.footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; margin-top:50px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>High Stars Aimers</h1>
+  <a href="papers.html"><i class="fas fa-arrow-left"></i> Back to Papers</a>
+</div>
+
+<main>
+<h2 id="page-title">Past Papers</h2>
+<div id="papers-container"></div>
+</main>
+
+<footer class="footer">
+  &copy; 2025 High Stars Aimers. All Rights Reserved.
+</footer>
+
+<script>
+// Define all subjects, forms, and dummy PDFs
+const papersData = {
+  "Mathematics": ["Form1","Form2","Form3","Form4"],
+  "English": ["Form1","Form2","Form3","Form4"],
+  "Kiswahili": ["Form1","Form2","Form3","Form4"],
+  "Physics": ["Form1","Form2","Form3","Form4"],
+  "Chemistry": ["Form1","Form2","Form3","Form4"],
+  "Biology": ["Form1","Form2","Form3","Form4"],
+  "Geography": ["Form1","Form2","Form3","Form4"],
+  "History": ["Form1","Form2","Form3","Form4"],
+  "CRE": ["Form1","Form2","Form3","Form4"],
+  "Business Studies": ["Form1","Form2","Form3","Form4"],
+  "Agriculture": ["Form1","Form2","Form3","Form4"],
+  "Computer Studies": ["Form1","Form2","Form3","Form4"]
+};
+
+// Read URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+const subject = urlParams.get('subject'); // e.g., Physics
+const form = urlParams.get('form');       // e.g., Form1
+
+const container = document.getElementById('papers-container');
+const title = document.getElementById('page-title');
+
+if(subject && papersData[subject]) {
+    title.textContent = `${subject} - ${form ? form : 'All Forms'} Papers`;
+    
+    let formsToShow = form ? [form] : papersData[subject];
+    
+    formsToShow.forEach(f => {
+        const div = document.createElement('div');
+        div.classList.add('paper-card');
+        const pdfLink = `pdfs/${subject.toLowerCase().replace(/ /g,'_')}_${f.toLowerCase()}_paper1.pdf`;
+        div.innerHTML = `<a href="${pdfLink}" target="_blank">${f} - Paper 1</a>`;
+        container.appendChild(div);
+    });
+} else {
+    title.textContent = "Select a valid subject";
+    container.innerHTML = "<p>No papers available for this subject.</p>";
+}
+</script>
+
+</body>
+</html>
