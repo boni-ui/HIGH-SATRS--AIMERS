@@ -24,10 +24,7 @@
     * { box-sizing: border-box; }
     h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
     a { text-decoration: none; color: var(--secondary-color); }
-    main { 
-        display: flex; 
-        min-height: calc(100vh - 60px); 
-    }
+    main { display: flex; min-height: calc(100vh - 60px); }
 
     .header {
         display: flex;
@@ -95,40 +92,6 @@
         border-radius: 8px;
     }
 
-    .selection-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-    }
-
-    .explore-section {
-        background: var(--card-background);
-        border-radius: 10px;
-        padding: 20px;
-        border: 1px solid var(--border-color);
-        cursor: pointer;
-        transition: transform 0.3s;
-        text-align: center;
-    }
-    .explore-section:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
-    }
-
-    .back-btn {
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        cursor: pointer;
-        transition: 0.3s;
-        align-self: flex-start;
-    }
-    .back-btn:hover { background: #1e2478; }
-
     .resource-card {
         background: var(--card-background);
         border-radius: 10px;
@@ -143,76 +106,7 @@
     }
     .resource-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2); }
     .resource-card h4 { margin: 0; font-size: 1.2rem; }
-    .resource-card .meta { font-size: 0.9rem; color: #aaa; }
-    .resource-card .meta span { margin-right: 15px; }
-    .resource-card .actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-        justify-content: center;
-    }
-    .resource-card .actions button {
-        padding: 8px 15px;
-        border-radius: 20px;
-        border: none;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background-color 0.3s;
-    }
-    .resource-card .actions .view-btn {
-        background-color: var(--primary-color);
-        color: white;
-    }
-    .resource-card .actions .download-btn {
-        background-color: var(--secondary-color);
-        color: var(--background-dark);
-    }
-    .featured-resource {
-        background: linear-gradient(45deg, #1e2478, #2a2e92);
-        border: 2px solid var(--secondary-color);
-    }
-
-    /* New Timer Styles */
-    .timer-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 20px;
-        padding: 20px;
-        background: var(--card-background);
-        border-radius: 10px;
-        border: 1px solid var(--border-color);
-    }
-    #timer-display {
-        font-size: 4rem;
-        font-weight: bold;
-        color: var(--secondary-color);
-    }
-    .timer-controls button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        font-weight: bold;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        margin: 0 5px;
-    }
-    #start-btn { background-color: #28a745; color: white; }
-    #start-btn:hover { background-color: #218838; }
-    #stop-btn { background-color: #dc3545; color: white; }
-    #stop-btn:hover { background-color: #c82333; }
-    #reset-btn { background-color: #ffc107; color: black; }
-    #reset-btn:hover { background-color: #e0a800; }
-
-    #timer-tip {
-        margin-top: 20px;
-        padding: 10px;
-        font-style: italic;
-        color: #aaa;
-        min-height: 40px; /* Prevents layout shift */
-    }
+    .resource-card p { color: #aaa; }
 
     .footer {
         padding: 20px;
@@ -228,13 +122,6 @@
         transition: transform 0.3s;
     }
     .social-icons a:hover { transform: scale(1.2); }
-
-    .view-home { display: block; }
-    .view-subjects { display: none; }
-    .view-years { display: none; }
-    .view-terms { display: none; }
-    .view-resources { display: none; }
-    .view-timer { display: none; }
 
     @media (max-width: 900px) {
         main { flex-direction: column; }
@@ -253,11 +140,7 @@
         }
     }
   </style>
-  
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  </head>
+</head>
 <body>
 
   <div class="header">
@@ -288,92 +171,37 @@
             <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
         </div>
 
-        <div id="home-view" class="view-home">
-            <h2>browse resources</h2>
-            <div class="resource-card">
-                <h4><i class="fas fa-search"></i> browse by subject</h4>
-                <p>explore our comprehensive collection of past papers organized by subject, year, and term.</p>
-            </div>
-            
-            <div class="resource-card">
-                <h4><i class="fas fa-sticky-note"></i> my notes</h4>
-                <p>create and organize your personal study notes and ideas.</p>
-            </div>
+        <h2>Browse Resources</h2>
 
-            <div class="resource-card">
-                <h4><i class="fas fa-question-circle"></i> quiz master</h4>
-                <p>test your knowledge with interactive quizzes on various topics.</p>
-            </div>
+        <!-- Linked card to subjects.html -->
+        <a href="subjects.html" class="resource-card">
+            <h4><i class="fas fa-search"></i> Browse by Subject</h4>
+            <p>Explore past papers organized by subject, year, and term.</p>
+        </a>
 
-            <div class="resource-card">
-                <h4><i class="fas fa-stopwatch"></i> study timer</h4>
-                <p>use the Pomodoro timer to manage your study sessions effectively.</p>
-            </div>
-
-            <div class="resource-card">
-                <h4><i class="fas fa-comments"></i> ask a question</h4>
-                <p>get answers from the community or instructors on your study queries.</p>
-            </div>
-
-            <div class="resource-card">
-                <h4><i class="fas fa-bug"></i> report a bug</h4>
-                <p>help us improve by reporting any issues or bugs you find.</p>
-            </div>
+        <div class="resource-card">
+            <h4><i class="fas fa-sticky-note"></i> My Notes</h4>
+            <p>Create and organize your personal study notes and ideas.</p>
         </div>
 
-        <div id="timer-view" class="view-timer">
-            <button class="back-btn">
-                <i class="fas fa-home"></i> back to home
-            </button>
-            <div class="timer-container">
-                <h2>Study Timer</h2>
-                <div id="timer-display">25:00</div>
-                <div class="timer-controls">
-                    <button id="start-btn" disabled>Start</button>
-                    <button id="stop-btn" disabled>Stop</button>
-                    <button id="reset-btn" disabled>Reset</button>
-                </div>
-                <div id="timer-tip" class="sidebar-section">
-                    <p id="timer-tip-text">"Set clear goals for each 25-minute session before you start."</p>
-                </div>
-            </div>
+        <div class="resource-card">
+            <h4><i class="fas fa-question-circle"></i> Quiz Master</h4>
+            <p>Test your knowledge with interactive quizzes on various topics.</p>
         </div>
 
-
-        <div id="subjects-view" class="view-subjects">
-            <h2>browse by subject</h2>
-            <button class="back-btn">
-                <i class="fas fa-home"></i> back to home
-            </button>
-            <div class="selection-container" id="subjects-container">
-                </div>
+        <div class="resource-card">
+            <h4><i class="fas fa-stopwatch"></i> Study Timer</h4>
+            <p>Use the Pomodoro timer to manage your study sessions effectively.</p>
         </div>
 
-        <div id="years-view" class="view-years">
-            <h2 id="years-title">browse by year</h2>
-            <button class="back-btn">
-                <i class="fas fa-arrow-left"></i> back to subjects
-            </button>
-            <div class="selection-container" id="years-container">
-                </div>
+        <div class="resource-card">
+            <h4><i class="fas fa-comments"></i> Ask a Question</h4>
+            <p>Get answers from the community or instructors on your study queries.</p>
         </div>
 
-        <div id="terms-view" class="view-terms">
-            <h2 id="terms-title">browse by term</h2>
-            <button class="back-btn">
-                <i class="fas fa-arrow-left"></i> back to years
-            </button>
-            <div class="selection-container" id="terms-container">
-                </div>
-        </div>
-
-        <div id="resources-view" class="view-resources">
-            <h2 id="resources-title">resources</h2>
-            <button class="back-btn">
-                <i class="fas fa-arrow-left"></i> back to terms
-            </button>
-            <div class="selection-container" id="resources-container">
-                </div>
+        <div class="resource-card">
+            <h4><i class="fas fa-bug"></i> Report a Bug</h4>
+            <p>Help us improve by reporting any issues or bugs you find.</p>
         </div>
     </div>
   </main>
@@ -393,6 +221,9 @@
     <p>&copy; 2024 High Stars Aimers. All Rights Reserved.</p>
   </footer>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
@@ -406,9 +237,6 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-
-    // NOTE: All application logic (like functions for navigation, timer, and user authentication) 
-    // must be added here or in a linked file for the page to be functional.
   </script>
-  </body>
+</body>
 </html>
