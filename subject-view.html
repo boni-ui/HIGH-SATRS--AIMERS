@@ -1,121 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>High Stars Aimers - Subject View</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-  --primary-color: #2a2e92;
-  --secondary-color: #00f0ff;
-  --background-dark: #0a0f1f;
-  --card-background: rgba(35, 40, 60, 0.8);
-  --text-light: #e0e0e0;
-  --border-color: rgba(0, 240, 255, 0.2);
-}
-html, body {
-  margin: 0; padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  color: var(--text-light);
-  background-color: var(--background-dark);
-}
-.header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 20px;
-  background-color: var(--background-dark);
-  border-bottom: 2px solid var(--secondary-color);
-}
-.header h1 { font-size: 24px; margin:0; }
-.header a { color:white; text-decoration:none; }
-main { padding: 30px; display: flex; flex-direction: column; align-items: center; gap:20px; }
-.subject-title { color: var(--secondary-color); font-size: 2rem; margin-bottom:20px; }
-.form-block {
-  width: 100%; max-width: 800px;
-  background: var(--card-background);
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  cursor: pointer;
-  transition: transform 0.3s;
-}
-.form-block:hover { transform: translateY(-3px); }
-.form-block h3 { margin:0; color: var(--secondary-color); display:flex; justify-content:space-between; align-items:center; }
-.topics-container { display:none; margin-top:10px; padding-left:15px; }
-.topic-item { padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.1); }
-.topic-item a { color: #aaa; text-decoration:none; }
-.topic-item a:hover { color: var(--secondary-color); }
-
-.footer {
-  text-align:center; padding:20px;
-  border-top:2px solid var(--secondary-color);
-  color:#aaa;
-  margin-top:50px;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Stars Aimers - Subject View</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #2a2e92;
+      --secondary-color: #00f0ff;
+      --background-dark: #0a0f1f;
+      --card-background: rgba(35, 40, 60, 0.8);
+      --text-light: #e0e0e0;
+      --border-color: rgba(0, 240, 255, 0.2);
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      color: var(--text-light);
+      background-color: var(--background-dark);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: var(--background-dark);
+      border-bottom: 2px solid var(--secondary-color);
+    }
+    .header a { color: white; text-decoration: none; }
+    main {
+      padding: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h2 {
+      color: var(--secondary-color);
+      margin-bottom: 20px;
+    }
+    .topic-card {
+      background: var(--card-background);
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      position: relative;
+    }
+    .topic-card:hover { box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2); }
+    .topic-card h3 { margin: 0; }
+    .dropdown {
+      display: none;
+      margin-top: 10px;
+      padding-left: 15px;
+      border-left: 2px solid var(--secondary-color);
+    }
+    .dropdown a {
+      display: block;
+      color: var(--text-light);
+      padding: 5px 0;
+      text-decoration: none;
+    }
+    .dropdown a:hover { color: var(--secondary-color); }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 2px solid var(--secondary-color);
+      color: #aaa;
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
-
-<div class="header">
-  <h1>High Stars Aimers</h1>
-  <a href="home.html"><i class="fas fa-home"></i> Home</a>
-</div>
-
-<main>
-  <div class="subject-title" id="subject-title">Subject Name</div>
-
-  <!-- Forms 1–4 -->
-  <div class="form-block" onclick="toggleTopics('form1')">
-    <h3>Form 1 <i class="fas fa-chevron-down"></i></h3>
-    <div class="topics-container" id="form1">
-      <!-- Example Topics -->
-      <div class="topic-item"><a href="#">Topic 1</a></div>
-      <div class="topic-item"><a href="#">Topic 2</a></div>
-      <div class="topic-item"><a href="#">Topic 3</a></div>
-    </div>
+  <div class="header">
+    <h1>High Stars Aimers</h1>
+    <a href="subjects.html"><i class="fas fa-arrow-left"></i> Back to Subjects</a>
   </div>
 
-  <div class="form-block" onclick="toggleTopics('form2')">
-    <h3>Form 2 <i class="fas fa-chevron-down"></i></h3>
-    <div class="topics-container" id="form2">
-      <div class="topic-item"><a href="#">Topic 1</a></div>
-      <div class="topic-item"><a href="#">Topic 2</a></div>
-      <div class="topic-item"><a href="#">Topic 3</a></div>
-    </div>
-  </div>
+  <main>
+    <h2 id="subject-title">Subject: </h2>
+    <div id="topics-container"></div>
+  </main>
 
-  <div class="form-block" onclick="toggleTopics('form3')">
-    <h3>Form 3 <i class="fas fa-chevron-down"></i></h3>
-    <div class="topics-container" id="form3">
-      <div class="topic-item"><a href="#">Topic 1</a></div>
-      <div class="topic-item"><a href="#">Topic 2</a></div>
-      <div class="topic-item"><a href="#">Topic 3</a></div>
-    </div>
-  </div>
+  <footer class="footer">
+    &copy; 2025 High Stars Aimers. All Rights Reserved.
+  </footer>
 
-  <div class="form-block" onclick="toggleTopics('form4')">
-    <h3>Form 4 <i class="fas fa-chevron-down"></i></h3>
-    <div class="topics-container" id="form4">
-      <div class="topic-item"><a href="#">Topic 1</a></div>
-      <div class="topic-item"><a href="#">Topic 2</a></div>
-      <div class="topic-item"><a href="#">Topic 3</a></div>
-    </div>
-  </div>
+  <script>
+    // Subjects and topics data
+    const syllabus = {
+      "Mathematics": {
+        1: ["Numbers & Operations", "Algebra Basics", "Geometry Fundamentals", "Statistics Intro"],
+        2: ["Algebra II", "Trigonometry Basics", "Plane Geometry", "Probability"],
+        3: ["Advanced Algebra", "Coordinate Geometry", "Mensuration", "Statistics & Probability"],
+        4: ["Calculus Intro", "Advanced Trigonometry", "Vectors", "Matrices"]
+      },
+      "Physics": {
+        1: ["Motion & Forces", "Energy Basics", "Heat", "Waves Introduction"],
+        2: ["Electromagnetism", "Light", "Sound", "Heat Transfer"],
+        3: ["Mechanics", "Electricity", "Magnetism", "Optics"],
+        4: ["Modern Physics", "Thermodynamics", "Oscillations", "Electronics Basics"]
+      },
+      "Chemistry": {
+        1: ["Matter & Properties", "Atoms & Molecules", "States of Matter", "Solutions Basics"],
+        2: ["Chemical Reactions", "Acids & Bases", "Metals & Non-metals", "Organic Intro"],
+        3: ["Organic Chemistry", "Chemical Bonding", "Periodic Table", "Electrochemistry"],
+        4: ["Analytical Chemistry", "Physical Chemistry", "Industrial Chemistry", "Environmental Chemistry"]
+      },
+      "Biology": {
+        1: ["Cells", "Human Body Basics", "Plants", "Animals"],
+        2: ["Genetics Basics", "Nutrition", "Respiration", "Reproduction"],
+        3: ["Human Systems", "Ecology", "Evolution", "Microorganisms"],
+        4: ["Advanced Genetics", "Biotechnology", "Human Health", "Environmental Biology"]
+      },
+      "English": {
+        1: ["Grammar Basics", "Reading Comprehension", "Writing Skills", "Literature Intro"],
+        2: ["Poetry", "Prose", "Drama", "Advanced Grammar"],
+        3: ["Literary Analysis", "Essay Writing", "Novel Study", "Drama Analysis"],
+        4: ["Advanced Writing", "Critical Reading", "Speech & Debates", "Literature Appreciation"]
+      },
+      "Kiswahili": {
+        1: ["Sarufi", "Usomaji", "Uandishi", "Fasihi"],
+        2: ["Methali na Misemo", "Insha", "Usomaji wa Fasihi", "Sarufi"],
+        3: ["Riwaya na Hadithi", "Mashairi", "Matumizi ya Lugha", "Insha"],
+        4: ["Tafsiri", "Fasihi ya Kisasa", "Kazi za Maandishi", "Usomaji wa Kisasa"]
+      },
+      "Geography": {
+        1: ["Maps & Directions", "Weather & Climate", "Landforms", "Population Basics"],
+        2: ["Rivers & Lakes", "Climate Zones", "Soil Types", "Population Studies"],
+        3: ["Physical Geography", "Human Geography", "Resources", "Environmental Issues"],
+        4: ["Advanced Physical Geography", "Economic Geography", "Geospatial Tech", "Global Issues"]
+      },
+      "History": {
+        1: ["Early Civilizations", "African Kingdoms", "Exploration", "Colonial Impact"],
+        2: ["Colonial Kenya", "World Wars", "Trade & Economy", "National Movements"],
+        3: ["Independence Struggles", "Global History", "Cultural Movements", "Politics"],
+        4: ["Modern History", "International Relations", "Economic History", "Historical Analysis"]
+      },
+      "CRE": {
+        1: ["Introduction to Religion", "Bible Stories", "Prayer & Worship", "Moral Lessons"],
+        2: ["Old Testament", "New Testament", "Christian Ethics", "Religious Practices"],
+        3: ["Church History", "Comparative Religion", "Christian Morality", "Social Issues"],
+        4: ["Advanced Theology", "World Religions", "Philosophy of Religion", "Ethics Debate"]
+      },
+      "Business Studies": {
+        1: ["Introduction to Business", "Entrepreneurship Basics", "Business Environment", "Business Ethics"],
+        2: ["Accounting Basics", "Marketing", "Trade & Commerce", "Business Law"],
+        3: ["Management Principles", "Finance", "Operations", "Human Resource"],
+        4: ["Advanced Accounting", "Strategic Management", "Business Policy", "Project Management"]
+      },
+      "Agriculture": {
+        1: ["Crop Farming", "Animal Husbandry", "Soil Basics", "Farm Tools"],
+        2: ["Pest & Disease Control", "Farm Management", "Irrigation", "Plant Breeding"],
+        3: ["Agricultural Economics", "Soil Science", "Livestock Management", "Agri-Technology"],
+        4: ["Advanced Crop Production", "Agri-Business", "Sustainable Farming", "Research Methods"]
+      },
+      "Computer Studies": {
+        1: ["Computer Basics", "Word Processing", "Spreadsheets", "Presentations"],
+        2: ["Programming Basics", "Databases", "Networks", "Internet Safety"],
+        3: ["Web Development", "Algorithms", "Data Structures", "Software Design"],
+        4: ["Advanced Programming", "Networking", "AI Basics", "Cybersecurity"]
+      }
+    };
 
-</main>
+    // Get URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const subject = params.get("subject") || "Mathematics";
+    const form = params.get("form") || "1";
 
-<div class="footer">&copy; 2024 High Stars Aimers. All Rights Reserved.</div>
+    // Update header
+    document.getElementById("subject-title").innerText = `Subject: ${subject} - Form ${form}`;
 
-<script>
-function toggleTopics(formId){
-  const container = document.getElementById(formId);
-  if(container.style.display === 'block'){
-    container.style.display = 'none';
-  } else {
-    container.style.display = 'block';
-  }
-}
-</script>
+    const topicsContainer = document.getElementById("topics-container");
 
+    // Generate topic cards
+    syllabus[subject][form].forEach(topic => {
+      const card = document.createElement("div");
+      card.className = "topic-card";
+      card.innerHTML = `<h3>${topic}</h3>
+                        <div class="dropdown">
+                          <!-- Notes PDF links go here -->
+                          <a href="#">No notes uploaded yet</a>
+                        </div>`;
+      card.addEventListener("click", () => {
+        const dropdown = card.querySelector(".dropdown");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      });
+      topicsContainer.appendChild(card);
+    });
+  </script>
 </body>
 </html>
