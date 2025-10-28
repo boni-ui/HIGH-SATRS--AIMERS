@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>High Stars Aimers - Subject View</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -10,92 +10,100 @@
       --primary-color: #2a2e92;
       --secondary-color: #00f0ff;
       --background-dark: #0a0f1f;
-      --card-background: rgba(35, 40, 60, 0.8);
+      --card-background: rgba(35, 40, 60, 0.85);
       --text-light: #e0e0e0;
       --border-color: rgba(0, 240, 255, 0.2);
     }
-
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      color: var(--text-light);
       background-color: var(--background-dark);
+      color: var(--text-light);
     }
-
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 20px;
       background-color: var(--background-dark);
+      padding: 15px 20px;
       border-bottom: 2px solid var(--secondary-color);
     }
-
-    main {
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 25px;
+    .header a {
+      color: var(--secondary-color);
+      text-decoration: none;
+      font-size: 1rem;
     }
-
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
     h2 {
       color: var(--secondary-color);
-      text-transform: capitalize;
+      text-align: center;
     }
-
-    .topics-container {
-      width: 100%;
-      max-width: 800px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .topic-card {
+    .form-card {
       background: var(--card-background);
-      padding: 15px 20px;
-      border-radius: 10px;
       border: 1px solid var(--border-color);
+      border-radius: 10px;
+      margin-bottom: 15px;
+      overflow: hidden;
+    }
+    .form-header {
+      background: var(--primary-color);
+      padding: 12px 16px;
       cursor: pointer;
-      transition: transform 0.3s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      font-weight: bold;
     }
-
-    .topic-card:hover {
+    .form-header:hover {
+      background: #3539a5;
+    }
+    .topics {
+      display: none;
+      padding: 15px;
+      background-color: rgba(10, 15, 31, 0.9);
+    }
+    .topic {
+      background: var(--card-background);
+      padding: 10px 15px;
+      margin: 8px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s;
+    }
+    .topic:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 15px rgba(0, 240, 255, 0.15);
+      box-shadow: 0 5px 12px rgba(0, 240, 255, 0.2);
     }
-
     .topic-title {
+      font-weight: bold;
+      color: var(--secondary-color);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
-    .pdf-list {
+    .notes-list {
       display: none;
-      flex-direction: column;
       margin-top: 10px;
-      gap: 8px;
-      animation: fadeIn 0.3s ease-in-out;
+      padding-left: 20px;
     }
-
-    .pdf-list a {
-      color: var(--secondary-color);
+    .notes-list a {
+      display: block;
+      color: var(--text-light);
+      margin-bottom: 6px;
       text-decoration: none;
       font-size: 0.95rem;
     }
-
-    .pdf-list a:hover {
+    .notes-list a:hover {
+      color: var(--secondary-color);
       text-decoration: underline;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .footer {
       text-align: center;
       padding: 20px;
@@ -103,33 +111,17 @@
       color: #aaa;
       margin-top: 30px;
     }
-
-    .back-btn {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: 0.3s;
-      align-self: flex-start;
-    }
-
-    .back-btn:hover { background: #1e2478; }
-
   </style>
 </head>
 <body>
   <div class="header">
     <h1>High Stars Aimers</h1>
-    <a href="subjects.html" style="color:white;text-decoration:none;"><i class="fas fa-arrow-left"></i> Back to Subjects</a>
+    <a href="subjects.html"><i class="fas fa-arrow-left"></i> Back to Subjects</a>
   </div>
 
   <main>
     <h2 id="subjectTitle">Loading...</h2>
-    <div class="topics-container" id="topicsContainer">
-      <p>Loading topics...</p>
-    </div>
+    <div id="formsContainer"></div>
   </main>
 
   <footer class="footer">
@@ -138,61 +130,74 @@
 
   <script>
     async function loadNotes() {
-      const params = new URLSearchParams(window.location.search);
-      const subject = params.get('subject');
-      const form = params.get('form');
-      const title = document.getElementById('subjectTitle');
-      const container = document.getElementById('topicsContainer');
-
-      title.textContent = subject + ' - Form ' + form;
+      const urlParams = new URLSearchParams(window.location.search);
+      const subject = urlParams.get('subject') || "Mathematics"; // default
+      document.getElementById('subjectTitle').textContent = subject;
 
       try {
-        const response = await fetch('notes/notes.json');
+        const response = await fetch("notes.json");
         const data = await response.json();
+        const subjectData = data[subject];
+        const container = document.getElementById("formsContainer");
 
-        const subjectData = data[subject]?.[form];
         if (!subjectData) {
-          container.innerHTML = "<p>No topics found for this subject/form yet.</p>";
+          container.innerHTML = "<p>No data found for this subject.</p>";
           return;
         }
 
-        container.innerHTML = '';
+        for (const form in subjectData) {
+          const formCard = document.createElement("div");
+          formCard.className = "form-card";
 
-        Object.entries(subjectData).forEach(([topic, files]) => {
-          const card = document.createElement('div');
-          card.className = 'topic-card';
+          const header = document.createElement("div");
+          header.className = "form-header";
+          header.innerHTML = `<span>Form ${form}</span> <i class="fas fa-chevron-down"></i>`;
+          formCard.appendChild(header);
 
-          const titleDiv = document.createElement('div');
-          titleDiv.className = 'topic-title';
-          titleDiv.innerHTML = `<span>${topic}</span><i class="fas fa-chevron-down"></i>`;
+          const topicsDiv = document.createElement("div");
+          topicsDiv.className = "topics";
 
-          const pdfList = document.createElement('div');
-          pdfList.className = 'pdf-list';
+          const topics = subjectData[form];
+          for (const topicName in topics) {
+            const topicDiv = document.createElement("div");
+            topicDiv.className = "topic";
 
-          if (files.length > 0) {
-            files.forEach(file => {
-              const link = document.createElement('a');
-              link.href = file;
-              link.target = '_blank';
-              link.innerHTML = `<i class="fas fa-file-pdf"></i> ${file.split('/').pop()}`;
-              pdfList.appendChild(link);
+            topicDiv.innerHTML = `
+              <div class="topic-title">
+                <span>${topicName}</span>
+                <i class="fas fa-plus"></i>
+              </div>
+              <div class="notes-list">
+                <a href="#" target="_blank">📄 Note 1 (Coming soon)</a>
+              </div>
+            `;
+
+            const title = topicDiv.querySelector(".topic-title");
+            const notesList = topicDiv.querySelector(".notes-list");
+            title.addEventListener("click", () => {
+              const icon = title.querySelector("i");
+              const isOpen = notesList.style.display === "block";
+              notesList.style.display = isOpen ? "none" : "block";
+              icon.className = isOpen ? "fas fa-plus" : "fas fa-minus";
             });
-          } else {
-            pdfList.innerHTML = `<p>No notes uploaded yet.</p>`;
+
+            topicsDiv.appendChild(topicDiv);
           }
 
-          titleDiv.addEventListener('click', () => {
-            const visible = pdfList.style.display === 'flex';
-            pdfList.style.display = visible ? 'none' : 'flex';
-          });
+          formCard.appendChild(topicsDiv);
+          container.appendChild(formCard);
 
-          card.appendChild(titleDiv);
-          card.appendChild(pdfList);
-          container.appendChild(card);
-        });
+          header.addEventListener("click", () => {
+            const isOpen = topicsDiv.style.display === "block";
+            topicsDiv.style.display = isOpen ? "none" : "block";
+            header.querySelector("i").className = isOpen
+              ? "fas fa-chevron-down"
+              : "fas fa-chevron-up";
+          });
+        }
       } catch (error) {
-        container.innerHTML = `<p>Error loading notes data.</p>`;
-        console.error(error);
+        console.error("Error loading notes.json:", error);
+        document.getElementById("formsContainer").innerHTML = "<p>Failed to load notes.</p>";
       }
     }
 
