@@ -24,14 +24,62 @@
     .header a { color:white; text-decoration:none; }
     main { padding:30px; display:flex; flex-direction:column; align-items:center; gap:25px; }
     h2 { color: var(--secondary-color); margin-bottom:10px; text-align:center; }
-    .subjects-container { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px; width:100%; max-width:900px; }
-    .subject-card { background: var(--card-background); padding:20px; border-radius:12px; text-align:center; border:1px solid var(--border-color); cursor:pointer; transition: transform 0.3s, box-shadow 0.3s; position:relative; }
+    .subjects-container { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px; width:100%; max-width:1000px; }
+    .subject-card { 
+      background: var(--card-background); 
+      padding:20px; 
+      border-radius:12px; 
+      text-align:center; 
+      border:1px solid var(--border-color); 
+      cursor:pointer; 
+      transition: transform 0.3s, box-shadow 0.3s; 
+      position:relative; 
+      overflow: visible; 
+      min-height: 120px;
+    }
     .subject-card:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(0,240,255,0.2); }
     .subject-card h3 { color: var(--secondary-color); margin:10px 0; }
-    .form-dropdown { display:none; flex-direction:column; background: rgba(10,15,31,0.95); border-radius:8px; border:1px solid var(--border-color); margin-top:10px; padding:10px; z-index:10; position:absolute; left:50%; transform:translateX(-50%); min-width:180px; }
-    .form-dropdown a { color: var(--secondary-color); text-decoration:none; padding:8px 0; border-bottom:1px solid rgba(0,240,255,0.2); transition: color 0.3s; }
-    .form-dropdown a:hover { color:white; }
-    .subject-card.active .form-dropdown { display:flex; }
+    
+    /* FIX: Bring the active card and its dropdown forward */
+    .subject-card.active {
+      z-index: 101; 
+    }
+    
+    /* Dropdown Styling */
+    .form-dropdown { 
+      display:none; 
+      flex-direction:column; 
+      background: rgba(10,15,31,0.98);
+      border-radius:8px; 
+      border:1px solid var(--secondary-color);
+      margin-top:10px; 
+      padding:10px 0;
+      z-index:100; /* High z-index */
+      position:absolute; 
+      top: 100%; 
+      left:50%; 
+      transform:translateX(-50%); 
+      min-width: calc(100% + 20px); 
+      box-shadow: 0 10px 20px rgba(0,240,255,0.4);
+    }
+    .form-dropdown a { 
+      color: var(--secondary-color); 
+      text-decoration:none; 
+      padding:8px 15px; 
+      border-bottom:1px solid rgba(0,240,255,0.1); 
+      transition: background-color 0.3s, color 0.3s; 
+      text-align: left;
+    }
+    .form-dropdown a:last-child {
+      border-bottom: none;
+    }
+    .form-dropdown a:hover { 
+      color:white; 
+      background-color: var(--primary-color);
+    }
+    .subject-card.active .form-dropdown { 
+      display:flex; 
+    }
     .footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; }
   </style>
 </head>
@@ -45,7 +93,6 @@
     <h2>Select Subject to View Papers</h2>
     <div class="subjects-container">
 
-      <!-- Example: Mathematics -->
       <div class="subject-card">
         <i class="fas fa-square-root-alt fa-3x"></i>
         <h3>Mathematics</h3>
@@ -57,7 +104,6 @@
         </div>
       </div>
 
-      <!-- Add other subjects similarly -->
       <div class="subject-card">
         <i class="fas fa-language fa-3x"></i>
         <h3>English</h3>
@@ -79,8 +125,107 @@
           <a href="pp-view.html?subject=Kiswahili&form=Form4">Form 4 Papers</a>
         </div>
       </div>
+      
+      <div class="subject-card">
+        <i class="fas fa-bolt fa-3x"></i>
+        <h3>Physics</h3>
+        <div class="form-dropdown">
+          <a href="pp-view.html?subject=Physics&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Physics&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Physics&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Physics&form=Form4">Form 4 Papers</a>
+        </div>
+      </div>
 
-      <!-- Repeat all other subjects (Physics, Chemistry, Biology, Geography, History, CRE, Agriculture, Business, Computer) -->
+      <div class="subject-card">
+        <i class="fas fa-flask fa-3x"></i>
+        <h3>Chemistry</h3>
+        <div class="form-dropdown">
+          <a href="pp-view.html?subject=Chemistry&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Chemistry&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Chemistry&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Chemistry&form=Form4">Form 4 Papers</a>
+        </div>
+      </div>
+
+      <div class="subject-card">
+        <i class="fas fa-seedling fa-3x"></i>
+        <h3>Biology</h3>
+        <div class="form-dropdown">
+          <a href="pp-view.html?subject=Biology&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Biology&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Biology&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Biology&form=Form4">Form 4 Papers</a>
+        </div>
+      </div>
+      
+      <div class="subject-card">
+        <i class="fas fa-globe-africa fa-3x"></i>
+        <h3>Geography</h3>
+        <div class="form-dropdown">
+          <a href="pp-view.html?subject=Geography&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Geography&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Geography&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Geography&form=Form4">Form 4 Papers</a>
+        </div>
+      </div>
+
+      <div class="subject-card">
+        <i class="fas fa-landmark fa-3x"></i>
+        <h3>History</h3>
+        <div class="form-dropdown">
+          <a href="pp-view.html?subject=History&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=History&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=History&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=History&form=Form4">Form 4 Papers</a>
+        </div>
+      </div>
+
+      <div class="subject-card">
+        <i class="fas fa-cross fa-3x"></i>
+        <h3>CRE</h3>
+        <div class="form-dropdown">
+          <a href="pp-view.html?subject=CRE&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=CRE&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=CRE&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=CRE&form=Form4">Form 4 Papers</a>
+        </div>
+      </div>
+
+      <div class="subject-card">
+        <i class="fas fa-tractor fa-3x"></i>
+        <h3>Agriculture</h3>
+        <div class="form-dropdown">
+          <a href="pp-view.html?subject=Agriculture&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Agriculture&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Agriculture&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Agriculture&form=Form4">Form 4 Papers</a>
+        </div>
+      </div>
+      
+      <div class="subject-card">
+        <i class="fas fa-chart-line fa-3x"></i>
+        <h3>Business Studies</h3>
+        <div class="form-dropdown">
+          <a href="pp-view.html?subject=Business&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Business&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Business&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Business&form=Form4">Form 4 Papers</a>
+        </div>
+      </div>
+
+      <div class="subject-card">
+        <i class="fas fa-desktop fa-3x"></i>
+        <h3>Computer Studies</h3>
+        <div class="form-dropdown">
+          <a href="pp-view.html?subject=Computer&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Computer&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Computer&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Computer&form=Form4">Form 4 Papers</a>
+        </div>
+      </div>
+      
+      <div style="visibility: hidden; display: block;"></div> 
 
     </div>
   </main>
@@ -90,18 +235,32 @@
   </footer>
 
   <script>
-    // Toggle dropdowns
+    // Toggle dropdowns (Revised for robustness)
     const cards = document.querySelectorAll('.subject-card');
+    
     cards.forEach(card => {
       card.addEventListener('click', (e) => {
+        // Prevent the card click from bubbling up to the window immediately
+        e.stopPropagation(); 
+        
+        // Check if the card already has the active class
+        const isActive = card.classList.contains('active');
+        
         // Close all other dropdowns
-        cards.forEach(c => { if(c !== card) c.classList.remove('active'); });
-        // Toggle current
-        card.classList.toggle('active');
-        e.stopPropagation();
+        cards.forEach(c => { 
+          if(c !== card) c.classList.remove('active'); 
+        });
+        
+        // Toggle the current card's active state
+        if (!isActive) {
+          card.classList.add('active');
+        } else {
+          card.classList.remove('active');
+        }
       });
     });
-    // Close dropdown if click outside
+    
+    // Close dropdown if click outside the card
     window.addEventListener('click', () => {
       cards.forEach(c => c.classList.remove('active'));
     });
