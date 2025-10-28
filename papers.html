@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Stars Aimers - Past Papers</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #2a2e92;
+      --secondary-color: #00f0ff;
+      --background-dark: #0a0f1f;
+      --card-background: rgba(35, 40, 60, 0.8);
+      --text-light: #e0e0e0;
+      --border-color: rgba(0, 240, 255, 0.2);
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      color: var(--text-light);
+      background-color: var(--background-dark);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: var(--background-dark);
+      border-bottom: 2px solid var(--secondary-color);
+    }
+    main {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+    }
+    .year-card {
+      background: var(--card-background);
+      padding: 15px 25px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+      width: 200px;
+    }
+    .year-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
+    }
+    .year-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 2px solid var(--secondary-color);
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>High Stars Aimers</h1>
+    <a href="subject-view.html" style="color:white; text-decoration:none;"><i class="fas fa-arrow-left"></i> Back</a>
+  </div>
+
+  <main>
+    <h2>Past Papers (2015–2024)</h2>
+    <div class="year-container">
+      <div class="year-card">2015</div>
+      <div class="year-card">2016</div>
+      <div class="year-card">2017</div>
+      <div class="year-card">2018</div>
+      <div class="year-card">2019</div>
+      <div class="year-card">2020</div>
+      <div class="year-card">2021</div>
+      <div class="year-card">2022</div>
+      <div class="year-card">2023</div>
+      <div class="year-card">2024</div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    &copy; 2024 High Stars Aimers. All Rights Reserved.
+  </footer>
+</body>
+</html>
