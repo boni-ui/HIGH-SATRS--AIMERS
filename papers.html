@@ -14,271 +14,145 @@
       --text-light: #e0e0e0;
       --border-color: rgba(0, 240, 255, 0.2);
     }
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      color: var(--text-light);
-      background-color: var(--background-dark);
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: var(--background-dark);
-      border-bottom: 2px solid var(--secondary-color);
-    }
-
-    main {
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 25px;
-    }
-
-    h2 {
-      color: var(--secondary-color);
-      margin-bottom: 10px;
-    }
-
-    .subjects-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      width: 100%;
-      max-width: 900px;
-    }
-
-    .subject-card {
-      background: var(--card-background);
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      border: 1px solid var(--border-color);
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-      position: relative;
-    }
-
-    .subject-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
-    }
-
-    .subject-card h3 {
-      color: var(--secondary-color);
-      margin: 10px 0;
-    }
-
-    /* Dropdown for forms */
-    .form-dropdown {
-      display: none;
-      flex-direction: column;
-      background: rgba(10, 15, 31, 0.95);
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      margin-top: 10px;
-      padding: 10px;
-      z-index: 10;
-      position: relative;
-    }
-
-    .form-dropdown a {
-      color: var(--secondary-color);
-      text-decoration: none;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(0,240,255,0.2);
-      transition: color 0.3s;
-    }
-
-    .form-dropdown a:hover {
-      color: white;
-    }
-
-    .subject-card.active .form-dropdown {
-      display: flex;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 20px;
-      border-top: 2px solid var(--secondary-color);
-      color: #aaa;
-    }
-
+    html, body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; color: var(--text-light); background-color: var(--background-dark); }
+    .header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); border-bottom:2px solid var(--secondary-color); }
+    .header a { color:white; text-decoration:none; }
+    main { padding:30px; display:flex; flex-direction:column; align-items:center; gap:25px; }
+    h2 { color: var(--secondary-color); margin-bottom:10px; text-align:center; }
+    .subjects-container { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; width:100%; max-width:900px; }
+    .subject-card { background: var(--card-background); padding:20px; border-radius:12px; text-align:center; border:1px solid var(--border-color); cursor:pointer; transition: transform 0.3s, box-shadow 0.3s; position:relative; }
+    .subject-card:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(0,240,255,0.2); }
+    .subject-card h3 { color: var(--secondary-color); margin:10px 0; }
+    .form-dropdown { display:none; flex-direction:column; background: rgba(10,15,31,0.95); border-radius:8px; border:1px solid var(--border-color); margin-top:10px; padding:10px; z-index:10; position:relative; }
+    .form-dropdown a { color: var(--secondary-color); text-decoration:none; padding:8px 0; border-bottom:1px solid rgba(0,240,255,0.2); transition: color 0.3s; }
+    .form-dropdown a:hover { color:white; }
+    .subject-card.active .form-dropdown { display:flex; }
+    .footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; }
   </style>
 </head>
 <body>
   <div class="header">
     <h1>High Stars Aimers</h1>
-    <a href="home.html" style="color:white; text-decoration:none;"><i class="fas fa-home"></i> Home</a>
+    <a href="home.html"><i class="fas fa-home"></i> Home</a>
   </div>
 
   <main>
     <h2>Select Subject to View Papers</h2>
-
     <div class="subjects-container">
 
-      <!-- Mathematics -->
+      <!-- Subjects -->
       <div class="subject-card">
         <i class="fas fa-square-root-alt fa-3x"></i>
         <h3>Mathematics</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
+          <a href="pp-view.html?subject=Mathematics&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Mathematics&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Mathematics&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Mathematics&form=Form4">Form 4 Papers</a>
         </div>
       </div>
 
-      <!-- English -->
       <div class="subject-card">
         <i class="fas fa-language fa-3x"></i>
         <h3>English</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
+          <a href="pp-view.html?subject=English&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=English&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=English&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=English&form=Form4">Form 4 Papers</a>
         </div>
       </div>
 
-      <!-- Kiswahili -->
       <div class="subject-card">
         <i class="fas fa-comments fa-3x"></i>
         <h3>Kiswahili</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
+          <a href="pp-view.html?subject=Kiswahili&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Kiswahili&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Kiswahili&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Kiswahili&form=Form4">Form 4 Papers</a>
         </div>
       </div>
 
-      <!-- Chemistry -->
       <div class="subject-card">
         <i class="fas fa-flask fa-3x"></i>
         <h3>Chemistry</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
+          <a href="pp-view.html?subject=Chemistry&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Chemistry&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Chemistry&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Chemistry&form=Form4">Form 4 Papers</a>
         </div>
       </div>
 
-      <!-- Physics -->
       <div class="subject-card">
         <i class="fas fa-atom fa-3x"></i>
         <h3>Physics</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
+          <a href="pp-view.html?subject=Physics&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Physics&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Physics&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Physics&form=Form4">Form 4 Papers</a>
         </div>
       </div>
 
-      <!-- Biology -->
       <div class="subject-card">
         <i class="fas fa-dna fa-3x"></i>
         <h3>Biology</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
+          <a href="pp-view.html?subject=Biology&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Biology&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Biology&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Biology&form=Form4">Form 4 Papers</a>
         </div>
       </div>
 
-      <!-- Geography -->
       <div class="subject-card">
         <i class="fas fa-globe-africa fa-3x"></i>
         <h3>Geography</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
+          <a href="pp-view.html?subject=Geography&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Geography&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Geography&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Geography&form=Form4">Form 4 Papers</a>
         </div>
       </div>
 
-      <!-- History -->
       <div class="subject-card">
         <i class="fas fa-landmark fa-3x"></i>
         <h3>History</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
+          <a href="pp-view.html?subject=History&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=History&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=History&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=History&form=Form4">Form 4 Papers</a>
         </div>
       </div>
 
-      <!-- CRE -->
       <div class="subject-card">
         <i class="fas fa-cross fa-3x"></i>
         <h3>CRE</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
+          <a href="pp-view.html?subject=CRE&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=CRE&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=CRE&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=CRE&form=Form4">Form 4 Papers</a>
         </div>
       </div>
 
-      <!-- Agriculture -->
       <div class="subject-card">
         <i class="fas fa-tractor fa-3x"></i>
         <h3>Agriculture</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
+          <a href="pp-view.html?subject=Agriculture&form=Form1">Form 1 Papers</a>
+          <a href="pp-view.html?subject=Agriculture&form=Form2">Form 2 Papers</a>
+          <a href="pp-view.html?subject=Agriculture&form=Form3">Form 3 Papers</a>
+          <a href="pp-view.html?subject=Agriculture&form=Form4">Form 4 Papers</a>
         </div>
       </div>
 
-      <!-- Business Studies -->
       <div class="subject-card">
         <i class="fas fa-chart-line fa-3x"></i>
         <h3>Business Studies</h3>
         <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
-        </div>
-      </div>
-
-      <!-- Computer Studies -->
-      <div class="subject-card">
-        <i class="fas fa-laptop-code fa-3x"></i>
-        <h3>Computer Studies</h3>
-        <div class="form-dropdown">
-          <a href="#">Form 1 Papers</a>
-          <a href="#">Form 2 Papers</a>
-          <a href="#">Form 3 Papers</a>
-          <a href="#">Form 4 Papers</a>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer class="footer">
-    &copy; 2024 High Stars Aimers. All Rights Reserved.
-  </footer>
-
-  <script>
-    // Toggle dropdowns
-    document.querySelectorAll('.subject-card').forEach(card => {
-      card.addEventListener('click', () => {
-        card.classList.toggle('active');
-      });
-    });
-  </script>
-</body>
-</html>
+          <a href="pp-view
