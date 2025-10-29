@@ -3,139 +3,273 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>High Stars Aimers - Papers View</title>
+  <title>High Stars Aimers - Subjects</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Use the same theme variables */
     :root {
       --primary-color: #2a2e92;
       --secondary-color: #00f0ff;
       --background-dark: #0a0f1f;
+      --card-background: rgba(35, 40, 60, 0.8);
       --text-light: #e0e0e0;
       --border-color: rgba(0, 240, 255, 0.2);
     }
-    body {
-      margin:0; padding:0;
-      font-family:'Segoe UI', sans-serif;
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
       color: var(--text-light);
       background-color: var(--background-dark);
     }
-    .header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); border-bottom:2px solid var(--secondary-color); }
-    .header a { color:white; text-decoration:none; }
-    main { padding:30px; display:flex; flex-direction:column; align-items:center; gap:25px; }
-    h2 { color: var(--secondary-color); text-align:center; }
-    #paper-info {
-        background-color: var(--primary-color);
-        padding: 15px 30px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        text-align: center;
-        border: 1px solid var(--secondary-color);
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: var(--background-dark);
+      border-bottom: 2px solid var(--secondary-color);
     }
-    #pdf-viewer-container {
-        width: 100%;
-        max-width: 900px;
-        height: 80vh; 
-        background-color: #1a1e2a;
-        border: 2px solid var(--secondary-color);
-        border-radius: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.2em;
+
+    .navigation {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      padding: 15px 0;
+      background-color: var(--background-dark);
+      border-bottom: 2px solid var(--secondary-color);
+      position: sticky;
+      top: 0;
+      z-index: 9999;
     }
-    /* Simple footer style */
-    .footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; }
+
+    .navigation a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.2s;
+    }
+
+    .navigation a:hover {
+      color: var(--secondary-color);
+    }
+
+    main {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+    }
+
+    h2 {
+      color: var(--secondary-color);
+    }
+
+    .subjects-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      width: 100%;
+      max-width: 900px;
+      position: relative;
+      z-index: 0;
+    }
+
+    .subject-card {
+      background: var(--card-background);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      position: relative;
+      overflow: visible;
+      z-index: 1;
+    }
+
+    .subject-card.active {
+      z-index: 10000;
+    }
+
+    .subject-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
+    }
+
+    .subject-card h3 {
+      color: var(--secondary-color);
+      margin: 10px 0;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 105%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 20, 40, 0.97);
+      border: 1px solid var(--secondary-color);
+      border-radius: 10px;
+      padding: 8px 0;
+      width: 200px;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      z-index: 10001;
+      animation: fadeIn 0.25s ease;
+      pointer-events: auto;
+    }
+
+    .dropdown a {
+      display: block;
+      color: var(--text-light);
+      padding: 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .dropdown a:hover {
+      background: rgba(0, 240, 255, 0.2);
+      color: var(--secondary-color);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, 10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 2px solid var(--secondary-color);
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <div class="header">
     <h1>High Stars Aimers</h1>
-    <a href="papers.html"><i class="fas fa-chevron-left"></i> Back to Subjects</a>
+  </div>
+
+  <!-- Navigation -->
+  <div class="navigation">
+    <a href="home.html"><i class="fas fa-home"></i> Home</a>
+    <a href="papers.html"><i class="fas fa-file-alt"></i> Papers View</a>
+    <a href="#">Subjects</a>
   </div>
 
   <main>
-    <div id="paper-info">
-      <h2>Loading Paper...</h2>
-    </div>
+    <h2>Select a Subject</h2>
+    <div class="subjects-container">
 
-    <div id="pdf-viewer-container">
-      PDF Viewer Area
+      <!-- Mathematics -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-square-root-alt fa-3x"></i>
+        <h3>Mathematics</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=math&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=math&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=math&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=math&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- English -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-book fa-3x"></i>
+        <h3>English</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=eng&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=eng&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=eng&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=eng&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- Kiswahili -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-language fa-3x"></i>
+        <h3>Kiswahili</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=kis&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=kis&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=kis&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=kis&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- Physics -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-atom fa-3x"></i>
+        <h3>Physics</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=phy&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=phy&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=phy&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=phy&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- Chemistry -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-flask fa-3x"></i>
+        <h3>Chemistry</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=chem&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=chem&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=chem&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=chem&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- Biology -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-dna fa-3x"></i>
+        <h3>Biology</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=bio&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=bio&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=bio&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=bio&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- Continue with Geography, History, CRE, Business, Agriculture, Computer Studies in same pattern -->
+      <!-- Each links to pp-view.html?sub=<code>&frm=fX -->
+      
     </div>
   </main>
-  
+
   <footer class="footer">
     &copy; 2025 High Stars Aimers. All Rights Reserved.
   </footer>
 
   <script>
-    // Map to convert codes back to user-friendly display names
-    const displayNameMap = {
-      'math': 'Mathematics',
-      'eng': 'English',
-      'kis': 'Kiswahili',
-      'phy': 'Physics',
-      'chem': 'Chemistry',
-      'bio': 'Biology',
-      'geo': 'Geography',
-      'hist': 'History',
-      'cre': 'CRE',
-      'agric': 'Agriculture',
-      'biz': 'Business Studies',
-      'comp': 'Computer Studies',
-      'f1': 'Form 1',
-      'f2': 'Form 2',
-      'f3': 'Form 3',
-      'f4': 'Form 4'
-    };
+    function toggleDropdown(card) {
+      const dropdowns = document.querySelectorAll('.dropdown');
+      const cards = document.querySelectorAll('.subject-card');
 
-    function loadPaper() {
-      // 1. Get the abbreviated parameters from the URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const subjectCode = urlParams.get('sub');
-      const formCode = urlParams.get('frm');
-      
-      const paperInfoDiv = document.getElementById('paper-info');
-      const pdfContainer = document.getElementById('pdf-viewer-container');
-      
-      if (subjectCode && formCode) {
-        
-        // 2. Construct the file path: [sub]-[frm].pdf (e.g., phy-f1.pdf)
-        const pdfFileName = `${subjectCode}-${formCode}.pdf`;
-        const pdfFilePath = `papers/${pdfFileName}`;
-        
-        // 3. Get the friendly display names
-        const displaySubject = displayNameMap[subjectCode] || subjectCode;
-        const displayForm = displayNameMap[formCode] || formCode;
-        
-        // 4. Update the info header
-        paperInfoDiv.innerHTML = `
-          <h2>${displaySubject} Paper - ${displayForm}</h2>
-          <p>File being loaded: <strong>${pdfFileName}</strong></p>
-        `;
-        
-        // 5. Inject the PDF viewer element
-        pdfContainer.innerHTML = `
-          <object data="${pdfFilePath}" type="application/pdf" width="100%" height="100%">
-            <p style="color:red; text-align:center; padding: 20px;">
-              **Error loading the PDF viewer.** <br>This happens if the file path is incorrect or your browser cannot embed PDFs.
-              <br><a href="${pdfFilePath}" download style="color:var(--secondary-color); font-weight: bold;">Click here to download the file directly: ${pdfFileName}</a>
-            </p>
-          </object>
-        `;
+      dropdowns.forEach(d => d.style.display = 'none');
+      cards.forEach(c => c.classList.remove('active'));
 
+      const dropdown = card.querySelector('.dropdown');
+      if (dropdown.style.display === 'block') {
+        dropdown.style.display = 'none';
+        card.classList.remove('active');
       } else {
-        // Handle case where parameters are missing
-        paperInfoDiv.innerHTML = `
-          <h2>Error!</h2>
-          <p>Subject or Form not specified in the URL. Please go back and select a paper.</p>
-        `;
-        pdfContainer.innerHTML = '';
+        dropdown.style.display = 'block';
+        card.classList.add('active');
       }
     }
-    
-    // Run the function when the page loads
-    window.onload = loadPaper;
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.subject-card')) {
+        document.querySelectorAll('.dropdown').forEach(d => d.style.display = 'none');
+        document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('active'));
+      }
+    });
   </script>
 </body>
 </html>
