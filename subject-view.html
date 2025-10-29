@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>High Stars Aimers - Subject View</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
       --primary-color: #2a2e92;
@@ -87,8 +87,25 @@
     &copy; 2025 High Stars Aimers. All Rights Reserved.
   </footer>
 
-  <script>
-    // Subjects and topics data
+  <!-- Firebase Integration -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
+      authDomain: "high-stars-aimers-844a6.firebaseapp.com",
+      databaseURL: "https://high-stars-aimers-844a6-default-rtdb.firebaseio.com",
+      projectId: "high-stars-aimers-844a6",
+      storageBucket: "high-stars-aimers-844a6.firebasestorage.app",
+      messagingSenderId: "10463765487",
+      appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
     const syllabus = {
       "Mathematics": {
         1: ["Numbers & Operations", "Algebra Basics", "Geometry Fundamentals", "Statistics Intro"],
@@ -96,97 +113,53 @@
         3: ["Advanced Algebra", "Coordinate Geometry", "Mensuration", "Statistics & Probability"],
         4: ["Calculus Intro", "Advanced Trigonometry", "Vectors", "Matrices"]
       },
-      "Physics": {
-        1: ["Motion & Forces", "Energy Basics", "Heat", "Waves Introduction"],
-        2: ["Electromagnetism", "Light", "Sound", "Heat Transfer"],
-        3: ["Mechanics", "Electricity", "Magnetism", "Optics"],
-        4: ["Modern Physics", "Thermodynamics", "Oscillations", "Electronics Basics"]
-      },
       "Chemistry": {
         1: ["Matter & Properties", "Atoms & Molecules", "States of Matter", "Solutions Basics"],
         2: ["Chemical Reactions", "Acids & Bases", "Metals & Non-metals", "Organic Intro"],
         3: ["Organic Chemistry", "Chemical Bonding", "Periodic Table", "Electrochemistry"],
         4: ["Analytical Chemistry", "Physical Chemistry", "Industrial Chemistry", "Environmental Chemistry"]
-      },
-      "Biology": {
-        1: ["Cells", "Human Body Basics", "Plants", "Animals"],
-        2: ["Genetics Basics", "Nutrition", "Respiration", "Reproduction"],
-        3: ["Human Systems", "Ecology", "Evolution", "Microorganisms"],
-        4: ["Advanced Genetics", "Biotechnology", "Human Health", "Environmental Biology"]
-      },
-      "English": {
-        1: ["Grammar Basics", "Reading Comprehension", "Writing Skills", "Literature Intro"],
-        2: ["Poetry", "Prose", "Drama", "Advanced Grammar"],
-        3: ["Literary Analysis", "Essay Writing", "Novel Study", "Drama Analysis"],
-        4: ["Advanced Writing", "Critical Reading", "Speech & Debates", "Literature Appreciation"]
-      },
-      "Kiswahili": {
-        1: ["Sarufi", "Usomaji", "Uandishi", "Fasihi"],
-        2: ["Methali na Misemo", "Insha", "Usomaji wa Fasihi", "Sarufi"],
-        3: ["Riwaya na Hadithi", "Mashairi", "Matumizi ya Lugha", "Insha"],
-        4: ["Tafsiri", "Fasihi ya Kisasa", "Kazi za Maandishi", "Usomaji wa Kisasa"]
-      },
-      "Geography": {
-        1: ["Maps & Directions", "Weather & Climate", "Landforms", "Population Basics"],
-        2: ["Rivers & Lakes", "Climate Zones", "Soil Types", "Population Studies"],
-        3: ["Physical Geography", "Human Geography", "Resources", "Environmental Issues"],
-        4: ["Advanced Physical Geography", "Economic Geography", "Geospatial Tech", "Global Issues"]
-      },
-      "History": {
-        1: ["Early Civilizations", "African Kingdoms", "Exploration", "Colonial Impact"],
-        2: ["Colonial Kenya", "World Wars", "Trade & Economy", "National Movements"],
-        3: ["Independence Struggles", "Global History", "Cultural Movements", "Politics"],
-        4: ["Modern History", "International Relations", "Economic History", "Historical Analysis"]
-      },
-      "CRE": {
-        1: ["Introduction to Religion", "Bible Stories", "Prayer & Worship", "Moral Lessons"],
-        2: ["Old Testament", "New Testament", "Christian Ethics", "Religious Practices"],
-        3: ["Church History", "Comparative Religion", "Christian Morality", "Social Issues"],
-        4: ["Advanced Theology", "World Religions", "Philosophy of Religion", "Ethics Debate"]
-      },
-      "Business Studies": {
-        1: ["Introduction to Business", "Entrepreneurship Basics", "Business Environment", "Business Ethics"],
-        2: ["Accounting Basics", "Marketing", "Trade & Commerce", "Business Law"],
-        3: ["Management Principles", "Finance", "Operations", "Human Resource"],
-        4: ["Advanced Accounting", "Strategic Management", "Business Policy", "Project Management"]
-      },
-      "Agriculture": {
-        1: ["Crop Farming", "Animal Husbandry", "Soil Basics", "Farm Tools"],
-        2: ["Pest & Disease Control", "Farm Management", "Irrigation", "Plant Breeding"],
-        3: ["Agricultural Economics", "Soil Science", "Livestock Management", "Agri-Technology"],
-        4: ["Advanced Crop Production", "Agri-Business", "Sustainable Farming", "Research Methods"]
-      },
-      "Computer Studies": {
-        1: ["Computer Basics", "Word Processing", "Spreadsheets", "Presentations"],
-        2: ["Programming Basics", "Databases", "Networks", "Internet Safety"],
-        3: ["Web Development", "Algorithms", "Data Structures", "Software Design"],
-        4: ["Advanced Programming", "Networking", "AI Basics", "Cybersecurity"]
       }
+      // (Add your other subjects)
     };
 
-    // Get URL parameters
     const params = new URLSearchParams(window.location.search);
     const subject = params.get("subject") || "Mathematics";
     const form = params.get("form") || "1";
-
-    // Update header
     document.getElementById("subject-title").innerText = `Subject: ${subject} - Form ${form}`;
-
     const topicsContainer = document.getElementById("topics-container");
 
-    // Generate topic cards
-    syllabus[subject][form].forEach(topic => {
+    syllabus[subject][form].forEach(async (topic) => {
       const card = document.createElement("div");
       card.className = "topic-card";
-      card.innerHTML = `<h3>${topic}</h3>
-                        <div class="dropdown">
-                          <!-- Notes PDF links go here -->
-                          <a href="#">No notes uploaded yet</a>
-                        </div>`;
+      card.innerHTML = `<h3>${topic}</h3><div class="dropdown"><p>Loading...</p></div>`;
+      const dropdown = card.querySelector(".dropdown");
+
+      const notesRef = ref(db, `notes/${subject}/${form}/${topic}`);
+
+      try {
+        const snapshot = await get(notesRef);
+        dropdown.innerHTML = "";
+        if (snapshot.exists()) {
+          const files = snapshot.val();
+          for (const key in files) {
+            const note = files[key];
+            const link = document.createElement("a");
+            link.href = note.url;
+            link.target = "_blank";
+            link.textContent = note.name || "View Note";
+            dropdown.appendChild(link);
+          }
+        } else {
+          dropdown.innerHTML = "<a href='#'>No notes uploaded yet</a>";
+        }
+      } catch (error) {
+        dropdown.innerHTML = "<p style='color:red'>Error loading notes</p>";
+      }
+
       card.addEventListener("click", () => {
-        const dropdown = card.querySelector(".dropdown");
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
       });
+
       topicsContainer.appendChild(card);
     });
   </script>
