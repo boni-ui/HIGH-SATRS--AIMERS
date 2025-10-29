@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>High Stars Aimers - Papers View</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
       --primary-color: #2a2e92;
       --secondary-color: #00f0ff;
       --background-dark: #0a0f1f;
       --text-light: #e0e0e0;
-      --border-color: rgba(0, 240, 255, 0.2);
     }
     body {
       margin: 0;
@@ -28,10 +27,7 @@
       background-color: var(--background-dark);
       border-bottom: 2px solid var(--secondary-color);
     }
-    .header a {
-      color: white;
-      text-decoration: none;
-    }
+    .header a { color: white; text-decoration: none; }
     main {
       padding: 30px;
       display: flex;
@@ -39,10 +35,7 @@
       align-items: center;
       gap: 25px;
     }
-    h2 {
-      color: var(--secondary-color);
-      text-align: center;
-    }
+    h2 { color: var(--secondary-color); text-align: center; }
     #paper-info {
       background-color: var(--primary-color);
       padding: 15px 30px;
@@ -77,30 +70,23 @@
   </div>
 
   <main>
-    <div id="paper-info">
-      <h2>Loading Paper...</h2>
-    </div>
-    <div id="pdf-viewer-container">
-      Connecting to Firebase...
-    </div>
+    <div id="paper-info"><h2>Loading Paper...</h2></div>
+    <div id="pdf-viewer-container">Connecting to Firebase...</div>
   </main>
 
   <footer class="footer">
     &copy; 2025 High Stars Aimers. All Rights Reserved.
   </footer>
 
-  <!-- Firebase SDKs -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    // Your Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
       authDomain: "high-stars-aimers-844a6.firebaseapp.com",
       projectId: "high-stars-aimers-844a6",
-      storageBucket: "high-stars-aimers-844a6.appspot.com",
+      storageBucket: "high-stars-aimers-844a6.firebasestorage.app",
       messagingSenderId: "10463765487",
       appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a",
       measurementId: "G-88828H1T1V"
@@ -108,22 +94,32 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
     const displayNameMap = {
-      'math': 'Mathematics', 'eng': 'English', 'kis': 'Kiswahili',
-      'phy': 'Physics', 'chem': 'Chemistry', 'bio': 'Biology',
-      'geo': 'Geography', 'hist': 'History', 'cre': 'CRE',
-      'agric': 'Agriculture', 'biz': 'Business Studies', 'comp': 'Computer Studies',
-      'f1': 'Form 1', 'f2': 'Form 2', 'f3': 'Form 3', 'f4': 'Form 4'
+      math: "Mathematics",
+      eng: "English",
+      kis: "Kiswahili",
+      phy: "Physics",
+      chem: "Chemistry",
+      bio: "Biology",
+      geo: "Geography",
+      hist: "History",
+      cre: "CRE",
+      agric: "Agriculture",
+      biz: "Business Studies",
+      comp: "Computer Studies",
+      f1: "Form 1",
+      f2: "Form 2",
+      f3: "Form 3",
+      f4: "Form 4"
     };
 
     async function loadPaper() {
       const params = new URLSearchParams(window.location.search);
-      const sub = params.get('sub');
-      const frm = params.get('frm');
-      const paperInfoDiv = document.getElementById('paper-info');
-      const pdfContainer = document.getElementById('pdf-viewer-container');
+      const sub = params.get("sub");
+      const frm = params.get("frm");
+      const paperInfoDiv = document.getElementById("paper-info");
+      const pdfContainer = document.getElementById("pdf-viewer-container");
 
       if (!sub || !frm) {
         paperInfoDiv.innerHTML = `<h2>Error!</h2><p>Missing subject or form parameters.</p>`;
@@ -136,7 +132,6 @@
       paperInfoDiv.innerHTML = `<h2>${subjectName} - ${formName} Paper</h2><p>Fetching from Firebase...</p>`;
 
       try {
-        // Query Firestore for matching paper
         const papersRef = collection(db, "papers");
         const q = query(papersRef, where("subject", "==", subjectName), where("form", "==", formName));
         const querySnapshot = await getDocs(q);
@@ -147,7 +142,7 @@
         }
 
         let fileURL = null;
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach((doc) => {
           fileURL = doc.data().fileURL;
         });
 
@@ -161,10 +156,8 @@
             <p style="color:red; text-align:center;">
               Unable to view PDF. <a href="${fileURL}" target="_blank" style="color:var(--secondary-color);">Click to open or download.</a>
             </p>
-          </object>
-        `;
+          </object>`;
         paperInfoDiv.innerHTML = `<h2>${subjectName} - ${formName} Paper</h2><p>Loaded successfully from Firebase.</p>`;
-
       } catch (error) {
         console.error(error);
         pdfContainer.innerHTML = `<p style="color:red;">Error fetching file: ${error.message}</p>`;
