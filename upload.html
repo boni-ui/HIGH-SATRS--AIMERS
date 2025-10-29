@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High Stars Aimers - Upload Portal</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary-color: #2a2e92;
+  --secondary-color: #00f0ff;
+  --background-dark: #0a0f1f;
+  --card-background: rgba(35, 40, 60, 0.8);
+  --text-light: #e0e0e0;
+  --border-color: rgba(0, 240, 255, 0.2);
+}
+html, body {
+  margin:0; padding:0;
+  font-family:'Segoe UI', sans-serif;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+.header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 20px;
+  background-color: var(--background-dark);
+  border-bottom:2px solid var(--secondary-color);
+}
+.header a { color:white; text-decoration:none; }
+main { padding:30px; max-width:700px; margin:0 auto; }
+h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
+.upload-card {
+  background: var(--card-background);
+  padding:25px 30px;
+  border-radius:10px;
+  border:1px solid var(--border-color);
+  box-shadow:0 4px 12px rgba(0,240,255,0.1);
+}
+label {
+  display:block; margin-top:15px; margin-bottom:5px;
+  color: var(--secondary-color); font-weight:600;
+}
+select, input[type="file"], button {
+  width:100%; padding:10px; background-color:#151a2f;
+  border:1px solid var(--border-color); color:var(--text-light);
+  border-radius:6px; margin-bottom:15px; font-size:16px;
+}
+button {
+  background-color: var(--secondary-color);
+  color:#000; font-weight:bold; cursor:pointer; border:none; transition:0.3s;
+}
+button:hover { background-color:#03e3f0; transform:scale(1.02); }
+.hidden { display:none; }
+.progress-bar {
+  width: 0; height: 8px;
+  background-color: var(--secondary-color);
+  border-radius: 4px; margin-top: 10px; transition: width 0.3s;
+}
+.footer {
+  text-align:center; padding:20px;
+  border-top:2px solid var(--secondary-color);
+  color:#aaa; margin-top:40px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>High Stars Aimers</h1>
+  <a href="index.html"><i class="fas fa-arrow-left"></i> Back Home</a>
+</div>
+
+<main>
+  <h2>Upload Portal</h2>
+  <div class="upload-card">
+    <form id="uploadForm">
+      <label for="uploadType">Select Upload Type:</label>
+      <select id="uploadType" required>
+        <option value="">-- Select Type --</option>
+        <option value="notes">Notes</option>
+        <option value="papers">Papers</option>
+      </select>
+
+      <div id="subjectDiv" class="hidden">
+        <label for="subject">Select Subject:</label>
+        <select id="subject">
+          <option value="">-- Select Subject --</option>
+          <option>Mathematics</option>
+          <option>English</option>
+          <option>Kiswahili</option>
+          <option>Biology</option>
+          <option>Chemistry</option>
+          <option>Physics</option>
+          <option>Geography</option>
+          <option>History</option>
+          <option>CRE</option>
+          <option>Business Studies</option>
+          <option>Agriculture</option>
+          <option>Computer Studies</option>
+        </select>
+      </div>
+
+      <div id="formDiv" class="hidden">
+        <label for="form">Select Form:</label>
+        <select id="form">
+          <option value="">-- Select Form --</option>
+          <option>Form 1</option>
+          <option>Form 2</option>
+          <option>Form 3</option>
+          <option>Form 4</option>
+        </select>
+      </div>
+
+      <div id="topicDiv" class="hidden">
+        <label for="topic">Select Topic:</label>
+        <select id="topic">
+          <option value="">-- Select Topic --</option>
+        </select>
+      </div>
+
+      <label for="file">Choose File (PDF):</label>
+      <input type="file" id="file" accept=".pdf" required>
+
+      <div class="progress-bar" id="progressBar"></div>
+      <p id="uploadStatus"></p>
+
+      <button type="submit">Upload File</button>
+    </form>
+  </div>
+</main>
+
+<footer class="footer">
+  &copy; 2025 High Stars Aimers. All Rights Reserved.
+</footer>
+
+<!-- Firebase SDK -->
+<script type="module">
+// Firebase SDKs
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
+  authDomain: "high-stars-aimers-844a6.firebaseapp.com",
+  projectId: "high-stars-aimers-844a6",
+  storageBucket: "high-stars-aimers-844a6.firebasestorage.app",
+  messagingSenderId: "10463765487",
+  appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a",
+  measurementId: "G-88828H1T1V"
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+const db = getFirestore(app);
+
+const uploadType = document.getElementById('uploadType');
+const subjectDiv = document.getElementById('subjectDiv');
+const formDiv = document.getElementById('formDiv');
+const topicDiv = document.getElementById('topicDiv');
+const subjectSelect = document.getElementById('subject');
+const formSelect = document.getElementById('form');
+const topicSelect = document.getElementById('topic');
+const uploadForm = document.getElementById('uploadForm');
+const progressBar = document.getElementById('progressBar');
+const uploadStatus = document.getElementById('uploadStatus');
+
+// 8-4-4 Topics
+const topicsData = {
+  "Mathematics": ["Numbers", "Algebra", "Geometry", "Mensuration", "Statistics", "Trigonometry", "Vectors", "Matrices"],
+  "English": ["Grammar", "Comprehension", "Writing", "Oral Skills", "Literature"],
+  "Kiswahili": ["Sarufi", "Fasihi", "Matumizi ya Lugha", "Insha"],
+  "Biology": ["Cell Structure", "Classification", "Transport in Plants", "Respiration", "Reproduction"],
+  "Chemistry": ["Introduction to Chemistry", "Acids, Bases & Indicators", "Water", "Air & Combustion", "The Mole Concept"],
+  "Physics": ["Measurement", "Forces", "Pressure", "Work, Energy & Power", "Light", "Electricity"],
+  "Geography": ["Map Reading", "Weather & Climate", "Rocks", "Agriculture", "Population"],
+  "History": ["Early Man", "Trade", "Colonialism", "Nationalism", "Independence"],
+  "CRE": ["Creation", "Faith", "Christian Living", "Church History"],
+  "Business Studies": ["Entrepreneurship", "Office Practice", "Business Environment", "Communication"],
+  "Agriculture": ["Soil Science", "Crop Production", "Livestock Production"],
+  "Computer Studies": ["Computer Basics", "Word Processing", "Spreadsheets", "Internet"]
+};
+
+// Field control
+uploadType.addEventListener('change', () => {
+  subjectDiv.classList.toggle('hidden', uploadType.value === "");
+  formDiv.classList.toggle('hidden', uploadType.value === "");
+  topicDiv.classList.toggle('hidden', uploadType.value !== "notes");
+});
+
+// Populate topics
+subjectSelect.addEventListener('change', () => {
+  const selected = subjectSelect.value;
+  topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
+  if (topicsData[selected]) {
+    topicsData[selected].forEach(t => {
+      const opt = document.createElement('option');
+      opt.textContent = t;
+      topicSelect.appendChild(opt);
+    });
+  }
+});
+
+// Upload process
+uploadForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const type = uploadType.value;
+  const subject = subjectSelect.value;
+  const form = formSelect.value;
+  const topic = topicSelect.value;
+  const file = document.getElementById('file').files[0];
+
+  if (!type || !subject || !form || !file || (type === "notes" && !topic)) {
+    alert("Please fill all required fields.");
+    return;
+  }
+
+  const path = type === "notes"
+    ? `notes/${subject}/${form}/${topic}/${file.name}`
+    : `papers/${subject}/${form}/${file.name}`;
+
+  const storageRef = ref(storage, path);
+  const uploadTask = uploadBytesResumable(storageRef, file);
+
+  uploadTask.on("state_changed",
+    (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      progressBar.style.width = progress + "%";
+    },
+    (error) => {
+      uploadStatus.textContent = "❌ Upload failed: " + error.message;
+    },
+    async () => {
+      const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+      const docRef = await addDoc(collection(db, type), {
+        subject, form, topic: type === "notes" ? topic : null,
+        fileName: file.name,
+        fileURL: downloadURL,
+        timestamp: new Date()
+      });
+      uploadStatus.textContent = "✅ Uploaded successfully!";
+      console.log("Saved document ID:", docRef.id);
+    }
+  );
+});
+</script>
+</body>
+</html>
