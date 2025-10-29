@@ -14,19 +14,53 @@
   --text-light: #e0e0e0;
   --border-color: rgba(0, 240, 255, 0.2);
 }
-html, body {margin:0;padding:0;font-family:'Segoe UI',sans-serif;background-color:var(--background-dark);color:var(--text-light);}
-.header {display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background-color:var(--background-dark);border-bottom:2px solid var(--secondary-color);}
-.header a{color:white;text-decoration:none;}
-main{padding:30px;max-width:700px;margin:0 auto;}
-h2{color:var(--secondary-color);margin-bottom:20px;text-align:center;}
-.upload-card{background:var(--card-background);padding:25px 30px;border-radius:10px;border:1px solid var(--border-color);box-shadow:0 4px 12px rgba(0,240,255,0.1);}
-label{display:block;margin-top:15px;margin-bottom:5px;color:var(--secondary-color);font-weight:600;}
-select,input[type="file"],button{width:100%;padding:10px;background-color:#151a2f;border:1px solid var(--border-color);color:var(--text-light);border-radius:6px;margin-bottom:15px;font-size:16px;}
-button{background-color:var(--secondary-color);color:#000;font-weight:bold;cursor:pointer;border:none;transition:0.3s;}
-button:hover{background-color:#03e3f0;transform:scale(1.02);}
-.hidden{display:none;}
-.progress-bar{width:0;height:8px;background-color:var(--secondary-color);border-radius:4px;margin-top:10px;transition:width 0.3s;}
-.footer{text-align:center;padding:20px;border-top:2px solid var(--secondary-color);color:#aaa;margin-top:40px;}
+html, body {
+  margin:0; padding:0;
+  font-family:'Segoe UI', sans-serif;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+.header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 20px;
+  background-color: var(--background-dark);
+  border-bottom:2px solid var(--secondary-color);
+}
+.header a { color:white; text-decoration:none; }
+main { padding:30px; max-width:700px; margin:0 auto; }
+h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
+.upload-card {
+  background: var(--card-background);
+  padding:25px 30px;
+  border-radius:10px;
+  border:1px solid var(--border-color);
+  box-shadow:0 4px 12px rgba(0,240,255,0.1);
+}
+label {
+  display:block; margin-top:15px; margin-bottom:5px;
+  color: var(--secondary-color); font-weight:600;
+}
+select, input[type="file"], button {
+  width:100%; padding:10px; background-color:#151a2f;
+  border:1px solid var(--border-color); color:var(--text-light);
+  border-radius:6px; margin-bottom:15px; font-size:16px;
+}
+button {
+  background-color: var(--secondary-color);
+  color:#000; font-weight:bold; cursor:pointer; border:none; transition:0.3s;
+}
+button:hover { background-color:#03e3f0; transform:scale(1.02); }
+.hidden { display:none; }
+.progress-bar {
+  width: 0; height: 8px;
+  background-color: var(--secondary-color);
+  border-radius: 4px; margin-top: 10px; transition: width 0.3s;
+}
+.footer {
+  text-align:center; padding:20px;
+  border-top:2px solid var(--secondary-color);
+  color:#aaa; margin-top:40px;
+}
 </style>
 </head>
 <body>
@@ -99,25 +133,27 @@ button:hover{background-color:#03e3f0;transform:scale(1.02);}
   &copy; 2025 High Stars Aimers. All Rights Reserved.
 </footer>
 
+<!-- Firebase SDK -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+// Import Firebase SDKs
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
 
-// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
   authDomain: "high-stars-aimers-844a6.firebaseapp.com",
-  databaseURL: "https://high-stars-aimers-844a6-default-rtdb.firebaseio.com/",
   projectId: "high-stars-aimers-844a6",
-  storageBucket: "high-stars-aimers-844a6.appspot.com",
+  storageBucket: "high-stars-aimers-844a6.firebasestorage.app",
   messagingSenderId: "10463765487",
   appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a",
   measurementId: "G-88828H1T1V"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const storage = getStorage(app);
 
+// DOM references
 const uploadType = document.getElementById('uploadType');
 const subjectDiv = document.getElementById('subjectDiv');
 const formDiv = document.getElementById('formDiv');
@@ -125,129 +161,88 @@ const topicDiv = document.getElementById('topicDiv');
 const subjectSelect = document.getElementById('subject');
 const formSelect = document.getElementById('form');
 const topicSelect = document.getElementById('topic');
+const uploadForm = document.getElementById('uploadForm');
 const progressBar = document.getElementById('progressBar');
 const uploadStatus = document.getElementById('uploadStatus');
 
-// Full syllabus topics for all forms
-const syllabus = {
-  "Mathematics": {
-    "Form 1": ["Numbers","Algebra","Geometry","Mensuration","Statistics","Trigonometry"],
-    "Form 2": ["Algebra II","Trigonometry","Plane Geometry","Probability","Statistics"],
-    "Form 3": ["Advanced Algebra","Coordinate Geometry","Mensuration","Statistics","Probability","Trigonometry"],
-    "Form 4": ["Calculus","Advanced Trigonometry","Vectors","Matrices","Probability"]
-  },
-  "English": {
-    "Form 1": ["Grammar","Comprehension","Writing","Oral Skills","Literature"],
-    "Form 2": ["Grammar II","Comprehension II","Writing II","Oral Skills II","Literature II"],
-    "Form 3": ["Grammar III","Comprehension III","Writing III","Oral Skills III","Literature III"],
-    "Form 4": ["Advanced Grammar","Advanced Comprehension","Advanced Writing","Advanced Oral Skills","Literature IV"]
-  },
-  "Kiswahili": {
-    "Form 1": ["Sarufi","Fasihi","Matumizi ya Lugha","Insha"],
-    "Form 2": ["Sarufi II","Fasihi II","Matumizi ya Lugha II","Insha II"],
-    "Form 3": ["Sarufi III","Fasihi III","Matumizi ya Lugha III","Insha III"],
-    "Form 4": ["Sarufi IV","Fasihi IV","Matumizi ya Lugha IV","Insha IV"]
-  },
-  "Biology": {
-    "Form 1": ["Cell Structure","Classification","Transport","Reproduction"],
-    "Form 2": ["Ecology","Human Body","Reproduction II","Genetics"],
-    "Form 3": ["Evolution","Human Physiology","Microbiology","Genetics II"],
-    "Form 4": ["Biotechnology","Human Health","Ecology II","Genetics III"]
-  },
-  "Chemistry": {
-    "Form 1": ["Matter & Properties","Atoms & Molecules","States of Matter","Solutions"],
-    "Form 2": ["Chemical Reactions","Acids & Bases","Metals & Non-metals","Organic Intro"],
-    "Form 3": ["Organic Chemistry","Chemical Bonding","Periodic Table","Electrochemistry"],
-    "Form 4": ["Analytical Chemistry","Physical Chemistry","Industrial Chemistry","Environmental Chemistry"]
-  },
-  "Physics": {
-    "Form 1": ["Forces","Pressure","Energy","Light"],
-    "Form 2": ["Motion","Work & Energy","Heat","Waves"],
-    "Form 3": ["Electromagnetism","Optics","Energy & Power","Modern Physics"],
-    "Form 4": ["Mechanics","Electricity & Magnetism","Thermodynamics","Modern Physics II"]
-  },
-  "Geography": {
-    "Form 1": ["Map Reading","Weather & Climate","Rivers","Landforms"],
-    "Form 2": ["Population","Resources","Agriculture","Industry"],
-    "Form 3": ["Urbanization","Transport","Economic Activities","Environment"],
-    "Form 4": ["Development","Disaster Management","Population II","Environment II"]
-  },
-  "History": {
-    "Form 1": ["Early Man","Colonialism","Nationalism"],
-    "Form 2": ["Resistance Movements","Colonial Administration","World Wars"],
-    "Form 3": ["Independence Movements","Post-independence","Cold War"],
-    "Form 4": ["Modern History","International Relations","Global Conflicts"]
-  },
-  "CRE": {
-    "Form 1": ["Creation","Faith","Christian Living"],
-    "Form 2": ["Ten Commandments","Prophets","Christian Practices"],
-    "Form 3": ["Church History","Ethics","Christian Leadership"],
-    "Form 4": ["Christian Ethics","Christian Mission","Advanced Christian Living"]
-  },
-  "Business Studies": {
-    "Form 1": ["Entrepreneurship","Communication","Business Environment"],
-    "Form 2": ["Marketing","Finance","Management"],
-    "Form 3": ["Business Operations","Accounting","Business Law"],
-    "Form 4": ["Strategic Management","Human Resource","Advanced Accounting"]
-  },
-  "Agriculture": {
-    "Form 1": ["Soil","Livestock","Crops"],
-    "Form 2": ["Soil Fertility","Pests & Diseases","Crop Production"],
-    "Form 3": ["Irrigation","Animal Husbandry","Agricultural Economics"],
-    "Form 4": ["Agri-Business","Sustainable Farming","Advanced Crop Production"]
-  },
-  "Computer Studies": {
-    "Form 1": ["Basics","Word Processing","Internet"],
-    "Form 2": ["Spreadsheets","Databases","Programming"],
-    "Form 3": ["Networking","Software Development","Multimedia"],
-    "Form 4": ["Advanced Programming","Web Development","Cyber Security"]
-  }
+// 8-4-4 Topics Data
+const topicsData = {
+  "Mathematics": ["Numbers", "Algebra", "Geometry", "Mensuration", "Statistics", "Trigonometry", "Vectors", "Matrices"],
+  "English": ["Grammar", "Comprehension", "Writing", "Oral Skills", "Literature"],
+  "Kiswahili": ["Sarufi", "Fasihi", "Matumizi ya Lugha", "Insha"],
+  "Biology": ["Cell Structure", "Classification", "Transport in Plants", "Respiration", "Reproduction"],
+  "Chemistry": ["Introduction to Chemistry", "Acids, Bases & Indicators", "Water", "Air & Combustion", "The Mole Concept"],
+  "Physics": ["Measurement", "Forces", "Pressure", "Work, Energy & Power", "Light", "Electricity"],
+  "Geography": ["Map Reading", "Weather & Climate", "Rocks", "Agriculture", "Population"],
+  "History": ["Early Man", "Trade", "Colonialism", "Nationalism", "Independence"],
+  "CRE": ["Creation", "Faith", "Christian Living", "Church History"],
+  "Business Studies": ["Entrepreneurship", "Office Practice", "Business Environment", "Communication"],
+  "Agriculture": ["Soil Science", "Crop Production", "Livestock Production"],
+  "Computer Studies": ["Computer Basics", "Word Processing", "Spreadsheets", "Internet"]
 };
 
-// Show/hide fields
+// Show fields based on selection
 uploadType.addEventListener('change', () => {
-  subjectDiv.classList.toggle('hidden', uploadType.value === "");
-  formDiv.classList.toggle('hidden', uploadType.value === "");
-  topicDiv.classList.toggle('hidden', uploadType.value === "");
+  if (uploadType.value === "") {
+    subjectDiv.classList.add('hidden');
+    formDiv.classList.add('hidden');
+    topicDiv.classList.add('hidden');
+    return;
+  }
+  subjectDiv.classList.remove('hidden');
+  formDiv.classList.remove('hidden');
+  if (uploadType.value === "notes") topicDiv.classList.remove('hidden');
+  else topicDiv.classList.add('hidden');
 });
 
-// Populate topics dynamically
-function populateTopics() {
-  const subject = subjectSelect.value;
-  const form = formSelect.value;
+// Populate topics
+subjectSelect.addEventListener('change', () => {
+  const selected = subjectSelect.value;
   topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
-  if(syllabus[subject] && syllabus[subject][form]){
-    syllabus[subject][form].forEach(t => {
+  if (topicsData[selected]) {
+    topicsData[selected].forEach(t => {
       const opt = document.createElement('option');
       opt.textContent = t;
       topicSelect.appendChild(opt);
     });
   }
-}
+});
 
-subjectSelect.addEventListener('change', populateTopics);
-formSelect.addEventListener('change', populateTopics);
-
-// Upload handler
-document.getElementById("uploadForm").addEventListener("submit", async e=>{
+// Upload to Firebase
+uploadForm.addEventListener('submit', e => {
   e.preventDefault();
   const type = uploadType.value;
   const subject = subjectSelect.value;
   const form = formSelect.value;
-  const topic = topicSelect.value || "N/A";
+  const topic = topicSelect.value;
   const file = document.getElementById('file').files[0];
-  if(!file) return alert("Please choose a file!");
 
-  let progress = 0;
-  const interval = setInterval(()=>{
-    progress+=20;
-    progressBar.style.width = progress+"%";
-    if(progress>=100) clearInterval(interval);
-  },200);
+  if (!type || !subject || !form || !file) {
+    alert("Please complete all required fields.");
+    return;
+  }
 
-  const uploadRef = ref(db, `${type}/${subject}/${form}/${topic}`);
-  const newFileRef = push(uploadRef);
+  const path = type === "notes"
+    ? `notes/${subject}/${form}/${topic}/${file.name}`
+    : `papers/${subject}/${form}/${file.name}`;
 
-  await set(newFileRef, {
-    fileName:file.name,
-    url:"#", // replace
+  const storageRef = ref(storage, path);
+  const uploadTask = uploadBytesResumable(storageRef, file);
+
+  uploadTask.on("state_changed",
+    snapshot => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      progressBar.style.width = progress + "%";
+    },
+    error => { uploadStatus.textContent = "❌ Upload failed: " + error.message; },
+    () => {
+      getDownloadURL(uploadTask.snapshot.ref).then(url => {
+        uploadStatus.textContent = "✅ Uploaded successfully!";
+        console.log("File available at:", url);
+      });
+    }
+  );
+});
+</script>
+</body>
+</html>
