@@ -1,45 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>High Stars Aimers - Paper View</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-  --primary-color: #2a2e92;
-  --secondary-color: #00f0ff;
-  --background-dark: #0a0f1f;
-  --text-light: #e0e0e0;
-}
-body {margin:0;padding:0;font-family:'Segoe UI',sans-serif;background-color:var(--background-dark);color:var(--text-light);}
-.header {display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background-color:var(--background-dark);border-bottom:2px solid var(--secondary-color);}
-.header a{color:white;text-decoration:none;}
-main{padding:30px;max-width:900px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:25px;}
-h2{color:var(--secondary-color);text-align:center;}
-#paper-info{background-color:var(--primary-color);padding:15px 30px;border-radius:8px;text-align:center;border:1px solid var(--secondary-color);}
-#pdf-viewer-container{width:100%;max-width:900px;height:80vh;background-color:#1a1e2a;border:2px solid var(--secondary-color);border-radius:8px;display:flex;justify-content:center;align-items:center;font-size:1.2em;}
-.footer{text-align:center;padding:20px;border-top:2px solid var(--secondary-color);color:#aaa;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>High Stars Aimers - Paper View</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-color: #2a2e92;
+      --secondary-color: #00f0ff;
+      --background-dark: #0a0f1f;
+      --card-background: rgba(35, 40, 60, 0.8);
+      --text-light: #e0e0e0;
+      --border-color: rgba(0, 240, 255, 0.2);
+    }
+    html, body { margin:0; padding:0; font-family:'Segoe UI', sans-serif; background-color:var(--background-dark); color:var(--text-light); }
+    .header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color:var(--background-dark); border-bottom:2px solid var(--secondary-color); }
+    .header a { color:white; text-decoration:none; }
+    main { padding:30px; max-width:900px; margin:0 auto; }
+    h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
+    .paper-card { background: var(--card-background); padding:20px; margin-bottom:15px; border-radius:12px; border:1px solid var(--border-color); }
+    .paper-card a { color: var(--text-light); text-decoration:none; }
+    .paper-card a:hover { color: var(--secondary-color); }
+    .footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; margin-top:30px; }
+  </style>
 </head>
 <body>
 
 <div class="header">
   <h1>High Stars Aimers</h1>
-  <a href="papers.html"><i class="fas fa-chevron-left"></i> Back to Papers</a>
+  <a href="papers.html"><i class="fas fa-arrow-left"></i> Back to Papers</a>
 </div>
 
 <main>
-  <div id="paper-info"><h2>Loading Paper...</h2></div>
-  <div id="pdf-viewer-container">Connecting to Firebase...</div>
+  <h2 id="paper-title">Paper: </h2>
+  <div id="papers-container">Loading papers...</div>
 </main>
 
-<footer class="footer">&copy; 2025 High Stars Aimers. All Rights Reserved.</footer>
+<footer class="footer">
+  &copy; 2025 High Stars Aimers. All Rights Reserved.
+</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
-  auth
+  authDomain: "high-stars-aimers-844a6.firebaseapp.com",
+  databaseURL: "https://high-stars-aimers-844a6-default-rtdb.firebaseio.com",
+  projectId: "high-stars-aimers-844a6",
+  storageBucket: "high-stars-aimers-844a6.appspot.com",
+  messagingSenderId: "10463765487",
+  appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const params = new URLSearchParams(window.location.search);
+const subject = params.get("subject") || "Mathematics";
+const form = params.get("form") || "Form 1";
+
+document.getElementById("paper-title").innerText = `Paper: ${subject} - ${form}`;
+const container = document.getElementById("papers-container");
+
+async function loadPapers() {
+  const papersRef = ref(db, `papers/${subject}/${form}`);
+  try {
+    const snapshot = await get(papersRef);
+    container.innerHTML = "";
+    if(snapshot.exists()){
+      const papers = snapshot.val();
+      for(const key in papers){
+        const paper = papers[key];
+        const card = document.createElement("div");
+        card.className = "paper-card";
+        card.innerHTML = `
+          <p><strong>${paper.topic || "General Paper"}</strong></p>
+          <a href="${paper.url || '#'}" target="_blank">View / Download PDF</a>
+        `;
+        container.appendChild(card);
+      }
+    } else {
+      container.innerHTML = "<p>No papers uploaded yet.</p>";
+    }
+  } catch(error){
+    container.innerHTML = `<p style="color:red;">Error loading papers: ${error.message}</p>`;
+  }
+}
+
+loadPapers();
+</script>
+</body>
+</html>
