@@ -14,18 +14,18 @@
   --text-light: #e0e0e0;
   --border-color: rgba(0, 240, 255, 0.2);
 }
-html, body {margin:0;padding:0;font-family:'Segoe UI', sans-serif;color:var(--text-light);background-color:var(--background-dark);}
+html, body {margin:0;padding:0;font-family:'Segoe UI',sans-serif;background-color:var(--background-dark);color:var(--text-light);}
 .header {display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background-color:var(--background-dark);border-bottom:2px solid var(--secondary-color);}
-.header a { color:white;text-decoration:none; }
-main {padding:30px;max-width:900px;margin:0 auto;}
-h2 {color:var(--secondary-color);margin-bottom:20px;}
-.topic-card {background:var(--card-background);padding:20px;margin-bottom:15px;border-radius:12px;border:1px solid var(--border-color);cursor:pointer;position:relative;}
-.topic-card:hover {box-shadow:0 8px 20px rgba(0,240,255,0.2);}
-.topic-card h3 {margin:0;}
-.file-list {margin-top:10px;}
-.file-list a {display:block;color:var(--text-light);text-decoration:none;padding:5px 0;}
-.file-list a:hover {color:var(--secondary-color);}
-.footer {text-align:center;padding:20px;border-top:2px solid var(--secondary-color);color:#aaa;margin-top:30px;}
+.header a{color:white;text-decoration:none;}
+main{padding:30px;max-width:900px;margin:0 auto;}
+h2{color:var(--secondary-color);margin-bottom:20px;text-align:center;}
+.topic-card{background:var(--card-background);padding:20px;margin-bottom:15px;border-radius:12px;border:1px solid var(--border-color);cursor:pointer;position:relative;}
+.topic-card:hover { box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2); }
+.topic-card h3 { margin: 0; }
+.dropdown { display: none; margin-top: 10px; padding-left: 15px; border-left: 2px solid var(--secondary-color); }
+.dropdown a { display: block; color: var(--text-light); padding: 5px 0; text-decoration: none; }
+.dropdown a:hover { color: var(--secondary-color); }
+.footer{text-align:center;padding:20px;border-top:2px solid var(--secondary-color);color:#aaa;margin-top:30px;}
 </style>
 </head>
 <body>
@@ -40,21 +40,18 @@ h2 {color:var(--secondary-color);margin-bottom:20px;}
   <div id="topics-container"></div>
 </main>
 
-<footer class="footer">
-  &copy; 2025 High Stars Aimers. All Rights Reserved.
-</footer>
+<footer class="footer">&copy; 2025 High Stars Aimers. All Rights Reserved.</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
   authDomain: "high-stars-aimers-844a6.firebaseapp.com",
-  databaseURL: "https://high-stars-aimers-844a6-default-rtdb.firebaseio.com/",
+  databaseURL: "https://high-stars-aimers-844a6-default-rtdb.firebaseio.com",
   projectId: "high-stars-aimers-844a6",
-  storageBucket: "high-stars-aimers-844a6.appspot.com",
+  storageBucket: "high-stars-aimers-844a6.firebasestorage.app",
   messagingSenderId: "10463765487",
   appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a"
 };
@@ -62,71 +59,66 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Full syllabus for all subjects/forms
+// Full syllabus
 const syllabus = {
   "Mathematics": {
-    "Form 1": ["Numbers","Algebra","Geometry","Mensuration","Statistics","Trigonometry"],
-    "Form 2": ["Algebra II","Trigonometry","Plane Geometry","Probability","Statistics"],
-    "Form 3": ["Advanced Algebra","Coordinate Geometry","Mensuration","Statistics","Probability","Trigonometry"],
-    "Form 4": ["Calculus","Advanced Trigonometry","Vectors","Matrices","Probability"]
+    1: ["Numbers & Operations","Algebra Basics","Geometry Fundamentals","Statistics Intro"],
+    2: ["Algebra II","Trigonometry Basics","Plane Geometry","Probability"],
+    3: ["Advanced Algebra","Coordinate Geometry","Mensuration","Statistics & Probability"],
+    4: ["Calculus Intro","Advanced Trigonometry","Vectors","Matrices"]
   },
-  "English": {
-    "Form 1": ["Grammar","Comprehension","Writing","Oral Skills","Literature"],
-    "Form 2": ["Grammar II","Comprehension II","Writing II","Oral Skills II","Literature II"],
-    "Form 3": ["Grammar III","Comprehension III","Writing III","Oral Skills III","Literature III"],
-    "Form 4": ["Advanced Grammar","Advanced Comprehension","Advanced Writing","Advanced Oral Skills","Literature IV"]
+  "Chemistry": {
+    1: ["Matter & Properties","Atoms & Molecules","States of Matter","Solutions Basics"],
+    2: ["Chemical Reactions","Acids & Bases","Metals & Non-metals","Organic Intro"],
+    3: ["Organic Chemistry","Chemical Bonding","Periodic Table","Electrochemistry"],
+    4: ["Analytical Chemistry","Physical Chemistry","Industrial Chemistry","Environmental Chemistry"]
   }
-  // add all other subjects similarly...
+  // Add other subjects here
 };
 
-// Read URL parameters
+// Get URL params
 const params = new URLSearchParams(window.location.search);
 const subject = params.get("subject") || "Mathematics";
-const form = params.get("form") || "Form 1";
+const form = parseInt(params.get("form")) || 1;
 
-document.getElementById("subject-title").innerText = `Subject: ${subject} - ${form}`;
+document.getElementById("subject-title").innerText = `Subject: ${subject} - Form ${form}`;
 const topicsContainer = document.getElementById("topics-container");
 
-// Function to create topic cards and fetch uploaded files
-async function displayTopics() {
-  const topics = syllabus[subject][form];
-  for (let topic of topics) {
-    const card = document.createElement("div");
-    card.className = "topic-card";
-    card.innerHTML = `<h3>${topic}</h3><div class="file-list"><p>Loading files...</p></div>`;
-    const fileList = card.querySelector(".file-list");
+// Display topics with notes
+syllabus[subject][form].forEach(async (topic) => {
+  const card = document.createElement("div");
+  card.className = "topic-card";
+  card.innerHTML = `<h3>${topic}</h3><div class="dropdown"><p>Loading...</p></div>`;
+  const dropdown = card.querySelector(".dropdown");
 
-    // Check both notes and papers
-    const types = ["notes", "papers"];
-    fileList.innerHTML = ""; // clear loading text
-
-    for (let type of types) {
-      const pathRef = ref(db, `${type}/${subject}/${form}/${topic}`);
-      const snapshot = await get(pathRef);
-      if (snapshot.exists()) {
-        const files = snapshot.val();
-        for (let key in files) {
-          const file = files[key];
-          const a = document.createElement("a");
-          a.href = file.url || "#";
-          a.target = "_blank";
-          a.textContent = `[${type}] ${file.fileName}`;
-          fileList.appendChild(a);
-        }
+  const notesRef = ref(db, `notes/${subject}/${form}/${topic}`);
+  try {
+    const snapshot = await get(notesRef);
+    dropdown.innerHTML = "";
+    if (snapshot.exists()) {
+      const files = snapshot.val();
+      for (const key in files) {
+        const note = files[key];
+        const link = document.createElement("a");
+        link.href = note.url || "#";
+        link.target = "_blank";
+        link.textContent = note.fileName || note.name || "View Note";
+        dropdown.appendChild(link);
       }
+    } else {
+      dropdown.innerHTML = "<a href='#'>No notes uploaded yet</a>";
     }
-
-    // If no files
-    if (!fileList.hasChildNodes()) {
-      fileList.innerHTML = "<p>No files uploaded yet.</p>";
-    }
-
-    topicsContainer.appendChild(card);
+  } catch (error) {
+    dropdown.innerHTML = "<p style='color:red'>Error loading notes</p>";
   }
-}
 
-// Load topics and files
-displayTopics();
+  card.addEventListener("click", () => {
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  });
+
+  topicsContainer.appendChild(card);
+});
 </script>
+
 </body>
 </html>
