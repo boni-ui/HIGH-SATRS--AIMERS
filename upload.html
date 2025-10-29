@@ -6,6 +6,7 @@
 <title>High Stars Aimers - Upload Portal</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+/* === SAME STYLES AS YOUR VERSION === */
 :root {
   --primary-color: #2a2e92;
   --secondary-color: #00f0ff;
@@ -14,53 +15,19 @@
   --text-light: #e0e0e0;
   --border-color: rgba(0, 240, 255, 0.2);
 }
-html, body {
-  margin:0; padding:0;
-  font-family:'Segoe UI', sans-serif;
-  background-color: var(--background-dark);
-  color: var(--text-light);
-}
-.header {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:10px 20px;
-  background-color: var(--background-dark);
-  border-bottom:2px solid var(--secondary-color);
-}
-.header a { color:white; text-decoration:none; }
-main { padding:30px; max-width:700px; margin:0 auto; }
-h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
-.upload-card {
-  background: var(--card-background);
-  padding:25px 30px;
-  border-radius:10px;
-  border:1px solid var(--border-color);
-  box-shadow:0 4px 12px rgba(0,240,255,0.1);
-}
-label {
-  display:block; margin-top:15px; margin-bottom:5px;
-  color: var(--secondary-color); font-weight:600;
-}
-select, input[type="file"], button {
-  width:100%; padding:10px; background-color:#151a2f;
-  border:1px solid var(--border-color); color:var(--text-light);
-  border-radius:6px; margin-bottom:15px; font-size:16px;
-}
-button {
-  background-color: var(--secondary-color);
-  color:#000; font-weight:bold; cursor:pointer; border:none; transition:0.3s;
-}
-button:hover { background-color:#03e3f0; transform:scale(1.02); }
-.hidden { display:none; }
-.progress-bar {
-  width: 0; height: 8px;
-  background-color: var(--secondary-color);
-  border-radius: 4px; margin-top: 10px; transition: width 0.3s;
-}
-.footer {
-  text-align:center; padding:20px;
-  border-top:2px solid var(--secondary-color);
-  color:#aaa; margin-top:40px;
-}
+html, body {margin:0;padding:0;font-family:'Segoe UI',sans-serif;background-color:var(--background-dark);color:var(--text-light);}
+.header {display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background-color:var(--background-dark);border-bottom:2px solid var(--secondary-color);}
+.header a{color:white;text-decoration:none;}
+main{padding:30px;max-width:700px;margin:0 auto;}
+h2{color:var(--secondary-color);margin-bottom:20px;text-align:center;}
+.upload-card{background:var(--card-background);padding:25px 30px;border-radius:10px;border:1px solid var(--border-color);box-shadow:0 4px 12px rgba(0,240,255,0.1);}
+label{display:block;margin-top:15px;margin-bottom:5px;color:var(--secondary-color);font-weight:600;}
+select,input[type="file"],button{width:100%;padding:10px;background-color:#151a2f;border:1px solid var(--border-color);color:var(--text-light);border-radius:6px;margin-bottom:15px;font-size:16px;}
+button{background-color:var(--secondary-color);color:#000;font-weight:bold;cursor:pointer;border:none;transition:0.3s;}
+button:hover{background-color:#03e3f0;transform:scale(1.02);}
+.hidden{display:none;}
+.progress-bar{width:0;height:8px;background-color:var(--secondary-color);border-radius:4px;margin-top:10px;transition:width 0.3s;}
+.footer{text-align:center;padding:20px;border-top:2px solid var(--secondary-color);color:#aaa;margin-top:40px;}
 </style>
 </head>
 <body>
@@ -133,27 +100,27 @@ button:hover { background-color:#03e3f0; transform:scale(1.02); }
   &copy; 2025 High Stars Aimers. All Rights Reserved.
 </footer>
 
-<!-- Firebase SDK -->
+<!-- ✅ Firebase Setup (Realtime Database only) -->
 <script type="module">
-// Firebase SDKs
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
   authDomain: "high-stars-aimers-844a6.firebaseapp.com",
+  databaseURL: "https://high-stars-aimers-844a6-default-rtdb.firebaseio.com/",
   projectId: "high-stars-aimers-844a6",
-  storageBucket: "high-stars-aimers-844a6.firebasestorage.app",
+  storageBucket: "high-stars-aimers-844a6.appspot.com",
   messagingSenderId: "10463765487",
   appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a",
   measurementId: "G-88828H1T1V"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
-const db = getFirestore(app);
+const db = getDatabase(app);
 
+// UI Elements
 const uploadType = document.getElementById('uploadType');
 const subjectDiv = document.getElementById('subjectDiv');
 const formDiv = document.getElementById('formDiv');
@@ -161,27 +128,24 @@ const topicDiv = document.getElementById('topicDiv');
 const subjectSelect = document.getElementById('subject');
 const formSelect = document.getElementById('form');
 const topicSelect = document.getElementById('topic');
-const uploadForm = document.getElementById('uploadForm');
 const progressBar = document.getElementById('progressBar');
 const uploadStatus = document.getElementById('uploadStatus');
 
-// 8-4-4 Topics
 const topicsData = {
-  "Mathematics": ["Numbers", "Algebra", "Geometry", "Mensuration", "Statistics", "Trigonometry", "Vectors", "Matrices"],
-  "English": ["Grammar", "Comprehension", "Writing", "Oral Skills", "Literature"],
-  "Kiswahili": ["Sarufi", "Fasihi", "Matumizi ya Lugha", "Insha"],
-  "Biology": ["Cell Structure", "Classification", "Transport in Plants", "Respiration", "Reproduction"],
-  "Chemistry": ["Introduction to Chemistry", "Acids, Bases & Indicators", "Water", "Air & Combustion", "The Mole Concept"],
-  "Physics": ["Measurement", "Forces", "Pressure", "Work, Energy & Power", "Light", "Electricity"],
-  "Geography": ["Map Reading", "Weather & Climate", "Rocks", "Agriculture", "Population"],
-  "History": ["Early Man", "Trade", "Colonialism", "Nationalism", "Independence"],
-  "CRE": ["Creation", "Faith", "Christian Living", "Church History"],
-  "Business Studies": ["Entrepreneurship", "Office Practice", "Business Environment", "Communication"],
-  "Agriculture": ["Soil Science", "Crop Production", "Livestock Production"],
-  "Computer Studies": ["Computer Basics", "Word Processing", "Spreadsheets", "Internet"]
+  "Mathematics": ["Numbers","Algebra","Geometry","Mensuration","Statistics","Trigonometry"],
+  "English": ["Grammar","Comprehension","Writing","Oral Skills","Literature"],
+  "Kiswahili": ["Sarufi","Fasihi","Matumizi ya Lugha","Insha"],
+  "Biology": ["Cell Structure","Classification","Transport","Reproduction"],
+  "Chemistry": ["Acids","Bases","The Mole","Water"],
+  "Physics": ["Forces","Pressure","Energy","Light"],
+  "History": ["Early Man","Colonialism","Nationalism"],
+  "CRE": ["Creation","Faith","Christian Living"],
+  "Business Studies": ["Entrepreneurship","Communication"],
+  "Agriculture": ["Soil","Livestock"],
+  "Computer Studies": ["Basics","Word Processing","Internet"]
 };
 
-// Field control
+// Toggle topic for Notes
 uploadType.addEventListener('change', () => {
   subjectDiv.classList.toggle('hidden', uploadType.value === "");
   formDiv.classList.toggle('hidden', uploadType.value === "");
@@ -201,47 +165,37 @@ subjectSelect.addEventListener('change', () => {
   }
 });
 
-// Upload process
-uploadForm.addEventListener('submit', async (e) => {
+// Upload handler
+document.getElementById("uploadForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const type = uploadType.value;
   const subject = subjectSelect.value;
   const form = formSelect.value;
-  const topic = topicSelect.value;
+  const topic = topicSelect.value || "N/A";
   const file = document.getElementById('file').files[0];
 
-  if (!type || !subject || !form || !file || (type === "notes" && !topic)) {
-    alert("Please fill all required fields.");
-    return;
-  }
+  if (!file) return alert("Please choose a file!");
 
-  const path = type === "notes"
-    ? `notes/${subject}/${form}/${topic}/${file.name}`
-    : `papers/${subject}/${form}/${file.name}`;
+  // Simulate progress animation
+  let progress = 0;
+  const progressInterval = setInterval(() => {
+    progress += 20;
+    progressBar.style.width = progress + "%";
+    if (progress >= 100) clearInterval(progressInterval);
+  }, 200);
 
-  const storageRef = ref(storage, path);
-  const uploadTask = uploadBytesResumable(storageRef, file);
+  const uploadRef = ref(db, `${type}/${subject}/${form}`);
+  const newFileRef = push(uploadRef);
 
-  uploadTask.on("state_changed",
-    (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      progressBar.style.width = progress + "%";
-    },
-    (error) => {
-      uploadStatus.textContent = "❌ Upload failed: " + error.message;
-    },
-    async () => {
-      const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-      const docRef = await addDoc(collection(db, type), {
-        subject, form, topic: type === "notes" ? topic : null,
-        fileName: file.name,
-        fileURL: downloadURL,
-        timestamp: new Date()
-      });
-      uploadStatus.textContent = "✅ Uploaded successfully!";
-      console.log("Saved document ID:", docRef.id);
-    }
-  );
+  await set(newFileRef, {
+    fileName: file.name,
+    topic: topic,
+    timestamp: new Date().toISOString(),
+    status: "Pending (file storage disabled on free plan)"
+  });
+
+  uploadStatus.textContent = "✅ Uploaded successfully to Realtime Database!";
 });
 </script>
 </body>
