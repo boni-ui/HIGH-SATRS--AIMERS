@@ -128,72 +128,126 @@ const topicSelect = document.getElementById('topic');
 const progressBar = document.getElementById('progressBar');
 const uploadStatus = document.getElementById('uploadStatus');
 
-const topicsData = {
-  "Mathematics": ["Numbers & Operations","Algebra Basics","Geometry Fundamentals","Statistics Intro"],
-  "English": ["Grammar","Comprehension","Writing","Oral Skills","Literature"],
-  "Kiswahili": ["Sarufi","Fasihi","Matumizi ya Lugha","Insha"],
-  "Biology": ["Cell Structure","Classification","Transport","Reproduction"],
-  "Chemistry": ["Acids & Bases","The Mole","Water"],
-  "Physics": ["Forces","Pressure","Energy","Light"],
-  "History": ["Early Man","Colonialism","Nationalism"],
-  "CRE": ["Creation","Faith","Christian Living"],
-  "Business Studies": ["Entrepreneurship","Communication"],
-  "Agriculture": ["Soil","Livestock"],
-  "Computer Studies": ["Basics","Word Processing","Internet"]
+// Full syllabus topics for all forms
+const syllabus = {
+  "Mathematics": {
+    "Form 1": ["Numbers","Algebra","Geometry","Mensuration","Statistics","Trigonometry"],
+    "Form 2": ["Algebra II","Trigonometry","Plane Geometry","Probability","Statistics"],
+    "Form 3": ["Advanced Algebra","Coordinate Geometry","Mensuration","Statistics","Probability","Trigonometry"],
+    "Form 4": ["Calculus","Advanced Trigonometry","Vectors","Matrices","Probability"]
+  },
+  "English": {
+    "Form 1": ["Grammar","Comprehension","Writing","Oral Skills","Literature"],
+    "Form 2": ["Grammar II","Comprehension II","Writing II","Oral Skills II","Literature II"],
+    "Form 3": ["Grammar III","Comprehension III","Writing III","Oral Skills III","Literature III"],
+    "Form 4": ["Advanced Grammar","Advanced Comprehension","Advanced Writing","Advanced Oral Skills","Literature IV"]
+  },
+  "Kiswahili": {
+    "Form 1": ["Sarufi","Fasihi","Matumizi ya Lugha","Insha"],
+    "Form 2": ["Sarufi II","Fasihi II","Matumizi ya Lugha II","Insha II"],
+    "Form 3": ["Sarufi III","Fasihi III","Matumizi ya Lugha III","Insha III"],
+    "Form 4": ["Sarufi IV","Fasihi IV","Matumizi ya Lugha IV","Insha IV"]
+  },
+  "Biology": {
+    "Form 1": ["Cell Structure","Classification","Transport","Reproduction"],
+    "Form 2": ["Ecology","Human Body","Reproduction II","Genetics"],
+    "Form 3": ["Evolution","Human Physiology","Microbiology","Genetics II"],
+    "Form 4": ["Biotechnology","Human Health","Ecology II","Genetics III"]
+  },
+  "Chemistry": {
+    "Form 1": ["Matter & Properties","Atoms & Molecules","States of Matter","Solutions"],
+    "Form 2": ["Chemical Reactions","Acids & Bases","Metals & Non-metals","Organic Intro"],
+    "Form 3": ["Organic Chemistry","Chemical Bonding","Periodic Table","Electrochemistry"],
+    "Form 4": ["Analytical Chemistry","Physical Chemistry","Industrial Chemistry","Environmental Chemistry"]
+  },
+  "Physics": {
+    "Form 1": ["Forces","Pressure","Energy","Light"],
+    "Form 2": ["Motion","Work & Energy","Heat","Waves"],
+    "Form 3": ["Electromagnetism","Optics","Energy & Power","Modern Physics"],
+    "Form 4": ["Mechanics","Electricity & Magnetism","Thermodynamics","Modern Physics II"]
+  },
+  "Geography": {
+    "Form 1": ["Map Reading","Weather & Climate","Rivers","Landforms"],
+    "Form 2": ["Population","Resources","Agriculture","Industry"],
+    "Form 3": ["Urbanization","Transport","Economic Activities","Environment"],
+    "Form 4": ["Development","Disaster Management","Population II","Environment II"]
+  },
+  "History": {
+    "Form 1": ["Early Man","Colonialism","Nationalism"],
+    "Form 2": ["Resistance Movements","Colonial Administration","World Wars"],
+    "Form 3": ["Independence Movements","Post-independence","Cold War"],
+    "Form 4": ["Modern History","International Relations","Global Conflicts"]
+  },
+  "CRE": {
+    "Form 1": ["Creation","Faith","Christian Living"],
+    "Form 2": ["Ten Commandments","Prophets","Christian Practices"],
+    "Form 3": ["Church History","Ethics","Christian Leadership"],
+    "Form 4": ["Christian Ethics","Christian Mission","Advanced Christian Living"]
+  },
+  "Business Studies": {
+    "Form 1": ["Entrepreneurship","Communication","Business Environment"],
+    "Form 2": ["Marketing","Finance","Management"],
+    "Form 3": ["Business Operations","Accounting","Business Law"],
+    "Form 4": ["Strategic Management","Human Resource","Advanced Accounting"]
+  },
+  "Agriculture": {
+    "Form 1": ["Soil","Livestock","Crops"],
+    "Form 2": ["Soil Fertility","Pests & Diseases","Crop Production"],
+    "Form 3": ["Irrigation","Animal Husbandry","Agricultural Economics"],
+    "Form 4": ["Agri-Business","Sustainable Farming","Advanced Crop Production"]
+  },
+  "Computer Studies": {
+    "Form 1": ["Basics","Word Processing","Internet"],
+    "Form 2": ["Spreadsheets","Databases","Programming"],
+    "Form 3": ["Networking","Software Development","Multimedia"],
+    "Form 4": ["Advanced Programming","Web Development","Cyber Security"]
+  }
 };
 
 // Show/hide fields
 uploadType.addEventListener('change', () => {
   subjectDiv.classList.toggle('hidden', uploadType.value === "");
   formDiv.classList.toggle('hidden', uploadType.value === "");
-  topicDiv.classList.toggle('hidden', uploadType.value !== "notes");
+  topicDiv.classList.toggle('hidden', uploadType.value === "");
 });
 
 // Populate topics dynamically
-subjectSelect.addEventListener('change', () => {
-  const selected = subjectSelect.value;
+function populateTopics() {
+  const subject = subjectSelect.value;
+  const form = formSelect.value;
   topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
-  if (topicsData[selected]) {
-    topicsData[selected].forEach(t => {
+  if(syllabus[subject] && syllabus[subject][form]){
+    syllabus[subject][form].forEach(t => {
       const opt = document.createElement('option');
       opt.textContent = t;
       topicSelect.appendChild(opt);
     });
   }
-});
+}
+
+subjectSelect.addEventListener('change', populateTopics);
+formSelect.addEventListener('change', populateTopics);
 
 // Upload handler
-document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+document.getElementById("uploadForm").addEventListener("submit", async e=>{
   e.preventDefault();
-
   const type = uploadType.value;
   const subject = subjectSelect.value;
   const form = formSelect.value;
   const topic = topicSelect.value || "N/A";
   const file = document.getElementById('file').files[0];
-
-  if (!file) return alert("Please choose a file!");
+  if(!file) return alert("Please choose a file!");
 
   let progress = 0;
-  const interval = setInterval(() => {
-    progress += 20;
-    progressBar.style.width = progress + "%";
-    if (progress >= 100) clearInterval(interval);
-  }, 200);
+  const interval = setInterval(()=>{
+    progress+=20;
+    progressBar.style.width = progress+"%";
+    if(progress>=100) clearInterval(interval);
+  },200);
 
-  const uploadRef = ref(db, `${type}/${subject}/${form}`);
+  const uploadRef = ref(db, `${type}/${subject}/${form}/${topic}`);
   const newFileRef = push(uploadRef);
 
   await set(newFileRef, {
-    fileName: file.name,
-    topic: topic,
-    timestamp: new Date().toISOString(),
-    status: "Pending (file storage disabled on free plan)"
-  });
-
-  uploadStatus.textContent = "✅ Uploaded successfully to Realtime Database!";
-});
-</script>
-
-</body>
-</html>
+    fileName:file.name,
+    url:"#", // replace
