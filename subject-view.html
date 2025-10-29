@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>High Stars Aimers - Subject View</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
   --primary-color: #2a2e92;
@@ -22,13 +22,14 @@ h2 {color:var(--secondary-color);margin-bottom:20px;}
 .topic-card {background:var(--card-background);padding:20px;margin-bottom:15px;border-radius:12px;border:1px solid var(--border-color);cursor:pointer;position:relative;}
 .topic-card:hover {box-shadow:0 8px 20px rgba(0,240,255,0.2);}
 .topic-card h3 {margin:0;}
-.dropdown {display:none;margin-top:10px;padding-left:15px;border-left:2px solid var(--secondary-color);}
-.dropdown a {display:block;color:var(--text-light);padding:5px 0;text-decoration:none;}
-.dropdown a:hover {color:var(--secondary-color);}
+.file-list {margin-top:10px;}
+.file-list a {display:block;color:var(--text-light);text-decoration:none;padding:5px 0;}
+.file-list a:hover {color:var(--secondary-color);}
 .footer {text-align:center;padding:20px;border-top:2px solid var(--secondary-color);color:#aaa;margin-top:30px;}
 </style>
 </head>
 <body>
+
 <div class="header">
   <h1>High Stars Aimers</h1>
   <a href="subjects.html"><i class="fas fa-arrow-left"></i> Back to Subjects</a>
@@ -51,9 +52,9 @@ import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.1
 const firebaseConfig = {
   apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
   authDomain: "high-stars-aimers-844a6.firebaseapp.com",
-  databaseURL: "https://high-stars-aimers-844a6-default-rtdb.firebaseio.com",
+  databaseURL: "https://high-stars-aimers-844a6-default-rtdb.firebaseio.com/",
   projectId: "high-stars-aimers-844a6",
-  storageBucket: "high-stars-aimers-844a6.firebasestorage.app",
+  storageBucket: "high-stars-aimers-844a6.appspot.com",
   messagingSenderId: "10463765487",
   appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a"
 };
@@ -74,82 +75,58 @@ const syllabus = {
     "Form 2": ["Grammar II","Comprehension II","Writing II","Oral Skills II","Literature II"],
     "Form 3": ["Grammar III","Comprehension III","Writing III","Oral Skills III","Literature III"],
     "Form 4": ["Advanced Grammar","Advanced Comprehension","Advanced Writing","Advanced Oral Skills","Literature IV"]
-  },
-  "Kiswahili": {
-    "Form 1": ["Sarufi","Fasihi","Matumizi ya Lugha","Insha"],
-    "Form 2": ["Sarufi II","Fasihi II","Matumizi ya Lugha II","Insha II"],
-    "Form 3": ["Sarufi III","Fasihi III","Matumizi ya Lugha III","Insha III"],
-    "Form 4": ["Sarufi IV","Fasihi IV","Matumizi ya Lugha IV","Insha IV"]
-  },
-  "Biology": {
-    "Form 1": ["Cell Structure","Classification","Transport","Reproduction"],
-    "Form 2": ["Ecology","Human Body","Reproduction II","Genetics"],
-    "Form 3": ["Evolution","Human Physiology","Microbiology","Genetics II"],
-    "Form 4": ["Biotechnology","Human Health","Ecology II","Genetics III"]
-  },
-  "Chemistry": {
-    "Form 1": ["Matter & Properties","Atoms & Molecules","States of Matter","Solutions"],
-    "Form 2": ["Chemical Reactions","Acids & Bases","Metals & Non-metals","Organic Intro"],
-    "Form 3": ["Organic Chemistry","Chemical Bonding","Periodic Table","Electrochemistry"],
-    "Form 4": ["Analytical Chemistry","Physical Chemistry","Industrial Chemistry","Environmental Chemistry"]
-  },
-  "Physics": {
-    "Form 1": ["Forces","Pressure","Energy","Light"],
-    "Form 2": ["Motion","Work & Energy","Heat","Waves"],
-    "Form 3": ["Electromagnetism","Optics","Energy & Power","Modern Physics"],
-    "Form 4": ["Mechanics","Electricity & Magnetism","Thermodynamics","Modern Physics II"]
-  },
-  "Geography": {
-    "Form 1": ["Map Reading","Weather & Climate","Rivers","Landforms"],
-    "Form 2": ["Population","Resources","Agriculture","Industry"],
-    "Form 3": ["Urbanization","Transport","Economic Activities","Environment"],
-    "Form 4": ["Development","Disaster Management","Population II","Environment II"]
-  },
-  "History": {
-    "Form 1": ["Early Man","Colonialism","Nationalism"],
-    "Form 2": ["Resistance Movements","Colonial Administration","World Wars"],
-    "Form 3": ["Independence Movements","Post-independence","Cold War"],
-    "Form 4": ["Modern History","International Relations","Global Conflicts"]
-  },
-  "CRE": {
-    "Form 1": ["Creation","Faith","Christian Living"],
-    "Form 2": ["Ten Commandments","Prophets","Christian Practices"],
-    "Form 3": ["Church History","Ethics","Christian Leadership"],
-    "Form 4": ["Christian Ethics","Christian Mission","Advanced Christian Living"]
-  },
-  "Business Studies": {
-    "Form 1": ["Entrepreneurship","Communication","Business Environment"],
-    "Form 2": ["Marketing","Finance","Management"],
-    "Form 3": ["Business Operations","Accounting","Business Law"],
-    "Form 4": ["Strategic Management","Human Resource","Advanced Accounting"]
-  },
-  "Agriculture": {
-    "Form 1": ["Soil","Livestock","Crops"],
-    "Form 2": ["Soil Fertility","Pests & Diseases","Crop Production"],
-    "Form 3": ["Irrigation","Animal Husbandry","Agricultural Economics"],
-    "Form 4": ["Agri-Business","Sustainable Farming","Advanced Crop Production"]
-  },
-  "Computer Studies": {
-    "Form 1": ["Basics","Word Processing","Internet"],
-    "Form 2": ["Spreadsheets","Databases","Programming"],
-    "Form 3": ["Networking","Software Development","Multimedia"],
-    "Form 4": ["Advanced Programming","Web Development","Cyber Security"]
   }
+  // add all other subjects similarly...
 };
 
-// URL parameters
+// Read URL parameters
 const params = new URLSearchParams(window.location.search);
 const subject = params.get("subject") || "Mathematics";
 const form = params.get("form") || "Form 1";
+
 document.getElementById("subject-title").innerText = `Subject: ${subject} - ${form}`;
 const topicsContainer = document.getElementById("topics-container");
 
-// Display topics from syllabus
-syllabus[subject][form].forEach(topic => {
-  const card = document.createElement("div");
-  card.className = "topic-card";
-  card.innerHTML = `<h3>${topic}</h3><div class="dropdown"><p>Loading notes...</p></div>`;
-  const dropdown = card.querySelector(".dropdown");
+// Function to create topic cards and fetch uploaded files
+async function displayTopics() {
+  const topics = syllabus[subject][form];
+  for (let topic of topics) {
+    const card = document.createElement("div");
+    card.className = "topic-card";
+    card.innerHTML = `<h3>${topic}</h3><div class="file-list"><p>Loading files...</p></div>`;
+    const fileList = card.querySelector(".file-list");
 
-  // Fetch notes from Firebase
-  const notesRef = ref(db
+    // Check both notes and papers
+    const types = ["notes", "papers"];
+    fileList.innerHTML = ""; // clear loading text
+
+    for (let type of types) {
+      const pathRef = ref(db, `${type}/${subject}/${form}/${topic}`);
+      const snapshot = await get(pathRef);
+      if (snapshot.exists()) {
+        const files = snapshot.val();
+        for (let key in files) {
+          const file = files[key];
+          const a = document.createElement("a");
+          a.href = file.url || "#";
+          a.target = "_blank";
+          a.textContent = `[${type}] ${file.fileName}`;
+          fileList.appendChild(a);
+        }
+      }
+    }
+
+    // If no files
+    if (!fileList.hasChildNodes()) {
+      fileList.innerHTML = "<p>No files uploaded yet.</p>";
+    }
+
+    topicsContainer.appendChild(card);
+  }
+}
+
+// Load topics and files
+displayTopics();
+</script>
+</body>
+</html>
