@@ -6,7 +6,6 @@
   <title>High Stars Aimers - Papers View</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Use the same theme variables */
     :root {
       --primary-color: #2a2e92;
       --secondary-color: #00f0ff;
@@ -15,128 +14,164 @@
       --border-color: rgba(0, 240, 255, 0.2);
     }
     body {
-      margin:0; padding:0;
-      font-family:'Segoe UI', sans-serif;
-      color: var(--text-light);
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
       background-color: var(--background-dark);
+      color: var(--text-light);
     }
-    .header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); border-bottom:2px solid var(--secondary-color); }
-    .header a { color:white; text-decoration:none; }
-    main { padding:30px; display:flex; flex-direction:column; align-items:center; gap:25px; }
-    h2 { color: var(--secondary-color); text-align:center; }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: var(--background-dark);
+      border-bottom: 2px solid var(--secondary-color);
+    }
+    .header a {
+      color: white;
+      text-decoration: none;
+    }
+    main {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+    }
+    h2 {
+      color: var(--secondary-color);
+      text-align: center;
+    }
     #paper-info {
-        background-color: var(--primary-color);
-        padding: 15px 30px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        text-align: center;
-        border: 1px solid var(--secondary-color);
+      background-color: var(--primary-color);
+      padding: 15px 30px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid var(--secondary-color);
     }
     #pdf-viewer-container {
-        width: 100%;
-        max-width: 900px;
-        height: 80vh; 
-        background-color: #1a1e2a;
-        border: 2px solid var(--secondary-color);
-        border-radius: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.2em;
+      width: 100%;
+      max-width: 900px;
+      height: 80vh;
+      background-color: #1a1e2a;
+      border: 2px solid var(--secondary-color);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2em;
     }
-    /* Simple footer style */
-    .footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 2px solid var(--secondary-color);
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
   <div class="header">
     <h1>High Stars Aimers</h1>
-    <a href="papers.html"><i class="fas fa-chevron-left"></i> Back to Subjects</a>
+    <a href="papers.html"><i class="fas fa-chevron-left"></i> Back to Papers</a>
   </div>
 
   <main>
     <div id="paper-info">
       <h2>Loading Paper...</h2>
     </div>
-
     <div id="pdf-viewer-container">
-      PDF Viewer Area
+      Connecting to Firebase...
     </div>
   </main>
-  
+
   <footer class="footer">
     &copy; 2025 High Stars Aimers. All Rights Reserved.
   </footer>
 
-  <script>
-    // Map to convert codes back to user-friendly display names
-    const displayNameMap = {
-      'math': 'Mathematics',
-      'eng': 'English',
-      'kis': 'Kiswahili',
-      'phy': 'Physics',
-      'chem': 'Chemistry',
-      'bio': 'Biology',
-      'geo': 'Geography',
-      'hist': 'History',
-      'cre': 'CRE',
-      'agric': 'Agriculture',
-      'biz': 'Business Studies',
-      'comp': 'Computer Studies',
-      'f1': 'Form 1',
-      'f2': 'Form 2',
-      'f3': 'Form 3',
-      'f4': 'Form 4'
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+    // Your Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
+      authDomain: "high-stars-aimers-844a6.firebaseapp.com",
+      projectId: "high-stars-aimers-844a6",
+      storageBucket: "high-stars-aimers-844a6.appspot.com",
+      messagingSenderId: "10463765487",
+      appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a",
+      measurementId: "G-88828H1T1V"
     };
 
-    function loadPaper() {
-      // 1. Get the abbreviated parameters from the URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const subjectCode = urlParams.get('sub');
-      const formCode = urlParams.get('frm');
-      
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const displayNameMap = {
+      'math': 'Mathematics', 'eng': 'English', 'kis': 'Kiswahili',
+      'phy': 'Physics', 'chem': 'Chemistry', 'bio': 'Biology',
+      'geo': 'Geography', 'hist': 'History', 'cre': 'CRE',
+      'agric': 'Agriculture', 'biz': 'Business Studies', 'comp': 'Computer Studies',
+      'f1': 'Form 1', 'f2': 'Form 2', 'f3': 'Form 3', 'f4': 'Form 4'
+    };
+
+    async function loadPaper() {
+      const params = new URLSearchParams(window.location.search);
+      const sub = params.get('sub');
+      const frm = params.get('frm');
       const paperInfoDiv = document.getElementById('paper-info');
       const pdfContainer = document.getElementById('pdf-viewer-container');
-      
-      if (subjectCode && formCode) {
-        
-        // 2. Construct the file path: [sub]-[frm].pdf (e.g., phy-f1.pdf)
-        // Ensure you have a folder named 'papers/' with your PDFs inside.
-        const pdfFileName = `${subjectCode}-${formCode}.pdf`;
-        const pdfFilePath = `papers/${pdfFileName}`;
-        
-        // 3. Get the friendly display names
-        const displaySubject = displayNameMap[subjectCode] || subjectCode;
-        const displayForm = displayNameMap[formCode] || formCode;
-        
-        // 4. Update the info header
-        paperInfoDiv.innerHTML = `
-          <h2>${displaySubject} Paper - ${displayForm}</h2>
-          <p>File being loaded: <strong>${pdfFileName}</strong></p>
-        `;
-        
-        // 5. Inject the PDF viewer element
+
+      if (!sub || !frm) {
+        paperInfoDiv.innerHTML = `<h2>Error!</h2><p>Missing subject or form parameters.</p>`;
+        pdfContainer.textContent = "Invalid request.";
+        return;
+      }
+
+      const subjectName = displayNameMap[sub] || sub;
+      const formName = displayNameMap[frm] || frm;
+      paperInfoDiv.innerHTML = `<h2>${subjectName} - ${formName} Paper</h2><p>Fetching from Firebase...</p>`;
+
+      try {
+        // Query Firestore for matching paper
+        const papersRef = collection(db, "papers");
+        const q = query(papersRef, where("subject", "==", subjectName), where("form", "==", formName));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          pdfContainer.innerHTML = `<p style="color:#ff6666;">No paper found for ${subjectName} - ${formName}.</p>`;
+          return;
+        }
+
+        let fileURL = null;
+        querySnapshot.forEach(doc => {
+          fileURL = doc.data().fileURL;
+        });
+
+        if (!fileURL) {
+          pdfContainer.innerHTML = `<p style="color:#ff6666;">No valid file URL found.</p>`;
+          return;
+        }
+
         pdfContainer.innerHTML = `
-          <object data="${pdfFilePath}" type="application/pdf" width="100%" height="100%">
+          <object data="${fileURL}" type="application/pdf" width="100%" height="100%">
             <p style="color:red; text-align:center;">
-              Error loading PDF. Please ensure the file <strong>${pdfFileName}</strong> exists in the <strong>papers/</strong> folder. 
-              <br>Your browser may not support PDF embedding. <a href="${pdfFilePath}" style="color:var(--secondary-color);">Click here to download the file instead.</a>
+              Unable to view PDF. <a href="${fileURL}" target="_blank" style="color:var(--secondary-color);">Click to open or download.</a>
             </p>
           </object>
         `;
+        paperInfoDiv.innerHTML = `<h2>${subjectName} - ${formName} Paper</h2><p>Loaded successfully from Firebase.</p>`;
 
-      } else {
-        // Handle case where parameters are missing
-        paperInfoDiv.innerHTML = `
-          <h2>Error!</h2>
-          <p>Subject or Form not specified in the URL. Please go back and select a paper.</p>
-        `;
-        pdfContainer.innerHTML = '';
+      } catch (error) {
+        console.error(error);
+        pdfContainer.innerHTML = `<p style="color:red;">Error fetching file: ${error.message}</p>`;
       }
     }
-    
-    // Run the function when the page loads
-    window.onload = loadPaper;
+
+    loadPaper();
   </script>
 </body>
 </html>
