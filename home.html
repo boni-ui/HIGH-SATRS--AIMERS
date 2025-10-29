@@ -1,223 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>High Stars Aimers - Home</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-        --primary-color: #2a2e92;
-        --secondary-color: #00f0ff;
-        --background-dark: #0a0f1f;
-        --card-background: rgba(35, 40, 60, 0.8);
-        --text-light: #e0e0e0;
-        --border-color: rgba(0, 240, 255, 0.2);
-    }
-    html, body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Segoe UI', sans-serif;
-        color: var(--text-light);
-        background-color: var(--background-dark);
-    }
-    * { box-sizing: border-box; }
-    h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
-    a { text-decoration: none; color: var(--secondary-color); }
-    main { display: flex; min-height: calc(100vh - 60px); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High Stars Aimers - Home</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+    --primary-color: #2a2e92;
+    --secondary-color: #00f0ff;
+    --accent-color: #ff6f61;
+    --background-dark: #0a0f1f;
+    --card-background: rgba(35, 40, 60, 0.9);
+    --text-light: #e0e0e0;
+    --border-color: rgba(0, 240, 255, 0.2);
+    --hover-color: rgba(0, 240, 255, 0.15);
+}
 
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: var(--background-dark);
-        border-bottom: 2px solid var(--secondary-color);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        height: 60px;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-    .header h1 { font-size: 24px; margin: 0; }
-
-    .sidebar {
-        width: 300px;
-        background-color: rgba(10, 15, 31, 0.9);
-        padding: 20px;
-        border-right: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        position: sticky;
-        top: 60px;
-        height: fit-content;
-    }
-    .sidebar .user-profile {
-        text-align: center;
-        margin-bottom: 20px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid var(--border-color);
-    }
-    .user-profile img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        border: 3px solid var(--secondary-color);
-        object-fit: cover;
-    }
-    .user-profile h3 { margin-top: 10px; font-size: 1.5rem; }
-    .sidebar-section {
-        background: var(--card-background);
-        border-radius: 10px;
-        padding: 20px;
-        border: 1px solid var(--border-color);
-    }
-
-    .content-area {
-        flex-grow: 1;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-        max-width: 900px;
-        margin: 0 auto;
-    }
-    .announcement-banner {
-        padding: 15px;
-        background-color: var(--secondary-color);
-        color: #333;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 8px;
-    }
-
-    .resource-card {
-        background: var(--card-background);
-        border-radius: 10px;
-        padding: 20px;
-        border: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        transition: transform 0.3s;
-        cursor: pointer;
-        text-align: center;
-    }
-    .resource-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2); }
-    .resource-card h4 { margin: 0; font-size: 1.2rem; }
-    .resource-card p { color: #aaa; }
-
-    .footer {
-        padding: 20px;
-        background-color: var(--background-dark);
-        text-align: center;
-        border-top: 2px solid var(--secondary-color);
-        color: #aaa;
-    }
-    .social-icons a {
-        margin: 0 10px;
-        font-size: 22px;
-        color: var(--secondary-color);
-        transition: transform 0.3s;
-    }
-    .social-icons a:hover { transform: scale(1.2); }
-
-    @media (max-width: 900px) {
-        main { flex-direction: column; }
-        .sidebar {
-            width: 100%;
-            border-right: none;
-            border-bottom: 1px solid var(--border-color);
-            flex-direction: column;
-            padding: 15px;
-            position: static;
-        }
-    }
-  </style>
+html, body {margin:0;padding:0;font-family:'Segoe UI',sans-serif;background-color:var(--background-dark);color:var(--text-light);}
+* {box-sizing:border-box;}
+h1,h2,h3,h4 {margin-bottom:10px;}
+a {text-decoration:none;color:inherit;}
+main {display:flex;min-height:calc(100vh - 70px);}
+.header {
+    display:flex;align-items:center;padding:10px 30px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    color:#fff;font-size:1.5rem;font-weight:bold;
+    height:70px;position:sticky;top:0;z-index:1000;
+    box-shadow:0 4px 15px rgba(0,0,0,0.3);border-bottom:2px solid var(--secondary-color);
+}
+.sidebar {
+    width:300px;background-color:rgba(15,20,40,0.95);
+    padding:20px;border-right:1px solid var(--border-color);
+    display:flex;flex-direction:column;gap:20px;
+    position:sticky;top:70px;height:fit-content;border-radius:0 15px 15px 0;
+}
+.user-profile {text-align:center;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border-color);}
+.user-profile img {width:100px;height:100px;border-radius:50%;border:3px solid var(--secondary-color);object-fit:cover;transition:transform 0.3s;}
+.user-profile img:hover {transform:scale(1.1);}
+.user-profile h3 {margin-top:10px;font-size:1.5rem;}
+.sidebar-section {background:var(--card-background);border-radius:15px;padding:15px;text-align:center;border:1px solid var(--border-color);}
+.content-area {flex-grow:1;padding:25px;display:flex;flex-direction:column;gap:25px;max-width:1000px;margin:0 auto;}
+.announcement-banner {
+    padding:15px;background:linear-gradient(120deg,#00f0ff,#2a2e92);
+    color:#fff;text-align:center;font-weight:bold;border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,240,255,0.3);
+}
+.resource-card {
+    background:var(--card-background);border-radius:15px;
+    padding:25px;border:1px solid var(--border-color);
+    display:flex;flex-direction:column;gap:12px;transition:all 0.3s;cursor:pointer;text-align:center;
+}
+.resource-card:hover {
+    transform:translateY(-8px);
+    box-shadow:0 12px 25px rgba(0,240,255,0.35);
+    background:linear-gradient(135deg, rgba(35,40,60,0.9), rgba(0,240,255,0.1));
+}
+.resource-card h4 {margin:0;font-size:1.3rem;color:#fff;}
+.resource-card p {color:#ccc;font-size:0.95rem;}
+.footer {padding:20px;background-color:var(--background-dark);text-align:center;border-top:2px solid var(--secondary-color);color:#aaa;border-radius:15px 15px 0 0;}
+.social-icons a {margin:0 10px;font-size:22px;color:var(--secondary-color);transition:transform 0.3s;}
+.social-icons a:hover {transform:scale(1.3);color:var(--accent-color);}
+@media (max-width:1000px){main{flex-direction:column;} .sidebar{width:100%;border-right:none;border-bottom:1px solid var(--border-color);border-radius:0;padding:15px;position:static;}}
+</style>
 </head>
-
 <body>
-  <div class="header">
-    <h1>High Stars Aimers</h1>
-    <div>
-        <button style="background: var(--primary-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
-            <i class="fas fa-sign-out-alt"></i> Sign Out
-        </button>
+
+<div class="header">High Stars Aimers</div>
+
+<main>
+  <aside class="sidebar">
+    <div class="user-profile">
+      <img id="userProfilePic" src="https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg" alt="Profile Picture">
+      <h3 id="welcomeMessage">Welcome, Student!</h3>
+      <p id="userEmail">student@email.com</p>
+    </div>
+    <div class="sidebar-section">
+      <h4>Today's Tip</h4>
+      <p id="today-tip-text">"Break down large tasks into smaller, manageable chunks."</p>
+    </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="announcement-banner">
+      <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
+    </div>
+
+    <h2>Browse Resources</h2>
+
+    <a href="subjects.html">
+      <div class="resource-card">
+        <h4><i class="fas fa-book"></i> Browse by Subject</h4>
+        <p>Explore all subjects including Mathematics, Physics, Chemistry, Biology, and more.</p>
+      </div>
+    </a>
+
+    <a href="papers.html">
+      <div class="resource-card">
+        <h4><i class="fas fa-file-alt"></i> Browse by Paper</h4>
+        <p>View all available past papers organized by subject and year.</p>
+      </div>
+    </a>
+
+    <div class="resource-card">
+      <h4><i class="fas fa-question-circle"></i> Quiz Master</h4>
+      <p>Test your knowledge with interactive quizzes on various topics.</p>
+    </div>
+
+    <div class="resource-card">
+      <h4><i class="fas fa-stopwatch"></i> Study Timer</h4>
+      <p>Use the Pomodoro timer to manage your study sessions effectively.</p>
+    </div>
+
+    <div class="resource-card">
+      <h4><i class="fas fa-comments"></i> Ask a Question</h4>
+      <p>Get answers from the community or instructors on your study queries.</p>
+    </div>
+
+    <div class="resource-card">
+      <h4><i class="fas fa-bug"></i> Report a Bug</h4>
+      <p>Help us improve by reporting any issues or bugs you find.</p>
     </div>
   </div>
+</main>
 
-  <main>
-    <aside class="sidebar">
-        <div class="user-profile">
-            <img id="userProfilePic" src="https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg" alt="Profile Picture">
-            <h3 id="welcomeMessage">Welcome, User!</h3>
-            <p id="userEmail">student@email.com</p>
-        </div>
+<footer class="footer">
+  <div class="social-icons">
+    <a href="#"><i class="fab fa-facebook"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-twitter"></i></a>
+    <a href="#"><i class="fab fa-youtube"></i></a>
+    <a href="#"><i class="fab fa-tiktok"></i></a>
+    <a href="#"><i class="fab fa-whatsapp"></i></a>
+  </div>
+  <div class="footer-links">
+    <a href="#">About Us</a> | <a href="#">FAQs</a> | <a href="#">Terms & Conditions</a>
+  </div>
+  <p>&copy; 2025 High Stars Aimers. All Rights Reserved.</p>
+</footer>
 
-        <div class="sidebar-section">
-            <h4>Today's Tip</h4>
-            <p id="today-tip-text">"Break down large tasks into smaller, manageable chunks."</p>
-        </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="announcement-banner">
-            <i class="fas fa-bullhorn"></i> New updates are here! Check out the latest past papers.
-        </div>
-
-        <h2>Browse Resources</h2>
-
-        <!-- 🔹 Linked Resource Cards -->
-        <a href="subjects.html">
-          <div class="resource-card">
-            <h4><i class="fas fa-book"></i> Browse by Subject</h4>
-            <p>Explore all subjects including Mathematics, Physics, Chemistry, Biology, and more.</p>
-          </div>
-        </a>
-
-        <a href="papers.html">
-          <div class="resource-card">
-            <h4><i class="fas fa-file-alt"></i> Browse by Paper</h4>
-            <p>View all available past papers organized by subject and year.</p>
-          </div>
-        </a>
-
-        <div class="resource-card">
-            <h4><i class="fas fa-question-circle"></i> Quiz Master</h4>
-            <p>Test your knowledge with interactive quizzes on various topics.</p>
-        </div>
-
-        <div class="resource-card">
-            <h4><i class="fas fa-stopwatch"></i> Study Timer</h4>
-            <p>Use the Pomodoro timer to manage your study sessions effectively.</p>
-        </div>
-
-        <div class="resource-card">
-            <h4><i class="fas fa-comments"></i> Ask a Question</h4>
-            <p>Get answers from the community or instructors on your study queries.</p>
-        </div>
-
-        <div class="resource-card">
-            <h4><i class="fas fa-bug"></i> Report a Bug</h4>
-            <p>Help us improve by reporting any issues or bugs you find.</p>
-        </div>
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="social-icons">
-      <a href="#"><i class="fab fa-facebook"></i></a>
-      <a href="#"><i class="fab fa-instagram"></i></a>
-      <a href="#"><i class="fab fa-twitter"></i></a>
-      <a href="#"><i class="fab fa-youtube"></i></a>
-      <a href="#"><i class="fab fa-tiktok"></i></a>
-      <a href="#"><i class="fab fa-whatsapp"></i></a>
-    </div>
-    <div class="footer-links">
-      <a href="#">About Us</a> | <a href="#">FAQs</a> | <a href="#">Terms & Conditions</a>
-    </div>
-    <p>&copy; 2024 High Stars Aimers. All Rights Reserved.</p>
-  </footer>
 </body>
 </html>
