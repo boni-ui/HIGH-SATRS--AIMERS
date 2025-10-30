@@ -45,7 +45,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
   authDomain: "high-stars-aimers-844a6.firebaseapp.com",
@@ -53,45 +52,4 @@ const firebaseConfig = {
   projectId: "high-stars-aimers-844a6",
   storageBucket: "high-stars-aimers-844a6.appspot.com",
   messagingSenderId: "10463765487",
-  appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-const params = new URLSearchParams(window.location.search);
-const subject = params.get("subject") || "Mathematics";
-const form = params.get("form") || "Form 1";
-
-document.getElementById("paper-title").innerText = `Paper: ${subject} - ${form}`;
-const container = document.getElementById("papers-container");
-
-async function loadPapers() {
-  const papersRef = ref(db, `papers/${subject}/${form}`);
-  try {
-    const snapshot = await get(papersRef);
-    container.innerHTML = "";
-    if(snapshot.exists()){
-      const papers = snapshot.val();
-      for(const key in papers){
-        const paper = papers[key];
-        const card = document.createElement("div");
-        card.className = "paper-card";
-        card.innerHTML = `
-          <p><strong>${paper.topic || "General Paper"}</strong></p>
-          <a href="${paper.url || '#'}" target="_blank">View / Download PDF</a>
-        `;
-        container.appendChild(card);
-      }
-    } else {
-      container.innerHTML = "<p>No papers uploaded yet.</p>";
-    }
-  } catch(error){
-    container.innerHTML = `<p style="color:red;">Error loading papers: ${error.message}</p>`;
-  }
-}
-
-loadPapers();
-</script>
-</body>
-</html>
+  appId: "
