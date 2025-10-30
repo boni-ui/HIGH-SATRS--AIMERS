@@ -97,20 +97,80 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-// Topics data (same as upload page)
+// ✅ Full topics JSON (same as upload page)
 const topicsData = {
-  "Mathematics": ["Numbers", "Algebra", "Geometry", "Mensuration", "Statistics", "Trigonometry", "Vectors", "Matrices"],
-  "English": ["Grammar", "Comprehension", "Writing", "Oral Skills", "Literature"],
-  "Kiswahili": ["Sarufi", "Fasihi", "Matumizi ya Lugha", "Insha"],
-  "Biology": ["Cell Structure", "Classification", "Transport in Plants", "Respiration", "Reproduction"],
-  "Chemistry": ["Introduction to Chemistry", "Acids, Bases & Indicators", "Water", "Air & Combustion", "The Mole Concept"],
-  "Physics": ["Measurement", "Forces", "Pressure", "Work, Energy & Power", "Light", "Electricity"],
-  "Geography": ["Map Reading", "Weather & Climate", "Rocks", "Agriculture", "Population"],
-  "History": ["Early Man", "Trade", "Colonialism", "Nationalism", "Independence"],
-  "CRE": ["Creation", "Faith", "Christian Living", "Church History"],
-  "Business Studies": ["Entrepreneurship", "Office Practice", "Business Environment", "Communication"],
-  "Agriculture": ["Soil Science", "Crop Production", "Livestock Production"],
-  "Computer Studies": ["Computer Basics", "Word Processing", "Spreadsheets", "Internet"]
+  "Mathematics": {
+    "Form 1": ["Numbers", "Integers", "Fractions", "Decimals", "Squares and Cubes", "Approximation", "Indices", "Algebraic Expressions", "Linear Equations", "Angles", "Triangles", "Quadrilaterals", "Circle Theorems", "Area and Perimeter", "Volume", "Statistics", "Graphs"],
+    "Form 2": ["Factors", "Multiples", "HCF and LCM", "Simultaneous Equations", "Quadratic Equations", "Pythagoras Theorem", "Similarity and Congruence", "Trigonometry I", "Logarithms", "Coordinate Geometry I", "Statistics II"],
+    "Form 3": ["Quadratic Expressions", "Quadratic Graphs", "Surds", "Sequences and Series", "Trigonometry II", "Vectors", "Matrices", "Linear Programming", "Bearings and Distances"],
+    "Form 4": ["Differentiation", "Integration", "Further Vectors", "Probability", "Statistics III", "Transformation of Graphs"]
+  },
+  "English": {
+    "Form 1": ["Parts of Speech", "Nouns", "Verbs", "Adjectives", "Adverbs", "Pronouns", "Prepositions", "Tenses", "Comprehension", "Creative Writing"],
+    "Form 2": ["Clauses and Phrases", "Reported Speech", "Active and Passive Voice", "Comprehension II", "Functional Writing"],
+    "Form 3": ["Literary Devices", "Oral Literature", "Listening and Speaking Skills", "Advanced Writing Skills"],
+    "Form 4": ["Revision Grammar", "Comprehension III", "Essay Writing", "Set Books"]
+  },
+  "Kiswahili": {
+    "Form 1": ["Matamshi", "Sarufi", "Misamiati", "Insha za Kawaida", "Fasihi Simulizi"],
+    "Form 2": ["Vitenzi", "Ngeli", "Insha za Hoja", "Tafsiri", "Fasihi Andishi"],
+    "Form 3": ["Matumizi ya Lugha", "Insha za Kitaalamu", "Tamthilia", "Riwaya"],
+    "Form 4": ["Uhakiki wa Kazi za Fasihi", "Insha za Kidini", "Mihadhara", "Kuhariri"]
+  },
+  "Biology": {
+    "Form 1": ["Introduction to Biology", "Classification I", "The Cell", "Cell Physiology", "The Cell and its Environment"],
+    "Form 2": ["Transport in Plants and Animals", "Respiration", "Gaseous Exchange", "Excretion"],
+    "Form 3": ["Photosynthesis", "Nutrition", "Reproduction in Plants and Animals", "Growth and Development"],
+    "Form 4": ["Genetics", "Evolution", "Ecology", "Adaptation and Survival"]
+  },
+  "Chemistry": {
+    "Form 1": ["Introduction to Chemistry", "Simple Classification of Substances", "Structure of the Atom", "Elements, Compounds and Mixtures", "Water and Hydrogen"],
+    "Form 2": ["The Mole Concept", "Acids, Bases and Indicators", "Salts", "Carbon and its Compounds"],
+    "Form 3": ["The Periodic Table", "Chemical Families", "Electrolysis", "Chemical Equilibrium"],
+    "Form 4": ["Industrial Chemistry", "Metals", "Radioactivity", "Organic Chemistry"]
+  },
+  "Physics": {
+    "Form 1": ["Introduction to Physics", "Measurement", "Forces", "Pressure", "Particulate Nature of Matter"],
+    "Form 2": ["Work, Energy and Power", "Simple Machines", "Heat", "Light", "Sound"],
+    "Form 3": ["Waves", "Static Electricity", "Current Electricity", "Magnetism"],
+    "Form 4": ["Electromagnetic Induction", "Electronics", "Radioactivity", "Nuclear Energy"]
+  },
+  "Geography": {
+    "Form 1": ["Introduction to Geography", "The Earth and the Solar System", "Weather and Climate", "Rocks and Minerals"],
+    "Form 2": ["Map Reading and Interpretation", "Statistical Methods", "Agriculture", "Transport and Communication"],
+    "Form 3": ["Population and Settlement", "Industry", "Forestry", "Fishing"],
+    "Form 4": ["Environmental Management", "Regional Studies", "Fieldwork Techniques"]
+  },
+  "History": {
+    "Form 1": ["Introduction to History", "Early Man", "Development of Agriculture", "People of Kenya up to 19th Century"],
+    "Form 2": ["Contacts between East Africa and Outside World", "Trade", "Colonial Administration"],
+    "Form 3": ["Nationalism", "The Struggle for Independence", "Social, Economic and Political Developments"],
+    "Form 4": ["World Wars", "International Relations", "World History Since 1945"]
+  },
+  "CRE": {
+    "Form 1": ["Introduction to CRE", "Creation and Fall of Man", "Faith and God's Promises", "Sin and Salvation"],
+    "Form 2": ["Leadership in Israel", "Kings of Israel", "Prophets in Israel"],
+    "Form 3": ["Teachings of Jesus", "The Ministry of Jesus", "The Early Church"],
+    "Form 4": ["Christian Ethics", "The Role of the Church Today"]
+  },
+  "Business Studies": {
+    "Form 1": ["Introduction to Business", "Forms of Business Units", "Entrepreneurship", "Business Environment"],
+    "Form 2": ["Office Practice", "Communication in Business", "Transport", "Warehousing"],
+    "Form 3": ["Insurance", "Wholesaling and Retailing", "National Income", "Taxation"],
+    "Form 4": ["Money and Banking", "International Trade", "Balance of Payments", "Business Finance"]
+  },
+  "Agriculture": {
+    "Form 1": ["Introduction to Agriculture", "Soil Science", "Crop Production I", "Livestock Production I"],
+    "Form 2": ["Farm Tools and Equipment", "Crop Production II", "Livestock Production II", "Farm Structures"],
+    "Form 3": ["Soil and Water Conservation", "Farm Management", "Agricultural Economics", "Animal Health"],
+    "Form 4": ["Agricultural Marketing", "Agroforestry", "Agricultural Extension"]
+  },
+  "Computer Studies": {
+    "Form 1": ["Introduction to Computers", "Computer Hardware", "Software", "Operating Systems"],
+    "Form 2": ["Word Processing", "Spreadsheets", "Databases", "Desktop Publishing"],
+    "Form 3": ["Programming Concepts", "Internet and Email", "Data Communication and Networking"],
+    "Form 4": ["System Development", "ICT and Society", "Computer Security"]
+  }
 };
 
 // Get subject and form from URL
@@ -121,14 +181,14 @@ document.getElementById("subject-title").innerText = `Subject: ${subject} - ${fo
 
 const topicsContainer = document.getElementById("topics-container");
 
-// Loop through topics
-topicsData[subject].forEach(async (topic) => {
+// Loop through topics dynamically
+topicsData[subject][form].forEach(async (topic) => {
   const card = document.createElement("div");
   card.className = "topic-card";
   card.innerHTML = `<h3>${topic}</h3><div class="dropdown"><p>Loading...</p></div>`;
   const dropdown = card.querySelector(".dropdown");
 
-  // Firebase Storage path
+  // Firebase path
   const path = `notes/${subject}/${form}/${topic}`;
   const listRef = ref(storage, path);
 
