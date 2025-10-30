@@ -135,7 +135,7 @@ button:hover { background-color:#03e3f0; transform:scale(1.02); }
 
 <!-- Firebase SDK -->
 <script type="module">
-// Import Firebase SDKs
+// Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
 
@@ -149,11 +149,10 @@ const firebaseConfig = {
   measurementId: "G-88828H1T1V"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-// DOM references
+// DOM
 const uploadType = document.getElementById('uploadType');
 const subjectDiv = document.getElementById('subjectDiv');
 const formDiv = document.getElementById('formDiv');
@@ -165,25 +164,66 @@ const uploadForm = document.getElementById('uploadForm');
 const progressBar = document.getElementById('progressBar');
 const uploadStatus = document.getElementById('uploadStatus');
 
-// 8-4-4 Topics Data
-const topicsData = {
-  "Mathematics": ["Numbers", "Algebra", "Geometry", "Mensuration", "Statistics", "Trigonometry", "Vectors", "Matrices"],
-  "English": ["Grammar", "Comprehension", "Writing", "Oral Skills", "Literature"],
-  "Kiswahili": ["Sarufi", "Fasihi", "Matumizi ya Lugha", "Insha"],
-  "Biology": ["Cell Structure", "Classification", "Transport in Plants", "Respiration", "Reproduction"],
-  "Chemistry": ["Introduction to Chemistry", "Acids, Bases & Indicators", "Water", "Air & Combustion", "The Mole Concept"],
-  "Physics": ["Measurement", "Forces", "Pressure", "Work, Energy & Power", "Light", "Electricity"],
-  "Geography": ["Map Reading", "Weather & Climate", "Rocks", "Agriculture", "Population"],
-  "History": ["Early Man", "Trade", "Colonialism", "Nationalism", "Independence"],
-  "CRE": ["Creation", "Faith", "Christian Living", "Church History"],
-  "Business Studies": ["Entrepreneurship", "Office Practice", "Business Environment", "Communication"],
-  "Agriculture": ["Soil Science", "Crop Production", "Livestock Production"],
-  "Computer Studies": ["Computer Basics", "Word Processing", "Spreadsheets", "Internet"]
+// Per-form topics
+const topicsByForm = {
+  "Form 1": {
+    "Chemistry": ["Introduction to Chemistry", "Laboratory Apparatus", "Simple Chemical Reactions", "Mixtures & Separation"],
+    "Physics": ["Measurements", "Forces", "Energy", "Density"],
+    "Biology": ["Introduction to Biology", "Cell Structure", "Classification I", "Health & Hygiene"],
+    "Mathematics": ["Whole Numbers", "Fractions", "Decimals", "Algebraic Expressions"],
+    "English": ["Nouns", "Adjectives", "Tenses", "Comprehension"],
+    "Kiswahili": ["Sarufi", "Matumizi ya Lugha", "Fasihi Simulizi", "Insha"],
+    "Geography": ["Introduction to Geography", "The Earth & Solar System", "Weather & Climate"],
+    "History": ["Early Man", "People & Culture", "Contacts with Outside World"],
+    "CRE": ["Creation", "Faith", "Sin & Forgiveness"],
+    "Agriculture": ["Introduction to Agriculture", "Soil Formation", "Farm Tools"],
+    "Business Studies": ["Introduction to Business", "Forms of Business Units"]
+  },
+  "Form 2": {
+    "Chemistry": ["Structure of the Atom", "Periodic Table", "Chemical Bonding", "Salts"],
+    "Physics": ["Pressure", "Work, Energy & Power", "Heat", "Simple Machines"],
+    "Biology": ["Nutrition in Plants", "Transport in Plants", "Gaseous Exchange"],
+    "Mathematics": ["Indices", "Linear Equations", "Simultaneous Equations"],
+    "English": ["Report Writing", "Summary", "Clauses"],
+    "Kiswahili": ["Ngeli", "Matumizi ya Lugha", "Insha"],
+    "Geography": ["Map Reading", "Weather", "Rocks"],
+    "History": ["Development of Agriculture", "Trade", "Early Man"],
+    "CRE": ["The Bible", "Faith & Works"],
+    "Agriculture": ["Livestock Production", "Crop Production II"],
+    "Business Studies": ["Business Transactions", "Entrepreneurship"]
+  },
+  "Form 3": {
+    "Chemistry": ["Mole Concept", "Acids, Bases & Salts", "Reaction Rates", "Electrolysis"],
+    "Physics": ["Reflection", "Refraction", "Current Electricity", "Magnetism"],
+    "Biology": ["Reproduction", "Coordination", "Excretion"],
+    "Mathematics": ["Quadratic Equations", "Trigonometry I", "Statistics"],
+    "English": ["Oral Skills", "Narrative Writing", "Grammar"],
+    "Kiswahili": ["Tamathali za Usemi", "Insha", "Fasihi Andishi"],
+    "Geography": ["Minerals", "Mining", "Population"],
+    "History": ["Colonial Administration", "African Reaction to Colonial Rule"],
+    "CRE": ["Leadership", "Christian Values"],
+    "Agriculture": ["Soil Fertility", "Farm Records"],
+    "Business Studies": ["Ledgers", "Accounting Documents"]
+  },
+  "Form 4": {
+    "Chemistry": ["Organic Chemistry", "Industrial Chemistry", "Electrochemistry", "Environmental Chemistry"],
+    "Physics": ["Radioactivity", "Electronics", "Waves", "Current Electricity II"],
+    "Biology": ["Genetics", "Evolution", "Ecology"],
+    "Mathematics": ["Vectors", "Matrices", "Probability"],
+    "English": ["Revision", "Set Books", "Composition Writing"],
+    "Kiswahili": ["Insha ya Kawaida", "Fasihi Andishi", "Uhakiki wa Riwaya"],
+    "Geography": ["Transport", "Trade", "Industry"],
+    "History": ["Road to Independence", "Social, Economic & Political Developments after 1963"],
+    "CRE": ["Christian Approaches to Modern Issues"],
+    "Agriculture": ["Agricultural Economics", "Agricultural Extension"],
+    "Business Studies": ["Final Accounts", "Trends in Business"]
+  }
 };
 
-// Show fields based on selection
+// Show fields
 uploadType.addEventListener('change', () => {
-  if (uploadType.value === "") {
+  const val = uploadType.value;
+  if (!val) {
     subjectDiv.classList.add('hidden');
     formDiv.classList.add('hidden');
     topicDiv.classList.add('hidden');
@@ -191,24 +231,26 @@ uploadType.addEventListener('change', () => {
   }
   subjectDiv.classList.remove('hidden');
   formDiv.classList.remove('hidden');
-  if (uploadType.value === "notes") topicDiv.classList.remove('hidden');
-  else topicDiv.classList.add('hidden');
+  topicDiv.classList.toggle('hidden', val !== "notes");
 });
 
-// Populate topics
-subjectSelect.addEventListener('change', () => {
-  const selected = subjectSelect.value;
+// Populate topics by subject + form
+function updateTopics() {
+  const form = formSelect.value;
+  const subject = subjectSelect.value;
   topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
-  if (topicsData[selected]) {
-    topicsData[selected].forEach(t => {
+  if (topicsByForm[form] && topicsByForm[form][subject]) {
+    topicsByForm[form][subject].forEach(t => {
       const opt = document.createElement('option');
       opt.textContent = t;
       topicSelect.appendChild(opt);
     });
   }
-});
+}
+subjectSelect.addEventListener('change', updateTopics);
+formSelect.addEventListener('change', updateTopics);
 
-// Upload to Firebase
+// Upload handler
 uploadForm.addEventListener('submit', e => {
   e.preventDefault();
   const type = uploadType.value;
@@ -216,15 +258,14 @@ uploadForm.addEventListener('submit', e => {
   const form = formSelect.value;
   const topic = topicSelect.value;
   const file = document.getElementById('file').files[0];
-
   if (!type || !subject || !form || !file) {
-    alert("Please complete all required fields.");
+    alert("Please fill all fields.");
     return;
   }
 
   const path = type === "notes"
-    ? `notes/${subject}/${form}/${topic}/${file.name}`
-    : `papers/${subject}/${form}/${file.name}`;
+    ? `notes/${form}/${subject}/${topic}/${file.name}`
+    : `papers/${form}/${subject}/${file.name}`;
 
   const storageRef = ref(storage, path);
   const uploadTask = uploadBytesResumable(storageRef, file);
