@@ -1,104 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>High Stars Aimers - Subject View</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      width: 90%;
-      max-width: 1000px;
-      margin: 30px auto;
-    }
-    h1 {
-      text-align: center;
-      color: #2a2e45;
-    }
-    .pdf-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-    .pdf-card {
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      text-align: center;
-      padding: 20px;
-    }
-    .pdf-card i {
-      font-size: 50px;
-      color: #2a2e45;
-    }
-    .pdf-card h3 {
-      margin: 10px 0;
-      font-size: 16px;
-    }
-    .pdf-card a {
-      text-decoration: none;
-      color: #fff;
-      background: #2a2e45;
-      padding: 8px 15px;
-      border-radius: 8px;
-      transition: 0.3s;
-      display: inline-block;
-    }
-    .pdf-card a:hover {
-      background: #40456e;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High Stars Aimers - Subject View</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary-color: #2a2e92;
+  --secondary-color: #00f0ff;
+  --background-dark: #0a0f1f;
+  --card-background: rgba(35, 40, 60, 0.8);
+  --text-light: #e0e0e0;
+  --border-color: rgba(0, 240, 255, 0.2);
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: var(--background-dark);
+  border-bottom: 2px solid var(--secondary-color);
+}
+.header a { color: white; text-decoration: none; }
+main { padding: 30px; max-width: 900px; margin: 0 auto; }
+h2 { color: var(--secondary-color); margin-bottom: 20px; text-align: center; }
+
+.file-card {
+  background: var(--card-background);
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.file-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
+}
+.file-card h3 {
+  margin: 0 0 10px;
+  color: var(--secondary-color);
+}
+.file-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+}
+.file-actions a {
+  color: var(--text-light);
+  text-decoration: none;
+  border: 1px solid var(--secondary-color);
+  padding: 5px 10px;
+  border-radius: 6px;
+  transition: background 0.3s, color 0.3s;
+}
+.file-actions a:hover {
+  background: var(--secondary-color);
+  color: var(--background-dark);
+}
+.footer {
+  text-align: center;
+  padding: 20px;
+  border-top: 2px solid var(--secondary-color);
+  color: #aaa;
+  margin-top: 30px;
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>📚 Uploaded Subject Notes</h1>
-    <div class="pdf-grid" id="pdfGrid"></div>
-  </div>
+
+<div class="header">
+  <h1>High Stars Aimers</h1>
+  <a href="subjects.html"><i class="fas fa-arrow-left"></i> Back to Subjects</a>
+</div>
+
+<main>
+  <h2 id="subject-title">Subject: </h2>
+  <div id="files-container"></div>
+</main>
+
+<footer class="footer">
+  &copy; 2025 High Stars Aimers. All Rights Reserved.
+</footer>
 
 <script>
 const CLOUD_NAME = "dj8xycoww";
-const folderPath = "highstars/files/notes"; // ✅ Updated folder path
 
-async function loadPDFs() {
-  const form = localStorage.getItem("selectedForm");
-  const subject = localStorage.getItem("selectedSubject");
-  const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/list.json?prefix=${folderPath}/${form}/${subject}/`;
+// ✅ Get subject and form from URL
+const params = new URLSearchParams(window.location.search);
+const subject = params.get("subject") || "Mathematics";
+const form = params.get("form") || "Form 1";
+document.getElementById("subject-title").innerText = `Subject: ${subject} - ${form}`;
+
+// ✅ Correct Cloudinary folder path
+const folderPath = `highstars/files/notes/${form}/${subject}`;
+
+const filesContainer = document.getElementById("files-container");
+
+async function loadFiles() {
+  filesContainer.innerHTML = "<p style='text-align:center;color:gray;'>Loading files...</p>";
 
   try {
-    const res = await fetch(url);
-    const data = await res.json();
+    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folderPath.replace(/\//g, "_")}.json`);
 
-    const grid = document.getElementById("pdfGrid");
-    grid.innerHTML = "";
-
-    if (!data.resources || data.resources.length === 0) {
-      grid.innerHTML = "<p style='text-align:center;'>No PDFs uploaded yet.</p>";
+    if (!res.ok) {
+      filesContainer.innerHTML = `<p style="text-align:center;color:gray;">No files found for ${subject} - ${form}</p>`;
       return;
     }
 
-    data.resources.forEach(file => {
-      const fileName = file.public_id.split("/").pop();
-      const card = `
-        <div class="pdf-card">
-          <i class="fa-solid fa-file-pdf"></i>
-          <h3>${fileName}</h3>
-          <a href="${file.secure_url}" target="_blank">Open PDF</a>
-        </div>`;
-      grid.innerHTML += card;
+    const data = await res.json();
+    const resources = data.resources || [];
+
+    if (resources.length === 0) {
+      filesContainer.innerHTML = `<p style="text-align:center;color:gray;">No files uploaded yet for ${subject} - ${form}</p>`;
+      return;
+    }
+
+    filesContainer.innerHTML = "";
+
+    resources.forEach((file) => {
+      const pdfUrl = file.secure_url;
+      const fileName = decodeURIComponent(pdfUrl.split("/").pop());
+
+      const card = document.createElement("div");
+      card.className = "file-card";
+      card.innerHTML = `
+        <h3><i class="fas fa-file-pdf"></i> ${fileName}</h3>
+        <div class="file-actions">
+          <a href="${pdfUrl}" target="_blank"><i class="fas fa-eye"></i> View</a>
+          <a href="${pdfUrl}" download><i class="fas fa-download"></i> Download</a>
+        </div>
+      `;
+      filesContainer.appendChild(card);
     });
   } catch (error) {
-    console.error("Error loading PDFs:", error);
+    console.error(error);
+    filesContainer.innerHTML = `<p style="color:red;text-align:center;">Error loading files</p>`;
   }
 }
 
-loadPDFs();
+loadFiles();
 </script>
 </body>
 </html>
