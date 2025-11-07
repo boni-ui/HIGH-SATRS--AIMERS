@@ -1,0 +1,58 @@
+{
+  "Form 1": {
+    "Agriculture": "https://drive.google.com/drive/folders/1DamlHW_U9BseQnutXFJuBgQ20qMQdqHD",
+    "Biology": "https://drive.google.com/drive/folders/1MRyBa8tjP7iOmYPyhUNxcZJjDqcDAsor",
+    "Business Studies": "https://drive.google.com/drive/folders/1RUhbj0IoV-11OU0tAyGXi0HXFzqdWLhb",
+    "Chemistry": "https://drive.google.com/drive/folders/1Lgdxu7DdOjHnMXmE6bjxNMkirHAS9fgj",
+    "Computer Studies": "https://drive.google.com/drive/folders/1RUhbj0IoV-11OU0tAyGXi0HXFzqdWLhb",
+    "CRE": "https://drive.google.com/drive/folders/1ctH-DCbdvKRFHA3ND8hL5TrMQLVnjPIz",
+    "English": "https://drive.google.com/drive/folders/1ufJ3lNqRMFjBaJEyXR9wTA9S9zQN5Jdv",
+    "Geography": "https://drive.google.com/drive/folders/1hFjmI_J-9hg1U3UvWiIU9T8ixgeUKuuQ",
+    "History": "https://drive.google.com/drive/folders/1jgXWaeSeSqAlSIHm3_wQUKIaYOWOC6RF",
+    "Kiswahili": "https://drive.google.com/drive/folders/1fwzd0LWt7w9obMba8EW_zAQ_4G7WWQgy",
+    "Mathematics": "https://drive.google.com/drive/folders/19u1B70bnbqF0YGzO6fOItsJJ2Noo5RDa",
+    "Physics": "https://drive.google.com/drive/folders/15qv5YJIQ4pUV6gTqZd6r9wljA4nUQoz2"
+  },
+  "Form 2": {
+    "Agriculture": "https://drive.google.com/drive/folders/1yO3Z1hlD2YLtAI9vCJigcEnx8HqxLvhb",
+    "Biology": "https://drive.google.com/drive/folders/1qR8jjsA3NuPNA4WhWmhHWsu1KhU5Emzh",
+    "Business Studies": "https://drive.google.com/drive/folders/1uNCYvmqVYrhr3WBxEEL3IAeh4VTs4EuK",
+    "Chemistry": "https://drive.google.com/drive/folders/16DyrXgqGYWg72kOKEe7N4qNbWNkFuWho",
+    "Computer Studies": "https://drive.google.com/drive/folders/18TJ3tyeuFIpIzfORxFz6B8s23ZVNNMSQ",
+    "CRE": "https://drive.google.com/drive/folders/1sTV-RvIejNgkxhCLaWoZ6hOYtxOpD-zq",
+    "English": "https://drive.google.com/drive/folders/1w0ubguSeP5iP30fFsgcpZgkW3J5sasD6",
+    "Geography": "https://drive.google.com/drive/folders/1dVxYqdQL8GWquq_CUsa7iDqewoEuV3gy",
+    "History": "https://drive.google.com/drive/folders/1fn6wlvwl10cs2ORHBzxpyvXsZOD6wgiZ",
+    "Kiswahili": "https://drive.google.com/drive/folders/1JoJ6wANIrWetA_pmE13lEtpRAjZpBH7D",
+    "Mathematics": "https://drive.google.com/drive/folders/1QArsO0QPkpxDyX3yTFnxrnkMlY75tpoH",
+    "Physics": "https://drive.google.com/drive/folders/1DMBhJWHUuy3k4xleM6y90LuwwmZeN-s9"
+  },
+  "Form 3": {
+    "Agriculture": "https://drive.google.com/drive/folders/1oRLSzN7qXgJx_N6cr9-1A8hiAsnq4vb3",
+    "Biology": "https://drive.google.com/drive/folders/1rKgyepV2VVnHMzQuB-qyIAJ0yAn03wn0",
+    "Business Studies": "https://drive.google.com/drive/folders/11iwO1OQyQ5vNW5vJSKm6hkKLr_LNzmDy",
+    "Chemistry": "https://drive.google.com/drive/folders/1XP8Fu_NxTjiiJV_JFIJW4jr8DxzItECN",
+    "Computer Studies": "https://drive.google.com/drive/folders/1D2Qa03xGb-YLyStLitvrlYpJywADavLl",
+    "CRE": "https://drive.google.com/drive/folders/1VwoGXFwBtASUSxUs530dPizrIm4_RvHe",
+    "English": "https://drive.google.com/drive/folders/1syP0rHJNUIFlkN-I1gvEa-SvivWrZo5d",
+    "Geography": "https://drive.google.com/drive/folders/1g1iHlqVzWBtY_OhQfYP4TbOBwakOQdQP",
+    "History": "https://drive.google.com/drive/folders/1y7o7Rq2iRkozUr-OaEacPBqJYjUgQsWv",
+    "Kiswahili": "https://drive.google.com/drive/folders/1JoJ6wANIrWetA_pmE13lEtpRAjZpBH7D",
+    "Mathematics": "https://drive.google.com/drive/folders/1noZ96qeBDt6Oz7YyuzUjbacj0Zu56Bjv",
+    "Physics": "https://drive.google.com/drive/folders/1dgDxbiekYBXf8x123rVWHyRXef83XXXU"
+  },
+  "Form 4": {
+    "Agriculture": "https://drive.google.com/drive/folders/12-dWcVHtlrXhapqd9NReWgb6mlVhpis_",
+    "Biology": "https://drive.google.com/drive/folders/1Ld2gC1ie74wrJHbK1rly6pa6v5YDNVv_",
+    "Business Studies": "https://drive.google.com/drive/folders/1piA2ZgMcwaZfu9dBDzVTWK-1MxskUgqy",
+    "Chemistry": "https://drive.google.com/drive/folders/1Iokl-wGCv2ck4ql_St_nYQQ18GlutHLj",
+    "Computer Studies": "https://drive.google.com/drive/folders/10bEz8d89WfaofaPf-IN_4-XzvR1dRTdn",
+    "CRE": "https://drive.google.com/drive/folders/1c9E8vpvD2Bc2wfRbf70HSMDU9fhwHAnE",
+    "English": "https://drive.google.com/drive/folders/1ttEl4PEOtwbgE35uK-t3zqqIYgYbhPuu",
+    "Geography": "https://drive.google.com/drive/folders/1U7wqPK50ZNuIxdaSeqv5Nf_rV-8FcqBJ",
+    "History": "https://drive.google.com/drive/folders/15roQQWzmzEiJj6OHuxeG-al9kcih6yP9",
+    "Kiswahili": "https://drive.google.com/drive/folders/1mgJNdNvOvWAPGDEWa6VNNN4-6tuSgEo5",
+    "Mathematics": "https://drive.google.com/drive/folders/1V8h69K1svEBrRw6NxpKRM4Wy-AOnPb5f",
+    "Physics": "https://drive.google.com/drive/folders/1WzSePOBbaJx1kh8STMkKP_GQVfXepHUp"
+  }
+}
