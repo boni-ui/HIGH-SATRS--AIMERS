@@ -3,68 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>High Stars Aimers - Subject View</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<title>High Stars Aimers - Subjects</title>
 <style>
-:root { --primary-color:#2a2e92; --secondary-color:#00f0ff; --background-dark:#0a0f1f; --card-background:rgba(35,40,60,0.8); --text-light:#e0e0e0; --border-color:rgba(0,240,255,0.2);}
-html, body{margin:0;padding:0;font-family:'Segoe UI',sans-serif;background-color:var(--background-dark);color:var(--text-light);}
-.header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background-color:var(--background-dark);border-bottom:2px solid var(--secondary-color);}
-.header a{color:white;text-decoration:none;}
-main{padding:30px;max-width:900px;margin:0 auto;}
-h2{color:var(--secondary-color);margin-bottom:20px;text-align:center;}
-.file-card{background:var(--card-background);padding:20px;margin-bottom:15px;border-radius:12px;border:1px solid var(--border-color);cursor:pointer;transition: transform 0.3s, box-shadow 0.3s;}
-.file-card:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,240,255,0.2);}
-.file-card h3{margin:0 0 10px;color: var(--secondary-color);}
-.file-actions{display:flex;justify-content:flex-start;gap:15px;}
-.file-actions a{color: var(--text-light);text-decoration:none;border:1px solid var(--secondary-color);padding:5px 10px;border-radius:6px;transition:0.3s;}
-.file-actions a:hover{background: var(--secondary-color); color:var(--background-dark);}
-.footer{text-align:center;padding:20px;border-top:2px solid var(--secondary-color);color:#aaa;margin-top:30px;}
+  body { font-family: Arial, sans-serif; background-color: #f2f2f2; margin: 0; padding: 0; }
+  header { background-color: #2a2e45; color: #fff; padding: 1em; text-align: center; }
+  h1 { margin: 0; }
+  .form-section { margin: 20px; }
+  .subject-card { background-color: #fff; padding: 15px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+  .subject-card a { text-decoration: none; color: #2a2e45; font-weight: bold; }
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>High Stars Aimers</h1>
-  <a href="subjects.html"><i class="fas fa-arrow-left"></i> Back to Subjects</a>
-</div>
-<main>
-  <h2 id="subject-title">Subject: </h2>
-  <div id="files-container"></div>
-</main>
-<footer class="footer">&copy; 2025 High Stars Aimers. All Rights Reserved.</footer>
-
+<header>
+  <h1>High Stars Aimers - Subjects</h1>
+</header>
+<div id="container"></div>
 <script>
-const CLOUD_NAME = "dj8xycoww";
-const params = new URLSearchParams(window.location.search);
-const subject = params.get("subject") || "Mathematics";
-const form = params.get("form") || "Form 1";
-const type = "notes";
-document.getElementById("subject-title").innerText = `Subject: ${subject} - ${form}`;
-
-const filesContainer = document.getElementById("files-container");
-const jsonKey = `${type}_${form}_${subject}`;
-
-async function loadFiles() {
-  filesContainer.innerHTML = "<p style='text-align:center;color:gray;'>Loading files...</p>";
-  try {
-    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${jsonKey}.json`);
-    if (!res.ok) { filesContainer.innerHTML=`<p style="text-align:center;color:gray;">No notes found for ${subject} - ${form}</p>`; return; }
-    const resources = await res.json();
-    if(resources.length===0){ filesContainer.innerHTML=`<p style="text-align:center;color:gray;">No notes uploaded yet for ${subject} - ${form}</p>`; return;}
-    filesContainer.innerHTML = "";
-    resources.forEach(fileUrl=>{
-      const fileName = decodeURIComponent(fileUrl.split("/").pop());
-      const card = document.createElement("div");
-      card.className = "file-card";
-      card.innerHTML = `<h3><i class="fas fa-file-pdf"></i> ${fileName}</h3>
-        <div class="file-actions">
-          <a href="${fileUrl}" target="_blank"><i class="fas fa-eye"></i> View</a>
-          <a href="${fileUrl}" download><i class="fas fa-download"></i> Download</a>
-        </div>`;
-      filesContainer.appendChild(card);
-    });
-  } catch(e){ console.error(e); filesContainer.innerHTML=`<p style="color:red;text-align:center;">Error loading notes</p>`; }
-}
-loadFiles();
+fetch('subjects.json')
+.then(response => response.json())
+.then(data => {
+  const container = document.getElementById('container');
+  for (let form in data) {
+    const section = document.createElement('div');
+    section.className = 'form-section';
+    const h2 = document.createElement('h2');
+    h2.textContent = form;
+    section.appendChild(h2);
+    for (let subject in data[form]) {
+      const card = document.createElement('div');
+      card.className = 'subject-card';
+      const link = document.createElement('a');
+      link.href = data[form][subject];
+      link.target = "_blank";
+      link.textContent = subject;
+      card.appendChild(link);
+      section.appendChild(card);
+    }
+    container.appendChild(section);
+  }
+});
 </script>
 </body>
 </html>
