@@ -53,7 +53,7 @@ button:hover { background-color:#03e3f0; transform:scale(1.02); }
 .progress-bar {
   width: 0; height: 8px;
   background-color: var(--secondary-color);
-  border-radius: 4px; margin-top: 10px; transition: width 0.3s;
+  border-radius: 4px; margin-top: 10px; transition: width 0.3s ease;
 }
 .footer {
   text-align:center; padding:20px;
@@ -133,7 +133,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCgbZprjmoVtouXN2iI83X8MqVuTjbp5H8",
   authDomain: "high-stars-aimers-844a6.firebaseapp.com",
   projectId: "high-stars-aimers-844a6",
-  storageBucket: "high-stars-aimers-844a6.firebasestorage.app",
+  storageBucket: "high-stars-aimers-844a6.appspot.com", // ✅ FIXED HERE
   messagingSenderId: "10463765487",
   appId: "1:10463765487:web:a2ae29377493a7b7d2cc1a",
   measurementId: "G-88828H1T1V"
@@ -149,6 +149,7 @@ const uploadStatus = document.getElementById('uploadStatus');
 
 uploadForm.addEventListener('submit', e => {
   e.preventDefault();
+
   const type = document.getElementById('uploadType').value;
   const subject = document.getElementById('subject').value;
   const form = document.getElementById('form').value;
@@ -169,7 +170,7 @@ uploadForm.addEventListener('submit', e => {
   uploadTask.on("state_changed",
     snapshot => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      progressBar.style.width = progress + "%";
+      progressBar.style.width = progress.toFixed(1) + "%";
       uploadStatus.textContent = `Uploading... ${Math.round(progress)}%`;
     },
     error => {
@@ -179,6 +180,12 @@ uploadForm.addEventListener('submit', e => {
       getDownloadURL(uploadTask.snapshot.ref).then(url => {
         uploadStatus.textContent = "✅ Uploaded successfully!";
         console.log("File available at:", url);
+        // Optional: Reset form after success
+        setTimeout(() => {
+          uploadForm.reset();
+          progressBar.style.width = "0%";
+          uploadStatus.textContent = "";
+        }, 2500);
       });
     }
   );
