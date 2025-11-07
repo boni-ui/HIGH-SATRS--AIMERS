@@ -45,13 +45,15 @@ const params = new URLSearchParams(window.location.search);
 const subject = params.get("subject") || "Mathematics";
 const form = params.get("form") || "Form 1";
 document.getElementById("subject-title").innerText = `Subject: ${subject} - ${form}`;
-const folderPath = `highstars/files/notes/${form}/${subject}`;
+
+// Folder path with spaces replaced by underscores
+const folderPath = `highstars/files/notes/${form.replace(/ /g,"_")}/${subject.replace(/ /g,"_")}`;
 const filesContainer = document.getElementById("files-container");
 
 async function loadFiles() {
   filesContainer.innerHTML = "<p style='text-align:center;color:gray;'>Loading files...</p>";
   try {
-    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folderPath.replace(/\//g,"_")}.json`);
+    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folderPath}.json`);
     if(!res.ok) { filesContainer.innerHTML=`<p style="text-align:center;color:gray;">No notes found for ${subject} - ${form}</p>`; return; }
     const data = await res.json();
     const resources = data.resources || [];
