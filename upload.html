@@ -14,22 +14,55 @@
   --text-light: #e0e0e0;
   --border-color: rgba(0, 240, 255, 0.2);
 }
-html, body { margin:0; padding:0; font-family:'Segoe UI', sans-serif; background-color:var(--background-dark); color:var(--text-light);}
-.header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color:var(--background-dark); border-bottom:2px solid var(--secondary-color);}
+html, body {
+  margin:0; padding:0;
+  font-family:'Segoe UI', sans-serif;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+.header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 20px;
+  background-color: var(--background-dark);
+  border-bottom:2px solid var(--secondary-color);
+}
 .header a { color:white; text-decoration:none; }
 main { padding:30px; max-width:700px; margin:0 auto; }
 h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
-.upload-card { background: var(--card-background); padding:25px 30px; border-radius:10px; border:1px solid var(--border-color); box-shadow:0 4px 12px rgba(0,240,255,0.1);}
-label { display:block; margin-top:15px; margin-bottom:5px; color: var(--secondary-color); font-weight:600; }
-select, input[type="file"], button { width:100%; padding:10px; background-color:#151a2f; border:1px solid var(--border-color); color:var(--text-light); border-radius:6px; margin-bottom:15px; font-size:16px; }
-button { background-color: var(--secondary-color); color:#000; font-weight:bold; cursor:pointer; border:none; transition:0.3s; }
+.upload-card {
+  background: var(--card-background);
+  padding:25px 30px;
+  border-radius:10px;
+  border:1px solid var(--border-color);
+  box-shadow:0 4px 12px rgba(0,240,255,0.1);
+}
+label {
+  display:block; margin-top:15px; margin-bottom:5px;
+  color: var(--secondary-color); font-weight:600;
+}
+select, input[type="file"], button {
+  width:100%; padding:10px; background-color:#151a2f;
+  border:1px solid var(--border-color); color:var(--text-light);
+  border-radius:6px; margin-bottom:15px; font-size:16px;
+}
+button {
+  background-color: var(--secondary-color);
+  color:#000; font-weight:bold; cursor:pointer; border:none; transition:0.3s;
+}
 button:hover { background-color:#03e3f0; transform:scale(1.02); }
-.progress-bar { width:0; height:8px; background-color: var(--secondary-color); border-radius:4px; margin-top:10px; transition:width 0.3s;}
-.footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; margin-top:40px;}
+.progress-bar {
+  width: 0; height: 8px;
+  background-color: var(--secondary-color);
+  border-radius: 4px; margin-top: 10px; transition: width 0.3s;
+}
+.footer {
+  text-align:center; padding:20px;
+  border-top:2px solid var(--secondary-color);
+  color:#aaa; margin-top:40px;
+}
 </style>
 </head>
 <body>
-
 <div class="header">
   <h1>High Stars Aimers</h1>
   <a href="index.html"><i class="fas fa-arrow-left"></i> Back Home</a>
@@ -89,7 +122,12 @@ button:hover { background-color:#03e3f0; transform:scale(1.02); }
 
 <script>
 const CLOUD_NAME = "dj8xycoww";
-const UPLOAD_PRESET = "high stars aimers";
+
+// Upload presets for notes and papers
+const UPLOAD_PRESETS = {
+  notes: "high stars note",
+  papers: "high stars papers"
+};
 
 const uploadForm = document.getElementById("uploadForm");
 const progressBar = document.getElementById("progressBar");
@@ -97,19 +135,23 @@ const uploadStatus = document.getElementById("uploadStatus");
 
 uploadForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const type = document.getElementById("uploadType").value;
   const subject = document.getElementById("subject").value;
   const form = document.getElementById("form").value;
   const file = document.getElementById("file").files[0];
 
-  if(!type || !subject || !form || !file){ alert("Please fill all fields."); return; }
+  if (!type || !subject || !form || !file) {
+    alert("Please fill all fields.");
+    return;
+  }
 
-  const folderPath = `highstars/files/${type}/${form}/${subject}`;
+  const preset = UPLOAD_PRESETS[type];
 
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", UPLOAD_PRESET);
-  formData.append("folder", folderPath);
+  formData.append("upload_preset", preset);
+  formData.append("folder", `highstars/files/${type}/${form}/${subject}`);
 
   uploadStatus.textContent = "⏳ Uploading...";
   progressBar.style.width = "0%";
@@ -118,7 +160,7 @@ uploadForm.addEventListener("submit", async (e) => {
   xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, true);
 
   xhr.upload.onprogress = (event) => {
-    if(event.lengthComputable){
+    if (event.lengthComputable) {
       const percent = (event.loaded / event.total) * 100;
       progressBar.style.width = percent + "%";
       uploadStatus.textContent = `Uploading... ${Math.round(percent)}%`;
@@ -126,14 +168,20 @@ uploadForm.addEventListener("submit", async (e) => {
   };
 
   xhr.onload = () => {
-    if(xhr.status === 200){
+    if (xhr.status === 200) {
       const response = JSON.parse(xhr.responseText);
+      const fileUrl = response.secure_url;
       uploadStatus.textContent = "✅ Uploaded successfully!";
-      console.log("File URL:", response.secure_url);
-    } else { uploadStatus.textContent = "❌ Upload failed."; }
+      console.log("File URL:", fileUrl);
+    } else {
+      uploadStatus.textContent = "❌ Upload failed.";
+    }
   };
 
-  xhr.onerror = () => { uploadStatus.textContent = "❌ Upload failed due to network error."; }
+  xhr.onerror = () => {
+    uploadStatus.textContent = "❌ Upload failed due to network error.";
+  };
+
   xhr.send(formData);
 });
 </script>
