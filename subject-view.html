@@ -14,7 +14,7 @@
   --text-light: #e0e0e0;
   --border-color: rgba(0, 240, 255, 0.2);
 }
-html, body { margin:0; padding:0; font-family:'Segoe UI', sans-serif; background-color:var(--background-dark); color:var(--text-light);}
+html, body { margin:0; padding:0; font-family:'Segoe UI',sans-serif; background-color:var(--background-dark); color:var(--text-light);}
 .header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color:var(--background-dark); border-bottom:2px solid var(--secondary-color);}
 .header a { color:white; text-decoration:none; }
 main { padding:30px; max-width:900px; margin:0 auto; }
@@ -44,34 +44,34 @@ const CLOUD_NAME = "dj8xycoww";
 const params = new URLSearchParams(window.location.search);
 const subject = params.get("subject") || "Mathematics";
 const form = params.get("form") || "Form 1";
-document.getElementById("subject-title").innerText = `Subject: ${subject} - ${form}`;
-
-// Folder path with spaces replaced by underscores
-const folderPath = `highstars/files/notes/${form.replace(/ /g,"_")}/${subject.replace(/ /g,"_")}`;
-const filesContainer = document.getElementById("files-container");
+const folderPath = "highstars/files/notes";
+const container = document.getElementById("files-container");
+document.getElementById("subject-title").innerText = `Notes: ${subject} - ${form}`;
 
 async function loadFiles() {
-  filesContainer.innerHTML = "<p style='text-align:center;color:gray;'>Loading files...</p>";
+  container.innerHTML = "<p style='text-align:center;color:gray;'>Loading notes...</p>";
   try {
-    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folderPath}.json`);
-    if(!res.ok) { filesContainer.innerHTML=`<p style="text-align:center;color:gray;">No notes found for ${subject} - ${form}</p>`; return; }
+    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folderPath.replace(/\//g,"_")}.json`);
+    if(!res.ok) { container.innerHTML=`<p style="text-align:center;color:gray;">No notes found</p>`; return; }
     const data = await res.json();
     const resources = data.resources || [];
-    if(resources.length===0){ filesContainer.innerHTML=`<p style="text-align:center;color:gray;">No notes uploaded yet for ${subject} - ${form}</p>`; return;}
-    filesContainer.innerHTML="";
-    resources.forEach(file=>{
-      const pdfUrl=file.secure_url;
-      const fileName=decodeURIComponent(pdfUrl.split("/").pop());
-      const card=document.createElement("div");
-      card.className="file-card";
-      card.innerHTML=`<h3><i class="fas fa-file-pdf"></i> ${fileName}</h3>
+    const filtered = resources.filter(f => f.public_id.toLowerCase().includes(subject.toLowerCase()) &&
+                                          f.public_id.toLowerCase().includes(form.toLowerCase()));
+    if(filtered.length === 0){ container.innerHTML=`<p style="text-align:center;color:gray;">No notes uploaded yet</p>`; return;}
+    container.innerHTML = "";
+    filtered.forEach(file => {
+      const pdfUrl = file.secure_url;
+      const fileName = decodeURIComponent(pdfUrl.split("/").pop());
+      const card = document.createElement("div");
+      card.className = "file-card";
+      card.innerHTML = `<h3><i class="fas fa-file-pdf"></i> ${fileName}</h3>
         <div class="file-actions">
           <a href="${pdfUrl}" target="_blank"><i class="fas fa-eye"></i> View</a>
           <a href="${pdfUrl}" download><i class="fas fa-download"></i> Download</a>
         </div>`;
-      filesContainer.appendChild(card);
+      container.appendChild(card);
     });
-  } catch(e){ console.error(e); filesContainer.innerHTML=`<p style="color:red;text-align:center;">Error loading notes</p>`;}
+  } catch(e){ console.error(e); container.innerHTML=`<p style="color:red;text-align:center;">Error loading notes</p>`; }
 }
 
 loadFiles();
