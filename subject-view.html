@@ -6,141 +6,70 @@
 <title>High Stars Aimers - Subject View</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-:root {
-  --primary-color: #2a2e92;
-  --secondary-color: #00f0ff;
-  --background-dark: #0a0f1f;
-  --card-background: rgba(35, 40, 60, 0.8);
-  --text-light: #e0e0e0;
-  --border-color: rgba(0, 240, 255, 0.2);
-}
-html, body {
-  margin: 0; padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: var(--background-dark);
-  color: var(--text-light);
-}
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: var(--background-dark);
-  border-bottom: 2px solid var(--secondary-color);
-}
-.header a { color: white; text-decoration: none; }
-main { padding: 30px; max-width: 900px; margin: 0 auto; }
-h2 { color: var(--secondary-color); margin-bottom: 20px; text-align: center; }
-.file-card {
-  background: var(--card-background);
-  padding: 20px;
-  margin-bottom: 15px;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.file-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
-}
-.file-card h3 {
-  margin: 0 0 10px;
-  color: var(--secondary-color);
-}
-.file-actions {
-  display: flex;
-  justify-content: flex-start;
-  gap: 15px;
-}
-.file-actions a {
-  color: var(--text-light);
-  text-decoration: none;
-  border: 1px solid var(--secondary-color);
-  padding: 5px 10px;
-  border-radius: 6px;
-  transition: background 0.3s, color 0.3s;
-}
-.file-actions a:hover {
-  background: var(--secondary-color);
-  color: var(--background-dark);
-}
-.footer {
-  text-align: center;
-  padding: 20px;
-  border-top: 2px solid var(--secondary-color);
-  color: #aaa;
-  margin-top: 30px;
-}
+:root{--primary-color:#2a2e92;--secondary-color:#00f0ff;--background-dark:#0a0f1f;--card-background:rgba(35,40,60,0.8);--text-light:#e0e0e0;--border-color:rgba(0,240,255,0.2);}
+html,body{margin:0;padding:0;font-family:'Segoe UI',sans-serif;background-color:var(--background-dark);color:var(--text-light);}
+.header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background-color:var(--background-dark);border-bottom:2px solid var(--secondary-color);}
+.header a{color:white;text-decoration:none;}
+main{padding:30px;max-width:900px;margin:0 auto;}
+h2{color:var(--secondary-color);margin-bottom:20px;text-align:center;}
+.file-card{background:var(--card-background);padding:20px;margin-bottom:15px;border-radius:12px;border:1px solid var(--border-color);cursor:pointer;transition:transform 0.3s,box-shadow 0.3s;}
+.file-card:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,240,255,0.2);}
+.file-card h3{margin:0 0 10px;color:var(--secondary-color);}
+.file-actions{display:flex;justify-content:flex-start;gap:15px;}
+.file-actions a{color:var(--text-light);text-decoration:none;border:1px solid var(--secondary-color);padding:5px 10px;border-radius:6px;transition:0.3s;}
+.file-actions a:hover{background:var(--secondary-color);color:var(--background-dark);}
+.footer{text-align:center;padding:20px;border-top:2px solid var(--secondary-color);color:#aaa;margin-top:30px;}
 </style>
 </head>
 <body>
+
 <div class="header">
-  <h1>High Stars Aimers</h1>
-  <a href="subjects.html"><i class="fas fa-arrow-left"></i> Back to Subjects</a>
+<h1>High Stars Aimers</h1>
+<a href="subjects.html"><i class="fas fa-arrow-left"></i> Back to Subjects</a>
 </div>
 
 <main>
-  <h2 id="subject-title">Subject: </h2>
-  <div id="files-container"></div>
+<h2 id="subject-title">Subject: </h2>
+<div id="files-container"></div>
 </main>
 
-<footer class="footer">
-  &copy; 2025 High Stars Aimers. All Rights Reserved.
-</footer>
+<footer class="footer">&copy; 2025 High Stars Aimers. All Rights Reserved.</footer>
 
 <script>
 const CLOUD_NAME = "dj8xycoww";
-const TYPE = "notes"; // this view shows notes
-
 const params = new URLSearchParams(window.location.search);
 const subject = params.get("subject") || "Mathematics";
 const form = params.get("form") || "Form 1";
-
 document.getElementById("subject-title").innerText = `Subject: ${subject} - ${form}`;
 
+const folderPath = `highstars/files/notes/${form}/${subject}`;
 const filesContainer = document.getElementById("files-container");
 
-// ✅ Use Cloudinary tag search for reliable results
-async function loadFiles() {
-  filesContainer.innerHTML = "<p style='text-align:center;color:gray;'>Loading files...</p>";
-
-  try {
-    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/resources/image/tags/${TYPE},${form},${subject}.json`);
-
-    if (!res.ok) {
-      filesContainer.innerHTML = `<p style="text-align:center;color:gray;">No files found for ${subject} - ${form}</p>`;
-      return;
-    }
-
+async function loadFiles(){
+  filesContainer.innerHTML="<p style='text-align:center;color:gray;'>Loading files...</p>";
+  try{
+    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folderPath.replace(/\//g,"_")}.json`);
+    if(!res.ok){ filesContainer.innerHTML=`<p style='text-align:center;color:gray;'>No files found for ${subject} - ${form}</p>`; return; }
     const data = await res.json();
-    const resources = data.resources || [];
+    const resources = data.resources||[];
+    if(resources.length===0){ filesContainer.innerHTML=`<p style='text-align:center;color:gray;'>No files uploaded yet for ${subject} - ${form}</p>`; return; }
 
-    if (resources.length === 0) {
-      filesContainer.innerHTML = `<p style="text-align:center;color:gray;">No notes uploaded yet for ${subject} - ${form}</p>`;
-      return;
-    }
-
-    filesContainer.innerHTML = "";
-
-    resources.forEach((file) => {
+    filesContainer.innerHTML="";
+    resources.forEach(file=>{
       const pdfUrl = file.secure_url;
       const fileName = decodeURIComponent(pdfUrl.split("/").pop());
-
       const card = document.createElement("div");
-      card.className = "file-card";
-      card.innerHTML = `
-        <h3><i class="fas fa-file-pdf"></i> ${fileName}</h3>
-        <div class="file-actions">
-          <a href="${pdfUrl}" target="_blank"><i class="fas fa-eye"></i> View</a>
-          <a href="${pdfUrl}" download><i class="fas fa-download"></i> Download</a>
-        </div>
-      `;
+      card.className="file-card";
+      card.innerHTML=`<h3><i class="fas fa-file-pdf"></i> ${fileName}</h3>
+      <div class="file-actions">
+        <a href="${pdfUrl}" target="_blank"><i class="fas fa-eye"></i> View</a>
+        <a href="${pdfUrl}" download><i class="fas fa-download"></i> Download</a>
+      </div>`;
       filesContainer.appendChild(card);
     });
-  } catch (error) {
+  }catch(error){
     console.error(error);
-    filesContainer.innerHTML = `<p style="color:red;text-align:center;">Error loading notes</p>`;
+    filesContainer.innerHTML=`<p style="color:red;text-align:center;">Error loading files</p>`;
   }
 }
 
