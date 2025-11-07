@@ -36,13 +36,13 @@ const params=new URLSearchParams(window.location.search);
 const subject=params.get("subject")||"Mathematics";
 const form=params.get("form")||"Form 1";
 document.getElementById("paper-title").innerText=`Papers: ${subject} - ${form}`;
-const folderPath=`highstars/files/papers/${form}/${subject}`;
+const folderPath=`highstars/files/papers/${form.replace(/ /g,"_")}/${subject.replace(/ /g,"_")}`;
 const papersContainer=document.getElementById("papers-container");
 
 async function loadPapers(){
   papersContainer.innerHTML="<p style='text-align:center;color:gray;'>Loading papers...</p>";
   try{
-    const res=await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folderPath.replace(/\//g,"_")}.json`);
+    const res=await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folderPath}.json`);
     if(!res.ok){ papersContainer.innerHTML=`<p style="text-align:center;color:gray;">No papers found for ${subject} - ${form}</p>`; return;}
     const data=await res.json();
     const resources=data.resources||[];
