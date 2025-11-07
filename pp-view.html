@@ -1,33 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High Stars Papers</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary-color: #2a2e92;
+  --secondary-color: #00f0ff;
+  --background-dark: #0a0f1f;
+  --card-background: rgba(35, 40, 60, 0.8);
+  --text-light: #e0e0e0;
+  --border-color: rgba(0,240,255,0.2);
+}
+body { margin:0; padding:0; font-family:'Segoe UI', sans-serif; background-color: var(--background-dark); color: var(--text-light);}
+.header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); border-bottom:2px solid var(--secondary-color);}
+.header a { color:white; text-decoration:none; }
+main { padding:30px; max-width:900px; margin:0 auto;}
+h2 { color: var(--secondary-color); text-align:center; margin-bottom:20px; }
+.paper-card { background: var(--card-background); padding:20px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);}
+.paper-card h3 { margin:0 0 10px; }
+.paper-card a { margin-right:10px; color: var(--secondary-color); text-decoration:none;}
+.footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>High Stars Papers</h1>
+  <a href="index.html"><i class="fas fa-arrow-left"></i> Home</a>
+</div>
+
+<main>
+  <h2 id="paper-title">Papers</h2>
+  <div id="papers-container"></div>
+</main>
+
+<footer class="footer">&copy; 2025 High Stars Aimers. All Rights Reserved.</footer>
+
 <script>
-const CLOUD_NAME="dj8xycoww";
-const params=new URLSearchParams(window.location.search);
-const subject=params.get("subject")||"Mathematics";
-const form=params.get("form")||"Form 1";
-const type = "papers";
-document.getElementById("paper-title").innerText=`Papers: ${subject} - ${form}`;
-const papersContainer=document.getElementById("papers-container");
-const jsonKey = `${type}_${form}_${subject}`;
+const params = new URLSearchParams(window.location.search);
+const subject = params.get("sub") || "Mathematics";
+const form = params.get("frm") || "Form 1";
+document.getElementById("paper-title").innerText = `Papers: ${subject} - ${form}`;
+const container = document.getElementById("papers-container");
 
 async function loadPapers(){
-  papersContainer.innerHTML="<p style='text-align:center;color:gray;'>Loading papers...</p>";
+  container.innerHTML="<p style='text-align:center;color:gray;'>Loading papers...</p>";
   try{
-    const res=await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${jsonKey}.json`);
-    if(!res.ok){ papersContainer.innerHTML=`<p style="text-align:center;color:gray;">No papers found for ${subject} - ${form}</p>`; return;}
-    const resources = await res.json();
-    if(resources.length===0){ papersContainer.innerHTML=`<p style="text-align:center;color:gray;">No papers uploaded yet for ${subject} - ${form}</p>`; return;}
-    papersContainer.innerHTML="";
-    resources.forEach(fileUrl=>{
-      const fileName=decodeURIComponent(fileUrl.split("/").pop());
-      const card=document.createElement("div");
+    const res = await fetch("papers.json");
+    const data = await res.json();
+    const papers = data[form]?.[subject] || [];
+    if(papers.length===0){ container.innerHTML="<p style='text-align:center;color:gray;'>No papers available.</p>"; return; }
+    container.innerHTML="";
+    papers.forEach(url=>{
+      const name = decodeURIComponent(url.split("/").pop());
+      const card = document.createElement("div");
       card.className="paper-card";
-      card.innerHTML=`<h3><i class="fas fa-file-pdf"></i> ${fileName}</h3>
-        <div style="margin-top:10px;">
-          <a href="${fileUrl}" target="_blank"><i class="fas fa-eye"></i> View</a> |
-          <a href="${fileUrl}" download><i class="fas fa-download"></i> Download</a>
+      card.innerHTML=`<h3><i class="fas fa-file-pdf"></i> ${name}</h3>
+        <div>
+          <a href="${url}" target="_blank"><i class="fas fa-eye"></i> View</a>
+          <a href="${url}" download><i class="fas fa-download"></i> Download</a>
         </div>`;
-      papersContainer.appendChild(card);
+      container.appendChild(card);
     });
-  }catch(e){ console.error(e); papersContainer.innerHTML=`<p style="color:red;text-align:center;">Error loading papers</p>`;}
+  }catch(e){ console.error(e); container.innerHTML="<p style='color:red;text-align:center;'>Error loading papers</p>";}
 }
 loadPapers();
 </script>
+</body>
+</html>
