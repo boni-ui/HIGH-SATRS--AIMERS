@@ -1,315 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>High Stars Aimers - Subjects</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --primary-color: #2a2e92;
-      --secondary-color: #00f0ff;
-      --background-dark: #0a0f1f;
-      --card-background: rgba(35, 40, 60, 0.8);
-      --text-light: #e0e0e0;
-      --border-color: rgba(0, 240, 255, 0.2);
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      color: var(--text-light);
-      background-color: var(--background-dark);
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: var(--background-dark);
-      border-bottom: 2px solid var(--secondary-color);
-    }
-
-    main {
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 25px;
-    }
-
-    h2 {
-      color: var(--secondary-color);
-    }
-
-    .subjects-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
-      width: 100%;
-      max-width: 900px;
-      position: relative;
-      z-index: 0;
-    }
-
-    .subject-card {
-      background: var(--card-background);
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      border: 1px solid var(--border-color);
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
-      position: relative;
-      overflow: visible;
-      z-index: 1;
-    }
-
-    .subject-card.active {
-      z-index: 9999;
-    }
-
-    .subject-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
-    }
-
-    .subject-card h3 {
-      color: var(--secondary-color);
-      margin: 10px 0;
-    }
-
-    /* Dropdown styling */
-    .dropdown {
-      display: none;
-      position: absolute;
-      top: 105%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(15, 20, 40, 0.97);
-      border: 1px solid var(--secondary-color);
-      border-radius: 10px;
-      padding: 8px 0;
-      width: 200px;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-      z-index: 99999;
-      animation: fadeIn 0.25s ease;
-      pointer-events: auto;
-    }
-
-    .dropdown a {
-      display: block;
-      color: var(--text-light);
-      padding: 10px;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-
-    .dropdown a:hover {
-      background: rgba(0, 240, 255, 0.2);
-      color: var(--secondary-color);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, 10px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
-    }
-
-    .footer {
-      text-align: center;
-      padding: 20px;
-      border-top: 2px solid var(--secondary-color);
-      color: #aaa;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High Stars Aimers - Subject View</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root { --primary-color:#2a2e92; --secondary-color:#00f0ff; --background-dark:#0a0f1f; --card-background:rgba(35,40,60,0.8); --text-light:#e0e0e0; --border-color:rgba(0,240,255,0.2);}
+html, body{margin:0;padding:0;font-family:'Segoe UI',sans-serif;background-color:var(--background-dark);color:var(--text-light);}
+.header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background-color:var(--background-dark);border-bottom:2px solid var(--secondary-color);}
+.header a{color:white;text-decoration:none;}
+main{padding:30px;max-width:900px;margin:0 auto;}
+h2{color:var(--secondary-color);margin-bottom:20px;text-align:center;}
+.file-card{background:var(--card-background);padding:20px;margin-bottom:15px;border-radius:12px;border:1px solid var(--border-color);cursor:pointer;transition:transform 0.3s, box-shadow 0.3s;}
+.file-card:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,240,255,0.2);}
+.file-card h3{margin:0 0 10px;color: var(--secondary-color);}
+.file-actions{display:flex;justify-content:flex-start;gap:15px;}
+.file-actions a{color: var(--text-light);text-decoration:none;border:1px solid var(--secondary-color);padding:5px 10px;border-radius:6px;transition:0.3s;}
+.file-actions a:hover{background: var(--secondary-color);color:var(--background-dark);}
+.footer{text-align:center;padding:20px;border-top:2px solid var(--secondary-color);color:#aaa;margin-top:30px;}
+</style>
 </head>
 <body>
-  <div class="header">
-    <h1>High Stars Aimers</h1>
-    <a href="home.html" style="color:white; text-decoration:none;"><i class="fas fa-home"></i> Home</a>
-  </div>
+<div class="header">
+  <h1>High Stars Aimers</h1>
+  <a href="subjects.html"><i class="fas fa-arrow-left"></i> Back to Subjects</a>
+</div>
+<main>
+  <h2 id="subject-title">Subject: </h2>
+  <div id="files-container"></div>
+</main>
+<footer class="footer">&copy; 2025 High Stars Aimers. All Rights Reserved.</footer>
 
-  <main>
-    <h2>Select a Subject</h2>
-    <div class="subjects-container">
+<script>
+const CLOUD_NAME = "dj8xycoww";
+const params = new URLSearchParams(window.location.search);
+const subject = params.get("subject") || "Mathematics";
+const form = params.get("form") || "Form 1";
+document.getElementById("subject-title").innerText = `Subject: ${subject} - ${form}`;
+const folderPath = `highstars/files/notes/${form}/${subject}`;
+const filesContainer = document.getElementById("files-container");
 
-      <!-- Mathematics -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-square-root-alt fa-3x"></i>
-        <h3>Mathematics</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=Mathematics&form=1">Form 1</a>
-          <a href="subject-view.html?subject=Mathematics&form=2">Form 2</a>
-          <a href="subject-view.html?subject=Mathematics&form=3">Form 3</a>
-          <a href="subject-view.html?subject=Mathematics&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- English -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-book fa-3x"></i>
-        <h3>English</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=English&form=1">Form 1</a>
-          <a href="subject-view.html?subject=English&form=2">Form 2</a>
-          <a href="subject-view.html?subject=English&form=3">Form 3</a>
-          <a href="subject-view.html?subject=English&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Kiswahili -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-language fa-3x"></i>
-        <h3>Kiswahili</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=Kiswahili&form=1">Form 1</a>
-          <a href="subject-view.html?subject=Kiswahili&form=2">Form 2</a>
-          <a href="subject-view.html?subject=Kiswahili&form=3">Form 3</a>
-          <a href="subject-view.html?subject=Kiswahili&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Physics -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-atom fa-3x"></i>
-        <h3>Physics</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=Physics&form=1">Form 1</a>
-          <a href="subject-view.html?subject=Physics&form=2">Form 2</a>
-          <a href="subject-view.html?subject=Physics&form=3">Form 3</a>
-          <a href="subject-view.html?subject=Physics&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Chemistry -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-flask fa-3x"></i>
-        <h3>Chemistry</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=Chemistry&form=1">Form 1</a>
-          <a href="subject-view.html?subject=Chemistry&form=2">Form 2</a>
-          <a href="subject-view.html?subject=Chemistry&form=3">Form 3</a>
-          <a href="subject-view.html?subject=Chemistry&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Biology -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-dna fa-3x"></i>
-        <h3>Biology</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=Biology&form=1">Form 1</a>
-          <a href="subject-view.html?subject=Biology&form=2">Form 2</a>
-          <a href="subject-view.html?subject=Biology&form=3">Form 3</a>
-          <a href="subject-view.html?subject=Biology&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Geography -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-globe-africa fa-3x"></i>
-        <h3>Geography</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=Geography&form=1">Form 1</a>
-          <a href="subject-view.html?subject=Geography&form=2">Form 2</a>
-          <a href="subject-view.html?subject=Geography&form=3">Form 3</a>
-          <a href="subject-view.html?subject=Geography&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- History -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-landmark fa-3x"></i>
-        <h3>History</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=History&form=1">Form 1</a>
-          <a href="subject-view.html?subject=History&form=2">Form 2</a>
-          <a href="subject-view.html?subject=History&form=3">Form 3</a>
-          <a href="subject-view.html?subject=History&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- CRE -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-cross fa-3x"></i>
-        <h3>CRE</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=CRE&form=1">Form 1</a>
-          <a href="subject-view.html?subject=CRE&form=2">Form 2</a>
-          <a href="subject-view.html?subject=CRE&form=3">Form 3</a>
-          <a href="subject-view.html?subject=CRE&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Business Studies -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-briefcase fa-3x"></i>
-        <h3>Business Studies</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=Business%20Studies&form=1">Form 1</a>
-          <a href="subject-view.html?subject=Business%20Studies&form=2">Form 2</a>
-          <a href="subject-view.html?subject=Business%20Studies&form=3">Form 3</a>
-          <a href="subject-view.html?subject=Business%20Studies&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Agriculture -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-seedling fa-3x"></i>
-        <h3>Agriculture</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=Agriculture&form=1">Form 1</a>
-          <a href="subject-view.html?subject=Agriculture&form=2">Form 2</a>
-          <a href="subject-view.html?subject=Agriculture&form=3">Form 3</a>
-          <a href="subject-view.html?subject=Agriculture&form=4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Computer Studies -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-laptop-code fa-3x"></i>
-        <h3>Computer Studies</h3>
-        <div class="dropdown">
-          <a href="subject-view.html?subject=Computer%20Studies&form=1">Form 1</a>
-          <a href="subject-view.html?subject=Computer%20Studies&form=2">Form 2</a>
-          <a href="subject-view.html?subject=Computer%20Studies&form=3">Form 3</a>
-          <a href="subject-view.html?subject=Computer%20Studies&form=4">Form 4</a>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <footer class="footer">
-    &copy; 2025 High Stars Aimers. All Rights Reserved.
-  </footer>
-
-  <script>
-    function toggleDropdown(card) {
-      const dropdowns = document.querySelectorAll('.dropdown');
-      const cards = document.querySelectorAll('.subject-card');
-
-      dropdowns.forEach(d => d.style.display = 'none');
-      cards.forEach(c => c.classList.remove('active'));
-
-      const dropdown = card.querySelector('.dropdown');
-      if (dropdown.style.display === 'block') {
-        dropdown.style.display = 'none';
-        card.classList.remove('active');
-      } else {
-        dropdown.style.display = 'block';
-        card.classList.add('active');
-      }
-    }
-
-    window.addEventListener('click', function(e) {
-      if (!e.target.closest('.subject-card')) {
-        document.querySelectorAll('.dropdown').forEach(d => d.style.display = 'none');
-        document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('active'));
-      }
+async function loadFiles() {
+  filesContainer.innerHTML = "<p style='text-align:center;color:gray;'>Loading files...</p>";
+  try {
+    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folderPath.replace(/\//g,"_")}.json`);
+    if(!res.ok){ filesContainer.innerHTML=`<p style='text-align:center;color:gray;'>No notes uploaded yet for ${subject} - ${form}</p>`; return;}
+    const data = await res.json();
+    const resources = data.resources || [];
+    if(resources.length===0){ filesContainer.innerHTML=`<p style='text-align:center;color:gray;'>No notes uploaded yet for ${subject} - ${form}</p>`; return;}
+    filesContainer.innerHTML="";
+    resources.forEach(file=>{
+      const pdfUrl = file.secure_url;
+      const fileName = decodeURIComponent(pdfUrl.split("/").pop());
+      const card = document.createElement("div");
+      card.className = "file-card";
+      card.innerHTML = `<h3><i class="fas fa-file-pdf"></i> ${fileName}</h3>
+        <div class="file-actions">
+          <a href="${pdfUrl}" target="_blank"><i class="fas fa-eye"></i> View</a>
+          <a href="${pdfUrl}" download><i class="fas fa-download"></i> Download</a>
+        </div>`;
+      filesContainer.appendChild(card);
     });
-  </script>
+  } catch(e){ console.error(e); filesContainer.innerHTML=`<p style='color:red;text-align:center;'>Error loading notes</p>`;}
+}
+loadFiles();
+</script>
 </body>
 </html>
