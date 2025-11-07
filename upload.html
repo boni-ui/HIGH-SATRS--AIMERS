@@ -50,7 +50,6 @@ button {
   color:#000; font-weight:bold; cursor:pointer; border:none; transition:0.3s;
 }
 button:hover { background-color:#03e3f0; transform:scale(1.02); }
-.hidden { display:none; }
 .progress-bar {
   width: 0; height: 8px;
   background-color: var(--secondary-color);
@@ -68,6 +67,7 @@ button:hover { background-color:#03e3f0; transform:scale(1.02); }
   <h1>High Stars Aimers</h1>
   <a href="index.html"><i class="fas fa-arrow-left"></i> Back Home</a>
 </div>
+
 <main>
   <h2>Upload Portal</h2>
   <div class="upload-card">
@@ -79,9 +79,9 @@ button:hover { background-color:#03e3f0; transform:scale(1.02); }
         <option value="papers">Papers</option>
       </select>
 
-      <div id="subjectDiv" class="hidden">
+      <div id="subjectDiv">
         <label for="subject">Select Subject:</label>
-        <select id="subject">
+        <select id="subject" required>
           <option value="">-- Select Subject --</option>
           <option>Mathematics</option>
           <option>English</option>
@@ -98,21 +98,14 @@ button:hover { background-color:#03e3f0; transform:scale(1.02); }
         </select>
       </div>
 
-      <div id="formDiv" class="hidden">
+      <div id="formDiv">
         <label for="form">Select Form:</label>
-        <select id="form">
+        <select id="form" required>
           <option value="">-- Select Form --</option>
           <option>Form 1</option>
           <option>Form 2</option>
           <option>Form 3</option>
           <option>Form 4</option>
-        </select>
-      </div>
-
-      <div id="topicDiv" class="hidden">
-        <label for="topic">Select Topic:</label>
-        <select id="topic">
-          <option value="">-- Select Topic --</option>
         </select>
       </div>
 
@@ -150,149 +143,38 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 // DOM references
-const uploadType = document.getElementById('uploadType');
-const subjectDiv = document.getElementById('subjectDiv');
-const formDiv = document.getElementById('formDiv');
-const topicDiv = document.getElementById('topicDiv');
-const subjectSelect = document.getElementById('subject');
-const formSelect = document.getElementById('form');
-const topicSelect = document.getElementById('topic');
 const uploadForm = document.getElementById('uploadForm');
 const progressBar = document.getElementById('progressBar');
 const uploadStatus = document.getElementById('uploadStatus');
 
-// ✅ Load topics directly from JSON
-const topicsByForm = {
-  "English": {
-    "1": { "Listening and Speaking": [], "Grammar": [], "Reading Comprehension": [], "Writing": [], "Oral Literature": [], "Vocabulary and Spelling": [] },
-    "2": { "Listening and Speaking": [], "Functional Writing": [], "Comprehension": [], "Grammar": [], "Oral Skills": [], "Vocabulary Development": [] },
-    "3": { "Advanced Grammar": [], "Writing Skills": [], "Comprehension": [], "Oral Skills": [], "Literature Analysis": [] },
-    "4": { "Revision Grammar": [], "Composition Writing": [], "Comprehension and Summary": [], "Oral Communication": [], "Literature Review": [] }
-  },
-  "Kiswahili": {
-    "1": { "Sarufi": [], "Matumizi ya Lugha": [], "Insha": [], "Fasihi Simulizi": [], "Fasihi Andishi": [] },
-    "2": { "Matumizi ya Lugha": [], "Insha": [], "Fasihi Andishi": [], "Sarufi": [], "Tamathali za Semi": [] },
-    "3": { "Insha za Kina": [], "Fasihi Andishi": [], "Fasihi Simulizi": [], "Sarufi ya Juu": [] },
-    "4": { "Insha za Mitihani": [], "Fasihi Andishi": [], "Fasihi Simulizi": [], "Sarufi ya Juu": [], "Matumizi ya Lugha": [] }
-  },
-  "Mathematics": {
-    "1": { "Whole Numbers": [], "Fractions": [], "Decimals": [], "Percentages": [], "Ratios and Proportions": [], "Algebraic Expressions": [], "Linear Equations": [], "Angles and Construction": [], "Perimeter and Area": [], "Volume": [] },
-    "2": { "Quadratic Equations": [], "Simultaneous Equations": [], "Indices": [], "Logarithms": [], "Trigonometry I": [], "Statistics": [], "Mensuration": [], "Probability": [] },
-    "3": { "Further Trigonometry": [], "Matrices": [], "Vectors": [], "Transformations": [], "Sequence and Series": [], "Coordinate Geometry": [] },
-    "4": { "Differentiation": [], "Integration": [], "Linear Programming": [], "Statistics II": [], "Trigonometry II": [], "Revision": [] }
-  },
-  "Physics": {
-    "1": { "Introduction to Physics": [], "Measurement": [], "Forces": [], "Pressure": [], "Work, Energy and Power": [], "Particulate Nature of Matter": [] },
-    "2": { "Thermal Expansion": [], "Heat Transfer": [], "Gas Laws": [], "Simple Machines": [], "Light": [], "Sound": [] },
-    "3": { "Static Electricity": [], "Current Electricity": [], "Magnetism": [], "Electromagnetism": [], "Waves": [] },
-    "4": { "Radioactivity": [], "Cathode Rays": [], "Electronics": [], "Alternating Current": [], "Revision Topics": [] }
-  },
-  "Chemistry": {
-    "1": { "Introduction to Chemistry": [], "Laboratory Techniques": [], "Simple Classification of Substances": [], "Physical and Chemical Changes": [], "Elements, Compounds and Mixtures": [], "Water and Hydrogen": [] },
-    "2": { "Atomic Structure": [], "Structure and Bonding": [], "Chemical Equations": [], "Acids, Bases and Salts": [], "The Mole Concept": [] },
-    "3": { "Electrochemistry": [], "Gas Laws": [], "Metals": [], "Carbon and Its Compounds": [], "Nitrogen and Its Compounds": [] },
-    "4": { "Sulphur and Its Compounds": [], "Chlorine and Its Compounds": [], "Fuels and Energy": [], "Radioactivity": [], "Industrial Chemistry": [] }
-  },
-  "Biology": {
-    "1": { "Introduction to Biology": [], "Classification I": [], "Cell Structure and Functions": [], "Nutrition in Plants and Animals": [], "Transport in Plants and Animals": [], "Respiration": [], "Excretion and Homeostasis": [] },
-    "2": { "Classification II": [], "Gaseous Exchange": [], "Respiration II": [], "Support and Movement": [], "Coordination": [], "Reproduction in Plants": [] },
-    "3": { "Genetics": [], "Evolution": [], "Ecology": [], "Growth and Development": [], "Transport in Animals": [] },
-    "4": { "Revision Topics": [], "Applied Biology": [], "Human Health": [], "Biotechnology": [] }
-  },
-  "Geography": {
-    "1": { "Introduction to Geography": [], "The Earth and the Solar System": [], "Weather and Climate": [], "Statistical Methods": [], "Map Work": [] },
-    "2": { "Internal Land Forming Processes": [], "External Land Forming Processes": [], "Vegetation": [], "Population": [], "Mining": [] },
-    "3": { "Agriculture": [], "Forestry": [], "Fishing": [], "Energy": [], "Tourism": [] },
-    "4": { "Industry": [], "Transport and Communication": [], "Trade": [], "Regional Studies": [], "Environmental Conservation": [] }
-  },
-  "History": {
-    "1": { "Introduction to History": [], "Early Man": [], "Development of Agriculture": [], "People and Population": [], "Social, Economic and Political Organization": [] },
-    "2": { "Contacts Between East Africa and the Outside World": [], "Development of Trade": [], "Colonial Rule in Kenya": [], "Social and Economic Developments": [] },
-    "3": { "Nationalism in Kenya": [], "Road to Independence": [], "Formation of Government": [], "Constitutional Developments": [] },
-    "4": { "World Wars": [], "International Relations": [], "World Organizations": [], "Revision": [] }
-  },
-  "CRE": {
-    "1": { "Creation and the Fall of Man": [], "Faith and God's Promises": [], "Sin and Salvation": [], "Leadership in Israel": [] },
-    "2": { "Teachings of Jesus": [], "The Early Church": [], "Faith in God": [], "Christian Ethics": [] },
-    "3": { "Old Testament Prophets": [], "Christian Approaches to Life": [], "Social Justice": [] },
-    "4": { "Contemporary Issues": [], "Christian Living": [], "Revision": [] }
-  },
-  "Business Studies": {
-    "1": { "Introduction to Business": [], "Forms of Business Units": [], "Communication": [], "Office Practice": [], "Entrepreneurship": [] },
-    "2": { "Transport": [], "Warehousing": [], "Insurance": [], "Banking": [], "Production": [] },
-    "3": { "Marketing": [], "Product Promotion": [], "Consumer Protection": [], "Business Finance": [] },
-    "4": { "National Income": [], "Inflation": [], "International Trade": [], "Economic Development": [] }
-  },
-  "Agriculture": {
-    "1": { "Introduction to Agriculture": [], "Soil Fertility": [], "Crop Production I": [], "Livestock Production I": [] },
-    "2": { "Crop Production II": [], "Livestock Production II": [], "Farm Structures": [], "Farm Tools and Equipment": [] },
-    "3": { "Agricultural Economics I": [], "Crop Production III": [], "Livestock Health": [] },
-    "4": { "Agricultural Economics II": [], "Agricultural Marketing": [], "Farm Management": [] }
-  },
-  "Computer Studies": {
-    "1": { "Introduction to Computers": [], "Computer Hardware": [], "Computer Software": [], "Application Areas": [] },
-    "2": { "Operating Systems": [], "Word Processing": [], "Spreadsheets": [], "Databases": [] },
-    "3": { "Programming": [], "Data Representation": [], "Networking": [], "Internet": [] },
-    "4": { "System Development": [], "ICT and Society": [], "Revision Topics": [] }
-  }
-};
-
-// Show/hide fields
-uploadType.addEventListener('change', () => {
-  const val = uploadType.value;
-  if (!val) {
-    subjectDiv.classList.add('hidden');
-    formDiv.classList.add('hidden');
-    topicDiv.classList.add('hidden');
-    return;
-  }
-  subjectDiv.classList.remove('hidden');
-  formDiv.classList.remove('hidden');
-  topicDiv.classList.toggle('hidden', val !== "notes");
-});
-
-// Update topic options dynamically
-function updateTopics() {
-  const subject = subjectSelect.value;
-  const formNum = formSelect.value.replace("Form ", "");
-  topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
-  if (topicsByForm[subject] && topicsByForm[subject][formNum]) {
-    Object.keys(topicsByForm[subject][formNum]).forEach(topic => {
-      const opt = document.createElement('option');
-      opt.textContent = topic;
-      topicSelect.appendChild(opt);
-    });
-  }
-}
-subjectSelect.addEventListener('change', updateTopics);
-formSelect.addEventListener('change', updateTopics);
-
-// Upload handler
 uploadForm.addEventListener('submit', e => {
   e.preventDefault();
-  const type = uploadType.value;
-  const subject = subjectSelect.value;
-  const form = formSelect.value;
-  const topic = topicSelect.value;
+  const type = document.getElementById('uploadType').value;
+  const subject = document.getElementById('subject').value;
+  const form = document.getElementById('form').value;
   const file = document.getElementById('file').files[0];
+
   if (!type || !subject || !form || !file) {
     alert("Please fill all fields.");
     return;
   }
 
-  const path = type === "notes"
-    ? `notes/${form}/${subject}/${topic}/${file.name}`
-    : `papers/${form}/${subject}/${file.name}`;
-
-  const storageRef = ref(storage, path);
+  const filePath = `${type}/${form}/${subject}/${file.name}`;
+  const storageRef = ref(storage, filePath);
   const uploadTask = uploadBytesResumable(storageRef, file);
+
+  uploadStatus.textContent = "⏳ Uploading... Please wait.";
+  progressBar.style.width = "0%";
 
   uploadTask.on("state_changed",
     snapshot => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       progressBar.style.width = progress + "%";
+      uploadStatus.textContent = `Uploading... ${Math.round(progress)}%`;
     },
-    error => { uploadStatus.textContent = "❌ Upload failed: " + error.message; },
+    error => {
+      uploadStatus.textContent = "❌ Upload failed: " + error.message;
+    },
     () => {
       getDownloadURL(uploadTask.snapshot.ref).then(url => {
         uploadStatus.textContent = "✅ Uploaded successfully!";
