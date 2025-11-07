@@ -136,7 +136,7 @@ const uploadStatus = document.getElementById("uploadStatus");
 uploadForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const type = document.getElementById("uploadType").value;
+  const type = document.getElementById("uploadType").value; 
   const subject = document.getElementById("subject").value;
   const form = document.getElementById("form").value;
   const file = document.getElementById("file").files[0];
@@ -148,13 +148,12 @@ uploadForm.addEventListener("submit", async (e) => {
 
   const preset = UPLOAD_PRESETS[type];
 
-  // Replace spaces with underscores in folder path for Cloudinary JSON compatibility
-  const folderPath = `highstars/files/${type}/${form.replace(/ /g,"_")}/${subject.replace(/ /g,"_")}`;
-
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", preset);
-  formData.append("folder", folderPath);
+
+  // Use only the main preset folder for JSON listing
+  formData.append("folder", `highstars/files/${type}`);
 
   uploadStatus.textContent = "⏳ Uploading...";
   progressBar.style.width = "0%";
