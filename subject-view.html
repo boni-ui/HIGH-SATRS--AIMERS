@@ -92,6 +92,7 @@ h2 { color: var(--secondary-color); margin-bottom: 20px; text-align: center; }
   &copy; 2025 High Stars Aimers. All Rights Reserved.
 </footer>
 
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 const CLOUD_NAME = "dj8xycoww";
 
@@ -101,24 +102,23 @@ const subject = params.get("subject") || "Mathematics";
 const form = params.get("form") || "Form 1";
 document.getElementById("subject-title").innerText = `Subject: ${subject} - ${form}`;
 
-// ✅ Correct Cloudinary folder path
+// ✅ Cloudinary folder path
 const folderPath = `highstars/files/notes/${form}/${subject}`;
-
 const filesContainer = document.getElementById("files-container");
 
 async function loadFiles() {
   filesContainer.innerHTML = "<p style='text-align:center;color:gray;'>Loading files...</p>";
 
   try {
-    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folderPath.replace(/\//g, "_")}.json`);
+    const searchURL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/resources/search`;
+    const query = `folder="${folderPath}" AND resource_type="raw"`;
 
-    if (!res.ok) {
-      filesContainer.innerHTML = `<p style="text-align:center;color:gray;">No files found for ${subject} - ${form}</p>`;
-      return;
-    }
+    const response = await axios.post(searchURL, 
+      { expression: query },
+      { auth: { username: "345425246322546", password: "GX2NyJO1rRhqrBhFCd3rAUO5AVM" } }
+    );
 
-    const data = await res.json();
-    const resources = data.resources || [];
+    const resources = response.data.resources || [];
 
     if (resources.length === 0) {
       filesContainer.innerHTML = `<p style="text-align:center;color:gray;">No files uploaded yet for ${subject} - ${form}</p>`;
