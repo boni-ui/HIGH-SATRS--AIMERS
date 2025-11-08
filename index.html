@@ -3,148 +3,179 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>High Stars Aimers</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Outfit:wght@500&display=swap" rel="stylesheet">
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: Arial, sans-serif;
-    }
+/* Basic Reset */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+html { scroll-behavior: smooth; }
+body { background: radial-gradient(circle at top, #0b1530, #000); color:#fff; min-height:100vh; overflow-x:hidden; padding:60px 0; display:flex; justify-content:center; align-items:flex-start; position:relative; }
 
-    body {
-        background: radial-gradient(circle at top, #0a0f1f, #000);
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        text-align: center;
-        overflow: hidden;
-    }
+/* Floating Stars */
+.star { position:absolute; width:2px; height:2px; background:white; border-radius:50%; opacity:0.7; animation:twinkle 3s infinite ease-in-out; }
+@keyframes twinkle { 0%,100% { opacity:0.3; transform:scale(1);} 50% { opacity:1; transform:scale(1.4);} }
 
-    .container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        padding: 40px;
-        border-radius: 50px; /* Smooth rounded corners */
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+/* Container */
+.container { background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border-radius:25px; padding:40px; width:90%; max-width:540px; text-align:center; position:relative; box-shadow:0 0 25px rgba(0,255,255,0.1); border:1px solid rgba(0,255,255,0.2); animation:fadeIn 1.2s ease; }
+.container::before { content:''; position:absolute; inset:-3px; border-radius:27px; background: linear-gradient(45deg, #00eaff, #007bff, #00eaff); filter:blur(15px); opacity:0.25; z-index:-1; animation:pulseGlow 5s infinite alternate; }
+@keyframes pulseGlow { 0% {opacity:0.15;} 100% {opacity:0.4;} }
+@keyframes fadeIn { from {opacity:0; transform:translateY(30px);} to {opacity:1; transform:translateY(0);} }
 
-    /* Rotating glowing border - full screen */
-    .container::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(
-            #ff0000,
-            #ff00ff,
-            #00ffff,
-            #00ff00,
-            #ffff00,
-            #ff0000
-        );
-        animation: rotate 4s linear infinite, pulse 2s ease-in-out infinite;
-        filter: blur(25px);
-        border-radius: 60px; /* More rounded */
-        z-index: 0;
-    }
+/* Heading */
+h1 { font-size:34px; color:#00eaff; font-weight:600; margin-bottom:8px; position:relative; overflow:hidden; }
+h1::after { content:''; position:absolute; top:0; left:-100%; width:50%; height:100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent); animation:shine 4s infinite; }
+@keyframes shine { 0%{left:-100%;}50%{left:120%;}100%{left:-100%;} }
 
-    .container::after {
-        content: '';
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        right: 15px;
-        bottom: 15px;
-        background: rgba(0, 0, 0, 0.85);
-        border-radius: 45px;
-        z-index: 1;
-    }
+/* Endless Writing Area / Typing */
+#typing { font-size:16px; color:#00bfff; margin-bottom:25px; min-height:50px; border-right:2px solid #00bfff; white-space:nowrap; overflow:hidden; }
 
-    @keyframes rotate {
-        100% { transform: rotate(360deg); }
-    }
-    @keyframes pulse {
-        0%, 100% { opacity: 0.6; }
-        50% { opacity: 1; }
-    }
+/* Banner */
+img { width:100%; border-radius:15px; margin-bottom:25px; box-shadow:0 0 20px rgba(0,234,255,0.25); transition: transform 0.6s ease; }
+img:hover { transform:scale(1.05) rotateY(5deg); }
 
-    .content {
-        position: relative;
-        z-index: 2;
-        max-width: 600px;
-        padding: 20px;
-    }
+/* Navigation Buttons with Wave Hover */
+.nav-links { display:flex; flex-direction:column; gap:12px; }
+.nav-links a { position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(0,234,255,0.1); border:1px solid rgba(0,234,255,0.3); color:#00eaff; font-weight:500; text-decoration:none; padding:12px 18px; border-radius:14px; transition: all 0.4s ease; animation:float 4s infinite ease-in-out; }
+.nav-links a i { margin-right:10px; font-size:17px; }
+.nav-links a::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background: linear-gradient(90deg, transparent, rgba(0,255,255,0.25), transparent); transition:0.5s; }
+.nav-links a:hover::before { left:100%; }
+.nav-links a:hover { color:#fff; background:linear-gradient(135deg,#00eaff,#007bff); box-shadow:0 0 25px rgba(0,255,255,0.4); transform:scale(1.05); }
+@keyframes float { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-5px);} }
 
-    h1 {
-        color: #00f0ff;
-        font-size: 36px;
-        margin-bottom: 10px;
-        text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
-    }
+/* Endless scrolling / News Feed */
+#feed { max-height:120px; overflow-y:auto; margin-bottom:20px; padding:10px; border:1px solid rgba(0,234,255,0.3); border-radius:12px; background:rgba(0,0,0,0.25); font-size:14px; color:#ccc; text-align:left; scrollbar-width:thin; scrollbar-color:#00eaff transparent; }
+#feed::-webkit-scrollbar { width:6px; }
+#feed::-webkit-scrollbar-thumb { background:#00eaff; border-radius:10px; }
+#feed::-webkit-scrollbar-track { background:transparent; }
 
-    p {
-        font-size: 18px;
-        color: #ccc;
-    }
+/* Quotes Section */
+#quote { margin-top:15px; font-size:14px; font-style:italic; color:#00eaff; opacity:0.8; }
 
-    img {
-        margin-top: 20px;
-        border-radius: 15px;
-        box-shadow: 0 0 20px #00f0ff;
-        max-width: 90%;
-        height: auto;
-    }
+/* Footer */
+footer { margin-top:25px; font-size:13px; color:#aaa; }
+footer i { color:#00eaff; }
 
-    .nav-links {
-        margin-top: 30px;
-    }
-
-    .nav-links a {
-        display: block;
-        margin: 10px auto;
-        padding: 12px 20px;
-        width: 220px;
-        background-color: #00f0ff;
-        color: black;
-        text-decoration: none;
-        border-radius: 30px;
-        font-size: 16px;
-        font-weight: bold;
-        transition: 0.3s;
-    }
-
-    .nav-links a:hover {
-        background-color: #00c0cc;
-        box-shadow: 0 0 25px #00f0ff;
-        transform: scale(1.05);
-    }
+/* Responsive */
+@media(max-width:600px){ .container{padding:30px 20px;} h1{font-size:28px;} .nav-links a{font-size:15px; padding:10px 15px;} }
 </style>
 </head>
 <body>
 
+<!-- Stars -->
+<script>
+for(let i=0;i<50;i++){
+  const s=document.createElement('div');
+  s.classList.add('star');
+  s.style.left=Math.random()*100+'%';
+  s.style.top=Math.random()*100+'%';
+  s.style.animationDelay=Math.random()*3+'s';
+  document.body.appendChild(s);
+}
+</script>
+
 <div class="container">
-    <div class="content">
-        <h1>Welcome to High Stars Aimers</h1>
-        <p>Your one-stop site for school notes, exams & success tips.</p>
+  <h1><i class="fas fa-star"></i> High Stars Aimers</h1>
+  <div id="typing"></div>
 
-        <img src="https://i.postimg.cc/MpH2Cjc6/file-00000000a8046230bc1b196305d9b3b4-conversation-id-685a6dbd-5aa8-800e-a943-4ac4d1da4bea-message-i.png" alt="High Stars Aimers Banner" width="300">
+  <img src="https://i.postimg.cc/MpH2Cjc6/file-00000000a8046230bc1b196305d9b3b4-conversation-id-685a6dbd-5aa8-800e-a943-4ac4d1da4bea-message-i.png" alt="Banner">
 
-        <div class="nav-links">
-            <a href="signup1.html">Sign up / Sign in</a>
-            <a href="signin1.html">Download Notes</a>
-            <a href="signin1.html">Exam Past Papers</a>
-            <a href="contact.html">Contact Us</a>
-        </div>
-    </div>
+  <div class="nav-links">
+    <a href="subject.html"><i class="fas fa-book-open"></i> Browse by Subject</a>
+    <a href="papers.html"><i class="fas fa-file-alt"></i> Browse by Paper</a>
+    <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+    <a href="about.html"><i class="fas fa-info-circle"></i> About High Stars</a>
+    <a href="tools.html"><i class="fas fa-toolbox"></i> Tools & Tips</a>
+    <a href="quizzes.html"><i class="fas fa-question-circle"></i> Quiz Corner</a>
+    <a href="calculator.html"><i class="fas fa-calculator"></i> Smart Calculator</a>
+    <a href="timetable.html"><i class="fas fa-clock"></i> Study Timer</a>
+    <a href="resources.html"><i class="fas fa-folder-open"></i> Resource Hub</a>
+    <a href="achievements.html"><i class="fas fa-trophy"></i> Achievements</a>
+  </div>
+
+  <div id="feed"></div>
+  <div id="quote"></div>
+
+  <footer><i class="fas fa-bolt"></i> Empowering Learners • © 2025 High Stars Aimers</footer>
 </div>
 
+<script>
+// Endless typing lines / knowledge feed
+const feed = [
+  "📌 Tip: Review notes every day to retain better.",
+  "📌 Did you know? Visual learning boosts memory retention.",
+  "📌 Motivation: Success is earned, not given.",
+  "📌 Fun Fact: The fastest way to learn math is by practice.",
+  "📌 Tip: Group studies increase understanding.",
+  "📌 Quote: 'Education is the passport to the future.'",
+  "📌 Tip: Stay hydrated to improve focus.",
+  "📌 Motivation: Hard work beats talent every time.",
+  "📌 Fun Fact: Reading 20 mins daily improves imagination.",
+  "📌 Tip: Teach someone to master a topic."
+];
+const feedEl = document.getElementById('feed');
+let feedIndex = 0;
+function updateFeed(){
+  feedEl.innerHTML += feed[feedIndex]+'<br>';
+  feedEl.scrollTop = feedEl.scrollHeight;
+  feedIndex = (feedIndex+1) % feed.length;
+}
+setInterval(updateFeed,3000); // Adds new line every 3s
+
+// Endless typing effect
+const messages = [
+  "Your gateway to knowledge & success...",
+  "Unlock your academic potential...",
+  "Exams made easy, notes made smarter...",
+  "Learn. Practice. Achieve. Repeat...",
+  "Together, we rise to the stars..."
+];
+let msgIndex = 0;
+let charIndex = 0;
+let currentMsg = messages[msgIndex];
+const typingEl = document.getElementById('typing');
+const speed = 120;
+function typeText(){
+  if(charIndex < currentMsg.length){
+    typingEl.textContent += currentMsg.charAt(charIndex);
+    charIndex++;
+    setTimeout(typeText,speed);
+  }else{ setTimeout(eraseText,2000); }
+}
+function eraseText(){
+  if(charIndex > 0){
+    typingEl.textContent = currentMsg.substring(0,charIndex-1);
+    charIndex--;
+    setTimeout(eraseText,60);
+  }else{
+    msgIndex=(msgIndex+1)%messages.length;
+    currentMsg = messages[msgIndex];
+    setTimeout(typeText,600);
+  }
+}
+typeText();
+
+// Rotating quotes
+const quotes = [
+  "“Believe you can and you're halfway there.”",
+  "“Success starts with self-discipline.”",
+  "“Dream it. Wish it. Do it.”",
+  "“Great things never come from comfort zones.”",
+  "“Your potential is endless.”",
+  "“Knowledge is power.”",
+  "“Focus on being productive, not busy.”",
+  "“Every expert was once a beginner.”",
+  "“Mistakes are proof that you are learning.”",
+  "“Consistency is key.”"
+];
+const quoteEl = document.getElementById("quote");
+setInterval(()=>{ quoteEl.innerText = quotes[Math.floor(Math.random()*quotes.length)]; },5000);
+
+// Parallax tilt
+document.addEventListener("mousemove",e=>{
+  const x=(e.clientX/window.innerWidth-0.5)*15;
+  const y=(e.clientY/window.innerHeight-0.5)*15;
+  document.getElementById("mainContainer").style.transform=`rotateY(${x}deg) rotateX(${-y}deg)`;
+});
+</script>
 </body>
 </html>
