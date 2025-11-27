@@ -63,6 +63,28 @@ main { display: flex; min-height: calc(100vh - 70px); }
 .user-profile h3 { margin-top: 10px; font-size: 1.5rem; color: var(--primary-color); }
 .user-profile p { color: #666; font-size: 0.9rem; }
 
+/* SIGN OUT BUTTON STYLING (New) */
+#signOutButton {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--accent-color); /* Red color for sign out */
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 5px rgba(255, 111, 97, 0.4);
+}
+#signOutButton:hover {
+    background-color: #e55a5a;
+    transform: translateY(-2px);
+}
+
 .sidebar-section {
   background: var(--hover-color);
   border-radius: 15px; padding: 15px; text-align: center;
@@ -135,9 +157,14 @@ main { display: flex; min-height: calc(100vh - 70px); }
   <aside class="sidebar">
     <div class="user-profile">
       <img id="userProfilePic" src="https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg" alt="Profile Picture">
-      <h3 id="welcomeMessage">Welcome, Student!</h3>
-      <p id="userEmail">student@email.com</p>
+      <h3 id="welcomeMessage">Loading...</h3>
+      <p id="userEmail">Loading email...</p>
     </div>
+    
+    <button id="signOutButton">
+        <i class="fas fa-sign-out-alt"></i> Sign Out
+    </button>
+    
     <div class="sidebar-section">
       <h4>Today's Tip</h4>
       <p id="today-tip-text">"Break down large tasks into smaller, manageable chunks."</p>
@@ -202,5 +229,68 @@ main { display: flex; min-height: calc(100vh - 70px); }
   <p>&copy; 2025 High Stars Aimers. All Rights Reserved.</p>
 </footer>
 
+<script type="module">
+    // --- Firebase Modular Imports (v9+) ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { 
+        getAuth, 
+        onAuthStateChanged, 
+        signOut 
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    // --- YOUR FIREBASE CONFIGURATION (The one you provided) ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:0b21df2fd59b744d2ce027",
+      measurementId: "G-JEV6M3EP1D"
+    };
+
+    // --- Initialization ---
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app); 
+    
+    // --- DOM Elements ---
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const userEmail = document.getElementById('userEmail');
+    const signOutButton = document.getElementById('signOutButton');
+
+    // 1. Authentication Status Listener (Auth Guard)
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is signed in, display profile details
+            
+            // Extract the username part of the email (before the @)
+            const emailPart = user.email || "Student";
+            const displayName = emailPart.substring(0, emailPart.indexOf('@'));
+
+            welcomeMessage.textContent = `Welcome, ${displayName}!`;
+            userEmail.textContent = user.email;
+            
+            // NOTE: If you save the user's name/picture in Firestore, 
+            // you would fetch and display it here.
+
+        } else {
+            // User is signed out or not logged in, redirect to login page
+            window.location.href = "signin1.html";
+        }
+    });
+
+    // 2. Sign Out Logic
+    signOutButton.addEventListener('click', () => {
+        signOut(auth).then(() => {
+            // Sign-out successful. The onAuthStateChanged listener above
+            // will detect the change and redirect the user.
+            console.log("User signed out successfully.");
+        }).catch((error) => {
+            // An error happened.
+            console.error("Sign out error:", error);
+            alert("Error signing out. Please try again.");
+        });
+    });
+</script>
 </body>
 </html>
