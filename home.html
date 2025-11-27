@@ -58,17 +58,20 @@ main { display: flex; min-height: calc(100vh - 70px); }
   width: 100px; height: 100px; border-radius: 50%;
   border: 3px solid var(--secondary-color);
   object-fit: cover; transition: transform 0.3s;
+  cursor: pointer; /* To indicate it's clickable for upload */
 }
 .user-profile img:hover { transform: scale(1.05); }
 .user-profile h3 { margin-top: 10px; font-size: 1.5rem; color: var(--primary-color); }
 .user-profile p { color: #666; font-size: 0.9rem; }
 
-/* SIGN OUT BUTTON STYLING (New) */
-#signOutButton {
-    width: 100%;
+/* Profile Buttons Container */
+.profile-actions {
+    display: flex;
+    gap: 10px;
+}
+.profile-actions button {
+    flex-grow: 1;
     padding: 10px;
-    background-color: var(--accent-color); /* Red color for sign out */
-    color: white;
     font-weight: bold;
     border: none;
     border-radius: 8px;
@@ -78,11 +81,61 @@ main { display: flex; min-height: calc(100vh - 70px); }
     align-items: center;
     justify-content: center;
     gap: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* View Profile Button */
+#viewProfileButton {
+    background-color: var(--primary-color);
+    color: white;
+}
+#viewProfileButton:hover {
+    background-color: #2b3a9e;
+    transform: translateY(-2px);
+}
+
+/* Sign Out Button */
+#signOutButton {
+    background-color: var(--accent-color); /* Red color for sign out */
+    color: white;
     box-shadow: 0 2px 5px rgba(255, 111, 97, 0.4);
 }
 #signOutButton:hover {
     background-color: #e55a5a;
     transform: translateY(-2px);
+}
+
+/* Profile Details Section */
+#profileDetails {
+    display: none; /* Initially hidden */
+    text-align: left;
+    background: var(--card-background);
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+#profileDetails h4 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+#profileDetails p {
+    margin: 5px 0;
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+#profileDetails span {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Status Message Area */
+#uploadStatus {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--primary-color);
 }
 
 .sidebar-section {
@@ -156,14 +209,31 @@ main { display: flex; min-height: calc(100vh - 70px); }
 <main>
   <aside class="sidebar">
     <div class="user-profile">
-      <img id="userProfilePic" src="https://i.postimg.cc/RZwkQnq3/Cam-Scanner-06-25-2025-19-04-4.jpg" alt="Profile Picture">
+      <img id="userProfilePic" src="https://via.placeholder.com/100/00b4d8/FFFFFF?text=P" alt="Profile Picture">
+      <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+      
       <h3 id="welcomeMessage">Loading...</h3>
       <p id="userEmail">Loading email...</p>
+      <div id="uploadStatus">Click image to upload photo</div>
     </div>
     
-    <button id="signOutButton">
-        <i class="fas fa-sign-out-alt"></i> Sign Out
-    </button>
+    <div class="profile-actions">
+        <button id="viewProfileButton">
+            <i class="fas fa-user-circle"></i> View Profile
+        </button>
+        <button id="signOutButton">
+            <i class="fas fa-sign-out-alt"></i> Sign Out
+        </button>
+    </div>
+
+    <div id="profileDetails">
+        <h4>User Profile Details</h4>
+        <p><span>Username:</span> <span id="profileUsername"></span></p>
+        <p><span>Email:</span> <span id="profileEmail"></span></p>
+        <p><span>Account Status:</span> <span id="profileStatus"></span></p>
+        <p><span>Registration Date:</span> <span id="profileRegDate"></span></p>
+        <p><span>Last Login:</span> <span id="profileLastLogin"></span></p>
+    </div>
     
     <div class="sidebar-section">
       <h4>Today's Tip</h4>
@@ -235,15 +305,23 @@ main { display: flex; min-height: calc(100vh - 70px); }
     import { 
         getAuth, 
         onAuthStateChanged, 
-        signOut 
+        signOut,
+        updateProfile // NEW: for updating photoURL
     } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import {
+        getStorage, 
+        ref, 
+        uploadBytes, 
+        getDownloadURL // NEW: for file storage
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+
 
     // --- YOUR FIREBASE CONFIGURATION (The one you provided) ---
     const firebaseConfig = {
       apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
       authDomain: "high-stars-aimers-5972f.firebaseapp.com",
       projectId: "high-stars-aimers-5972f",
-      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app", // Used for Storage
       messagingSenderId: "233345875942",
       appId: "1:233345875942:web:0b21df2fd59b744d2ce027",
       measurementId: "G-JEV6M3EP1D"
@@ -252,26 +330,53 @@ main { display: flex; min-height: calc(100vh - 70px); }
     // --- Initialization ---
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app); 
+    const storage = getStorage(app); // Initialize Storage
     
     // --- DOM Elements ---
     const welcomeMessage = document.getElementById('welcomeMessage');
-    const userEmail = document.getElementById('userEmail');
+    const userEmailElement = document.getElementById('userEmail');
+    const userProfilePic = document.getElementById('userProfilePic');
+    const imageUpload = document.getElementById('imageUpload');
+    const uploadStatus = document.getElementById('uploadStatus');
     const signOutButton = document.getElementById('signOutButton');
+    const viewProfileButton = document.getElementById('viewProfileButton');
+    const profileDetails = document.getElementById('profileDetails');
+    
+    // Profile Detail Elements
+    const profileUsername = document.getElementById('profileUsername');
+    const profileEmail = document.getElementById('profileEmail');
+    const profileStatus = document.getElementById('profileStatus');
+    const profileRegDate = document.getElementById('profileRegDate');
+    const profileLastLogin = document.getElementById('profileLastLogin');
 
-    // 1. Authentication Status Listener (Auth Guard)
+    // Default Profile Image URL (if no photoURL is set)
+    const DEFAULT_PIC = 'https://via.placeholder.com/100/00b4d8/FFFFFF?text=P';
+
+
+    // 1. Authentication Status Listener (Auth Guard & Profile Display)
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // User is signed in, display profile details
+            // Get user details
+            const email = user.email || "N/A";
+            const emailPart = email.substring(0, email.indexOf('@'));
+            const displayName = emailPart.charAt(0).toUpperCase() + emailPart.slice(1);
             
-            // Extract the username part of the email (before the @)
-            const emailPart = user.email || "Student";
-            const displayName = emailPart.substring(0, emailPart.indexOf('@'));
-
+            const creationDate = new Date(user.metadata.creationTime).toLocaleDateString();
+            const lastSignInDate = new Date(user.metadata.lastSignInTime).toLocaleDateString();
+            
+            // Display basics
             welcomeMessage.textContent = `Welcome, ${displayName}!`;
-            userEmail.textContent = user.email;
+            userEmailElement.textContent = email;
             
-            // NOTE: If you save the user's name/picture in Firestore, 
-            // you would fetch and display it here.
+            // Set profile picture (or default if null)
+            userProfilePic.src = user.photoURL || DEFAULT_PIC;
+
+            // Update Profile Detail section
+            profileUsername.textContent = displayName;
+            profileEmail.textContent = email;
+            profileStatus.textContent = user.emailVerified ? 'Verified' : 'Unverified';
+            profileRegDate.textContent = creationDate;
+            profileLastLogin.textContent = lastSignInDate;
 
         } else {
             // User is signed out or not logged in, redirect to login page
@@ -282,14 +387,75 @@ main { display: flex; min-height: calc(100vh - 70px); }
     // 2. Sign Out Logic
     signOutButton.addEventListener('click', () => {
         signOut(auth).then(() => {
-            // Sign-out successful. The onAuthStateChanged listener above
-            // will detect the change and redirect the user.
+            // Redirect is handled by the onAuthStateChanged listener
             console.log("User signed out successfully.");
         }).catch((error) => {
-            // An error happened.
             console.error("Sign out error:", error);
             alert("Error signing out. Please try again.");
         });
+    });
+    
+    // 3. Toggle Profile Details Logic
+    viewProfileButton.addEventListener('click', () => {
+        // Toggle the display style
+        const isHidden = profileDetails.style.display === 'none' || profileDetails.style.display === '';
+        profileDetails.style.display = isHidden ? 'block' : 'none';
+        
+        // Change button text/icon based on state
+        viewProfileButton.innerHTML = isHidden 
+            ? '<i class="fas fa-times-circle"></i> Hide Profile' 
+            : '<i class="fas fa-user-circle"></i> View Profile';
+    });
+
+    // 4. Image Upload Logic (FULLY FUNCTIONAL)
+    userProfilePic.addEventListener('click', () => {
+        imageUpload.click(); // Trigger the hidden file input
+    });
+
+    imageUpload.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        const user = auth.currentUser;
+
+        if (!file || !user) {
+            uploadStatus.textContent = "No file selected or user not logged in.";
+            return;
+        }
+
+        // Set the file path in Firebase Storage to be unique (UserID/profile.jpg)
+        const storagePath = `profile_pictures/${user.uid}/profile.jpg`;
+        const imageRef = ref(storage, storagePath);
+
+        uploadStatus.style.color = 'var(--primary-color)';
+        uploadStatus.textContent = "Uploading image...";
+
+        // 1. Upload the file
+        uploadBytes(imageRef, file)
+            .then((snapshot) => {
+                uploadStatus.textContent = "Upload complete. Getting URL...";
+                
+                // 2. Get the permanent download URL
+                return getDownloadURL(snapshot.ref);
+            })
+            .then((url) => {
+                // 3. Update the user's photoURL in Firebase Auth
+                return updateProfile(user, {
+                    photoURL: url
+                });
+            })
+            .then(() => {
+                // 4. Update the image element and status message
+                userProfilePic.src = auth.currentUser.photoURL; // Reloads the image from the new URL
+                uploadStatus.style.color = 'green';
+                uploadStatus.textContent = "Profile picture saved successfully!";
+            })
+            .catch((error) => {
+                console.error("Profile picture update failed:", error);
+                uploadStatus.style.color = 'red';
+                uploadStatus.textContent = `Error: Could not save image. Check console.`;
+                if (error.code === 'storage/unauthorized') {
+                    uploadStatus.textContent += " (Check Firebase Storage Rules!)";
+                }
+            });
     });
 </script>
 </body>
