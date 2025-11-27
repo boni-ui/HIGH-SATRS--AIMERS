@@ -248,21 +248,23 @@
             })
             .catch((error) => {
                 let message = "An unknown error occurred. Please try again.";
-                
-                // --- USER-FRIENDLY ERROR HANDLING ---
-                if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-login-credentials') {
-                    // Combine all common login failures into one secure message
-                    message = 'Incorrect email or password.';
-                } else if (error.code === 'auth/invalid-email') {
+                switch(error.code) {
+                  case 'auth/wrong-password':
+                    message = 'Incorrect password. Please try again.';
+                    break;
+                  case 'auth/user-not-found':
+                    message = 'No account found with that email.';
+                    break;
+                  case 'auth/invalid-email':
                     message = 'Invalid email address format.';
-                } else if (error.code === 'auth/network-request-failed') {
+                    break;
+                  case 'auth/network-request-failed':
                     message = 'Network error. Check your internet connection.';
-                } else {
+                    break;
+                  default:
                     console.error('Login error:', error.message);
-                    message = "Login failed. Please check your details.";
+                    message = error.message; 
                 }
-                // ------------------------------------
-                
                 errorMsg.textContent = message;
                 errorMsg.style.display = 'block';
             });
