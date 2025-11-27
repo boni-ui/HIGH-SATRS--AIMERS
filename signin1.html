@@ -142,22 +142,6 @@
         display: none; /* Initially hidden */
     }
 </style>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script>
-  const firebaseConfig = {
-    // Correct Firebase project configuration
-    apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
-    authDomain: "high-stars-aimers-5972f.firebaseapp.com",
-    projectId: "high-stars-aimers-5972f",
-    storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
-    messagingSenderId: "233345875942",
-    appId: "1:233345875942:web:cf7610de84f0b2262ce027",
-    measurementId: "G-X475KTSH5J"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-</script>
 </head>
 <body>
 
@@ -178,7 +162,33 @@
     </div>
 </div>
 
-<script>
+<script type="module">
+    // --- Firebase Modular Imports (v9+) ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { 
+        getAuth, 
+        signInWithEmailAndPassword, 
+        onAuthStateChanged, 
+        sendPasswordResetEmail,
+        signOut 
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    // --- YOUR NEW FIREBASE CONFIGURATION ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:0b21df2fd59b744d2ce027",
+      measurementId: "G-JEV6M3EP1D"
+    };
+
+    // --- Initialization ---
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app); 
+    
+    // --- DOM Elements ---
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
     const errorMsg = document.getElementById("errorMsg");
@@ -187,14 +197,25 @@
     const forgotPasswordError = document.getElementById('forgot-password-error');
     const forgotPasswordSuccess = document.getElementById('forgot-password-success');
 
-    // Check for existing user session on page load
-    auth.onAuthStateChanged(user => {
+    // --- Global exposure for HTML inline events ---
+    window.signIn = signIn;
+
+    // --- Core Logic ---
+
+    // 1. Check for existing user session and email verification
+    onAuthStateChanged(auth, (user) => {
       if (user) {
-        window.location.href = "home.html";
+        if (user.emailVerified) {
+             window.location.href = "home.html";
+        } else {
+             signOut(auth);
+             errorMsg.textContent = "Please verify your email address to log in. Check your inbox!";
+             errorMsg.style.display = 'block';
+        }
       }
     });
 
-    // Password show/hide toggle
+    // 2. Password show/hide toggle
     togglePassword.addEventListener("click", function () {
         const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
         passwordInput.setAttribute("type", type);
@@ -202,7 +223,7 @@
         this.classList.toggle("fa-eye-slash");
     });
 
-    // Firebase sign-in
+    // 3. Firebase sign-in function
     function signIn() {
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
@@ -215,9 +236,15 @@
             return;
         }
 
-        auth.signInWithEmailAndPassword(email, password)
+        signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                // The onAuthStateChanged listener will handle the redirection.
+                const user = userCredential.user;
+                if (!user.emailVerified) {
+                    signOut(auth);
+                    errorMsg.textContent = "Please verify your email address to log in. Check your inbox!";
+                    errorMsg.style.display = 'block';
+                }
+                // Redirection is handled by onAuthStateChanged listener if verified
             })
             .catch((error) => {
                 let message = "An unknown error occurred. Please try again.";
@@ -236,13 +263,14 @@
                     break;
                   default:
                     console.error('Login error:', error.message);
+                    message = error.message; 
                 }
                 errorMsg.textContent = message;
                 errorMsg.style.display = 'block';
             });
     }
 
-    // Forgot Password logic
+    // 4. Forgot Password logic
     forgotPasswordLink.onclick = function(e) {
         e.preventDefault();
         const email = emailInput.value.trim();
@@ -257,7 +285,7 @@
             return;
         }
 
-        auth.sendPasswordResetEmail(email)
+        sendPasswordResetEmail(auth, email)
             .then(() => {
                 forgotPasswordSuccess.textContent = "Password reset email sent! Check your inbox.";
                 forgotPasswordSuccess.style.display = 'block';
@@ -273,12 +301,13 @@
                     break;
                   default:
                     console.error('Password reset error:', error.message);
+                    message = error.message; 
                 }
                 forgotPasswordError.textContent = message;
                 forgotPasswordError.style.display = 'block';
             });
     };
-</script>
 
+</script>
 </body>
 </html>
