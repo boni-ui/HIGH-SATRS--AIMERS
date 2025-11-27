@@ -129,20 +129,6 @@
         text-decoration: underline;
     }
 </style>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
-        authDomain: "high-stars-aimers-5972f.firebaseapp.com",
-        projectId: "high-stars-aimers-5972f",
-        storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
-        messagingSenderId: "233345875942",
-        appId: "1:233345875942:web:cf7610de84f0b2262ce027",
-        measurementId: "G-X475KTSH5J"
-    };
-    firebase.initializeApp(firebaseConfig);
-</script>
 </head>
 <body>
 
@@ -176,6 +162,7 @@
 </div>
 
 <script>
+    // Simple DOM manipulation is fine outside the module block
     function togglePassword(fieldId, icon) {
         const field = document.getElementById(fieldId);
         const type = field.getAttribute("type") === "password" ? "text" : "password";
@@ -183,12 +170,43 @@
         icon.classList.toggle("fa-eye");
         icon.classList.toggle("fa-eye-slash");
     }
+</script>
 
+<script type="module">
+    // --- Firebase Modular Imports (v9+) ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { 
+        getAuth, 
+        createUserWithEmailAndPassword, 
+        sendEmailVerification 
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    // --- YOUR NEW FIREBASE CONFIGURATION ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:0b21df2fd59b744d2ce027",
+      measurementId: "G-JEV6M3EP1D"
+    };
+
+    // --- Initialization ---
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app); 
+    
+    // --- Global exposure for HTML inline events ---
+    window.registerUser = registerUser;
+
+    // --- Core Logic ---
     function registerUser() {
         const email = document.getElementById("newEmail").value.trim();
         const password = document.getElementById("newPassword").value;
         const confirm = document.getElementById("confirmPassword").value;
         const message = document.getElementById("signupMsg");
+
+        message.textContent = "";
 
         if (password !== confirm) {
             message.style.color = "red";
@@ -196,19 +214,36 @@
             return false;
         }
 
-        firebase.auth().createUserWithEmailAndPassword(email, password)
+        createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                user.sendEmailVerification().then(() => {
+                sendEmailVerification(user).then(() => {
                     message.style.color = "green";
-                    message.textContent = "Account created successfully! A verification email has been sent. Please check your inbox and log in after verifying.";
-                    // Optionally, you can sign out the user here to force them to log in after verifying.
-                    firebase.auth().signOut();
+                    message.textContent = "Account created successfully! A verification email has been sent. Please check your inbox and log in on the Sign In page after verifying.";
+                    
+                    document.getElementById("newEmail").value = '';
+                    document.getElementById("newPassword").value = '';
+                    document.getElementById("confirmPassword").value = '';
                 });
             })
             .catch((error) => {
                 message.style.color = "red";
-                message.textContent = error.message;
+                let errorMessage = "An unknown error occurred. Please try again.";
+                switch(error.code) {
+                  case 'auth/email-already-in-use':
+                    errorMessage = 'This email is already registered. Try logging in.';
+                    break;
+                  case 'auth/invalid-email':
+                    errorMessage = 'The email address is not valid.';
+                    break;
+                  case 'auth/weak-password':
+                    errorMessage = 'Password is too weak. It must be at least 6 characters.';
+                    break;
+                  default:
+                    console.error('Signup error:', error.message);
+                    errorMessage = error.message; 
+                }
+                message.textContent = errorMessage;
             });
 
         return false;
