@@ -1,132 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>High Stars Aimers - Papers</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      background: #0a0f1f;
-      color: #e0e0e0;
-    }
-    .header {
-      padding: 10px 20px;
-      background: #0a0f1f;
-      border-bottom: 2px solid #00f0ff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .header a {
-      color: white;
-      text-decoration: none;
-    }
-    main {
-      padding: 20px;
-    }
-    h2 {
-      color: #00f0ff;
-      margin-bottom: 20px;
-    }
-    .pdf-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-    .pdf-card {
-      background: rgba(35, 40, 60, 0.9);
-      border: 1px solid rgba(0,240,255,0.2);
-      border-radius: 12px;
-      padding: 15px;
-      text-align: center;
-      transition: transform 0.2s;
-    }
-    .pdf-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0,240,255,0.2);
-    }
-    .pdf-card a {
-      color: #00f0ff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .footer {
-      text-align: center;
-      padding: 20px;
-      border-top: 2px solid #00f0ff;
-      color: #aaa;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes View</title>
+<style>
+  body { font-family: sans-serif; background: #0a0f1f; color: #e0e0e0; padding: 20px; }
+  h1 { color: #00f0ff; }
+  ul { list-style: none; padding: 0; }
+  li { margin: 10px 0; }
+  a { color: #00f0ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+</style>
 </head>
 <body>
-
-<div class="header">
-  <h1>High Stars Aimers</h1>
-  <a href="papers.html"><i class="fas fa-arrow-left"></i> Back</a>
-</div>
-
-<main>
-  <h2 id="title">Loading Papers...</h2>
-  <div class="pdf-container" id="pdfContainer">
-    <!-- PDFs will load here -->
-  </div>
-</main>
-
-<footer class="footer">&copy; 2025 High Stars Aimers</footer>
+<h1 id="title">Loading...</h1>
+<ul id="fileList"></ul>
 
 <script>
-  // Get URL parameters
-  const params = new URLSearchParams(window.location.search);
-  const subject = params.get('sub'); // e.g., 'math'
-  const form = params.get('frm'); // e.g., 'f1'
+// Read subject and form from URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+const subject = urlParams.get('subject'); // e.g., Mathematics
+const form = urlParams.get('form');       // e.g., 1
 
-  // Map short codes to folder names
-  const subjectsMap = {
-    math: "Mathematics",
-    eng: "English",
-    kis: "Kiswahili",
-    phy: "Physics",
-    chem: "Chemistry",
-    bio: "Biology",
-    geo: "Geography",
-    his: "History",
-    cre: "CRE",
-    bus: "Business Studies",
-    agri: "Agriculture",
-    comp: "Computer Studies"
-  };
+document.getElementById('title').innerText = `${subject} Notes - Form ${form}`;
 
-  const subjectName = subjectsMap[subject] || subject;
-  document.getElementById('title').innerText = `${subjectName} Papers - ${form.toUpperCase()}`;
+// Cloudinary details
+const cloudName = 'dj8xycoww';
+const unsignedPreset = 'high stars note';
+const folderPath = `notes/${subject}/f${form}`;
 
-  const container = document.getElementById('pdfContainer');
+// Cloudinary search URL for raw files (PDFs)
+const searchUrl = `https://res.cloudinary.com/${cloudName}/search/sort_by=public_id:asc/expression=folder:${folderPath} AND resource_type:raw?max_results=100&upload_preset=${unsignedPreset}`;
 
-  // Replace with Cloudinary cloud name and folder structure
-  const cloudName = 'dj8xycoww';
-  const folderPath = `subjects/${subjectName}/${form.toUpperCase()}`;
-
-  // Fetch all PDFs in the folder using Cloudinary API
-  fetch(`https://res.cloudinary.com/${cloudName}/image/list/${folderPath}.json`)
-    .then(res => res.json())
-    .then(data => {
-      if(data.resources && data.resources.length > 0){
-        data.resources.forEach(pdf => {
-          const card = document.createElement('div');
-          card.classList.add('pdf-card');
-          card.innerHTML = `<i class="fas fa-file-pdf fa-3x"></i><br><a href="${pdf.secure_url}" target="_blank">${pdf.public_id.split('/').pop()}</a>`;
-          container.appendChild(card);
-        });
-      } else {
-        container.innerHTML = "<p>No papers found for this selection.</p>";
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      container.innerHTML = "<p>Failed to load papers.</p>";
+fetch(searchUrl)
+.then(res => res.json())
+.then(data => {
+    const list = document.getElementById('fileList');
+    if (!data.resources || data.resources.length === 0) {
+        list.innerHTML = '<li>No notes found in this folder.</li>';
+        return;
+    }
+    data.resources.forEach(file => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${file.secure_url}" target="_blank">${file.filename}</a>`;
+        list.appendChild(li);
     });
+})
+.catch(err => {
+    console.error(err);
+    document.getElementById('fileList').innerHTML = '<li>Error loading notes.</li>';
+});
 </script>
 </body>
 </html>
