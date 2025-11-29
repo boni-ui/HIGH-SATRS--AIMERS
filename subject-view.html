@@ -3,101 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>High Stars Aimers - Subjects</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<title>Subject View</title>
 <style>
-:root {
-  --primary-color: #2a2e92;
-  --secondary-color: #00f0ff;
-  --background-dark: #0a0f1f;
-  --card-background: rgba(35, 40, 60, 0.8);
-  --text-light: #e0e0e0;
-  --border-color: rgba(0, 240, 255, 0.2);
-}
-body { margin:0; padding:0; font-family:'Segoe UI', sans-serif; background-color: var(--background-dark); color: var(--text-light); }
-.header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); border-bottom:2px solid var(--secondary-color); }
-.header a { color:white; text-decoration:none; }
-main { padding:30px; max-width:800px; margin:0 auto; }
-h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
-.papers-container { display:grid; grid-template-columns:1fr; gap:15px; }
-.paper-card {
-  background: var(--card-background);
-  padding:15px 20px;
-  border-radius:10px;
-  border:1px solid var(--border-color);
-  box-shadow:0 4px 12px rgba(0,240,255,0.1);
-}
-.paper-card h3 { margin:0 0 10px; font-size:18px; color: var(--text-light); }
-.paper-card p { margin: 5px 0; font-size: 14px; color: #ccc; }
-.paper-card div { margin-top: 10px; }
-.paper-card a { color: var(--secondary-color); text-decoration:none; margin-right:15px; font-size: 14px; transition: color 0.2s; }
-.paper-card a:hover { color: #03e3f0; text-decoration:underline; }
-.footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; margin-top:40px; }
-.status-message { text-align: center; margin-bottom: 20px; font-weight: bold; }
+  body { font-family: sans-serif; background: #0a0f1f; color: #e0e0e0; padding: 20px; }
+  h1 { color: #00f0ff; }
+  ul { list-style: none; padding: 0; }
+  li { margin: 10px 0; }
+  a { color: #00f0ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>High Stars Aimers</h1>
-  <a href="index.html"><i class="fas fa-arrow-left"></i> Back Home</a>
-</div>
-
-<main>
-  <h2 id="papers-title">Loading Subjects...</h2>
-  <p id="status-message" class="status-message" style="color: var(--secondary-color);"></p>
-  <div class="papers-container" id="papers-container">
-     <p style="text-align:center;color:gray; padding: 50px;">Awaiting files...</p>
-  </div>
-</main>
-
-<footer class="footer">
-  &copy; 2025 High Stars Aimers. All Rights Reserved.
-</footer>
+<h1 id="title">Loading...</h1>
+<ul id="fileList"></ul>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const subject = params.get("subject") || null;
-const form = params.get("form") || null;
+// Get query parameters from URL
+const urlParams = new URLSearchParams(window.location.search);
+const subject = urlParams.get('subject'); // e.g., Mathematics
+const form = urlParams.get('form');       // e.g., 1
 
-const container = document.getElementById("papers-container");
-const titleElem = document.getElementById("papers-title");
+document.getElementById('title').innerText = `${subject} - Form ${form}`;
 
-async function loadFiles() {
-    titleElem.innerText = `${form || ''} ${subject || ''} Subjects`;
+// Cloudinary details
+const cloudName = 'dj8xycoww';
+const unsignedPreset = 'high stars subjects';
+const folderPath = `subjects/${subject}/f${form}`;
 
-    try {
-        const folder = "highstars/files/subjects";
-        const res = await fetch(`https://res.cloudinary.com/dj8xycoww/image/list/${folder}.json`);
-        const data = await res.json();
-        let files = data.resources;
+// Cloudinary search URL (unsigned)
+const searchUrl = `https://res.cloudinary.com/${cloudName}/search/sort_by=public_id:asc/expression=folder:${folderPath} AND resource_type:raw?max_results=100&upload_preset=${unsignedPreset}`;
 
-        if(subject) files = files.filter(f => f.public_id.toLowerCase().includes(subject.toLowerCase()));
-        if(form) files = files.filter(f => f.public_id.toLowerCase().includes(form.toLowerCase()));
-
-        if(files.length === 0){
-            container.innerHTML = `<p style="text-align:center;color:gray; padding:50px;">No files found.</p>`;
-            return;
-        }
-
-        container.innerHTML = files.map(f => `
-            <div class="paper-card">
-                <h3><i class="fas fa-file-pdf"></i> ${f.public_id.split('/').pop()}</h3>
-                <p>Subject: ${subject || 'N/A'} | Form: ${form || 'N/A'}</p>
-                <div>
-                    <a href="${f.secure_url}" target="_blank"><i class="fas fa-eye"></i> View</a>
-                    <a href="${f.secure_url}" download><i class="fas fa-download"></i> Download</a>
-                </div>
-            </div>
-        `).join('');
-
-        document.getElementById("status-message").textContent = `Loaded ${files.length} files.`;
-    } catch (e) {
-        console.error(e);
-        container.innerHTML = `<p style="text-align:center;color:red; padding:50px;">Failed to load files.</p>`;
+fetch(searchUrl)
+.then(res => res.json())
+.then(data => {
+    const list = document.getElementById('fileList');
+    if (!data.resources || data.resources.length === 0) {
+        list.innerHTML = '<li>No files found in this folder.</li>';
+        return;
     }
-}
-
-window.onload = loadFiles;
+    data.resources.forEach(file => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${file.secure_url}" target="_blank">${file.filename}</a>`;
+        list.appendChild(li);
+    });
+})
+.catch(err => {
+    console.error(err);
+    document.getElementById('fileList').innerHTML = '<li>Error loading files.</li>';
+});
 </script>
 </body>
 </html>
