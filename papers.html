@@ -14,7 +14,6 @@
       --text-light: #e0e0e0;
       --border-color: rgba(0, 240, 255, 0.2);
     }
-
     html, body {
       margin: 0;
       padding: 0;
@@ -22,7 +21,6 @@
       color: var(--text-light);
       background-color: var(--background-dark);
     }
-
     .header {
       display: flex;
       justify-content: space-between;
@@ -31,7 +29,6 @@
       background-color: var(--background-dark);
       border-bottom: 2px solid var(--secondary-color);
     }
-
     .navigation {
       display: flex;
       justify-content: center;
@@ -43,18 +40,15 @@
       top: 0;
       z-index: 9999;
     }
-
     .navigation a {
       color: var(--text-light);
       text-decoration: none;
       font-weight: bold;
       transition: color 0.2s;
     }
-
     .navigation a:hover {
       color: var(--secondary-color);
     }
-
     main {
       padding: 30px;
       display: flex;
@@ -62,11 +56,9 @@
       align-items: center;
       gap: 25px;
     }
-
     h2 {
       color: var(--secondary-color);
     }
-
     .subjects-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -76,7 +68,6 @@
       position: relative;
       z-index: 0;
     }
-
     .subject-card {
       background: var(--card-background);
       padding: 20px;
@@ -89,21 +80,17 @@
       overflow: visible;
       z-index: 1;
     }
-
     .subject-card.active {
       z-index: 10000;
     }
-
     .subject-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
     }
-
     .subject-card h3 {
       color: var(--secondary-color);
       margin: 10px 0;
     }
-
     .dropdown {
       display: none;
       position: absolute;
@@ -120,7 +107,6 @@
       animation: fadeIn 0.25s ease;
       pointer-events: auto;
     }
-
     .dropdown a {
       display: block;
       color: var(--text-light);
@@ -128,17 +114,14 @@
       text-decoration: none;
       transition: background 0.2s;
     }
-
     .dropdown a:hover {
       background: rgba(0, 240, 255, 0.2);
       color: var(--secondary-color);
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translate(-50%, 10px); }
       to { opacity: 1; transform: translate(-50%, 0); }
     }
-
     .footer {
       text-align: center;
       padding: 20px;
@@ -236,9 +219,78 @@
         </div>
       </div>
 
-      <!-- Continue with Geography, History, CRE, Business, Agriculture, Computer Studies in same pattern -->
-      <!-- Each links to pp-view.html?sub=<code>&frm=fX -->
-      
+      <!-- Geography -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-globe-africa fa-3x"></i>
+        <h3>Geography</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=geo&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=geo&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=geo&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=geo&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-landmark fa-3x"></i>
+        <h3>History</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=hist&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=hist&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=hist&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=hist&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- CRE -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-cross fa-3x"></i>
+        <h3>CRE</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=cre&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=cre&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=cre&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=cre&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- Business Studies -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-briefcase fa-3x"></i>
+        <h3>Business Studies</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=bus&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=bus&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=bus&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=bus&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- Agriculture -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-seedling fa-3x"></i>
+        <h3>Agriculture</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=agr&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=agr&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=agr&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=agr&frm=f4">Form 4</a>
+        </div>
+      </div>
+
+      <!-- Computer Studies -->
+      <div class="subject-card" onclick="toggleDropdown(this)">
+        <i class="fas fa-laptop-code fa-3x"></i>
+        <h3>Computer Studies</h3>
+        <div class="dropdown">
+          <a href="pp-view.html?sub=comp&frm=f1">Form 1</a>
+          <a href="pp-view.html?sub=comp&frm=f2">Form 2</a>
+          <a href="pp-view.html?sub=comp&frm=f3">Form 3</a>
+          <a href="pp-view.html?sub=comp&frm=f4">Form 4</a>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -250,10 +302,8 @@
     function toggleDropdown(card) {
       const dropdowns = document.querySelectorAll('.dropdown');
       const cards = document.querySelectorAll('.subject-card');
-
       dropdowns.forEach(d => d.style.display = 'none');
       cards.forEach(c => c.classList.remove('active'));
-
       const dropdown = card.querySelector('.dropdown');
       if (dropdown.style.display === 'block') {
         dropdown.style.display = 'none';
