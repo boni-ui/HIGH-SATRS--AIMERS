@@ -1,47 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>High Stars Aimers - Notes</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-  --primary-color: #2a2e92;
-  --secondary-color: #00f0ff;
-  --background-dark: #0a0f1f;
-  --card-background: rgba(35, 40, 60, 0.8);
-  --text-light: #e0e0e0;
-  --border-color: rgba(0, 240, 255, 0.2);
-}
-body { margin:0; padding:0; font-family:'Segoe UI', sans-serif; background-color: var(--background-dark); color: var(--text-light); }
-.header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); border-bottom:2px solid var(--secondary-color); }
-.header a { color:white; text-decoration:none; }
-main { padding:30px; max-width:800px; margin:0 auto; }
-h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
-.notes-container { display:grid; grid-template-columns:1fr; gap:15px; }
-.note-card {
-  background: var(--card-background);
-  padding:15px 20px;
-  border-radius:10px;
-  border:1px solid var(--border-color);
-  box-shadow:0 4px 12px rgba(0,240,255,0.1);
-}
-.note-card h3 { margin:0 0 10px; font-size:18px; color: var(--text-light); }
-.note-card p { margin: 5px 0; font-size: 14px; color: #ccc; }
-.note-card div { margin-top: 10px; }
-.note-card a { color: var(--secondary-color); text-decoration:none; margin-right:15px; font-size: 14px; transition: color 0.2s; }
-.note-card a:hover { color: #03e3f0; text-decoration:underline; }
-.footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; margin-top:40px; }
-.status-message { text-align: center; margin-bottom: 20px; font-weight: bold; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Stars Aimers - Papers</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #0a0f1f;
+      color: #e0e0e0;
+    }
+    .header {
+      padding: 10px 20px;
+      background: #0a0f1f;
+      border-bottom: 2px solid #00f0ff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header a {
+      color: white;
+      text-decoration: none;
+    }
+    main {
+      padding: 20px;
+    }
+    h2 {
+      color: #00f0ff;
+      margin-bottom: 20px;
+    }
+    .pdf-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .pdf-card {
+      background: rgba(35, 40, 60, 0.9);
+      border: 1px solid rgba(0,240,255,0.2);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .pdf-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,240,255,0.2);
+    }
+    .pdf-card a {
+      color: #00f0ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 2px solid #00f0ff;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
+
 <div class="header">
   <h1>High Stars Aimers</h1>
-  <a href="index.html"><i class="fas fa-arrow-left"></i> Back Home</a>
+  <a href="papers.html"><i class="fas fa-arrow-left"></i> Back</a>
 </div>
 
 <main>
-  <h2 id="notes-title">Loading Notes...</h2>
-  <p id="status-message" class="status-message" style="color:
+  <h2 id="title">Loading Papers...</h2>
+  <div class="pdf-container" id="pdfContainer">
+    <!-- PDFs will load here -->
+  </div>
+</main>
+
+<footer class="footer">&copy; 2025 High Stars Aimers</footer>
+
+<script>
+  // Get URL parameters
+  const params = new URLSearchParams(window.location.search);
+  const subject = params.get('sub'); // e.g., 'math'
+  const form = params.get('frm'); // e.g., 'f1'
+
+  // Map short codes to folder names
+  const subjectsMap = {
+    math: "Mathematics",
+    eng: "English",
+    kis: "Kiswahili",
+    phy: "Physics",
+    chem: "Chemistry",
+    bio: "Biology",
+    geo: "Geography",
+    his: "History",
+    cre: "CRE",
+    bus: "Business Studies",
+    agri: "Agriculture",
+    comp: "Computer Studies"
+  };
+
+  const subjectName = subjectsMap[subject] || subject;
+  document.getElementById('title').innerText = `${subjectName} Papers - ${form.toUpperCase()}`;
+
+  const container = document.getElementById('pdfContainer');
+
+  // Replace with Cloudinary cloud name and folder structure
+  const cloudName = 'dj8xycoww';
+  const folderPath = `subjects/${subjectName}/${form.toUpperCase()}`;
+
+  // Fetch all PDFs in the folder using Cloudinary API
+  fetch(`https://res.cloudinary.com/${cloudName}/image/list/${folderPath}.json`)
+    .then(res => res.json())
+    .then(data => {
+      if(data.resources && data.resources.length > 0){
+        data.resources.forEach(pdf => {
+          const card = document.createElement('div');
+          card.classList.add('pdf-card');
+          card.innerHTML = `<i class="fas fa-file-pdf fa-3x"></i><br><a href="${pdf.secure_url}" target="_blank">${pdf.public_id.split('/').pop()}</a>`;
+          container.appendChild(card);
+        });
+      } else {
+        container.innerHTML = "<p>No papers found for this selection.</p>";
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      container.innerHTML = "<p>Failed to load papers.</p>";
+    });
+</script>
+</body>
+</html>
