@@ -3,54 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Subject View</title>
+<title>High Stars Aimers - Subject Papers</title>
 <style>
-  body { font-family: sans-serif; background: #0a0f1f; color: #e0e0e0; padding: 20px; }
-  h1 { color: #00f0ff; }
-  ul { list-style: none; padding: 0; }
-  li { margin: 10px 0; }
-  a { color: #00f0ff; text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  body { font-family: 'Segoe UI', sans-serif; background:#0a0f1f; color:#e0e0e0; padding:20px; }
+  h2 { color:#00f0ff; text-align:center; }
+  .paper-list { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:20px; }
+  .paper-card { background:rgba(35,40,60,0.9); padding:15px; border-radius:10px; border:1px solid rgba(0,240,255,0.2); text-align:center; width:200px; }
+  .paper-card a { color:#00f0ff; text-decoration:none; font-weight:bold; }
+  .paper-card a:hover { color:#fff; }
 </style>
 </head>
 <body>
-<h1 id="title">Loading...</h1>
-<ul id="fileList"></ul>
+
+<h2 id="title">Subject Papers</h2>
+<div class="paper-list" id="paper-list">
+  <!-- Papers will appear here -->
+</div>
 
 <script>
-// Get query parameters from URL
-const urlParams = new URLSearchParams(window.location.search);
-const subject = urlParams.get('subject'); // e.g., Mathematics
-const form = urlParams.get('form');       // e.g., 1
+  // 1. Parse URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const subject = urlParams.get('subject');
+  const form = urlParams.get('form');
 
-document.getElementById('title').innerText = `${subject} - Form ${form}`;
+  document.getElementById('title').innerText = `${subject} - Form ${form}`;
 
-// Cloudinary details
-const cloudName = 'dj8xycoww';
-const unsignedPreset = 'high stars subjects';
-const folderPath = `subjects/${subject}/f${form}`;
+  // 2. Add Cloudinary URLs for all subjects here
+  const papers = {
+    "Mathematics": {
+      "1": [
+        "https://collection.cloudinary.com/dj8xycoww/9366adba2c9792be53f84129a97fe630"
+      ],
+      "2": [],
+      "3": [],
+      "4": []
+    },
+    "English": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": []
+    },
+    "Kiswahili": { "1": [], "2": [], "3": [], "4": [] },
+    "Physics": { "1": [], "2": [], "3": [], "4": [] },
+    "Chemistry": { "1": [], "2": [], "3": [], "4": [] },
+    "Biology": { "1": [], "2": [], "3": [], "4": [] },
+    "Geography": { "1": [], "2": [], "3": [], "4": [] },
+    "History": { "1": [], "2": [], "3": [], "4": [] },
+    "CRE": { "1": [], "2": [], "3": [], "4": [] },
+    "Business Studies": { "1": [], "2": [], "3": [], "4": [] },
+    "Agriculture": { "1": [], "2": [], "3": [], "4": [] },
+    "Computer Studies": { "1": [], "2": [], "3": [], "4": [] }
+  };
 
-// Cloudinary search URL (unsigned)
-const searchUrl = `https://res.cloudinary.com/${cloudName}/search/sort_by=public_id:asc/expression=folder:${folderPath} AND resource_type:raw?max_results=100&upload_preset=${unsignedPreset}`;
-
-fetch(searchUrl)
-.then(res => res.json())
-.then(data => {
-    const list = document.getElementById('fileList');
-    if (!data.resources || data.resources.length === 0) {
-        list.innerHTML = '<li>No files found in this folder.</li>';
-        return;
-    }
-    data.resources.forEach(file => {
-        const li = document.createElement('li');
-        li.innerHTML = `<a href="${file.secure_url}" target="_blank">${file.filename}</a>`;
-        list.appendChild(li);
+  // 3. Display papers
+  const listDiv = document.getElementById('paper-list');
+  const subjectPapers = papers[subject] ? papers[subject][form] || [] : [];
+  
+  if(subjectPapers.length === 0){
+    listDiv.innerHTML = "<p>No papers found for this selection.</p>";
+  } else {
+    subjectPapers.forEach(url => {
+      const card = document.createElement('div');
+      card.className = 'paper-card';
+      card.innerHTML = `<a href="${url}" target="_blank">View Paper</a>`;
+      listDiv.appendChild(card);
     });
-})
-.catch(err => {
-    console.error(err);
-    document.getElementById('fileList').innerHTML = '<li>Error loading files.</li>';
-});
+  }
 </script>
+
 </body>
 </html>
