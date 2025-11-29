@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>High Stars Aimers - Papers</title>
+<title>High Stars Aimers - Notes</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
@@ -14,161 +14,27 @@
   --text-light: #e0e0e0;
   --border-color: rgba(0, 240, 255, 0.2);
 }
-body {
-  margin:0; padding:0;
-  font-family:'Segoe UI', sans-serif;
-  background-color: var(--background-dark);
-  color: var(--text-light);
-}
-.header {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:10px 20px;
-  background-color: var(--background-dark);
-  border-bottom:2px solid var(--secondary-color);
-}
+body { margin:0; padding:0; font-family:'Segoe UI', sans-serif; background-color: var(--background-dark); color: var(--text-light); }
+.header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); border-bottom:2px solid var(--secondary-color); }
 .header a { color:white; text-decoration:none; }
 main { padding:30px; max-width:800px; margin:0 auto; }
 h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
-.papers-container { display:grid; grid-template-columns:1fr; gap:15px; } /* Changed to 1 column for better mobile layout */
-.paper-card {
+.notes-container { display:grid; grid-template-columns:1fr; gap:15px; }
+.note-card {
   background: var(--card-background);
   padding:15px 20px;
   border-radius:10px;
   border:1px solid var(--border-color);
   box-shadow:0 4px 12px rgba(0,240,255,0.1);
 }
-.paper-card h3 { margin:0 0 10px; font-size:18px; color: var(--text-light); }
-.paper-card p { margin: 5px 0; font-size: 14px; color: #ccc; }
-.paper-card div { margin-top: 10px; }
-.paper-card a { 
-  color: var(--secondary-color); text-decoration:none; 
-  margin-right:15px; font-size: 14px;
-  transition: color 0.2s;
-}
-.paper-card a:hover { color: #03e3f0; text-decoration:underline; }
+.note-card h3 { margin:0 0 10px; font-size:18px; color: var(--text-light); }
+.note-card p { margin: 5px 0; font-size: 14px; color: #ccc; }
+.note-card div { margin-top: 10px; }
+.note-card a { color: var(--secondary-color); text-decoration:none; margin-right:15px; font-size: 14px; transition: color 0.2s; }
+.note-card a:hover { color: #03e3f0; text-decoration:underline; }
 .footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; margin-top:40px; }
 .status-message { text-align: center; margin-bottom: 20px; font-weight: bold; }
 </style>
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, query, where, onSnapshot, getDocs, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Environment Globals
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db, auth;
-        const publicDataPath = `/artifacts/${appId}/public/data`;
-        const papersCollectionPath = `${publicDataPath}/papers`;
-
-        // UI Elements
-        const papersContainer = document.getElementById("papers-container");
-        const papersTitle = document.getElementById("papers-title");
-        const statusMessage = document.getElementById("status-message");
-        
-        // URL Parameters (for filtering)
-        const params = new URLSearchParams(window.location.search);
-        // Note: For 'Browse by Paper', we assume the main filter is not subject, but we will
-        // use the same subject/form filters as the subject view for consistency and utility.
-        const subject = params.get("subject") || null;
-        const form = params.get("form") || null;
-
-        // --- Initialization ---
-        const initFirebase = async () => {
-            try {
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                setLogLevel('Debug');
-
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                onAuthStateChanged(auth, (user) => {
-                    loadPapers();
-                });
-
-            } catch (error) {
-                console.error("Initialization Error:", error);
-                statusMessage.textContent = "Initialization failed.";
-            }
-        };
-
-        // --- Load Papers from Firestore ---
-        const loadPapers = () => {
-            let q = query(collection(db, papersCollectionPath), where("type", "==", "papers"));
-            
-            let titleText = 'All Exam Papers';
-            const queryConstraints = [];
-
-            // Add Subject filter if present
-            if (subject) {
-                queryConstraints.push(where("subjectRef", "==", subject));
-                titleText = `${subject.toUpperCase()} Papers`;
-            }
-
-            // Add Form filter if present
-            if (form) {
-                queryConstraints.push(where("form", "==", form));
-                if (subject) {
-                    titleText = `${form} - ${subject.toUpperCase()} Papers`;
-                } else {
-                    titleText = `${form} Papers`;
-                }
-            }
-
-            papersTitle.innerText = titleText;
-
-            // Apply all query constraints
-            if (queryConstraints.length > 0) {
-                 q = query(collection(db, papersCollectionPath), where("type", "==", "papers"), ...queryConstraints);
-            }
-
-            statusMessage.textContent = "Loading content...";
-            papersContainer.innerHTML = '';
-            
-            onSnapshot(q, (snapshot) => {
-                const papers = [];
-                snapshot.forEach((doc) => {
-                    papers.push(doc.data());
-                });
-
-                if (papers.length === 0) {
-                    papersContainer.innerHTML = `<p style="text-align:center;color:gray; padding: 50px;">No papers found matching the criteria.</p>`;
-                    statusMessage.textContent = `Found 0 papers.`;
-                    return;
-                }
-                
-                papers.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
-
-                papersContainer.innerHTML = papers.map(paper => `
-                    <div class="paper-card">
-                        <h3><i class="fas fa-file-pdf"></i> ${paper.title}</h3>
-                        <p>Subject: ${paper.subjectRef.charAt(0).toUpperCase() + paper.subjectRef.slice(1)} | Form: ${paper.form}</p>
-                        <p>Uploaded: ${new Date(paper.uploadDate).toLocaleDateString()}</p>
-                        <div>
-                            <a href="${paper.pdfUrl}" target="_blank"><i class="fas fa-eye"></i> View</a>
-                            <a href="${paper.pdfUrl}" download="${paper.title.replace(/\s/g, '_')}.pdf"><i class="fas fa-download"></i> Download</a>
-                        </div>
-                    </div>
-                `).join('');
-                statusMessage.textContent = `Successfully loaded ${papers.length} papers.`;
-
-            }, (error) => {
-                console.error("Error loading papers:", error);
-                papersContainer.innerHTML = `<p style="text-align:center;color:red; padding: 50px;">Failed to load data. Check console.</p>`;
-                statusMessage.textContent = "Failed to load papers.";
-            });
-        };
-
-        window.onload = initFirebase;
-    </script>
 </head>
 <body>
 <div class="header">
@@ -177,14 +43,5 @@ h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
 </div>
 
 <main>
-  <h2 id="papers-title">Loading Papers...</h2>
-  <p id="status-message" class="status-message" style="color: var(--secondary-color);"></p>
-  <div class="papers-container" id="papers-container">
-     <p style="text-align:center;color:gray; padding: 50px;">Awaiting data from Firestore...</p>
-  </div>
-</main>
-
-<footer class="footer">
-  &copy; 2025 High Stars Aimers. All Rights Reserved.
-</footer>
-
+  <h2 id="notes-title">Loading Notes...</h2>
+  <p id="status-message" class="status-message" style="color:
