@@ -4,79 +4,102 @@
 <title>High Stars Aimers - Home</title>    
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
 <style>    
+/* MODERN COLOR PALETTE */
 :root {    
-    --primary-color: #3b4cca;    
-    --secondary-color: #00b4d8;    
-    --accent-color: #ff6f61;    
-    --background-dark: #f5f7fa;    
-    --card-background: #ffffff;    
-    --text-light: #333;    
-    --border-color: #e2e8f0;    
-    --hover-color: #f0f4ff;
-}  html, body {  
+    --primary-color: #1A73E8; /* Deep Blue - Google/Modern Tech Vibe */
+    --secondary-color: #00B4D8; /* Bright Cyan Accent */
+    --accent-color: #EA4335; /* Soft Red for Action/Error (Google Red) */
+    --background-dark: #F7F9FC; /* Very light, clean background */
+    --card-background: #ffffff; /* Pure white cards */
+    --text-dark: #202124; /* Darker text for readability (Google Dark Grey) */
+    --text-light: #5F6368; /* Light grey text for secondary info */
+    --border-color: #DADCE0; /* Light border/divider */
+    --hover-color: #E8F0FE; /* Subtle hover effect (Light Blue) */
+    --box-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --box-shadow-deep: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+/* BASE STYLES */
+html, body {  
 margin: 0; padding: 0;  
-font-family: 'Segoe UI', sans-serif;  
+font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Added Roboto/Modern Font Stack */
 background-color: var(--background-dark);  
-color: var(--text-light);  
-}  * { box-sizing: border-box; }
-h1,h2,h3,h4 { margin-bottom: 10px; }
+color: var(--text-dark); /* Use dark text color */
+line-height: 1.6;
+}  
+* { box-sizing: border-box; }
+h1,h2,h3,h4 { margin-bottom: 15px; color: var(--text-dark); font-weight: 500;} /* Better heading weight */
 a { text-decoration: none; color: inherit; }
 main { display: flex; min-height: calc(100vh - 70px); }
 
 /* HEADER */
 .header {
 display: flex; align-items: center;
-padding: 10px 30px;
-background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-color: #fff; font-size: 1.5rem; font-weight: bold;
-height: 70px; position: sticky; top: 0; z-index: 1000;
-box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-border-bottom: 2px solid var(--secondary-color);
+padding: 10px 40px; /* Increased padding */
+background: var(--primary-color); /* Solid Primary Color */
+color: #fff; 
+font-size: 1.8rem; /* Slightly larger */
+font-weight: 700; /* Bolder logo text */
+height: 70px; 
+position: sticky; top: 0; z-index: 1000;
+box-shadow: var(--box-shadow-deep); /* Deeper shadow for header */
 }
 
 /* SIDEBAR */
 .sidebar {
-width: 300px;
+width: 320px; /* Slightly wider */
 background-color: var(--card-background);
-padding: 20px;
-border-right: 1px solid var(--border-color);
-display: flex; flex-direction: column; gap: 20px;
+padding: 30px; /* Increased padding */
+border-right: none; /* Removed hard border */
+display: flex; flex-direction: column; gap: 25px;
 position: sticky; top: 70px; height: fit-content;
 border-radius: 0 15px 15px 0;
-box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+box-shadow: var(--box-shadow-light); /* Lighter shadow */
 }
 .user-profile {
-text-align: center; margin-bottom: 20px;
-padding-bottom: 20px; border-bottom: 1px solid var(--border-color);
+text-align: center; 
+margin-bottom: 10px; /* Reduced bottom margin */
+padding-bottom: 20px; 
+border-bottom: 1px solid var(--border-color);
 }
 .user-profile img {
-width: 100px; height: 100px; border-radius: 50%;
-border: 3px solid var(--secondary-color);
-object-fit: cover; transition: transform 0.3s;
-cursor: pointer; /* To indicate it's clickable for upload */
+width: 110px; height: 110px; /* Slightly larger image */
+border-radius: 50%;
+border: 4px solid var(--secondary-color); /* Thicker accent border */
+object-fit: cover; transition: all 0.3s ease;
+cursor: pointer;
+box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.3); /* Subtle outer glow/ring */
 }
-.user-profile img:hover { transform: scale(1.05); }
-.user-profile h3 { margin-top: 10px; font-size: 1.5rem; color: var(--primary-color); }
-.user-profile p { color: #666; font-size: 0.9rem; }
+.user-profile img:hover { transform: scale(1.05); opacity: 0.9; }
+.user-profile h3 { 
+    margin-top: 15px; 
+    font-size: 1.6rem; 
+    color: var(--text-dark); 
+    font-weight: 600;
+}
+.user-profile p { 
+    color: var(--text-light); 
+    font-size: 0.9rem; 
+    margin-top: 5px;
+}
 
 /* Profile Buttons Container */
 .profile-actions {
 display: flex;
-gap: 10px;
+gap: 15px; /* Increased gap */
 }
 .profile-actions button {
 flex-grow: 1;
-padding: 10px;
-font-weight: bold;
+padding: 12px;
+font-weight: 600;
 border: none;
-border-radius: 8px;
+border-radius: 10px; /* Softer rounded corners */
 cursor: pointer;
 transition: background-color 0.3s, transform 0.1s;
 display: flex;
 align-items: center;
 justify-content: center;
 gap: 8px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* View Profile Button */
@@ -85,44 +108,47 @@ background-color: var(--primary-color);
 color: white;
 }
 #viewProfileButton:hover {
-background-color: #2b3a9e;
-transform: translateY(-2px);
+background-color: #1660cc; /* Slightly darker primary on hover */
+transform: translateY(-1px);
+box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
 /* Sign Out Button */
 #signOutButton {
-background-color: var(--accent-color); /* Red color for sign out */
+background-color: var(--accent-color);
 color: white;
-box-shadow: 0 2px 5px rgba(255, 111, 97, 0.4);
+box-shadow: 0 2px 5px rgba(234, 67, 53, 0.4);
 }
 #signOutButton:hover {
-background-color: #e55a5a;
-transform: translateY(-2px);
+background-color: #d13a2e; /* Slightly darker accent on hover */
+transform: translateY(-1px);
+box-shadow: 0 3px 6px rgba(234, 67, 53, 0.6);
 }
 
 /* Profile Details Section */
 #profileDetails {
-display: none; /* Initially hidden */
+display: none;
 text-align: left;
-background: var(--card-background);
-border-radius: 10px;
-padding: 15px;
-border: 1px solid var(--border-color);
-box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+background: var(--hover-color); /* Use light blue tint */
+border-radius: 12px;
+padding: 20px;
+border: 1px solid #c2e7ff; /* Lighter border */
+box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
 }
 #profileDetails h4 {
 color: var(--primary-color);
 margin-bottom: 10px;
 border-bottom: 1px solid var(--border-color);
 padding-bottom: 5px;
+font-weight: 600;
 }
 #profileDetails p {
-margin: 5px 0;
+margin: 8px 0; /* More vertical space */
 font-size: 0.95rem;
-color: var(--text-light);
+color: var(--text-dark);
 }
 #profileDetails span {
-font-weight: bold;
+font-weight: 500;
 color: var(--primary-color);
 }
 
@@ -131,67 +157,142 @@ color: var(--primary-color);
 margin-top: 10px;
 font-size: 0.9rem;
 color: var(--primary-color);
+font-style: italic;
 }
 
 .sidebar-section {
-background: var(--hover-color);
-border-radius: 15px; padding: 15px; text-align: center;
+background: var(--card-background);
+border-radius: 12px; 
+padding: 20px; 
+text-align: center;
 border: 1px solid var(--border-color);
+box-shadow: var(--box-shadow-light);
+}
+.sidebar-section h4 {
+    color: var(--secondary-color);
+}
+.sidebar-section p {
+    font-style: italic;
+    color: var(--text-light);
 }
 
 /* MAIN CONTENT */
 .content-area {
-flex-grow: 1; padding: 25px;
-display: flex; flex-direction: column; gap: 25px;
-max-width: 1000px; margin: 0 auto;
+flex-grow: 1; 
+padding: 40px; /* Increased padding */
+display: flex; 
+flex-direction: column; 
+gap: 30px; /* Increased gap */
+max-width: 1200px; /* Wider content area */
+margin: 0 auto;
 }
 .announcement-banner {
-padding: 15px;
-background: linear-gradient(120deg, var(--secondary-color), var(--primary-color));
-color: #fff; text-align: center; font-weight: bold;
+padding: 20px; /* More padding */
+background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* Better gradient angle */
+color: #fff; 
+text-align: center; 
+font-weight: 600;
+font-size: 1.1rem;
 border-radius: 12px;
-box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+box-shadow: 0 6px 15px rgba(0,0,0,0.2); /* Stronger shadow for emphasis */
+}
+
+/* RESOURCE CARDS */
+h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
 }
 .resource-card {
 background: var(--card-background);
-border-radius: 15px; padding: 25px;
+border-radius: 12px; /* Smoother corners */
+padding: 30px; /* Increased padding */
 border: 1px solid var(--border-color);
-display: flex; flex-direction: column; gap: 12px;
-transition: all 0.3s; cursor: pointer; text-align: center;
-box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+display: flex; 
+flex-direction: column; 
+gap: 10px;
+transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Modern transition curve */
+cursor: pointer; 
+text-align: left; /* Aligned left for professionalism */
+box-shadow: var(--box-shadow-light);
 }
 .resource-card:hover {
-transform: translateY(-6px);
-box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+transform: translateY(-4px); /* Smaller lift */
+box-shadow: var(--box-shadow-deep); /* Stronger shadow on hover */
 background: var(--hover-color);
+border-color: var(--primary-color); /* Primary color accent on hover */
 }
-.resource-card h4 { margin: 0; font-size: 1.3rem; color: var(--primary-color); }
-.resource-card p { color: #666; font-size: 0.95rem; }
+.resource-card h4 { 
+    margin: 0; 
+    font-size: 1.4rem; 
+    color: var(--primary-color); 
+    font-weight: 600;
+    display: flex; /* Align icon and text */
+    align-items: center;
+    gap: 12px;
+}
+.resource-card h4 i {
+    color: var(--secondary-color);
+    font-size: 1.6rem;
+}
+.resource-card p { 
+    color: var(--text-light); 
+    font-size: 1rem; 
+    margin-top: 5px;
+}
 
 /* FOOTER */
 .footer {
-padding: 20px;
+padding: 30px;
 background-color: var(--card-background);
 text-align: center;
-border-top: 2px solid var(--secondary-color);
-color: #666;
+border-top: none; /* Removed hard border */
+color: var(--text-light);
 border-radius: 15px 15px 0 0;
-box-shadow: 0 -3px 8px rgba(0,0,0,0.05);
+box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
 }
 .social-icons a {
-margin: 0 10px; font-size: 22px;
-color: var(--secondary-color); transition: transform 0.3s;
+margin: 0 15px; /* Increased spacing */
+font-size: 24px; /* Slightly larger icons */
+color: var(--primary-color); /* Changed to primary color */
+transition: transform 0.3s, color 0.3s;
 }
 .social-icons a:hover {
-transform: scale(1.2); color: var(--accent-color);
+transform: scale(1.15); 
+color: var(--accent-color); /* Accent color on hover */
+}
+.footer-links {
+    margin: 15px 0;
+    font-size: 0.95rem;
+}
+.footer-links a {
+    color: var(--text-light);
+    transition: color 0.3s;
+}
+.footer-links a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+.footer p {
+    font-size: 0.85rem;
+    margin-top: 10px;
 }
 
+/* RESPONSIVENESS */
 @media (max-width: 1000px) {
 main { flex-direction: column; }
 .sidebar {
-width: 100%; border-right: none;
+width: 100%; 
+border-right: none;
 border-bottom: 1px solid var(--border-color);
-border-radius: 0; padding: 15px; position: static;
+border-radius: 0; 
+padding: 20px; 
+position: static;
+}
+.content-area {
+    padding: 20px;
 }
 }
 </style>
@@ -218,7 +319,7 @@ border-radius: 0; padding: 15px; position: static;
     <p><span>Registration Date:</span> <span id="profileRegDate"></span></p>    
     <p><span>Last Login:</span> <span id="profileLastLogin"></span></p>    
 </div>    <div class="sidebar-section">    
-  <h4>Today's Tip</h4>    
+  <h4>Today's Tip 💡</h4>    
   <p id="today-tip-text">"Break down large tasks into smaller, manageable chunks."</p>    
 </div>    </aside>    <div class="content-area">    
     <div class="announcement-banner">    
