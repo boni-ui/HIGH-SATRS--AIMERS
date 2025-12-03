@@ -27,11 +27,18 @@ font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Added
 background-color: var(--background-dark);  
 color: var(--text-dark); /* Use dark text color */
 line-height: 1.6;
+/* Ensure the body is min-height 100vh to utilize screen space for scroll fix */
+min-height: 100vh;
 }  
 * { box-sizing: border-box; }
 h1,h2,h3,h4 { margin-bottom: 15px; color: var(--text-dark); font-weight: 500;} /* Better heading weight */
 a { text-decoration: none; color: inherit; }
-main { display: flex; min-height: calc(100vh - 70px); }
+
+/* FIX: Ensure main uses full available space for better scrolling experience */
+main { 
+    display: flex; 
+    min-height: calc(100vh - 70px - 100px); /* Adjusted to ensure main is tall enough before footer */
+}
 
 /* HEADER */
 .header {
@@ -53,7 +60,9 @@ background-color: var(--card-background);
 padding: 30px; /* Increased padding */
 border-right: none; /* Removed hard border */
 display: flex; flex-direction: column; gap: 25px;
-position: sticky; top: 70px; height: fit-content;
+/* Keep sidebar sticky for a modern feel */
+position: sticky; top: 70px; 
+height: fit-content; 
 border-radius: 0 15px 15px 0;
 box-shadow: var(--box-shadow-light); /* Lighter shadow */
 }
@@ -173,7 +182,7 @@ box-shadow: var(--box-shadow-light);
 .sidebar-section h4 {
     color: var(--secondary-color);
 }
-/* --- STYLING FOR ROTATING TIPS --- */
+
 #today-tip-text {
     font-style: italic;
     color: var(--text-dark); /* Darker text for readability */
@@ -182,7 +191,6 @@ box-shadow: var(--box-shadow-light);
     min-height: 40px; /* Prevents layout shift during rotation */
     display: block; /* Ensure transition applies properly */
 }
-/* --- END STYLING FOR ROTATING TIPS --- */
 
 
 /* MAIN CONTENT */
@@ -194,6 +202,8 @@ flex-direction: column;
 gap: 30px; /* Increased gap */
 max-width: 1200px; /* Wider content area */
 margin: 0 auto;
+/* FIX: Allow content area to scroll independently if needed */
+overflow-y: auto; 
 }
 .announcement-banner {
 padding: 20px; /* More padding */
@@ -305,7 +315,7 @@ position: static;
 }
 }
 
-/* --- NEW MODAL STYLES --- */
+/* --- MODAL STYLES --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -474,8 +484,7 @@ position: static;
         <p>Get answers from the community or instructors on your study queries.</p>    
       </div>   
     </a>  
-    <a href="contact.html">    
-      <div class="resource-card">    
+    <a href="contact.html">  <div class="resource-card">    
         <h4><i class="fas fa-bug"></i> Report a Bug</h4>    
         <p>Help us improve by reporting any issues or bugs you find.</p>    
       </div>    
@@ -537,8 +546,8 @@ const uploadStatus = document.getElementById('uploadStatus');
 const signOutButton = document.getElementById('signOutButton');    
 const viewProfileButton = document.getElementById('viewProfileButton');    
 const profileDetails = document.getElementById('profileDetails');    
-const todayTipText = document.getElementById('today-tip-text'); // New element for tips
-// NEW MODAL ELEMENTS
+const todayTipText = document.getElementById('today-tip-text'); 
+// MODAL ELEMENTS
 const developmentModal = document.getElementById('developmentModal');
 const closeModalBtn = document.getElementById('closeModalBtn');
     
@@ -588,8 +597,4 @@ onAuthStateChanged(auth, (user) => {
         // Get user details    
         const email = user.email || "N/A";    
         const emailPart = email.substring(0, email.indexOf('@'));    
-        const displayName = emailPart.charAt(0).toUpperCase() + emailPart.slice(1);    
-            
-        const creationDate = new Date(user.metadata.creationTime).toLocaleDateString();    
-        const lastSignInDate = new Date(user.metadata.lastSignInTime).toLocaleDateString();    
-     
+        const displayName = e
