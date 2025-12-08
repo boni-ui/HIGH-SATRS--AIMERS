@@ -1,3 +1,12 @@
+<script>
+  // Instant check: If the user is NOT logged in, stop everything and go to login page.
+  if (localStorage.getItem('isLoggedIn') !== 'true') {
+    window.location.replace("signin1.html"); 
+  }
+</script>
+<!DOCTYPE html>
+<html lang="en">
+...
 <!DOCTYPE html>
 <html lang="en">
 <head>
