@@ -32,9 +32,6 @@ html, body {
     line-height: 1.6;
 }
 * { box-sizing: border-box; }
-h1,h2,h3,h4 { margin-bottom: 15px; color: var(--text-dark); font-weight: 500;}
-a { text-decoration: none; color: inherit; }
-main { display: flex; min-height: calc(100vh - 70px); }
 
 /* HEADER */
 .header {
@@ -46,9 +43,6 @@ main { display: flex; min-height: calc(100vh - 70px); }
     font-size: 1.8rem;
     font-weight: 700;
     height: 70px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
     box-shadow: var(--box-shadow-deep);
 }
 
@@ -60,9 +54,6 @@ main { display: flex; min-height: calc(100vh - 70px); }
     display: flex;
     flex-direction: column;
     gap: 25px;
-    position: sticky;
-    top: 70px;
-    height: fit-content;
     border-radius: 0 15px 15px 0;
     box-shadow: var(--box-shadow-light);
 }
@@ -79,20 +70,8 @@ main { display: flex; min-height: calc(100vh - 70px); }
     border-radius: 50%;
     border: 4px solid var(--secondary-color);
     object-fit: cover;
-    transition: all 0.3s ease;
     cursor: pointer;
     box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.3);
-}
-.user-profile img:hover { transform: scale(1.05); opacity: 0.9; }
-
-.user-profile h3 {
-    margin-top: 15px;
-    font-size: 1.6rem;
-    font-weight: 600;
-}
-.user-profile p {
-    color: var(--text-light);
-    font-size: 0.9rem;
 }
 
 /* PROFILE ACTIONS */
@@ -103,141 +82,9 @@ main { display: flex; min-height: calc(100vh - 70px); }
 .profile-actions button {
     flex-grow: 1;
     padding: 12px;
-    font-weight: 600;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-/* View Profile */
-#viewProfileButton {
-    background-color: var(--primary-color);
-    color: white;
-}
-#viewProfileButton:hover {
-    background-color: #1660cc;
-    transform: translateY(-1px);
-}
-
-/* Sign Out */
-#signOutButton {
-    background-color: var(--accent-color);
-    color: white;
-}
-#signOutButton:hover {
-    background-color: #d13a2e;
-    transform: translateY(-1px);
-}
-
-/* PROFILE DETAILS */
-#profileDetails {
-    display: none;
-    background: var(--hover-color);
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #c2e7ff;
-}
-#profileDetails h4 {
-    color: var(--primary-color);
-    margin-bottom: 10px;
-    border-bottom: 1px solid var(--border-color);
-}
-#uploadStatus {
-    margin-top: 10px;
-    color: var(--primary-color);
-    font-size: 0.9rem;
-    font-style: italic;
-}
-
-/* SIDEBAR SECTION */
-.sidebar-section {
-    background: var(--card-background);
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--box-shadow-light);
-}
-.sidebar-section h4 {
-    color: var(--secondary-color);
-}
-.sidebar-section p {
-    color: var(--text-light);
-    font-style: italic;
-}
-
-/* MAIN CONTENT */
-.content-area {
-    flex-grow: 1;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.announcement-banner {
-    padding: 20px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    border-radius: 12px;
-    font-weight: 600;
-    box-shadow: var(--box-shadow-deep);
-}
-
-/* RESOURCE CARDS */
-.resource-card {
-    background: var(--card-background);
-    border-radius: 12px;
-    padding: 30px;
-    border: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    transition: 0.3s;
-    cursor: pointer;
-    box-shadow: var(--box-shadow-light);
-}
-.resource-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--box-shadow-deep);
-    background: var(--hover-color);
-    border-color: var(--primary-color);
-}
-.resource-card h4 {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 1.4rem;
-    color: var(--primary-color);
-}
-
-/* FOOTER */
-.footer {
-    padding: 30px;
-    background: var(--card-background);
-    text-align: center;
-    color: var(--text-light);
-    border-radius: 15px 15px 0 0;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
-}
-.social-icons a {
-    margin: 0 15px;
-    font-size: 24px;
-    color: var(--primary-color);
-}
-.social-icons a:hover {
-    color: var(--accent-color);
-}
-
-/* RESPONSIVE */
-@media (max-width: 1000px) {
-    main { flex-direction: column; }
-    .sidebar { width: 100%; position: static; }
 }
 
 /* MODAL */
@@ -258,9 +105,8 @@ main { display: flex; min-height: calc(100vh - 70px); }
     padding: 30px;
     border-radius: 15px;
     width: 90%;
-    max-width: 500px;
+    max-width: 450px;
     border: 3px solid var(--primary-color);
-    box-shadow: var(--box-shadow-deep);
 }
 </style>
 </head>
@@ -276,26 +122,18 @@ main { display: flex; min-height: calc(100vh - 70px); }
             <input type="file" id="imageUpload" accept="image/*" style="display:none;">
             <h3 id="welcomeMessage">Loading...</h3>
             <p id="userEmail">Loading email...</p>
-            <div id="uploadStatus">Click image to upload photo</div>
         </div>
 
         <div class="profile-actions">
             <button id="viewProfileButton"><i class="fas fa-user-circle"></i> View Profile</button>
-            <button id="signOutButton"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
-        </div>
-
-        <div id="profileDetails">
-            <h4>User Profile Details</h4>
-            <p>Username: <span id="profileUsername"></span></p>
-            <p>Email: <span id="profileEmail"></span></p>
-            <p>Status: <span id="profileStatus"></span></p>
-            <p>Registered: <span id="profileRegDate"></span></p>
-            <p>Last Login: <span id="profileLastLogin"></span></p>
+            <button id="signOutButton" style="background:var(--accent-color);color:white;">
+                <i class="fas fa-sign-out-alt"></i> Sign Out
+            </button>
         </div>
 
         <div class="sidebar-section">
             <h4>Today's Tip</h4>
-            <p id="today-tip-text">"Break down large tasks into smaller chunks."</p>
+            <p>"Break down large tasks into smaller chunks."</p>
         </div>
     </aside>
 
@@ -336,34 +174,84 @@ main { display: flex; min-height: calc(100vh - 70px); }
                 <p>Ask tutors or the community for help.</p>
             </div>
         </a>
-
-        <a href="contact.html">
-            <div class="resource-card">
-                <h4><i class="fas fa-bug"></i> Report a Bug</h4>
-                <p>Help us improve by reporting issues.</p>
-            </div>
-        </a>
     </div>
 </main>
 
 <footer class="footer">
-    <div class="social-icons">
-        <a href="https://www.facebook.com/profile.php?id=61579327734565"><i class="fab fa-facebook"></i></a>
-        <a href="https://www.instagram.com/b.boni.mbugua"><i class="fab fa-instagram"></i></a>
-        <a href="https://x.com/mbugua_bon60636"><i class="fab fa-twitter"></i></a>
-        <a href="https://www.youtube.com/@BoniMbugua"><i class="fab fa-youtube"></i></a>
-        <a href="https://tiktok.com/@bonimbugua346"><i class="fab fa-tiktok"></i></a>
-        <a href="https://wa.me/254762187843"><i class="fab fa-whatsapp"></i></a>
-    </div>
-
-    <div class="footer-links">
-        <a href="#">About Us</a> |
-        <a href="#">FAQs</a> |
-        <a href="#">Terms & Conditions</a>
-    </div>
-
     <p>&copy; 2025 High Stars Aimers. All Rights Reserved.</p>
 </footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="profileModal">
+    <div class="modal-content">
+        <h2>Profile Information</h2>
+        <p><strong>Username:</strong> <span id="modalUsername"></span></p>
+        <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+        <p><strong>Status:</strong> Active</p>
+        <br>
+        <button onclick="closeModal()" style="padding:10px 20px;">Close</button>
+    </div>
+</div>
+
+
+<script>
+/* LOAD USER DETAILS */
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem("userData"));
+
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    document.getElementById("welcomeMessage").textContent = user.username;
+    document.getElementById("userEmail").textContent = user.email;
+
+    document.getElementById("modalUsername").textContent = user.username;
+    document.getElementById("modalEmail").textContent = user.email;
+
+    if (user.profilePic) {
+        document.getElementById("userProfilePic").src = user.profilePic;
+    }
+});
+
+/* PROFILE PIC UPLOAD */
+document.getElementById("userProfilePic").addEventListener("click", () => {
+    document.getElementById("imageUpload").click();
+});
+
+document.getElementById("imageUpload").addEventListener("change", function() {
+    const file = this.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imgURL = e.target.result;
+        document.getElementById("userProfilePic").src = imgURL;
+
+        let user = JSON.parse(localStorage.getItem("userData"));
+        user.profilePic = imgURL;
+        localStorage.setItem("userData", JSON.stringify(user));
+    };
+    reader.readAsDataURL(file);
+});
+
+/* OPEN MODAL */
+document.getElementById("viewProfileButton").addEventListener("click", () => {
+    document.getElementById("profileModal").style.display = "flex";
+});
+
+/* CLOSE MODAL */
+function closeModal() {
+    document.getElementById("profileModal").style.display = "none";
+}
+
+/* SIGN OUT */
+document.getElementById("signOutButton").addEventListener("click", () => {
+    localStorage.removeItem("userData");
+    window.location.href = "login.html";
+});
+</script>
 
 </body>
 </html>
