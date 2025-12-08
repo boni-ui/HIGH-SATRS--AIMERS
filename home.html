@@ -6,79 +6,83 @@
 </script>
 <!DOCTYPE html>
 <html lang="en">
-...
-<!DOCTYPE html>
-<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>High Stars Aimers - Home</title>
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Outfit:wght@500&display=swap" rel="stylesheet">
 <style>
 /* MODERN COLOR PALETTE */
 :root {
-    --primary-color: #1A73E8; /* Deep Blue - Google/Modern Tech Vibe */
-    --secondary-color: #00B4D8; /* Bright Cyan Accent */
-    --accent-color: #EA4335; /* Soft Red for Action/Error (Google Red) */
-    --background-dark: #F7F9FC; /* Very light, clean background */
-    --card-background: #ffffff; /* Pure white cards */
-    --text-dark: #202124; /* Darker text for readability (Google Dark Grey) */
-    --text-light: #5F6368; /* Light grey text for secondary info */
-    --border-color: #DADCE0; /* Light border/divider */
-    --hover-color: #E8F0FE; /* Subtle hover effect (Light Blue) */
+    --primary-color: #1A73E8; 
+    --secondary-color: #00B4D8; 
+    --accent-color: #EA4335; 
+    --background-dark: #F7F9FC; 
+    --card-background: #ffffff; 
+    --text-dark: #202124; 
+    --text-light: #5F6368; 
+    --border-color: #DADCE0; 
+    --hover-color: #E8F0FE; 
     --box-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
     --box-shadow-deep: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 /* BASE STYLES */
 html, body {
 margin: 0; padding: 0;
-font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Added Roboto/Modern Font Stack */
+font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
 background-color: var(--background-dark);
-color: var(--text-dark); /* Use dark text color */
+color: var(--text-dark); 
 line-height: 1.6;
 }
 * { box-sizing: border-box; }
-h1,h2,h3,h4 { margin-bottom: 15px; color: var(--text-dark); font-weight: 500;} /* Better heading weight */
+h1,h2,h3,h4 { margin-bottom: 15px; color: var(--text-dark); font-weight: 500;} 
 a { text-decoration: none; color: inherit; }
 main { display: flex; min-height: calc(100vh - 70px); }
 
 /* HEADER */
 .header {
 display: flex; align-items: center;
-padding: 10px 40px; /* Increased padding */
-background: var(--primary-color); /* Solid Primary Color */
+padding: 10px 40px; 
+background: var(--primary-color); 
 color: #fff;
-font-size: 1.8rem; /* Slightly larger */
-font-weight: 700; /* Bolder logo text */
+font-size: 1.8rem; 
+font-weight: 700; 
 height: 70px;
 position: sticky; top: 0; z-index: 1000;
-box-shadow: var(--box-shadow-deep); /* Deeper shadow for header */
+box-shadow: var(--box-shadow-deep); 
 }
 
 /* SIDEBAR */
 .sidebar {
-width: 320px; /* Slightly wider */
+width: 320px; 
 background-color: var(--card-background);
-padding: 30px; /* Increased padding */
-border-right: none; /* Removed hard border */
+padding: 30px; 
+border-right: none; 
 display: flex; flex-direction: column; gap: 25px;
 position: sticky; top: 70px; height: fit-content;
 border-radius: 0 15px 15px 0;
-box-shadow: var(--box-shadow-light); /* Lighter shadow */
+box-shadow: var(--box-shadow-light); 
 }
 .user-profile {
 text-align: center;
-margin-bottom: 10px; /* Reduced bottom margin */
+margin-bottom: 10px; 
 padding-bottom: 20px;
 border-bottom: 1px solid var(--border-color);
 }
 .user-profile img {
-width: 110px; height: 110px; /* Slightly larger image */
+width: 110px; height: 110px; 
 border-radius: 50%;
-border: 4px solid var(--secondary-color); /* Thicker accent border */
+border: 4px solid var(--secondary-color); 
 object-fit: cover; transition: all 0.3s ease;
 cursor: pointer;
-box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.3); /* Subtle outer glow/ring */
+box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.3); 
 }
 .user-profile img:hover { transform: scale(1.05); opacity: 0.9; }
 .user-profile h3 {
@@ -96,14 +100,14 @@ box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.3); /* Subtle outer glow/ring */
 /* Profile Buttons Container */
 .profile-actions {
 display: flex;
-gap: 15px; /* Increased gap */
+gap: 15px; 
 }
 .profile-actions button {
 flex-grow: 1;
 padding: 12px;
 font-weight: 600;
 border: none;
-border-radius: 10px; /* Softer rounded corners */
+border-radius: 10px; 
 cursor: pointer;
 transition: background-color 0.3s, transform 0.1s;
 display: flex;
@@ -119,7 +123,7 @@ background-color: var(--primary-color);
 color: white;
 }
 #viewProfileButton:hover {
-background-color: #1660cc; /* Slightly darker primary on hover */
+background-color: #1660cc; 
 transform: translateY(-1px);
 box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
@@ -131,7 +135,7 @@ color: white;
 box-shadow: 0 2px 5px rgba(234, 67, 53, 0.4);
 }
 #signOutButton:hover {
-background-color: #d13a2e; /* Slightly darker accent on hover */
+background-color: #d13a2e; 
 transform: translateY(-1px);
 box-shadow: 0 3px 6px rgba(234, 67, 53, 0.6);
 }
@@ -140,11 +144,11 @@ box-shadow: 0 3px 6px rgba(234, 67, 53, 0.6);
 #profileDetails {
 display: none;
 text-align: left;
-background: var(--hover-color); /* Use light blue tint */
+background: var(--hover-color); 
 border-radius: 12px;
 padding: 20px;
-border: 1px solid #c2e7ff; /* Lighter border */
-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+border: 1px solid #c2e7ff; 
+box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05); 
 }
 #profileDetails h4 {
 color: var(--primary-color);
@@ -154,7 +158,7 @@ padding-bottom: 5px;
 font-weight: 600;
 }
 #profileDetails p {
-margin: 8px 0; /* More vertical space */
+margin: 8px 0; 
 font-size: 0.95rem;
 color: var(--text-dark);
 }
@@ -190,22 +194,22 @@ box-shadow: var(--box-shadow-light);
 /* MAIN CONTENT */
 .content-area {
 flex-grow: 1;
-padding: 40px; /* Increased padding */
+padding: 40px; 
 display: flex;
 flex-direction: column;
-gap: 30px; /* Increased gap */
-max-width: 1200px; /* Wider content area */
+gap: 30px; 
+max-width: 1200px; 
 margin: 0 auto;
 }
 .announcement-banner {
-padding: 20px; /* More padding */
-background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* Better gradient angle */
+padding: 20px; 
+background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); 
 color: #fff;
 text-align: center;
 font-weight: 600;
 font-size: 1.1rem;
 border-radius: 12px;
-box-shadow: 0 6px 15px rgba(0,0,0,0.2); /* Stronger shadow for emphasis */
+box-shadow: 0 6px 15px rgba(0,0,0,0.2); 
 }
 
 /* RESOURCE CARDS */
@@ -218,29 +222,29 @@ h2 {
 }
 .resource-card {
 background: var(--card-background);
-border-radius: 12px; /* Smoother corners */
-padding: 30px; /* Increased padding */
+border-radius: 12px; 
+padding: 30px; 
 border: 1px solid var(--border-color);
 display: flex;
 flex-direction: column;
 gap: 10px;
-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Modern transition curve */
+transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
 cursor: pointer;
-text-align: left; /* Aligned left for professionalism */
+text-align: left; 
 box-shadow: var(--box-shadow-light);
 }
 .resource-card:hover {
-transform: translateY(-4px); /* Smaller lift */
-box-shadow: var(--box-shadow-deep); /* Stronger shadow on hover */
+transform: translateY(-4px); 
+box-shadow: var(--box-shadow-deep); 
 background: var(--hover-color);
-border-color: var(--primary-color); /* Primary color accent on hover */
+border-color: var(--primary-color); 
 }
 .resource-card h4 {
     margin: 0;
     font-size: 1.4rem;
     color: var(--primary-color);
     font-weight: 600;
-    display: flex; /* Align icon and text */
+    display: flex; 
     align-items: center;
     gap: 12px;
 }
@@ -259,20 +263,20 @@ border-color: var(--primary-color); /* Primary color accent on hover */
 padding: 30px;
 background-color: var(--card-background);
 text-align: center;
-border-top: none; /* Removed hard border */
+border-top: none; 
 color: var(--text-light);
 border-radius: 15px 15px 0 0;
 box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
 }
 .social-icons a {
-margin: 0 15px; /* Increased spacing */
-font-size: 24px; /* Slightly larger icons */
-color: var(--primary-color); /* Changed to primary color */
+margin: 0 15px; 
+font-size: 24px; 
+color: var(--primary-color); 
 transition: transform 0.3s, color 0.3s;
 }
 .social-icons a:hover {
 transform: scale(1.15);
-color: var(--accent-color); /* Accent color on hover */
+color: var(--accent-color); 
 }
 .footer-links {
     margin: 15px 0;
@@ -309,18 +313,17 @@ position: static;
 
 /* --- POPUP MODAL STYLES --- */
 .modal-overlay {
-    /* Full screen overlay */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
-    display: none; /* Hidden by default */
+    background-color: rgba(0, 0, 0, 0.6); 
+    display: none; 
     justify-content: center;
     align-items: center;
-    z-index: 2000; /* Ensure it's on top of everything */
-    backdrop-filter: blur(3px); /* Optional: subtle blur effect */
+    z-index: 2000; 
+    backdrop-filter: blur(3px); 
 }
 
 .modal-content {
@@ -332,8 +335,8 @@ position: static;
     max-width: 500px;
     box-shadow: var(--box-shadow-deep);
     position: relative;
-    animation: fadeIn 0.3s ease-out; /* Simple animation */
-    border: 3px solid var(--primary-color); /* Primary border */
+    animation: fadeIn 0.3s ease-out; 
+    border: 3px solid var(--primary-color); 
 }
 
 @keyframes fadeIn {
@@ -391,7 +394,6 @@ position: static;
     font-style: normal;
 }
 </style>
-
 </head>
 <body>
 <div class="header">High Stars Aimers</div>
@@ -486,9 +488,7 @@ position: static;
         <hr>
         <div class="modal-body">
             <p><strong>Status Update:</strong> "Welcome to High Stars Aimers! As a valued early user, please note that this platform is currently in active development. While the core **Login** and **Profile Management** features are functional, some areas like **Quiz Master** and **Study Timer** are being continuously built and tested."</p>
-
             <p><strong>Actionable Request:</strong> "You may encounter temporary bugs or changes. If you spot an issue, please help us by using the **Report a Bug** card below! Your feedback accelerates development."</p>
-
             <div class="knowledge-tip">
                 <strong>Did you know?</strong> "The human brain consumes about 20% of the body's total oxygen and calories, despite making up only 2% of body mass. Your concentration requires a lot of energy—remember to take short breaks and stay hydrated!"
             </div>
@@ -497,130 +497,90 @@ position: static;
     </div>
 </div>
 <script type="module">
-    // --- Firebase Modular Imports (v9+) ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import {
-        getAuth,
-        onAuthStateChanged,
-        signOut,
-        updateProfile
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import {
-        getStorage,
-        ref,
-        uploadBytes,
-        getDownloadURL
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+    import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-// --- YOUR FIREBASE CONFIGURATION (The one you provided) ---
-const firebaseConfig = {
-  apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
-  authDomain: "high-stars-aimers-5972f.firebaseapp.com",
-  projectId: "high-stars-aimers-5972f",
-  // *** ERROR CORRECTION: Changed storageBucket to correct bucket name format ***
-  storageBucket: "high-stars-aimers-5972f.appspot.com",
-  messagingSenderId: "233345875942",
-  appId: "1:233345875942:web:0b21df2fd59b744d2ce027",
-  measurementId: "G-JEV6M3EP1D"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.appspot.com",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:0b21df2fd59b744d2ce027",
+      measurementId: "G-JEV6M3EP1D"
+    };
 
-// --- Initialization ---
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const storage = getStorage(app); // Initialize Storage
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
 
-// --- DOM Elements ---
-const welcomeMessage = document.getElementById('welcomeMessage');
-const userEmailElement = document.getElementById('userEmail');
-const userProfilePic = document.getElementById('userProfilePic');
-const imageUpload = document.getElementById('imageUpload');
-const uploadStatus = document.getElementById('uploadStatus');
-const signOutButton = document.getElementById('signOutButton');
-const viewProfileButton = document.getElementById('viewProfileButton');
-const profileDetails = document.getElementById('profileDetails');
-const developmentModal = document.getElementById('developmentModal'); // NEW Modal Element
-const closeModalButton = document.getElementById('closeModalButton'); // NEW Close Button
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const userEmailElement = document.getElementById('userEmail');
+    const userProfilePic = document.getElementById('userProfilePic');
+    const signOutButton = document.getElementById('signOutButton');
+    const viewProfileButton = document.getElementById('viewProfileButton');
+    const profileDetails = document.getElementById('profileDetails');
+    const developmentModal = document.getElementById('developmentModal'); 
+    const closeModalButton = document.getElementById('closeModalButton'); 
 
-// Profile Detail Elements
-const profileUsername = document.getElementById('profileUsername');
-const profileEmail = document.getElementById('profileEmail');
-const profileStatus = document.getElementById('profileStatus');
-const profileRegDate = document.getElementById('profileRegDate');
-const profileLastLogin = document.getElementById('profileLastLogin');
+    const profileUsername = document.getElementById('profileUsername');
+    const profileEmail = document.getElementById('profileEmail');
+    const profileStatus = document.getElementById('profileStatus');
+    const profileRegDate = document.getElementById('profileRegDate');
+    const profileLastLogin = document.getElementById('profileLastLogin');
 
-// Default Profile Image URL (if no photoURL is set)
-const DEFAULT_PIC = 'https://via.placeholder.com/100/00b4d8/FFFFFF?text=P';
+    const DEFAULT_PIC = 'https://via.placeholder.com/100/00b4d8/FFFFFF?text=P';
 
-// --- NEW POPUP FUNCTIONS ---
-
-function showDevelopmentModal() {
-    // Check if the user has seen the modal this session
-    if (!sessionStorage.getItem('developmentModalSeen')) {
-        developmentModal.style.display = 'flex'; // Show the modal
+    function showDevelopmentModal() {
+        if (!sessionStorage.getItem('developmentModalSeen')) {
+            developmentModal.style.display = 'flex'; 
+        }
     }
-}
 
-function closeDevelopmentModal() {
-    developmentModal.style.display = 'none'; // Hide the modal
-    // Set the flag so it won't show again this session
-    sessionStorage.setItem('developmentModalSeen', 'true');
-}
-
-// Attach event listener to the close button
-closeModalButton.addEventListener('click', closeDevelopmentModal);
-
-// 1. Authentication Status Listener (Auth Guard & Profile Display)
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // --- User is logged in ---
-
-        // Get user details
-        const email = user.email || "N/A";
-        const emailPart = email.substring(0, email.indexOf('@'));
-        const displayName = emailPart.charAt(0).toUpperCase() + emailPart.slice(1);
-
-        const creationDate = new Date(user.metadata.creationTime).toLocaleDateString();
-        const lastSignInDate = new Date(user.metadata.lastSignInTime).toLocaleDateString();
-
-        // Display basics
-        welcomeMessage.textContent = `Welcome, ${displayName}!`;
-        userEmailElement.textContent = email;
-
-        // Set profile picture (or default if null)
-        userProfilePic.src = user.photoURL || DEFAULT_PIC;
-
-        // Update Profile Detail section
-        profileUsername.textContent = displayName;
-        profileEmail.textContent = email;
-        profileStatus.textContent = user.emailVerified ? 'Verified' : 'Unverified';
-        profileRegDate.textContent = creationDate;
-        profileLastLogin.textContent = lastSignInDate;
-
-        // --- NEW: Trigger the modal after successful authentication ---
-        showDevelopmentModal();
-
-    } else {
-        // User is signed out or not logged in, redirect to login page
-        // Clear the session flag when signing out so it shows on next login
-        sessionStorage.removeItem('developmentModalSeen');
-        window.location.href = "signin1.html";
+    function closeDevelopmentModal() {
+        developmentModal.style.display = 'none'; 
+        sessionStorage.setItem('developmentModalSeen', 'true');
     }
-});
 
-// 2. Sign Out Logic
-signOutButton.addEventListener('click', () => {
-    signOut(auth).then(() => {
-        // Redirect is handled by the onAuthStateChanged listener
-        console.log("User signed out successfully.");
-    }).catch((error) => {
-        console.error("Sign out error:", error);
-        alert("Error signing out. Please try again.");
+    closeModalButton.addEventListener('click', closeDevelopmentModal);
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const email = user.email || "N/A";
+            const emailPart = email.substring(0, email.indexOf('@'));
+            const displayName = emailPart.charAt(0).toUpperCase() + emailPart.slice(1);
+            const creationDate = new Date(user.metadata.creationTime).toLocaleDateString();
+            const lastSignInDate = new Date(user.metadata.lastSignInTime).toLocaleDateString();
+
+            welcomeMessage.textContent = `Welcome, ${displayName}!`;
+            userEmailElement.textContent = email;
+            userProfilePic.src = user.photoURL || DEFAULT_PIC;
+            profileUsername.textContent = displayName;
+            profileEmail.textContent = email;
+            profileStatus.textContent = user.emailVerified ? 'Verified' : 'Unverified';
+            profileRegDate.textContent = creationDate;
+            profileLastLogin.textContent = lastSignInDate;
+            showDevelopmentModal();
+        } else {
+            sessionStorage.removeItem('developmentModalSeen');
+            localStorage.removeItem('isLoggedIn');
+            window.location.replace("signin1.html");
+        }
     });
-});
 
-// 3. Toggle Profile Details Logic
-viewProfileButton.addEventListener('click', () => {
-    // Toggle the display style
-    const isHidden = profileDetails.style.display === 'none' || profileDetails.style.display === '';
-    profileDetails.style.display = isHidden ? 'block' : 'none';
+    signOutButton.addEventListener('click', () => {
+        signOut(auth).then(() => {
+            localStorage.removeItem('isLoggedIn');
+            window.location.replace("signin1.html");
+        }).catch((error) => {
+            console.error("Sign out error:", error);
+        });
+    });
 
+    viewProfileButton.addEventListener('click', () => {
+      profileDetails.style.display = profileDetails.style.display === 'block' ? 'none' : 'block';
+    });
+</script>
+</body>
+</html>
