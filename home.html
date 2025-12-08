@@ -1,5 +1,6 @@
 <script>
   // Instant check: If the user is NOT logged in, stop everything and go to login page.
+  // Note: We use window.location.replace to keep the history clean.
   if (localStorage.getItem('isLoggedIn') !== 'true') {
     window.location.replace("signin1.html"); 
   }
@@ -547,6 +548,9 @@ position: static;
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            // SUCCESSFUL LOGIN SYNC: Ensure the guard sees the user as logged in
+            localStorage.setItem('isLoggedIn', 'true');
+
             const email = user.email || "N/A";
             const emailPart = email.substring(0, email.indexOf('@'));
             const displayName = emailPart.charAt(0).toUpperCase() + emailPart.slice(1);
