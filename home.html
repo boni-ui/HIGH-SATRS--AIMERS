@@ -16,7 +16,10 @@
     --text-light: #5F6368;
     --border-color: #DADCE0;
     --box-shadow-light: 0 2px 6px rgba(0,0,0,0.1);
-    --box-shadow-deep: 0 4px 12px rgba(0,0,0,0.1);
+    --box-shadow-deep: 0 0 20px rgba(0,0,0,0.15);
+    --card-hover-scale: 1.05;
+    --card-hover-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    --transition-speed: 0.3s;
 }
 
 * { box-sizing: border-box; }
@@ -53,20 +56,31 @@ main {
     background: var(--card-background);
     width: 95%;
     max-width: 400px;
-    border-radius: 15px;
+    border-radius: 20px;
     box-shadow: var(--box-shadow-light);
     text-align: center;
-    padding: 20px;
+    padding: 25px;
     margin-bottom: 25px;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.user-card:hover {
+    transform: scale(var(--card-hover-scale));
+    box-shadow: var(--card-hover-shadow);
 }
 
 .user-card img {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    border: 3px solid var(--secondary-color);
+    border: 4px solid var(--secondary-color);
     object-fit: cover;
     cursor: pointer;
+    transition: transform var(--transition-speed);
+}
+
+.user-card img:hover {
+    transform: scale(1.1);
 }
 
 .user-card h3 {
@@ -80,18 +94,19 @@ main {
 
 .user-card button {
     margin: 10px 5px;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: none;
     border-radius: 25px;
     background: var(--primary-color);
     color: white;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background var(--transition-speed), transform var(--transition-speed);
 }
 
 .user-card button:hover {
     background: var(--secondary-color);
+    transform: scale(1.05);
 }
 
 /* Resource Cards */
@@ -101,52 +116,73 @@ main {
     width: 95%;
     max-width: 900px;
     margin-bottom: 30px;
-    gap: 15px;
+    gap: 20px;
 }
 
 .resource-card {
     background: var(--card-background);
-    border-radius: 15px;
+    border-radius: 20px;
     box-shadow: var(--box-shadow-light);
-    padding: 20px;
-    transition: 0.3s;
+    padding: 25px;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed), background var(--transition-speed);
     cursor: pointer;
     text-decoration: none;
     color: var(--text-dark);
+    border-left: 6px solid var(--primary-color);
 }
 
 .resource-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--box-shadow-deep);
+    transform: scale(var(--card-hover-scale));
+    box-shadow: var(--card-hover-shadow);
+    border-left-color: var(--secondary-color);
+    background: #f0f8ff;
 }
 
 .resource-card h4 {
     margin: 0 0 10px 0;
     color: var(--primary-color);
+    transition: color var(--transition-speed);
+}
+
+.resource-card:hover h4 {
+    color: var(--secondary-color);
 }
 
 .resource-card p {
     color: var(--text-light);
+    transition: color var(--transition-speed);
+}
+
+.resource-card:hover p {
+    color: var(--text-dark);
 }
 
 /* Footer */
 footer {
     text-align: center;
-    padding: 20px;
+    padding: 25px 10px;
     background: var(--card-background);
-    margin-top: 20px;
+    margin-top: 30px;
     box-shadow: var(--box-shadow-light);
+    border-top: 2px solid var(--border-color);
+}
+
+footer p {
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
 footer .social-icons a {
     margin: 0 10px;
     color: var(--primary-color);
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
+    transition: color var(--transition-speed), transform var(--transition-speed);
 }
 
 footer .social-icons a:hover {
     color: var(--secondary-color);
+    transform: scale(1.2);
 }
 
 /* Modals */
@@ -165,8 +201,8 @@ footer .social-icons a:hover {
 
 .modal-content {
     background: white;
-    padding: 25px 30px;
-    border-radius: 15px;
+    padding: 30px 35px;
+    border-radius: 20px;
     width: 90%;
     max-width: 450px;
     text-align: center;
@@ -174,21 +210,24 @@ footer .social-icons a:hover {
 }
 
 .modal-content h3 {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .modal-content button {
     margin-top: 15px;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: none;
     border-radius: 25px;
     background: var(--primary-color);
     color: white;
     font-weight: bold;
     cursor: pointer;
+    transition: background var(--transition-speed), transform var(--transition-speed);
 }
+
 .modal-content button:hover {
     background: var(--secondary-color);
+    transform: scale(1.05);
 }
 </style>
 </head>
@@ -241,13 +280,14 @@ footer .social-icons a:hover {
 </main>
 
 <footer>
+    <p>Follow Boni Mbugua on:</p>
     <div class="social-icons">
-        <a href="#"><i class="fab fa-facebook"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-youtube"></i></a>
-        <a href="#"><i class="fab fa-tiktok"></i></a>
-        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://www.facebook.com/profile.php?id=61579327734565" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/boni.mbugua?igsh=MWF3MmI0N29leDdzeA==" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://x.com/mbugua_bon60636?s=09" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.youtube.com/@boniMbugua" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.tiktok.com/@bonimbugua346" target="_blank"><i class="fab fa-tiktok"></i></a>
+      <a href="https://wa.me/254762187843" target="_blank"><i class="fab fa-whatsapp"></i></a>
     </div>
     <p>&copy; 2025 High Stars Aimers. All Rights Reserved.</p>
 </footer>
@@ -272,7 +312,6 @@ footer .social-icons a:hover {
 </div>
 
 <script>
-// Load user info
 document.addEventListener("DOMContentLoaded", () => {
     const name = localStorage.getItem("username") || "Guest User";
     const email = localStorage.getItem("email") || "unknown@example.com";
