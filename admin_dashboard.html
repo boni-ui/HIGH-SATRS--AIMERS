@@ -1,159 +1,487 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- 
-  <title>Admin Dashboard - High Stars Aimers</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f4fa;
-      color: #333;
-    }
-    header {
-      background-color: #2a2e92;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
-    }
-    h2 {
-      color: #2a2e92;
-      margin-bottom: 20px;
-    }
-    .summary {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-    }
-    .card {
-      flex: 1 1 30%;
-      background-color: #e9ecfa;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 0 5px #ccc;
-    }
-    .card h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-    .card p {
-      font-size: 22px;
-      font-weight: bold;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 30px;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #ccc;
-      text-align: left;
-    }
-    th {
-      background-color: #2a2e92;
-      color: white;
-    }
-    .footer {
-      text-align: center;
-      margin-top: 40px;
-      color: gray;
-      font-size: 14px;
-    }
-    .actions i {
-      margin-right: 10px;
-      cursor: pointer;
-      color: #2a2e92;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Directory</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #38bdf8;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .header {
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 10;
+        }
+
+        h1 { font-size: 1.5rem; margin-bottom: 15px; color: var(--accent); }
+
+        #search {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        #search:focus { border-color: var(--accent); }
+
+        .contact-item {
+            background: var(--card);
+            margin-bottom: 8px;
+            padding: 15px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid transparent;
+        }
+
+        .contact-item:hover { border-color: #334155; }
+
+        .details { display: flex; align-items: center; gap: 15px; overflow: hidden; }
+
+        .icon {
+            min-width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .name-box { overflow: hidden; }
+
+        .name { font-weight: 600; font-size: 1rem; margin-bottom: 2px; }
+
+        .numbers { 
+            font-size: 0.8rem; 
+            color: var(--text-dim); 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .call-btn {
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .heart { color: #f43f5e; }
+    </style>
 </head>
 <body>
-  <header>
-    Admin Dashboard - High Stars Aimers
-  </header>  <div class="container">
-    <h2>Overview</h2>
-    <div class="summary">
-      <div class="card">
-        <h3>Total Uploads</h3>
-        <p id="totalUploads">0</p>
-      </div>
-      <div class="card">
-        <h3>Total Purchases</h3>
-        <p id="totalPurchases">0</p>
-      </div>
-      <div class="card">
-        <h3>Revenue (KSH)</h3>
-        <p id="totalRevenue">0</p>
-      </div>
-    </div><h2>Recent Uploads</h2>
-<table>
-  <thead>
-    <tr><th>Title</th><th>Type</th><th>Year</th><th>Subject</th><th>Price</th></tr>
-  </thead>
-  <tbody id="uploadsTable"></tbody>
-</table>
 
-<h2>Recent Purchases</h2>
-<table>
-  <thead>
-    <tr><th>Subject</th><th>Price</th><th>Time</th><th>Message</th></tr>
-  </thead>
-  <tbody id="purchasesTable"></tbody>
-</table>
+<div class="wrapper">
+    <div class="header">
+        <h1>Local Contacts</h1>
+        <input type="text" id="search" placeholder="Search name or number..." onkeyup="search()">
+    </div>
 
-  </div>  <div class="footer">
-    High Stars Aimers Admin Portal | Managed by Boni Mbugua
-  </div>  <script>
-    function loadDashboard() {
-      const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
-      const purchases = JSON.parse(localStorage.getItem('purchaseLogs') || '[]');
+    <div id="list">
+        <div class="contact-item" data-name="antiebeth">
+            <div class="details">
+                <div class="icon">AB</div>
+                <div class="box">
+                    <div class="name">antie beth</div>
+                    <div class="numbers">071-254-1715</div>
+                </div>
+            </div>
+            <a href="tel:0712541715" class="call-btn">CALL</a>
+        </div>
 
-      // Overview counts
-      document.getElementById("totalUploads").textContent = uploads.length;
-      document.getElementById("totalPurchases").textContent = purchases.length;
-      const totalRevenue = purchases.reduce((sum, p) => sum + parseInt(p.price), 0);
-      document.getElementById("totalRevenue").textContent = totalRevenue;
+        <div class="contact-item" data-name="antienjambi">
+            <div class="details">
+                <div class="icon">AN</div>
+                <div class="box">
+                    <div class="name">antie Njambi</div>
+                    <div class="numbers">078-352-9298, +254715925570</div>
+                </div>
+            </div>
+            <a href="tel:0783529298" class="call-btn">CALL</a>
+        </div>
 
-      // Upload table
-      const uploadsTable = document.getElementById("uploadsTable");
-      uploads.slice().reverse().slice(0, 5).forEach(u => {
-        const row = `<tr>
-          <td>${u.title}</td>
-          <td>${u.type}</td>
-          <td>${u.year}</td>
-          <td>${u.subject}</td>
-          <td>${u.price}</td>
-        </tr>`;
-        uploadsTable.innerHTML += row;
-      });
+        <div class="contact-item" data-name="antiepury">
+            <div class="details">
+                <div class="icon">AP</div>
+                <div class="box">
+                    <div class="name">antie pury</div>
+                    <div class="numbers">+254754827830</div>
+                </div>
+            </div>
+            <a href="tel:+254754827830" class="call-btn">CALL</a>
+        </div>
 
-      // Purchases table
-      const purchasesTable = document.getElementById("purchasesTable");
-      purchases.slice().reverse().slice(0, 5).forEach(p => {
-        const row = `<tr>
-          <td>${p.subject}</td>
-          <td>${p.price}</td>
-          <td>${p.time}</td>
-          <td>${p.message.slice(0, 30)}...</td>
-        </tr>`;
-        purchasesTable.innerHTML += row;
-      });
+        <div class="contact-item" data-name="badman">
+            <div class="details">
+                <div class="icon">BM</div>
+                <div class="box">
+                    <div class="name">badman</div>
+                    <div class="numbers">+254700277841</div>
+                </div>
+            </div>
+            <a href="tel:+254700277841" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="biashara">
+            <div class="details">
+                <div class="icon">BS</div>
+                <div class="box">
+                    <div class="name">Biashara</div>
+                    <div class="numbers">070-081-2923, 0700 812923</div>
+                </div>
+            </div>
+            <a href="tel:0700812923" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="brayosouth">
+            <div class="details">
+                <div class="icon">BS</div>
+                <div class="box">
+                    <div class="name">brayo south</div>
+                    <div class="numbers">+254717082826</div>
+                </div>
+            </div>
+            <a href="tel:+254717082826" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="childhelpline">
+            <div class="details">
+                <div class="icon">CH</div>
+                <div class="box">
+                    <div class="name">Child helpline</div>
+                    <div class="numbers">116</div>
+                </div>
+            </div>
+            <a href="tel:116" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="cucu">
+            <div class="details">
+                <div class="icon">CU</div>
+                <div class="box">
+                    <div class="name">Cucu</div>
+                    <div class="numbers">078-495-2346</div>
+                </div>
+            </div>
+            <a href="tel:0784952346" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="dad">
+            <div class="details">
+                <div class="icon">DA</div>
+                <div class="box">
+                    <div class="name">DAD <span class="heart">❤️</span></div>
+                    <div class="numbers">+254721155077, 010-144-9730</div>
+                </div>
+            </div>
+            <a href="tel:+254721155077" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="davidkinyua">
+            <div class="details">
+                <div class="icon">DK</div>
+                <div class="box">
+                    <div class="name">David kinyua</div>
+                    <div class="numbers">+254105245610</div>
+                </div>
+            </div>
+            <a href="tel:+254105245610" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="denyz">
+            <div class="details">
+                <div class="icon">DZ</div>
+                <div class="box">
+                    <div class="name">Denyz</div>
+                    <div class="numbers">+254101188322</div>
+                </div>
+            </div>
+            <a href="tel:+254101188322" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="directoryenq">
+            <div class="details">
+                <div class="icon">DE</div>
+                <div class="box">
+                    <div class="name">Directory Enq</div>
+                    <div class="numbers">111</div>
+                </div>
+            </div>
+            <a href="tel:111" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="gitau">
+            <div class="details">
+                <div class="icon">GT</div>
+                <div class="box">
+                    <div class="name">Gitau</div>
+                    <div class="numbers">075-720-3312</div>
+                </div>
+            </div>
+            <a href="tel:0757203312" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="jose">
+            <div class="details">
+                <div class="icon">JO</div>
+                <div class="box">
+                    <div class="name">JOSE</div>
+                    <div class="numbers">073-111-7912</div>
+                </div>
+            </div>
+            <a href="tel:0731117912" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="madamchief">
+            <div class="details">
+                <div class="icon">MC</div>
+                <div class="box">
+                    <div class="name">Madam Chief</div>
+                    <div class="numbers">071-179-3512</div>
+                </div>
+            </div>
+            <a href="tel:0711793512" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="michell">
+            <div class="details">
+                <div class="icon">MI</div>
+                <div class="box">
+                    <div class="name">Michell</div>
+                    <div class="numbers">--</div>
+                </div>
+            </div>
+            <a href="#" class="call-btn">N/A</a>
+        </div>
+
+        <div class="contact-item" data-name="mpesa">
+            <div class="details">
+                <div class="icon">MP</div>
+                <div class="box">
+                    <div class="name">MPESA</div>
+                    <div class="numbers">254781442926, +254119270436</div>
+                </div>
+            </div>
+            <a href="tel:254781442926" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mrkaranja">
+            <div class="details">
+                <div class="icon">MK</div>
+                <div class="box">
+                    <div class="name">Mr Karanja</div>
+                    <div class="numbers">071-633-6618</div>
+                </div>
+            </div>
+            <a href="tel:0716336618" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mrrono">
+            <div class="details">
+                <div class="icon">MR</div>
+                <div class="box">
+                    <div class="name">Mr rono</div>
+                    <div class="numbers">+254716693400</div>
+                </div>
+            </div>
+            <a href="tel:+254716693400" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mrwaruru">
+            <div class="details">
+                <div class="icon">MW</div>
+                <div class="box">
+                    <div class="name">Mr Waruru</div>
+                    <div class="numbers">072-123-6118</div>
+                </div>
+            </div>
+            <a href="tel:0721236118" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mum">
+            <div class="details">
+                <div class="icon">MU</div>
+                <div class="box">
+                    <div class="name">mum <span class="heart">❤️</span></div>
+                    <div class="numbers">079-455-9625, 073-438-3496</div>
+                </div>
+            </div>
+            <a href="tel:0794559625" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mutisowatata">
+            <div class="details">
+                <div class="icon">MT</div>
+                <div class="box">
+                    <div class="name">Muthoni wa tata</div>
+                    <div class="numbers">071-618-8204</div>
+                </div>
+            </div>
+            <a href="tel:0716188204" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="nathan">
+            <div class="details">
+                <div class="icon">NA</div>
+                <div class="box">
+                    <div class="name">Nathan</div>
+                    <div class="numbers">011-341-7171</div>
+                </div>
+            </div>
+            <a href="tel:0113417171" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="nelson">
+            <div class="details">
+                <div class="icon">NE</div>
+                <div class="box">
+                    <div class="name">Nelson</div>
+                    <div class="numbers">073-260-2517</div>
+                </div>
+            </div>
+            <a href="tel:0732602517" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="nyambura">
+            <div class="details">
+                <div class="icon">NY</div>
+                <div class="box">
+                    <div class="name">Nyambura</div>
+                    <div class="numbers">070-729-8327</div>
+                </div>
+            </div>
+            <a href="tel:0707298327" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="pastordennis">
+            <div class="details">
+                <div class="icon">PD</div>
+                <div class="box">
+                    <div class="name">Pastor Dennis</div>
+                    <div class="numbers">076-961-5719</div>
+                </div>
+            </div>
+            <a href="tel:0769615719" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="scotsteve">
+            <div class="details">
+                <div class="icon">SS</div>
+                <div class="box">
+                    <div class="name">Scotsteve</div>
+                    <div class="numbers">079-837-3958</div>
+                </div>
+            </div>
+            <a href="tel:0798373958" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="servicemenu">
+            <div class="details">
+                <div class="icon">SM</div>
+                <div class="box">
+                    <div class="name">Service Menu</div>
+                    <div class="numbers">222</div>
+                </div>
+            </div>
+            <a href="tel:222" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="tatanyambura">
+            <div class="details">
+                <div class="icon">TN</div>
+                <div class="box">
+                    <div class="name">Tata nyambura bushi</div>
+                    <div class="numbers">076-276-8690</div>
+                </div>
+            </div>
+            <a href="tel:0762768690" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="thuku">
+            <div class="details">
+                <div class="icon">TH</div>
+                <div class="box">
+                    <div class="name">thuku</div>
+                    <div class="numbers">079-468-5909</div>
+                </div>
+            </div>
+            <a href="tel:0794685909" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="victor">
+            <div class="details">
+                <div class="icon">VI</div>
+                <div class="box">
+                    <div class="name">Victor</div>
+                    <div class="numbers">073-799-0105</div>
+                </div>
+            </div>
+            <a href="tel:0737990105" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="wapaul">
+            <div class="details">
+                <div class="icon">WP</div>
+                <div class="box">
+                    <div class="name">wa paul</div>
+                    <div class="numbers">078-598-5567</div>
+                </div>
+            </div>
+            <a href="tel:0785985567" class="call-btn">CALL</a>
+        </div>
+        </div>
+</div>
+
+<script>
+    function search() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const items = document.querySelectorAll('.contact-item');
+        
+        items.forEach(item => {
+            const name = item.getAttribute('data-name');
+            const numbers = item.querySelector('.numbers').innerText.toLowerCase();
+            if (name.includes(query) || numbers.includes(query)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
     }
+</script>
 
-    loadDashboard();
-  </script></body>
+</body>
 </html>
