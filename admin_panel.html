@@ -1,236 +1,486 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel - High Stars Aimers</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Directory</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #38bdf8;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
 
-    body {
-      background: radial-gradient(circle at top, #0a0f1f, #000);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-align: center;
-      overflow: hidden;
-    }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
 
-    .container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      padding: 40px;
-      border-radius: 50px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-    }
+        .wrapper {
+            width: 100%;
+            max-width: 480px;
+        }
 
-    /* Rotating glowing border */
-    .container::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: conic-gradient(
-        #ff0000,
-        #ff00ff,
-        #00ffff,
-        #00ff00,
-        #ffff00,
-        #ff0000
-      );
-      animation: rotate 4s linear infinite, pulse 2s ease-in-out infinite;
-      filter: blur(25px);
-      border-radius: 60px;
-      z-index: 0;
-    }
+        .header {
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 10;
+        }
 
-    .container::after {
-      content: '';
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      right: 15px;
-      bottom: 15px;
-      background: rgba(0, 0, 0, 0.85);
-      border-radius: 45px;
-      z-index: 1;
-    }
+        h1 { font-size: 1.5rem; margin-bottom: 15px; color: var(--accent); }
 
-    @keyframes rotate {
-      100% { transform: rotate(360deg); }
-    }
+        #search {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+        }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
-    }
+        #search:focus { border-color: var(--accent); }
 
-    .content {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 600px;
-    }
+        .contact-item {
+            background: var(--card);
+            margin-bottom: 8px;
+            padding: 15px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid transparent;
+        }
 
-    h1 {
-      color: #00f0ff;
-      font-size: 36px;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
-    }
+        .contact-item:hover { border-color: #334155; }
 
-    .panel {
-      margin-top: 30px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
+        .details { display: flex; align-items: center; gap: 15px; overflow: hidden; }
 
-    .panel a {
-      padding: 15px 25px;
-      font-size: 18px;
-      background-color: #00f0ff;
-      color: black;
-      text-decoration: none;
-      border-radius: 30px;
-      width: 250px;
-      text-align: center;
-      font-weight: bold;
-      transition: 0.3s;
-    }
+        .icon {
+            min-width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
 
-    .panel a:hover {
-      background-color: #00c0cc;
-      box-shadow: 0 0 25px #00f0ff;
-      transform: scale(1.05);
-    }
+        .name-box { overflow: hidden; }
 
-    .auth {
-      margin-top: 50px;
-    }
+        .name { font-weight: 600; font-size: 1rem; margin-bottom: 2px; }
 
-    .auth p {
-      margin-bottom: 10px;
-    }
+        .numbers { 
+            font-size: 0.8rem; 
+            color: var(--text-dim); 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-    .password-wrapper {
-      position: relative;
-      display: inline-block;
-      width: 250px;
-    }
+        .call-btn {
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
 
-    .auth input {
-      padding: 10px;
-      font-size: 16px;
-      width: 100%;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: #00f0ff;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .auth button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background: #00f0ff;
-      color: black;
-      border: none;
-      cursor: pointer;
-      border-radius: 25px;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    .auth button:hover {
-      background: #00c0cc;
-      box-shadow: 0 0 20px #00f0ff;
-      transform: scale(1.05);
-    }
-
-    .error {
-      color: red;
-      margin-top: 10px;
-    }
-  </style>
+        .heart { color: #f43f5e; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="content">
-    <h1>High Stars Aimers - Admin Panel</h1>
-
-    <div class="auth" id="auth">
-      <p>Enter Admin Password to Continue:</p>
-      <div class="password-wrapper">
-        <input type="password" id="adminPass" placeholder="Enter password..." />
-        <i class="fas fa-eye toggle-password" onclick="togglePassword('adminPass', this)"></i>
-      </div>
-      <br>
-      <button onclick="checkPassword()">Login</button>
-      <div id="error" class="error"></div>
+<div class="wrapper">
+    <div class="header">
+        <h1>Local Contacts</h1>
+        <input type="text" id="search" placeholder="Search name or number..." onkeyup="search()">
     </div>
 
-    <div class="panel" id="panel">
-      <a href="home.html" target="_blank">🏠 Home</a>
-      <a href="admin_upload.html" target="_blank">⬆️ Upload Content</a>
-      <a href="subscribe.html" target="_blank">⭐ Subscription System</a>
-      <a href="purchase.html" target="_blank">💰 Purchase System</a>
-      <a href="profile.html" target="_blank">👤 Profile Page</a>
-      <a href="contact.html" target="_blank">📞 Contact Page</a>
-      <a href="exam_generator.html" target="_blank">🧠 Exam Generator</a>
-    </div>
-  </div>
+    <div id="list">
+        <div class="contact-item" data-name="antiebeth">
+            <div class="details">
+                <div class="icon">AB</div>
+                <div class="box">
+                    <div class="name">antie beth</div>
+                    <div class="numbers">071-254-1715</div>
+                </div>
+            </div>
+            <a href="tel:0712541715" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="antienjambi">
+            <div class="details">
+                <div class="icon">AN</div>
+                <div class="box">
+                    <div class="name">antie Njambi</div>
+                    <div class="numbers">078-352-9298, +254715925570</div>
+                </div>
+            </div>
+            <a href="tel:0783529298" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="antiepury">
+            <div class="details">
+                <div class="icon">AP</div>
+                <div class="box">
+                    <div class="name">antie pury</div>
+                    <div class="numbers">+254754827830</div>
+                </div>
+            </div>
+            <a href="tel:+254754827830" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="badman">
+            <div class="details">
+                <div class="icon">BM</div>
+                <div class="box">
+                    <div class="name">badman</div>
+                    <div class="numbers">+254700277841</div>
+                </div>
+            </div>
+            <a href="tel:+254700277841" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="biashara">
+            <div class="details">
+                <div class="icon">BS</div>
+                <div class="box">
+                    <div class="name">Biashara</div>
+                    <div class="numbers">070-081-2923, 0700 812923</div>
+                </div>
+            </div>
+            <a href="tel:0700812923" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="brayosouth">
+            <div class="details">
+                <div class="icon">BS</div>
+                <div class="box">
+                    <div class="name">brayo south</div>
+                    <div class="numbers">+254717082826</div>
+                </div>
+            </div>
+            <a href="tel:+254717082826" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="childhelpline">
+            <div class="details">
+                <div class="icon">CH</div>
+                <div class="box">
+                    <div class="name">Child helpline</div>
+                    <div class="numbers">116</div>
+                </div>
+            </div>
+            <a href="tel:116" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="cucu">
+            <div class="details">
+                <div class="icon">CU</div>
+                <div class="box">
+                    <div class="name">Cucu</div>
+                    <div class="numbers">078-495-2346</div>
+                </div>
+            </div>
+            <a href="tel:0784952346" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="dad">
+            <div class="details">
+                <div class="icon">DA</div>
+                <div class="box">
+                    <div class="name">DAD <span class="heart">❤️</span></div>
+                    <div class="numbers">+254721155077, 010-144-9730</div>
+                </div>
+            </div>
+            <a href="tel:+254721155077" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="davidkinyua">
+            <div class="details">
+                <div class="icon">DK</div>
+                <div class="box">
+                    <div class="name">David kinyua</div>
+                    <div class="numbers">+254105245610</div>
+                </div>
+            </div>
+            <a href="tel:+254105245610" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="denyz">
+            <div class="details">
+                <div class="icon">DZ</div>
+                <div class="box">
+                    <div class="name">Denyz</div>
+                    <div class="numbers">+254101188322</div>
+                </div>
+            </div>
+            <a href="tel:+254101188322" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="directoryenq">
+            <div class="details">
+                <div class="icon">DE</div>
+                <div class="box">
+                    <div class="name">Directory Enq</div>
+                    <div class="numbers">111</div>
+                </div>
+            </div>
+            <a href="tel:111" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="gitau">
+            <div class="details">
+                <div class="icon">GT</div>
+                <div class="box">
+                    <div class="name">Gitau</div>
+                    <div class="numbers">075-720-3312</div>
+                </div>
+            </div>
+            <a href="tel:0757203312" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="jose">
+            <div class="details">
+                <div class="icon">JO</div>
+                <div class="box">
+                    <div class="name">JOSE</div>
+                    <div class="numbers">073-111-7912</div>
+                </div>
+            </div>
+            <a href="tel:0731117912" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="madamchief">
+            <div class="details">
+                <div class="icon">MC</div>
+                <div class="box">
+                    <div class="name">Madam Chief</div>
+                    <div class="numbers">071-179-3512</div>
+                </div>
+            </div>
+            <a href="tel:0711793512" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="michell">
+            <div class="details">
+                <div class="icon">MI</div>
+                <div class="box">
+                    <div class="name">Michell</div>
+                    <div class="numbers">--</div>
+                </div>
+            </div>
+            <a href="#" class="call-btn">N/A</a>
+        </div>
+
+        <div class="contact-item" data-name="mpesa">
+            <div class="details">
+                <div class="icon">MP</div>
+                <div class="box">
+                    <div class="name">MPESA</div>
+                    <div class="numbers">254781442926, +254119270436</div>
+                </div>
+            </div>
+            <a href="tel:254781442926" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mrkaranja">
+            <div class="details">
+                <div class="icon">MK</div>
+                <div class="box">
+                    <div class="name">Mr Karanja</div>
+                    <div class="numbers">071-633-6618</div>
+                </div>
+            </div>
+            <a href="tel:0716336618" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mrrono">
+            <div class="details">
+                <div class="icon">MR</div>
+                <div class="box">
+                    <div class="name">Mr rono</div>
+                    <div class="numbers">+254716693400</div>
+                </div>
+            </div>
+            <a href="tel:+254716693400" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mrwaruru">
+            <div class="details">
+                <div class="icon">MW</div>
+                <div class="box">
+                    <div class="name">Mr Waruru</div>
+                    <div class="numbers">072-123-6118</div>
+                </div>
+            </div>
+            <a href="tel:0721236118" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mum">
+            <div class="details">
+                <div class="icon">MU</div>
+                <div class="box">
+                    <div class="name">mum <span class="heart">❤️</span></div>
+                    <div class="numbers">079-455-9625, 073-438-3496</div>
+                </div>
+            </div>
+            <a href="tel:0794559625" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mutisowatata">
+            <div class="details">
+                <div class="icon">MT</div>
+                <div class="box">
+                    <div class="name">Muthoni wa tata</div>
+                    <div class="numbers">071-618-8204</div>
+                </div>
+            </div>
+            <a href="tel:0716188204" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="nathan">
+            <div class="details">
+                <div class="icon">NA</div>
+                <div class="box">
+                    <div class="name">Nathan</div>
+                    <div class="numbers">011-341-7171</div>
+                </div>
+            </div>
+            <a href="tel:0113417171" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="nelson">
+            <div class="details">
+                <div class="icon">NE</div>
+                <div class="box">
+                    <div class="name">Nelson</div>
+                    <div class="numbers">073-260-2517</div>
+                </div>
+            </div>
+            <a href="tel:0732602517" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="nyambura">
+            <div class="details">
+                <div class="icon">NY</div>
+                <div class="box">
+                    <div class="name">Nyambura</div>
+                    <div class="numbers">070-729-8327</div>
+                </div>
+            </div>
+            <a href="tel:0707298327" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="pastordennis">
+            <div class="details">
+                <div class="icon">PD</div>
+                <div class="box">
+                    <div class="name">Pastor Dennis</div>
+                    <div class="numbers">076-961-5719</div>
+                </div>
+            </div>
+            <a href="tel:0769615719" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="scotsteve">
+            <div class="details">
+                <div class="icon">SS</div>
+                <div class="box">
+                    <div class="name">Scotsteve</div>
+                    <div class="numbers">079-837-3958</div>
+                </div>
+            </div>
+            <a href="tel:0798373958" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="servicemenu">
+            <div class="details">
+                <div class="icon">SM</div>
+                <div class="box">
+                    <div class="name">Service Menu</div>
+                    <div class="numbers">222</div>
+                </div>
+            </div>
+            <a href="tel:222" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="tatanyambura">
+            <div class="details">
+                <div class="icon">TN</div>
+                <div class="box">
+                    <div class="name">Tata nyambura bushi</div>
+                    <div class="numbers">076-276-8690</div>
+                </div>
+            </div>
+            <a href="tel:0762768690" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="thuku">
+            <div class="details">
+                <div class="icon">TH</div>
+                <div class="box">
+                    <div class="name">thuku</div>
+                    <div class="numbers">079-468-5909</div>
+                </div>
+            </div>
+            <a href="tel:0794685909" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="victor">
+            <div class="details">
+                <div class="icon">VI</div>
+                <div class="box">
+                    <div class="name">Victor</div>
+                    <div class="numbers">073-799-0105</div>
+                </div>
+            </div>
+            <a href="tel:0737990105" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="wapaul">
+            <div class="details">
+                <div class="icon">WP</div>
+                <div class="box">
+                    <div class="name">wa paul</div>
+                    <div class="numbers">078-598-5567</div>
+                </div>
+            </div>
+            <a href="tel:0785985567" class="call-btn">CALL</a>
+        </div>
+        </div>
 </div>
 
 <script>
-  const correctPassword = "bonimbugua5077";
-
-  function checkPassword() {
-    const input = document.getElementById("adminPass").value;
-    const error = document.getElementById("error");
-    if (input === correctPassword) {
-      document.getElementById("auth").style.display = "none";
-      document.getElementById("panel").style.display = "flex";
-    } else {
-      error.textContent = "Incorrect password!";
+    function search() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const items = document.querySelectorAll('.contact-item');
+        
+        items.forEach(item => {
+            const name = item.getAttribute('data-name');
+            const numbers = item.querySelector('.numbers').innerText.toLowerCase();
+            if (name.includes(query) || numbers.includes(query)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
     }
-  }
-
-  function togglePassword(fieldId, icon) {
-    const field = document.getElementById(fieldId);
-    const type = field.getAttribute("type") === "password" ? "text" : "password";
-    field.setAttribute("type", type);
-    icon.classList.toggle("fa-eye");
-    icon.classList.toggle("fa-eye-slash");
-  }
 </script>
 
 </body>
