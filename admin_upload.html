@@ -3,327 +3,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>High Stars Aimers - Admin Upload</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Digital Directory</title>
     <style>
         :root {
-            --primary-color: #2a2e92;
-            --secondary-color: #00f0ff;
-            --background-dark: #0a0f1f;
-            --card-background: rgba(35, 40, 60, 0.8);
-            --text-light: #e0e0e0;
-            --border-color: rgba(0, 240, 255, 0.2);
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #38bdf8;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
         }
 
-        html, body {
-            height: 100%;
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
             margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', sans-serif;
-            color: var(--text-light);
-            background-color: var(--background-dark);
-        }
-        * { box-sizing: border-box; }
-        h1, h2, h3, h4 { color: var(--secondary-color); margin-bottom: 10px; }
-        a { text-decoration: none; color: var(--secondary-color); }
-        main { display: flex; flex-direction: column; min-height: calc(100vh - 60px); }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: var(--background-dark);
-            border-bottom: 2px solid var(--secondary-color);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            height: 60px;
-        }
-        .header h1 { font-size: 24px; margin: 0; }
-        .header a {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .header a:hover { background-color: #1e2478; }
-
-        .content-area {
-            flex-grow: 1;
-            padding: 40px 20px;
+            padding: 15px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
         }
 
-        .upload-form-container {
+        .wrapper {
             width: 100%;
-            max-width: 600px;
-            background: var(--card-background);
-            border-radius: 10px;
-            padding: 30px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.1);
+            max-width: 480px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        .header {
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 10;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--secondary-color);
-        }
+        h1 { font-size: 1.5rem; margin-bottom: 15px; color: var(--accent); }
 
-        .form-group input[type="text"],
-        .form-group select,
-        .form-group input[type="file"] {
+        #search {
             width: 100%;
-            padding: 12px;
-            background-color: var(--background-dark);
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            color: var(--text-light);
-            font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .form-group input[type="text"]:focus,
-        .form-group select:focus {
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            box-sizing: border-box;
             outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 5px var(--secondary-color);
         }
 
-        .file-input-label {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary-color);
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        #search:focus { border-color: var(--accent); }
+
+        .contact-item {
+            background: var(--card);
+            margin-bottom: 8px;
+            padding: 15px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid transparent;
         }
-        .file-input-label:hover {
-            background-color: #1e2478;
-        }
-        #file-name {
-            margin-top: 10px;
-            font-style: italic;
-            color: #aaa;
-        }
-        input[type="file"] {
-            display: none;
-        }
-        
-        .form-actions {
-            text-align: right;
-            margin-top: 30px;
-        }
-        .form-actions button {
-            padding: 12px 25px;
-            background-color: var(--secondary-color);
-            color: var(--background-dark);
-            font-size: 1rem;
+
+        .contact-item:hover { border-color: #334155; }
+
+        .details { display: flex; align-items: center; gap: 15px; overflow: hidden; }
+
+        .icon {
+            min-width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: transform 0.3s;
+            text-transform: uppercase;
         }
-        .form-actions button:hover {
-            transform: translateY(-3px);
-        }
-        
-        .footer {
-            padding: 20px;
-            background-color: var(--background-dark);
-            text-align: center;
-            border-top: 2px solid var(--secondary-color);
-            color: #aaa;
-        }
-        .social-icons a {
-            margin: 0 10px;
-            font-size: 22px;
-            color: var(--secondary-color);
-            transition: transform 0.3s;
-        }
-        .social-icons a:hover { transform: scale(1.2); }
 
+        .name-box { overflow: hidden; }
+
+        .name { font-weight: 600; font-size: 1rem; margin-bottom: 2px; }
+
+        .numbers { 
+            font-size: 0.8rem; 
+            color: var(--text-dim); 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .call-btn {
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .heart { color: #f43f5e; }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
-            authDomain: "high-stars-aimers-5972f.firebaseapp.com",
-            projectId: "high-stars-aimers-5972f",
-            storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
-            messagingSenderId: "233345875942",
-            appId: "1:233345875942:web:cf7610de84f0b2262ce027",
-            measurementId: "G-X475KTSH5J"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage();
-        const db = firebase.firestore();
-
-        const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Studies", "Technical Drawing", "General Science"];
-        const years = [2024, 2023, 2022, 2021, 2020];
-        const terms = ["Term 1", "Term 2", "Term 3"];
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            const subjectSelect = document.getElementById('subject-select');
-            const yearSelect = document.getElementById('year-select');
-            const termSelect = document.getElementById('term-select');
-            const fileInput = document.getElementById('file-input');
-            const fileNameSpan = document.getElementById('file-name');
-
-            subjects.forEach(subject => {
-                subjectSelect.innerHTML += `<option value="${subject}">${subject}</option>`;
-            });
-            years.forEach(year => {
-                yearSelect.innerHTML += `<option value="${year}">${year}</option>`;
-            });
-            terms.forEach(term => {
-                termSelect.innerHTML += `<option value="${term}">${term}</option>`;
-            });
-
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                fileNameSpan.textContent = file ? file.name : 'No file selected';
-            });
-        });
-
-        function handleUpload(event) {
-            event.preventDefault();
-
-            const form = event.target;
-            const resourceName = form['resource-name'].value;
-            const resourceType = form['resource-type'].value;
-            const subject = form['subject-select'].value;
-            const year = form['year-select'].value;
-            const term = form['term-select'].value;
-            const file = form['file-input'].files[0];
-
-            if (!file) {
-                alert('Please select a file to upload.');
-                return;
-            }
-            if (!resourceName || !resourceType || !subject || !year || !term) {
-                 alert('Please fill out all form fields.');
-                 return;
-            }
-
-            alert('Uploading file...');
-
-            const storageRef = storage.ref();
-            const fileRef = storageRef.child(`resources/${subject}/${year}/${term}/${file.name}`);
-
-            fileRef.put(file).then((snapshot) => {
-                console.log('File uploaded successfully!');
-                snapshot.ref.getDownloadURL().then((downloadURL) => {
-                    console.log('Download URL:', downloadURL);
-
-                    db.collection('resources').add({
-                        name: resourceName,
-                        type: resourceType,
-                        subject: subject,
-                        year: year,
-                        term: term,
-                        url: downloadURL,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }).then(() => {
-                        alert('Resource uploaded successfully!');
-                        form.reset();
-                        document.getElementById('file-name').textContent = 'No file selected';
-                    }).catch(error => {
-                        console.error("Error adding document: ", error);
-                        alert("Error uploading resource metadata.");
-                    });
-                });
-            }).catch(error => {
-                console.error("Error uploading file: ", error);
-                alert("Error uploading file.");
-            });
-        }
-    </script>
 </head>
 <body>
 
+<div class="wrapper">
     <div class="header">
-        <h1>Admin Dashboard</h1>
-        <a href="index.html">
-            <i class="fas fa-arrow-left"></i> Back to Site
-        </a>
+        <h1>Local Contacts</h1>
+        <input type="text" id="search" placeholder="Search name or number..." onkeyup="search()">
     </div>
 
-    <main class="content-area">
-        <div class="upload-form-container">
-            <h2>Upload New Resource</h2>
-            <form onsubmit="handleUpload(event)">
-                <div class="form-group">
-                    <label for="resource-name">Resource Name</label>
-                    <input type="text" id="resource-name" name="resource-name" required>
+    <div id="list">
+        <div class="contact-item" data-name="antiebeth">
+            <div class="details">
+                <div class="icon">AB</div>
+                <div class="box">
+                    <div class="name">antie beth</div>
+                    <div class="numbers">071-254-1715</div>
                 </div>
-                <div class="form-group">
-                    <label for="resource-type">Resource Type</label>
-                    <input type="text" id="resource-type" name="resource-type" required placeholder="e.g., Exam Paper, Notes">
-                </div>
-                <div class="form-group">
-                    <label for="subject-select">Subject</label>
-                    <select id="subject-select" name="subject-select" required>
-                        <option value="" disabled selected>Select a Subject</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="year-select">Year</label>
-                    <select id="year-select" name="year-select" required>
-                        <option value="" disabled selected>Select a Year</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="term-select">Term</label>
-                    <select id="term-select" name="term-select" required>
-                        <option value="" disabled selected>Select a Term</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>File Upload</label>
-                    <label class="file-input-label" for="file-input">
-                        <i class="fas fa-upload"></i> Choose File
-                    </label>
-                    <input type="file" id="file-input" name="file-input" required>
-                    <span id="file-name">No file selected</span>
-                </div>
-                <div class="form-actions">
-                    <button type="submit">
-                        <i class="fas fa-plus"></i> Upload Resource
-                    </button>
-                </div>
-            </form>
+            </div>
+            <a href="tel:0712541715" class="call-btn">CALL</a>
         </div>
-    </main>
 
-    <footer class="footer">
-        <div class="social-icons">
-          <a href="#"><i class="fab fa-facebook"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-youtube"></i></a>
-          <a href="#"><i class="fab fa-tiktok"></i></a>
-          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        <div class="contact-item" data-name="antienjambi">
+            <div class="details">
+                <div class="icon">AN</div>
+                <div class="box">
+                    <div class="name">antie Njambi</div>
+                    <div class="numbers">078-352-9298, +254715925570</div>
+                </div>
+            </div>
+            <a href="tel:0783529298" class="call-btn">CALL</a>
         </div>
-        <div class="footer-links">
-          <a href="#">About Us</a> | <a href="#">FAQs</a> | <a href="#">Terms & Conditions</a>
+
+        <div class="contact-item" data-name="antiepury">
+            <div class="details">
+                <div class="icon">AP</div>
+                <div class="box">
+                    <div class="name">antie pury</div>
+                    <div class="numbers">+254754827830</div>
+                </div>
+            </div>
+            <a href="tel:+254754827830" class="call-btn">CALL</a>
         </div>
-        <p>&copy; 2024 High Stars Aimers. All Rights Reserved.</p>
-    </footer>
+
+        <div class="contact-item" data-name="badman">
+            <div class="details">
+                <div class="icon">BM</div>
+                <div class="box">
+                    <div class="name">badman</div>
+                    <div class="numbers">+254700277841</div>
+                </div>
+            </div>
+            <a href="tel:+254700277841" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="biashara">
+            <div class="details">
+                <div class="icon">BS</div>
+                <div class="box">
+                    <div class="name">Biashara</div>
+                    <div class="numbers">070-081-2923, 0700 812923</div>
+                </div>
+            </div>
+            <a href="tel:0700812923" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="brayosouth">
+            <div class="details">
+                <div class="icon">BS</div>
+                <div class="box">
+                    <div class="name">brayo south</div>
+                    <div class="numbers">+254717082826</div>
+                </div>
+            </div>
+            <a href="tel:+254717082826" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="childhelpline">
+            <div class="details">
+                <div class="icon">CH</div>
+                <div class="box">
+                    <div class="name">Child helpline</div>
+                    <div class="numbers">116</div>
+                </div>
+            </div>
+            <a href="tel:116" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="cucu">
+            <div class="details">
+                <div class="icon">CU</div>
+                <div class="box">
+                    <div class="name">Cucu</div>
+                    <div class="numbers">078-495-2346</div>
+                </div>
+            </div>
+            <a href="tel:0784952346" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="dad">
+            <div class="details">
+                <div class="icon">DA</div>
+                <div class="box">
+                    <div class="name">DAD <span class="heart">❤️</span></div>
+                    <div class="numbers">+254721155077, 010-144-9730</div>
+                </div>
+            </div>
+            <a href="tel:+254721155077" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="davidkinyua">
+            <div class="details">
+                <div class="icon">DK</div>
+                <div class="box">
+                    <div class="name">David kinyua</div>
+                    <div class="numbers">+254105245610</div>
+                </div>
+            </div>
+            <a href="tel:+254105245610" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="denyz">
+            <div class="details">
+                <div class="icon">DZ</div>
+                <div class="box">
+                    <div class="name">Denyz</div>
+                    <div class="numbers">+254101188322</div>
+                </div>
+            </div>
+            <a href="tel:+254101188322" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="directoryenq">
+            <div class="details">
+                <div class="icon">DE</div>
+                <div class="box">
+                    <div class="name">Directory Enq</div>
+                    <div class="numbers">111</div>
+                </div>
+            </div>
+            <a href="tel:111" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="gitau">
+            <div class="details">
+                <div class="icon">GT</div>
+                <div class="box">
+                    <div class="name">Gitau</div>
+                    <div class="numbers">075-720-3312</div>
+                </div>
+            </div>
+            <a href="tel:0757203312" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="jose">
+            <div class="details">
+                <div class="icon">JO</div>
+                <div class="box">
+                    <div class="name">JOSE</div>
+                    <div class="numbers">073-111-7912</div>
+                </div>
+            </div>
+            <a href="tel:0731117912" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="madamchief">
+            <div class="details">
+                <div class="icon">MC</div>
+                <div class="box">
+                    <div class="name">Madam Chief</div>
+                    <div class="numbers">071-179-3512</div>
+                </div>
+            </div>
+            <a href="tel:0711793512" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="michell">
+            <div class="details">
+                <div class="icon">MI</div>
+                <div class="box">
+                    <div class="name">Michell</div>
+                    <div class="numbers">--</div>
+                </div>
+            </div>
+            <a href="#" class="call-btn">N/A</a>
+        </div>
+
+        <div class="contact-item" data-name="mpesa">
+            <div class="details">
+                <div class="icon">MP</div>
+                <div class="box">
+                    <div class="name">MPESA</div>
+                    <div class="numbers">254781442926, +254119270436</div>
+                </div>
+            </div>
+            <a href="tel:254781442926" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mrkaranja">
+            <div class="details">
+                <div class="icon">MK</div>
+                <div class="box">
+                    <div class="name">Mr Karanja</div>
+                    <div class="numbers">071-633-6618</div>
+                </div>
+            </div>
+            <a href="tel:0716336618" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mrrono">
+            <div class="details">
+                <div class="icon">MR</div>
+                <div class="box">
+                    <div class="name">Mr rono</div>
+                    <div class="numbers">+254716693400</div>
+                </div>
+            </div>
+            <a href="tel:+254716693400" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mrwaruru">
+            <div class="details">
+                <div class="icon">MW</div>
+                <div class="box">
+                    <div class="name">Mr Waruru</div>
+                    <div class="numbers">072-123-6118</div>
+                </div>
+            </div>
+            <a href="tel:0721236118" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mum">
+            <div class="details">
+                <div class="icon">MU</div>
+                <div class="box">
+                    <div class="name">mum <span class="heart">❤️</span></div>
+                    <div class="numbers">079-455-9625, 073-438-3496</div>
+                </div>
+            </div>
+            <a href="tel:0794559625" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="mutisowatata">
+            <div class="details">
+                <div class="icon">MT</div>
+                <div class="box">
+                    <div class="name">Muthoni wa tata</div>
+                    <div class="numbers">071-618-8204</div>
+                </div>
+            </div>
+            <a href="tel:0716188204" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="nathan">
+            <div class="details">
+                <div class="icon">NA</div>
+                <div class="box">
+                    <div class="name">Nathan</div>
+                    <div class="numbers">011-341-7171</div>
+                </div>
+            </div>
+            <a href="tel:0113417171" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="nelson">
+            <div class="details">
+                <div class="icon">NE</div>
+                <div class="box">
+                    <div class="name">Nelson</div>
+                    <div class="numbers">073-260-2517</div>
+                </div>
+            </div>
+            <a href="tel:0732602517" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="nyambura">
+            <div class="details">
+                <div class="icon">NY</div>
+                <div class="box">
+                    <div class="name">Nyambura</div>
+                    <div class="numbers">070-729-8327</div>
+                </div>
+            </div>
+            <a href="tel:0707298327" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="pastordennis">
+            <div class="details">
+                <div class="icon">PD</div>
+                <div class="box">
+                    <div class="name">Pastor Dennis</div>
+                    <div class="numbers">076-961-5719</div>
+                </div>
+            </div>
+            <a href="tel:0769615719" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="scotsteve">
+            <div class="details">
+                <div class="icon">SS</div>
+                <div class="box">
+                    <div class="name">Scotsteve</div>
+                    <div class="numbers">079-837-3958</div>
+                </div>
+            </div>
+            <a href="tel:0798373958" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="servicemenu">
+            <div class="details">
+                <div class="icon">SM</div>
+                <div class="box">
+                    <div class="name">Service Menu</div>
+                    <div class="numbers">222</div>
+                </div>
+            </div>
+            <a href="tel:222" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="tatanyambura">
+            <div class="details">
+                <div class="icon">TN</div>
+                <div class="box">
+                    <div class="name">Tata nyambura bushi</div>
+                    <div class="numbers">076-276-8690</div>
+                </div>
+            </div>
+            <a href="tel:0762768690" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="thuku">
+            <div class="details">
+                <div class="icon">TH</div>
+                <div class="box">
+                    <div class="name">thuku</div>
+                    <div class="numbers">079-468-5909</div>
+                </div>
+            </div>
+            <a href="tel:0794685909" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="victor">
+            <div class="details">
+                <div class="icon">VI</div>
+                <div class="box">
+                    <div class="name">Victor</div>
+                    <div class="numbers">073-799-0105</div>
+                </div>
+            </div>
+            <a href="tel:0737990105" class="call-btn">CALL</a>
+        </div>
+
+        <div class="contact-item" data-name="wapaul">
+            <div class="details">
+                <div class="icon">WP</div>
+                <div class="box">
+                    <div class="name">wa paul</div>
+                    <div class="numbers">078-598-5567</div>
+                </div>
+            </div>
+            <a href="tel:0785985567" class="call-btn">CALL</a>
+        </div>
+        </div>
+</div>
+
+<script>
+    function search() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const items = document.querySelectorAll('.contact-item');
+        
+        items.forEach(item => {
+            const name = item.getAttribute('data-name');
+            const numbers = item.querySelector('.numbers').innerText.toLowerCase();
+            if (name.includes(query) || numbers.includes(query)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
