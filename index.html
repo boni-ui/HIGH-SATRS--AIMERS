@@ -3,262 +3,200 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>High Stars Aimers</title>
+  <title>High Stars Aimers | Excellence in Education</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-
-  <!-- PWA manifest (already correct) -->
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#0f172a">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Outfit:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    :root {
+      --primary: #38bdf8;
+      --secondary: #818cf8;
+      --bg-dark: #0f172a;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+    
     html { scroll-behavior: smooth; }
+
     body {
-      background: radial-gradient(circle at top, #0b1530, #000);
-      color:#fff;
-      min-height:100vh;
-      overflow-x:hidden;
-      padding:60px 0;
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-      position:relative;
+      background: radial-gradient(circle at 0% 0%, #1e293b 0%, #0f172a 100%);
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      overflow-x: hidden;
     }
 
-    .star {
-      position:absolute;
-      width:2px;
-      height:2px;
-      background:white;
-      border-radius:50%;
-      opacity:0.7;
-      animation:twinkle 3s infinite ease-in-out;
-    }
-
-    @keyframes twinkle {
-      0%,100% { opacity:0.3; transform:scale(1);}
-      50% { opacity:1; transform:scale(1.4);}
+    /* Subtle Animated Background */
+    .bg-glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+      top: -100px;
+      right: -100px;
+      z-index: 0;
     }
 
     .container {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(20px);
-      border-radius:25px;
-      padding:40px;
-      width:90%;
-      max-width:540px;
-      text-align:center;
-      position:relative;
-      box-shadow:0 0 25px rgba(0,255,255,0.1);
-      border:1px solid rgba(0,255,255,0.2);
-      animation:fadeIn 1.2s ease;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 50px 40px;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      position: relative;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      z-index: 1;
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .container::before {
-      content:'';
-      position:absolute;
-      inset:-3px;
-      border-radius:27px;
-      background: linear-gradient(45deg, #00eaff, #007bff, #00eaff);
-      filter:blur(15px);
-      opacity:0.25;
-      z-index:-1;
-      animation:pulseGlow 5s infinite alternate;
-    }
-
-    @keyframes pulseGlow {
-      0% {opacity:0.15;}
-      100% {opacity:0.4;}
-    }
-
-    @keyframes fadeIn {
-      from {opacity:0; transform:translateY(30px);}
-      to {opacity:1; transform:translateY(0);}
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h1 {
-      font-size:34px;
-      color:#00eaff;
-      font-weight:600;
-      margin-bottom:8px;
-      position:relative;
-      overflow:hidden;
+      font-family: 'Outfit', sans-serif;
+      font-size: 38px;
+      font-weight: 700;
+      background: linear-gradient(to right, #fff, var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      letter-spacing: -1px;
     }
 
-    h1::after {
-      content:'';
-      position:absolute;
-      top:0;
-      left:-100%;
-      width:50%;
-      height:100%;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
-      animation:shine 4s infinite;
+    .subtitle {
+      font-size: 16px;
+      color: #94a3b8;
+      margin-bottom: 30px;
+      font-weight: 300;
     }
 
-    @keyframes shine {
-      0%{left:-100%;}
-      50%{left:120%;}
-      100%{left:-100%;}
+    .hero-img {
+      width: 100%;
+      border-radius: 16px;
+      margin-bottom: 35px;
+      border: 1px solid var(--glass-border);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
 
-    #typing {
-      font-size:16px;
-      color:#00bfff;
-      margin-bottom:25px;
-      min-height:50px;
-      border-right:2px solid #00bfff;
-      white-space:nowrap;
-      overflow:hidden;
+    .hero-img:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
     }
 
-    img {
-      width:100%;
-      border-radius:15px;
-      margin-bottom:25px;
-      box-shadow:0 0 20px rgba(0,234,255,0.25);
-      transition: transform 0.6s ease;
+    /* Professional Grid Layout for Links */
+    .nav-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
     }
 
-    img:hover {
-      transform:scale(1.05) rotateY(5deg);
+    .nav-grid a {
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      color: #e2e8f0;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
     }
 
-    .nav-links {
-      display:flex;
-      flex-direction:column;
-      gap:12px;
+    .nav-grid a i {
+      margin-right: 12px;
+      color: var(--primary);
+      font-size: 18px;
     }
 
-    .nav-links a {
-      position:relative;
-      overflow:hidden;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(0,234,255,0.1);
-      border:1px solid rgba(0,234,255,0.3);
-      color:#00eaff;
-      font-weight:500;
-      text-decoration:none;
-      padding:12px 18px;
-      border-radius:14px;
-      transition: all 0.4s ease;
-      animation:float 4s infinite ease-in-out;
+    .nav-grid a:hover {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: var(--primary);
+      transform: scale(1.02);
+      color: #fff;
     }
 
-    .nav-links a i {
-      margin-right:10px;
-      font-size:17px;
-    }
-
-    .nav-links a::before {
-      content:'';
-      position:absolute;
-      top:0;
-      left:-100%;
-      width:100%;
-      height:100%;
-      background: linear-gradient(90deg, transparent, rgba(0,255,255,0.25), transparent);
-      transition:0.5s;
-    }
-
-    .nav-links a:hover::before { left:100%; }
-
-    .nav-links a:hover {
-      color:#fff;
-      background:linear-gradient(135deg,#00eaff,#007bff);
-      box-shadow:0 0 25px rgba(0,255,255,0.4);
-      transform:scale(1.05);
-    }
-
-    @keyframes float {
-      0%,100%{ transform:translateY(0);}
-      50%{ transform:translateY(-5px);}
-    }
-
-    #feed {
-      max-height:120px;
-      overflow-y:auto;
-      margin-bottom:20px;
-      padding:10px;
-      border:1px solid rgba(0,234,255,0.3);
-      border-radius:12px;
-      background:rgba(0,0,0,0.25);
-      font-size:14px;
-      color:#ccc;
-      text-align:left;
-    }
-
-    #quote {
-      margin-top:15px;
-      font-size:14px;
-      font-style:italic;
-      color:#00eaff;
-      opacity:0.8;
+    /* Full-width special link */
+    .featured-link {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2)) !important;
+      border-color: rgba(56, 189, 248, 0.4) !important;
     }
 
     footer {
-      margin-top:25px;
-      font-size:13px;
-      color:#aaa;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--glass-border);
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.6;
     }
 
-    footer i { color:#00eaff; }
+    .developer-tag {
+      display: block;
+      margin-top: 8px;
+      color: var(--primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 11px;
+    }
 
-    @media(max-width:600px){
-      .container{padding:30px 20px;}
-      h1{font-size:28px;}
-      .nav-links a{font-size:15px; padding:10px 15px;}
+    @media (max-width: 500px) {
+      .nav-grid { grid-template-columns: 1fr; }
+      .featured-link { grid-column: span 1; }
+      .container { padding: 30px 20px; }
+      h1 { font-size: 30px; }
     }
   </style>
 </head>
 
 <body>
-<script>
-for(let i=0;i<50;i++){
-  const s=document.createElement('div');
-  s.classList.add('star');
-  s.style.left=Math.random()*100+'%';
-  s.style.top=Math.random()*100+'%';
-  s.style.animationDelay=Math.random()*3+'s';
-  document.body.appendChild(s);
-}
-</script>
+  <div class="bg-glow"></div>
 
-<div class="container">
-  <h1><i class="fas fa-star"></i> High Stars Aimers</h1>
-  <div id="typing"></div>
+  <div class="container">
+    <header>
+      <h1>High Stars Aimers</h1>
+      <p class="subtitle">Empowering the next generation of scholars</p>
+    </header>
 
-  <img src="https://i.postimg.cc/MpH2Cjc6/file-00000000a8046230bc1b196305d9b3b4-conversation-id-685a6dbd-5aa8-800e-a943-4ac4d1da4bea-message-i.png" alt="Banner">
+    <img src="https://i.postimg.cc/MpH2Cjc6/file-00000000a8046230bc1b196305d9b3b4-conversation-id-685a6dbd-5aa8-800e-a943-4ac4d1da4bea-message-i.png" alt="Education Banner" class="hero-img">
 
-  <div class="nav-links">
-    <a href="signin1.html"><i class="fas fa-book-open"></i> Browse by Subject</a>
-    <a href="signin1.html"><i class="fas fa-file-alt"></i> Browse by Paper</a>
-    <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
-    <a href="contact.html"><i class="fas fa-info-circle"></i> About High Stars</a>
-    <a href="signin1.html"><i class="fas fa-toolbox"></i> Tools & Tips</a>
-    <a href="singin1.html"><i class="fas fa-question-circle"></i> Quiz Corner</a>
-    <a href="calculator.html"><i class="fas fa-calculator"></i> Smart Calculator</a>
-    <a href="timetable.html"><i class="fas fa-clock"></i> Study Timer</a>
-    <a href="signin1.html"><i class="fas fa-folder-open"></i> Resource Hub</a>
-    <a href="achievements.html"><i class="fas fa-trophy"></i> Achievements</a>
+    <div class="nav-grid">
+      <a href="signin1.html"><i class="fas fa-book-open"></i> Subjects</a>
+      <a href="signin1.html"><i class="fas fa-file-signature"></i> Exam Papers</a>
+      <a href="calculator.html"><i class="fas fa-microchip"></i> Smart Calculator</a>
+      <a href="timetable.html"><i class="fas fa-calendar-alt"></i> Study Plan</a>
+      <a href="achievements.html"><i class="fas fa-medal"></i> Leaderboard</a>
+      <a href="contact.html"><i class="fas fa-info-circle"></i> About Us</a>
+      <a href="signin1.html" class="featured-link"><i class="fas fa-layer-group"></i> Access Resource Hub</a>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 High Stars Aimers. All rights reserved.</p>
+      <span class="developer-tag">Developed by Boni Mbugua</span>
+    </footer>
   </div>
 
-  <div id="feed"></div>
-  <div id="quote"></div>
-
-  <footer><i class="fas fa-bolt"></i> Empowering Learners • © 2025 High Stars Aimers</footer>
-</div>
-
-<script>
-/* existing scripts unchanged */
-</script>
 </body>
 </html>
