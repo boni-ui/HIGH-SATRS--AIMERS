@@ -25,222 +25,180 @@ select, input[type="file"], input[type="text"] { width:100%; padding:10px; backg
 button { width:100%; padding:10px; background-color: var(--secondary-color); color:#000; font-weight:bold; cursor:pointer; border:none; transition:0.3s; border-radius:6px; margin-bottom:15px; font-size:16px; }
 button:hover:not(:disabled) { background-color:#03e3f0; transform:scale(1.02); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
-.progress-bar { width: 0; height: 8px; background-color: var(--secondary-color); border-radius: 4px; margin-top: 10px; transition: width 0.3s; }
+.progress-container { width: 100%; background-color: #151a2f; border-radius: 4px; margin-top: 10px; }
+.progress-bar { width: 0%; height: 8px; background-color: var(--secondary-color); border-radius: 4px; transition: width 0.3s; }
 .footer { text-align:center; padding:20px; border-top:2px solid var(--secondary-color); color:#aaa; margin-top:40px; }
-.status-box { padding: 10px; border-radius: 6px; margin-top: 15px; text-align: center; }
+.status-box { padding: 10px; border-radius: 6px; margin-top: 15px; text-align: center; font-size: 14px; }
 .status-info { background-color: rgba(0, 240, 255, 0.1); border: 1px solid var(--secondary-color); }
-.status-error { background-color: rgba(255, 0, 0, 0.1); border: 1px solid red; color: red; }
-.status-success { background-color: rgba(0, 255, 0, 0.1); border: 1px solid limegreen; color: limegreen; }
+.status-error { background-color: rgba(255, 0, 0, 0.1); border: 1px solid red; color: #ff6b6b; }
+.status-success { background-color: rgba(0, 255, 0, 0.1); border: 1px solid limegreen; color: #51cf66; }
 </style>
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, collection, onSnapshot, setDoc, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
-
-        // Environment Globals
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db, auth, storage;
-        let userId = null;
-        const publicDataPath = `/artifacts/${appId}/public/data`;
-        const subjectsCollectionPath = `${publicDataPath}/subjects`;
-        const papersCollectionPath = `${publicDataPath}/papers`;
-
-        // UI Elements
-        const uploadForm = document.getElementById("uploadForm");
-        const progressBar = document.getElementById("progressBar");
-        const uploadStatus = document.getElementById("uploadStatus");
-        const subjectSelect = document.getElementById("subject");
-        const uploadButton = uploadForm.querySelector('button[type="submit"]');
-
-        // --- Utility Functions ---
-        const showStatus = (message, type = 'info') => {
-            uploadStatus.textContent = message;
-            uploadStatus.className = `status-box status-${type}`;
-            console.log(`[Status ${type.toUpperCase()}]: ${message}`);
-        };
-
-        // --- Initialization ---
-        const initFirebase = async () => {
-            try {
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                storage = getStorage(app);
-                setLogLevel('Debug');
-
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user && !user.isAnonymous) {
-                        userId = user.uid;
-                        showStatus(`Authenticated as ${userId}. Ready to upload.`, 'success');
-                        uploadButton.disabled = false;
-                        loadSubjects();
-                    } else {
-                        // Redirect or disable form if not a proper user
-                        userId = null;
-                        showStatus("Please sign in with a registered account on the Home page to upload content.", 'error');
-                        uploadButton.disabled = true;
-                    }
-                });
-
-            } catch (error) {
-                console.error("Initialization Error:", error);
-                showStatus(`Initialization Error: ${error.message}`, 'error');
-            }
-        };
-
-        // --- Load Subjects for Dropdown ---
-        const loadSubjects = () => {
-            const q = collection(db, subjectsCollectionPath);
-            onSnapshot(q, (snapshot) => {
-                subjectSelect.innerHTML = '<option value="" disabled selected>-- Select Subject --</option>';
-                snapshot.forEach((doc) => {
-                    const subject = doc.data();
-                    const option = document.createElement('option');
-                    option.value = subject.slug;
-                    option.textContent = subject.name;
-                    subjectSelect.appendChild(option);
-                });
-            }, (error) => {
-                showStatus("Failed to load subjects. Check console.", 'error');
-                console.error("Error loading subjects:", error);
-            });
-        };
-
-        // --- Upload Handler ---
-        uploadForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            if (!userId) {
-                showStatus("Error: You must be logged in to upload.", 'error');
-                return;
-            }
-
-            uploadButton.disabled = true;
-            
-            const type = document.getElementById("uploadType").value;
-            const subjectSlug = document.getElementById("subject").value;
-            const formLevel = document.getElementById("form").value;
-            const title = document.getElementById("title").value;
-            const file = document.getElementById("file").files[0];
-
-            if (!type || !subjectSlug || !formLevel || !file || !title) { 
-                showStatus("Please fill all fields.", 'error'); 
-                uploadButton.disabled = false;
-                return;
-            }
-
-            const fileExtension = file.name.split('.').pop();
-            const uniqueId = doc(collection(db, papersCollectionPath)).id;
-            const storagePath = `uploads/${type}/${subjectSlug}/${formLevel}/${uniqueId}.${fileExtension}`;
-            
-            const storageRef = ref(storage, storagePath);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-
-            uploadTask.on('state_changed', 
-                (snapshot) => {
-                    // Observe state change events such as progress, pause, and resume
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressBar.style.width = `${progress}%`;
-                    showStatus(`Uploading... ${Math.round(progress)}%`, 'info');
-                }, 
-                (error) => {
-                    // Handle unsuccessful uploads
-                    showStatus(`❌ Upload Failed: ${error.message}`, 'error');
-                    uploadButton.disabled = false;
-                }, 
-                async () => {
-                    // Handle successful uploads on complete
-                    try {
-                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                        
-                        // 2. Save metadata to Firestore
-                        const paperDoc = {
-                            paperId: uniqueId,
-                            title: title,
-                            type: type, // 'notes' or 'papers'
-                            subjectRef: subjectSlug,
-                            form: formLevel,
-                            pdfUrl: downloadURL,
-                            uploadDate: new Date().toISOString(),
-                            uploadedBy: userId,
-                        };
-
-                        await setDoc(doc(db, papersCollectionPath, uniqueId), paperDoc);
-                        
-                        showStatus(`✅ File uploaded and metadata saved successfully!`, 'success');
-                        uploadForm.reset();
-                        progressBar.style.width = "0%";
-                    } catch (dbError) {
-                         showStatus(`❌ Metadata Save Failed: ${dbError.message}`, 'error');
-                    } finally {
-                        uploadButton.disabled = false;
-                    }
-                }
-            );
-        });
-
-        window.onload = initFirebase;
-    </script>
 </head>
 <body>
+
 <div class="header">
   <h1>High Stars Aimers</h1>
   <a href="index.html"><i class="fas fa-arrow-left"></i> Back Home</a>
 </div>
 
 <main>
-  <h2>Upload Portal</h2>
+  <h2>Admin Upload Portal</h2>
   <div class="upload-card">
     <form id="uploadForm">
       
-      <!-- New field for document Title -->
       <label for="title">Document Title:</label>
-      <input type="text" id="title" placeholder="e.g., Form 3 Algebra Notes" required>
+      <input type="text" id="title" placeholder="e.g., Mathematics Paper 1 Revision" required>
 
-      <label for="uploadType">Select Upload Type:</label>
+      <label for="uploadType">Folder Category:</label>
       <select id="uploadType" required>
-        <option value="">-- Select Type --</option>
-        <option value="notes">Notes</option>
-        <option value="papers">Papers</option>
+        <option value="revision_papers">Revision Papers</option>
+        <option value="subject_notes">Subject Notes</option>
       </select>
 
       <label for="subject">Select Subject:</label>
-      <!-- Subjects are now loaded dynamically from Firestore -->
       <select id="subject" required>
-        <option value="" disabled selected>-- Loading Subjects... --</option>
+        <option value="" disabled selected>-- Select Subject --</option>
+        <option value="Mathematics">Mathematics</option>
+        <option value="English">English</option>
+        <option value="Kiswahili">Kiswahili</option>
+        <option value="Chemistry">Chemistry</option>
+        <option value="Physics">Physics</option>
+        <option value="Biology">Biology</option>
+        <option value="Geography">Geography</option>
+        <option value="History">History</option>
+        <option value="CRE">CRE</option>
+        <option value="Business Studies">Business Studies</option>
+        <option value="Agriculture">Agriculture</option>
+        <option value="Computer Studies">Computer Studies</option>
       </select>
 
       <label for="form">Select Form:</label>
       <select id="form" required>
-        <option value="">-- Select Form --</option>
         <option value="Form 1">Form 1</option>
         <option value="Form 2">Form 2</option>
         <option value="Form 3">Form 3</option>
         <option value="Form 4">Form 4</option>
       </select>
 
-      <label for="file">Choose File (PDF):</label>
+      <label for="file">Choose PDF File:</label>
       <input type="file" id="file" accept=".pdf" required>
 
-      <div class="progress-bar" id="progressBar"></div>
-      <p id="uploadStatus" class="status-box status-info">Initializing application and checking user status...</p>
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      
+      <p id="uploadStatus" class="status-box status-info">Checking connection...</p>
 
-      <button type="submit" disabled>Upload File</button>
+      <button type="submit" id="uploadBtn" disabled>Upload to Firebase</button>
     </form>
   </div>
 </main>
 
 <footer class="footer">
-  &copy; 2025 High Stars Aimers. All Rights Reserved.
+  &copy; 2026 High Stars Aimers. Admin Access Only.
 </footer>
 
+<script type="module">
+    // Import required Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
+    // Your Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:cf7610de84f0b2262ce027"
+    };
+
+    // Initialize Firebase Services
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const uploadForm = document.getElementById("uploadForm");
+    const progressBar = document.getElementById("progressBar");
+    const uploadStatus = document.getElementById("uploadStatus");
+    const uploadButton = document.getElementById("uploadBtn");
+
+    const showStatus = (msg, type) => {
+        uploadStatus.textContent = msg;
+        uploadStatus.className = `status-box status-${type}`;
+    };
+
+    // Attempt Anonymous Sign-in
+    signInAnonymously(auth).catch(e => showStatus("Connection Error: " + e.message, "error"));
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            showStatus("System Ready. Authenticated.", "success");
+            uploadButton.disabled = false;
+        }
+    });
+
+    // Handle the actual Upload
+    uploadForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        const title = document.getElementById("title").value;
+        const type = document.getElementById("uploadType").value;
+        const subject = document.getElementById("subject").value;
+        const form = document.getElementById("form").value;
+        const file = document.getElementById("file").files[0];
+
+        if (!file) return;
+
+        uploadButton.disabled = true;
+        const fileExt = file.name.split('.').pop();
+        
+        // STEP 1: Define the organized Storage path
+        const storagePath = `${type}/${subject}/${form}/${title}.${fileExt}`;
+        const storageRef = ref(storage, storagePath);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on('state_changed', 
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                progressBar.style.width = progress + "%";
+                showStatus(`Uploading... ${Math.round(progress)}%`, "info");
+            }, 
+            (error) => {
+                showStatus("Upload Failed: " + error.message, "error");
+                uploadButton.disabled = false;
+            }, 
+            async () => {
+                try {
+                    // STEP 2: Get the download URL
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    
+                    // STEP 3: Save Metadata to Firestore
+                    const docId = Date.now().toString(); // Unique ID for each entry
+                    await setDoc(doc(db, "papers", docId), {
+                        title: title,
+                        category: type,
+                        subject: subject,
+                        form: form,
+                        url: downloadURL,
+                        timestamp: new Date().toISOString()
+                    });
+
+                    showStatus("✅ Upload Successful! The resource is now live.", "success");
+                    uploadForm.reset();
+                    setTimeout(() => { progressBar.style.width = "0%"; }, 2000);
+                } catch (err) {
+                    showStatus("File uploaded but Database record failed: " + err.message, "error");
+                } finally {
+                    uploadButton.disabled = false;
+                }
+            }
+        );
+    });
+</script>
+
+</body>
+</html>
