@@ -6,67 +6,271 @@
   <title>Revision Papers | High Stars Aimers</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root { --primary: #00f0ff; --bg: #0a0f1f; --card: rgba(35, 40, 60, 0.8); }
-    body { font-family: 'Segoe UI', sans-serif; color: #e0e0e0; background-color: var(--bg); margin:0; }
-    .header { padding: 15px 20px; background: var(--bg); border-bottom: 2px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
-    .header h1 { margin: 0; font-size: 1.5rem; color: white; }
-    main { padding: 30px; display: flex; flex-direction: column; align-items: center; gap: 25px; }
-    h2 { color: var(--primary); }
-    .subjects-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; width: 100%; max-width: 900px; }
-    .subject-card { background: var(--card); padding: 25px; border-radius: 12px; text-align: center; border: 1px solid rgba(0, 240, 255, 0.1); cursor: pointer; position: relative; transition: 0.3s; }
-    .subject-card:hover { border-color: var(--primary); transform: translateY(-5px); }
-    .dropdown { display: none; position: absolute; top: 105%; left: 50%; transform: translateX(-50%); background: #161b2d; border: 1px solid var(--primary); border-radius: 8px; width: 180px; z-index: 100; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-    .dropdown a { display: block; color: white; padding: 12px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .dropdown a:last-child { border: none; }
-    .dropdown a:hover { background: var(--primary); color: black; }
-    .subject-card.active .dropdown { display: block; }
-    .footer { text-align: center; padding: 20px; color: #666; }
+    :root {
+      --primary: #00f0ff;
+      --secondary: #7000ff;
+      --bg: #050a18;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --text: #e0e0e0;
+    }
+
+    * { box-sizing: border-box; transition: all 0.3s ease; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top right, #101835, var(--bg));
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* --- Header --- */
+    .header {
+      padding: 1rem 5%;
+      background: rgba(10, 15, 31, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header h1 {
+      font-size: 1.4rem;
+      background: linear-gradient(to right, #fff, var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+
+    .nav-link {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-link:hover { color: var(--primary); }
+
+    /* --- Main Content --- */
+    main {
+      padding: 40px 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-section { text-align: center; margin-bottom: 40px; }
+    .hero-section h2 { font-size: 2.5rem; margin-bottom: 10px; letter-spacing: -1px; }
+
+    /* --- Search Bar --- */
+    .search-container {
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    #subjectSearch {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px 25px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: var(--card-bg);
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    #subjectSearch:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
+
+    /* --- Grid --- */
+    .subjects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .subject-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(5px);
+      padding: 30px 20px;
+      border-radius: 20px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .subject-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-10px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .subject-card i {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* --- Modal System (Replaces Dropdowns) --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: #161b2d;
+      padding: 30px;
+      border-radius: 24px;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid var(--primary);
+      text-align: center;
+    }
+
+    .form-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .form-btn {
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .form-btn:hover {
+      background: var(--primary);
+      color: #000;
+    }
+
+    .close-modal {
+      margin-top: 20px;
+      display: inline-block;
+      color: #888;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    footer { text-align: center; padding: 40px; opacity: 0.5; font-size: 0.9rem; }
   </style>
 </head>
 <body>
+
   <div class="header">
     <h1>High Stars Aimers</h1>
-    <a href="home.html" style="color:white; text-decoration:none;"><i class="fas fa-home"></i> Home</a>
+    <a href="home.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
   </div>
 
   <main>
-    <h2>Revision Papers</h2>
-    <div class="subjects-container">
-      
-      <script>
-        const subjects = [
-          { name: "Mathematics", icon: "fa-square-root-alt" },
-          { name: "English", icon: "fa-book" },
-          { name: "Kiswahili", icon: "fa-language" },
-          { name: "Physics", icon: "fa-atom" },
-          { name: "Chemistry", icon: "fa-flask" },
-          { name: "Biology", icon: "fa-dna" },
-          { name: "Geography", icon: "fa-globe-africa" },
-          { name: "History", icon: "fa-landmark" },
-          { name: "CRE", icon: "fa-cross" },
-          { name: "Business Studies", icon: "fa-briefcase" },
-          { name: "Agriculture", icon: "fa-seedling" },
-          { name: "Computer Studies", icon: "fa-laptop-code" }
-        ];
+    <section class="hero-section">
+      <h2>Revision Papers</h2>
+      <p>Select a subject to begin your revision journey</p>
+    </section>
 
-        subjects.forEach(sub => {
-          document.write(`
-            <div class="subject-card" onclick="this.classList.toggle('active')">
-              <i class="fas ${sub.icon} fa-3x" style="color:var(--primary)"></i>
-              <h3>${sub.name}</h3>
-              <div class="dropdown">
-                <a href="view-resources.html?type=revision_papers&subject=${sub.name}&form=Form 1">Form 1</a>
-                <a href="view-resources.html?type=revision_papers&subject=${sub.name}&form=Form 2">Form 2</a>
-                <a href="view-resources.html?type=revision_papers&subject=${sub.name}&form=Form 3">Form 3</a>
-                <a href="view-resources.html?type=revision_papers&subject=${sub.name}&form=Form 4">Form 4</a>
-              </div>
-            </div>
-          `);
-        });
-      </script>
-
+    <div class="search-container">
+      <input type="text" id="subjectSearch" placeholder="Search for a subject (e.g. Physics)...">
     </div>
+
+    <div class="subjects-grid" id="subjectsGrid">
+      </div>
   </main>
-  <footer class="footer">&copy; 2026 High Stars Aimers</footer>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <h3 id="modalTitle">Subject Name</h3>
+      <div class="form-list">
+        <a href="#" class="form-btn" id="linkF1">Form 1</a>
+        <a href="#" class="form-btn" id="linkF2">Form 2</a>
+        <a href="#" class="form-btn" id="linkF3">Form 3</a>
+        <a href="#" class="form-btn" id="linkF4">Form 4</a>
+      </div>
+      <span class="close-modal" onclick="closeModal()">Close Window</span>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 High Stars Aimers | Excellence Guaranteed</footer>
+
+  <script>
+    const subjects = [
+      { name: "Mathematics", icon: "fa-square-root-alt" },
+      { name: "English", icon: "fa-book" },
+      { name: "Kiswahili", icon: "fa-language" },
+      { name: "Physics", icon: "fa-atom" },
+      { name: "Chemistry", icon: "fa-flask" },
+      { name: "Biology", icon: "fa-dna" },
+      { name: "Geography", icon: "fa-globe-africa" },
+      { name: "History", icon: "fa-landmark" },
+      { name: "CRE", icon: "fa-cross" },
+      { name: "Business Studies", icon: "fa-briefcase" },
+      { name: "Agriculture", icon: "fa-seedling" },
+      { name: "Computer Studies", icon: "fa-laptop-code" }
+    ];
+
+    const grid = document.getElementById('subjectsGrid');
+    const searchInput = document.getElementById('subjectSearch');
+    const modal = document.getElementById('modalOverlay');
+
+    function renderSubjects(filter = '') {
+      grid.innerHTML = '';
+      const filtered = subjects.filter(s => s.name.toLowerCase().includes(filter.toLowerCase()));
+      
+      filtered.forEach(sub => {
+        const card = document.createElement('div');
+        card.className = 'subject-card';
+        card.innerHTML = `
+          <i class="fas ${sub.icon}"></i>
+          <h3>${sub.name}</h3>
+        `;
+        card.onclick = () => openModal(sub.name);
+        grid.appendChild(card);
+      });
+    }
+
+    function openModal(subject) {
+      document.getElementById('modalTitle').innerText = subject;
+      // Update links
+      [1,2,3,4].forEach(num => {
+        document.getElementById(`linkF${num}`).href = `view-resources.html?type=revision_papers&subject=${subject}&form=Form ${num}`;
+      });
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = (event) => {
+      if (event.target == modal) closeModal();
+    }
+
+    // Search functionality
+    searchInput.oninput = (e) => renderSubjects(e.target.value);
+
+    // Initial Render
+    renderSubjects();
+  </script>
 </body>
 </html>
