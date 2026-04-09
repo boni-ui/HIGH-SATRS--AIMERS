@@ -7,12 +7,12 @@
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
 
   <style>
     :root {
-      /* 1. Professional Color Palette */
       --primary: #2563eb;
       --primary-glow: rgba(37, 99, 235, 0.2);
       --secondary: #7c3aed;
@@ -28,7 +28,6 @@
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* 2. Dark Mode Support */
     @media (prefers-color-scheme: dark) {
       :root {
         --bg: #020617;
@@ -39,10 +38,7 @@
       }
     }
 
-    /* 3. Smooth Scrolling & Selection */
     html { scroll-behavior: smooth; }
-    ::selection { background: var(--primary); color: white; }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
@@ -54,7 +50,6 @@
       min-height: 100vh;
     }
 
-    /* 4. Modern Glassmorphism Header */
     .header {
       background: var(--card-bg);
       backdrop-filter: blur(12px);
@@ -75,20 +70,9 @@
       background: linear-gradient(45deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      display: flex; align-items: center; gap: 0.75rem;
     }
 
-    /* 5. Animated Notifications Dot */
-    .nav-actions { display: flex; gap: 1rem; align-items: center; }
-    .notif-btn { position: relative; cursor: pointer; color: var(--text-muted); }
-    .notif-btn::after {
-        content: ''; position: absolute; top: -2px; right: -2px;
-        width: 8px; height: 8px; background: #ef4444; border-radius: 50%;
-    }
-
-    /* Layout */
     .dashboard-grid {
       max-width: 1300px;
       margin: 2rem auto;
@@ -98,7 +82,6 @@
       padding: 0 1.5rem;
     }
 
-    /* 6. Profile Sidebar Improvements */
     .user-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -110,11 +93,9 @@
       top: 100px;
     }
 
-    /* 7. Avatar Ring Effect */
     .profile-img-container {
       position: relative;
-      width: 110px;
-      height: 110px;
+      width: 110px; height: 110px;
       margin: 0 auto 1.5rem;
       padding: 5px;
       border: 2px dashed var(--primary);
@@ -122,185 +103,65 @@
     }
 
     .user-card img {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       border-radius: 50%;
       object-fit: cover;
-      transition: var(--transition);
+      background: var(--bg);
     }
 
-    .user-card img:hover { transform: scale(1.05); cursor: pointer; }
-
-    /* 8. Modern Typography */
-    .user-card h3 { font-size: 1.25rem; letter-spacing: -0.02em; }
-    .user-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem; }
-
-    /* 9. High-Contrast Buttons */
     .btn {
-      width: 100%;
-      padding: 0.8rem;
+      width: 100%; padding: 0.8rem;
       border-radius: var(--radius-md);
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
+      font-weight: 600; cursor: pointer; border: none;
       transition: var(--transition);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
     }
 
-    .btn-primary { 
-        background: var(--primary); 
-        color: white; 
-        box-shadow: 0 4px 14px 0 var(--primary-glow);
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text-main); margin-top: 0.75rem; }
 
-    .btn-outline { 
-        background: transparent; 
-        border: 1.5px solid var(--border); 
-        color: var(--text-main); 
-        margin-top: 0.75rem;
-    }
-    .btn-outline:hover { background: var(--border); }
-
-    /* 10. Section Title with Decorative Line */
-    .resource-section h2 {
-      font-size: 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .resource-section h2::after {
-        content: ''; flex: 1; height: 1px; background: var(--border);
-    }
-
-    /* 11. Interactive Grid */
     .resource-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
     }
 
-    /* 12. Enhanced Card Design */
     .resource-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 1.75rem;
-      text-decoration: none;
-      color: inherit;
+      text-decoration: none; color: inherit;
       transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      position: relative;
-      overflow: hidden;
+      display: flex; flex-direction: column; gap: 1rem;
     }
 
-    /* 13. Hover Glow Effect */
-    .resource-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-5px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-    }
+    .resource-card:hover { border-color: var(--primary); transform: translateY(-5px); }
 
-    /* 14. Custom Icon Containers */
     .icon-box {
-      width: 48px;
-      height: 48px;
+      width: 48px; height: 48px;
       background: linear-gradient(135deg, var(--primary-glow), transparent);
-      color: var(--primary);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
+      color: var(--primary); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
     }
 
-    /* 15. Dynamic Badges */
-    .status-badge {
-      font-size: 0.7rem;
-      background: #fef3c7;
-      color: #92400e;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    /* 16. Skeleton Loader (Concept) */
-    .loading-pulse { animation: pulse 2s infinite; }
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-
-    /* Footer */
-    footer {
-      margin-top: 5rem;
-      padding: 4rem 2rem;
-      background: var(--card-bg);
-      border-top: 1px solid var(--border);
-      text-align: center;
-    }
-
-    /* 17. Social Icon Floating Animation */
-    .social-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
-    .social-links a { 
-        color: var(--text-muted); 
-        font-size: 1.5rem; 
-        transition: var(--transition); 
-    }
-    .social-links a:hover { color: var(--primary); transform: translateY(-3px); }
-
-    /* 18. Micro-interactions for Modals */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(2, 6, 23, 0.8);
-      backdrop-filter: blur(8px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      position: fixed; inset: 0; background: rgba(2, 6, 23, 0.8);
+      backdrop-filter: blur(8px); display: none;
+      justify-content: center; align-items: center; z-index: 2000;
     }
-
-    .modal-overlay.active { display: flex; opacity: 1; }
+    .modal-overlay.active { display: flex; }
 
     .modal-content {
-      background: var(--card-bg);
-      padding: 3rem;
-      border-radius: 24px;
-      width: 90%;
-      max-width: 450px;
-      text-align: center;
-      border: 1px solid var(--border);
-      transform: scale(0.9);
-      transition: var(--transition);
+      background: var(--card-bg); padding: 3rem; border-radius: 24px;
+      width: 90%; max-width: 450px; text-align: center; border: 1px solid var(--border);
     }
 
-    .modal-overlay.active .modal-content { transform: scale(1); }
+    footer { margin-top: 5rem; padding: 4rem 2rem; text-align: center; }
+    .social-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
+    .social-links a { color: var(--text-muted); font-size: 1.5rem; }
 
-    /* 19. Custom Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-    /* 20. Advanced Responsive Design */
-    @media (max-width: 1024px) {
-      .dashboard-grid { grid-template-columns: 1fr; }
-      .user-card { position: relative; top: 0; }
-    }
-
-    @media (max-width: 640px) {
-      .header { padding: 1rem; }
-      .brand span { display: none; } /* Show only icon on small phones */
-      .resource-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -313,7 +174,7 @@
   <div class="nav-actions">
     <div class="notif-btn"><i class="far fa-bell fa-lg"></i></div>
     <div style="width: 35px; height: 35px; background: var(--border); border-radius: 50%; overflow: hidden;">
-        <img src="https://via.placeholder.com/35" class="small-avatar" alt="User">
+        <img id="topNavAvatar" src="https://via.placeholder.com/35" alt="User">
     </div>
   </div>
 </header>
@@ -321,12 +182,11 @@
 <main class="dashboard-grid">
   <aside class="profile-sidebar">
     <div class="user-card">
-      <div class="profile-img-container" title="Click to change photo">
-        <img id="userProfilePic" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile">
-        <input type="file" id="imageUpload" accept="image/*" style="display:none;">
+      <div class="profile-img-container">
+        <img id="userProfilePic" src="https://api.dicebear.com/7.x/initials/svg?seed=User" alt="Profile">
       </div>
-      <h3 id="welcomeMessage">Loading Profile...</h3>
-      <p id="userEmail">Securing connection...</p>
+      <h3 id="welcomeMessage">Verifying...</h3>
+      <p id="userEmail">Please wait...</p>
       
       <button class="btn btn-primary" id="viewProfileButton">
         <i class="fas fa-user-circle"></i> Profile Settings
@@ -338,47 +198,32 @@
   </aside>
 
   <section class="resource-section">
-    <h2>Academic Dashboard</h2>
+    <h2 style="display:flex; align-items:center; gap:10px; margin-bottom: 20px;">
+        Academic Dashboard <div style="flex:1; height:1px; background:var(--border)"></div>
+    </h2>
     <div class="resource-grid">
       <a href="subjects.html" class="resource-card">
         <div class="icon-box"><i class="fas fa-graduation-cap"></i></div>
-        <div>
-          <h4>Academic Subjects</h4>
-          <p>Master STEM and Humanities with expert-curated notes.</p>
-        </div>
+        <h4>Academic Subjects</h4>
+        <p>Master STEM and Humanities with expert-curated notes.</p>
       </a>
       
       <a href="papers.html" class="resource-card">
         <div class="icon-box"><i class="fas fa-layer-group"></i></div>
-        <div>
-          <h4>Past Papers Archive</h4>
-          <p>Access to quality revision papers</p>
-        </div>
+        <h4>Past Papers Archive</h4>
+        <p>Access to quality revision papers for all forms.</p>
       </a>
 
-      <div class="resource-card">
-        <div class="status-badge" style="position:absolute; top:1.5rem; right:1.5rem;">Coming Soon</div>
+      <div class="resource-card" style="opacity: 0.7;">
         <div class="icon-box"><i class="fas fa-laptop-code"></i></div>
-        <div>
-          <h4>Interactive Quizzes</h4>
-          <p>Test your knowledge with AI-driven adaptive testing.</p>
-        </div>
-      </div>
-
-      <div class="resource-card">
-        <div class="icon-box"><i class="fas fa-stopwatch"></i></div>
-        <div>
-          <h4>Revision Timer</h4>
-          <p>Use the Pomodoro technique to stay focused longer.</p>
-        </div>
+        <h4>Interactive Quizzes</h4>
+        <p>Test your knowledge with adaptive testing (Coming Soon).</p>
       </div>
 
       <a href="contact.html" class="resource-card">
         <div class="icon-box"><i class="fas fa-headset"></i></div>
-        <div>
-          <h4>Expert Support</h4>
-          <p>Connect with Boni Mbugua for personalized guidance.</p>
-        </div>
+        <h4>Expert Support</h4>
+        <p>Connect with Boni Mbugua for personalized guidance.</p>
       </a>
     </div>
   </section>
@@ -386,67 +231,75 @@
 
 <footer>
   <div class="social-links">
-    <a href="https://facebook.com" title="Facebook"><i class="fab fa-facebook"></i></a>
-    <a href="https://instagram.com/boni.mbugua" title="Instagram"><i class="fab fa-instagram"></i></a>
-    <a href="https://x.com/mbugua_bon60636" title="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
-    <a href="https://youtube.com/@boniMbugua" title="YouTube"><i class="fab fa-youtube"></i></a>
-    <a href="https://wa.me/254762187843" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="#"><i class="fab fa-facebook"></i></a>
+    <a href="https://instagram.com/boni.mbugua"><i class="fab fa-instagram"></i></a>
+    <a href="https://wa.me/254762187843"><i class="fab fa-whatsapp"></i></a>
   </div>
-  <p class="footer-credit">
-    &copy; 2026 <strong>High Stars Aimers</strong>. Built with precision by <span class="dev-name" style="color:var(--primary)">Boni Mbugua</span>
-  </p>
+  <p>&copy; 2026 <strong>High Stars Aimers</strong>. Built by <span style="color:var(--primary)">Boni Mbugua</span></p>
 </footer>
 
 <div id="profileModal" class="modal-overlay">
   <div class="modal-content">
-    <div style="text-align: right; margin-top: -1.5rem;">
-        <button id="closeModal" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-muted)">&times;</button>
+    <div style="text-align: right;">
+        <button id="closeModal" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
     </div>
-    <img id="modalPic" src="" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1.5rem; border: 4px solid var(--primary-glow);">
-    <h3 id="modalName" style="margin-bottom: 0.5rem;"></h3>
+    <img id="modalPic" src="" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem;">
+    <h3 id="modalName"></h3>
     <p id="modalEmail" style="color: var(--text-muted); margin-bottom: 2rem;"></p>
-    <div style="display: flex; gap: 10px;">
-        <button class="btn btn-primary">Edit Info</button>
-        <button class="btn btn-outline" onclick="document.getElementById('profileModal').classList.remove('active')">Back</button>
-    </div>
+    <button class="btn btn-outline" onclick="document.getElementById('profileModal').classList.remove('active')">Close</button>
   </div>
 </div>
 
 <script>
-// Logic remains functional with the new styles
-const auth = { onAuthStateChanged: (cb) => { 
-    setTimeout(() => cb({
-        displayName: 'Boni Mbugua', 
-        email: 'mbugua.dev@aimers.com',
-        photoURL: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'
-    }), 800); 
-}};
+// 1. Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+  authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+  projectId: "high-stars-aimers-5972f",
+  storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+  messagingSenderId: "233345875942",
+  appId: "1:233345875942:web:cf7610de84f0b2262ce027"
+};
 
-document.addEventListener("DOMContentLoaded", () => {
-    const pic = document.getElementById("userProfilePic");
-    const upload = document.getElementById("imageUpload");
-    const modal = document.getElementById("profileModal");
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
-    auth.onAuthStateChanged(user => {
-        if(user){
-            document.getElementById("welcomeMessage").innerText = user.displayName;
-            document.getElementById("userEmail").innerText = user.email;
-            pic.src = user.photoURL || pic.src;
-            document.querySelector(".small-avatar").src = user.photoURL;
+// 2. Auth Listener
+auth.onAuthStateChanged(user => {
+    if (user) {
+        // A user is signed in
+        const name = user.displayName || user.email.split('@')[0];
+        const initial = name.charAt(0).toUpperCase();
+        const fallbackAvatar = `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
 
-            document.getElementById("viewProfileButton").onclick = () => {
-                modal.classList.add("active");
-                document.getElementById("modalPic").src = user.photoURL || pic.src;
-                document.getElementById("modalName").innerText = user.displayName;
-                document.getElementById("modalEmail").innerText = user.email;
-            };
-        }
-    });
+        // Update UI elements
+        document.getElementById("welcomeMessage").innerText = `Hello, ${name}`;
+        document.getElementById("userEmail").innerText = user.email;
+        
+        const userPhoto = user.photoURL || fallbackAvatar;
+        document.getElementById("userProfilePic").src = userPhoto;
+        document.getElementById("topNavAvatar").src = userPhoto;
 
-    pic.onclick = () => upload.click();
-    document.getElementById("closeModal").onclick = () => modal.classList.remove("active");
-    window.onclick = e => { if(e.target === modal) modal.classList.remove("active"); };
+        // Modal Logic
+        document.getElementById("viewProfileButton").onclick = () => {
+            document.getElementById("profileModal").classList.add("active");
+            document.getElementById("modalPic").src = userPhoto;
+            document.getElementById("modalName").innerText = name;
+            document.getElementById("modalEmail").innerText = user.email;
+        };
+    } else {
+        // No user is signed in, redirect to login page
+        window.location.href = "signin1.html"; 
+    }
 });
+
+// 3. Buttons & Modals
+document.getElementById("signOutButton").onclick = () => auth.signOut();
+document.getElementById("closeModal").onclick = () => document.getElementById("profileModal").classList.remove("active");
+
+window.onclick = (e) => {
+    if (e.target.id === "profileModal") document.getElementById("profileModal").classList.remove("active");
+};
 </script>
 
 </body>
