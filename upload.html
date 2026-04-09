@@ -218,12 +218,22 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); }
         }
     };
 
-    // 2. AUTH STATE PROTECTION
+    // 2. AUTH STATE PROTECTION (THE GATEKEEPER)
+    const ADMIN_EMAIL = "bonimbugua13@gmail.com";
+
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            loginOverlay.style.display = 'none';
-            portalContent.style.display = 'block';
+            if (user.email === ADMIN_EMAIL) {
+                // Verified: Show the portal
+                loginOverlay.style.display = 'none';
+                portalContent.style.display = 'block';
+            } else {
+                // Imposter: Kick them out
+                alert("Unauthorized Access: This portal is for " + ADMIN_EMAIL + " only.");
+                signOut(auth);
+            }
         } else {
+            // Logged out: Show login screen
             loginOverlay.style.display = 'flex';
             portalContent.style.display = 'none';
         }
