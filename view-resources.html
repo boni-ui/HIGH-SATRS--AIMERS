@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Stars Aimers | Resources</title>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getStorage, ref, listAll, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+
+        // 1. YOUR API CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+            authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+            projectId: "high-stars-aimers-5972f",
+            storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+            messagingSenderId: "233345875942",
+            appId: "1:233345875942:web:cf7610de84f0b2262ce027",
+            measurementId: "G-X475KTSH5J"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+
+        // 2. GET PARAMETERS FROM DROPDOWN
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type');       // revision_papers OR subject_notes
+        const subject = urlParams.get('subject'); // e.g., Biology
+        const form = urlParams.get('form');       // e.g., Form 1
+
+        // UI Setup
+        const listContainer = document.getElementById('fileList');
+        const titleElement = document.getElementById('pageTitle');
+        
+        if (type && subject && form) {
+            titleElement.innerText = `${subject} - ${form}`;
+            
+            // 3. BUILD UNIVERSAL PATH
+            // Structure: folder_category / Subject / Form X
+            const fetchPath = `${type}/${subject}/${form}`;
+            const storageRef = ref(storage, fetchPath);
+
+            // 4. FETCH FILES
+            listAll(storageRef).then((res) => {
+                listContainer.innerHTML = ""; // Clear loading msg
+
+                if (res.items.length === 0) {
+                    listContainer.innerHTML = "<p class='msg'>No documents uploaded yet for this section.</p>";
+                    return;
+                }
+
+                res.items.forEach((itemRef) => {
+                    getDownloadURL(itemRef).then((url) => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        
+                        // We use itemRef.name to show the "Document Title" you wrote in Admin
+                        fileItem.innerHTML = `
+                            <span class="file-name">${itemRef.name}</span>
+                            <a href="${url}" target="_blank" class="view-btn">VIEW</a>
+                        `;
+                        listContainer.appendChild(fileItem);
+                    });
+                });
+            }).catch((error) => {
+                console.error(error);
+                listContainer.innerHTML = "<p class='msg'>Error connecting to library.</p>";
+            });
+        }
+    </script>
+
+    <style>
+        body { font-family: sans-serif; background: #0a0f1f; color: white; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 { color: #00f0ff; text-align: center; border-bottom: 2px solid #00f0ff; padding-bottom: 10px; }
+        .file-item { 
+            background: #161b2d; 
+            margin: 10px 0; 
+            padding: 15px; 
+            border-radius: 8px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+        .file-name { font-weight: bold; font-size: 1.1rem; }
+        .view-btn { 
+            background: #00f0ff; 
+            color: black; 
+            text-decoration: none; 
+            padding: 8px 15px; 
+            border-radius: 5px; 
+            font-weight: bold; 
+        }
+        .msg { text-align: center; color: #888; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="pageTitle">Loading...</h1>
+        <div id="fileList"><p class="msg">Searching library...</p></div>
+    </div>
+</body>
+</html>
