@@ -3,323 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>High Stars Aimers - Subjects</title>
+  <title>Revision Papers | High Stars Aimers</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --primary-color: #2a2e92;
-      --secondary-color: #00f0ff;
-      --background-dark: #0a0f1f;
-      --card-background: rgba(35, 40, 60, 0.8);
-      --text-light: #e0e0e0;
-      --border-color: rgba(0, 240, 255, 0.2);
-    }
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      color: var(--text-light);
-      background-color: var(--background-dark);
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: var(--background-dark);
-      border-bottom: 2px solid var(--secondary-color);
-    }
-    .navigation {
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      padding: 15px 0;
-      background-color: var(--background-dark);
-      border-bottom: 2px solid var(--secondary-color);
-      position: sticky;
-      top: 0;
-      z-index: 9999;
-    }
-    .navigation a {
-      color: var(--text-light);
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.2s;
-    }
-    .navigation a:hover {
-      color: var(--secondary-color);
-    }
-    main {
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 25px;
-    }
-    h2 {
-      color: var(--secondary-color);
-    }
-    .subjects-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
-      width: 100%;
-      max-width: 900px;
-      position: relative;
-      z-index: 0;
-    }
-    .subject-card {
-      background: var(--card-background);
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      border: 1px solid var(--border-color);
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
-      position: relative;
-      overflow: visible;
-      z-index: 1;
-    }
-    .subject-card.active {
-      z-index: 10000;
-    }
-    .subject-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2);
-    }
-    .subject-card h3 {
-      color: var(--secondary-color);
-      margin: 10px 0;
-    }
-    .dropdown {
-      display: none;
-      position: absolute;
-      top: 105%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(15, 20, 40, 0.97);
-      border: 1px solid var(--secondary-color);
-      border-radius: 10px;
-      padding: 8px 0;
-      width: 200px;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-      z-index: 10001;
-      animation: fadeIn 0.25s ease;
-      pointer-events: auto;
-    }
-    .dropdown a {
-      display: block;
-      color: var(--text-light);
-      padding: 10px;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-    .dropdown a:hover {
-      background: rgba(0, 240, 255, 0.2);
-      color: var(--secondary-color);
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, 10px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
-    }
-    .footer {
-      text-align: center;
-      padding: 20px;
-      border-top: 2px solid var(--secondary-color);
-      color: #aaa;
-    }
+    :root { --primary: #00f0ff; --bg: #0a0f1f; --card: rgba(35, 40, 60, 0.8); }
+    body { font-family: 'Segoe UI', sans-serif; color: #e0e0e0; background-color: var(--bg); margin:0; }
+    .header { padding: 15px 20px; background: var(--bg); border-bottom: 2px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { margin: 0; font-size: 1.5rem; color: white; }
+    main { padding: 30px; display: flex; flex-direction: column; align-items: center; gap: 25px; }
+    h2 { color: var(--primary); }
+    .subjects-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; width: 100%; max-width: 900px; }
+    .subject-card { background: var(--card); padding: 25px; border-radius: 12px; text-align: center; border: 1px solid rgba(0, 240, 255, 0.1); cursor: pointer; position: relative; transition: 0.3s; }
+    .subject-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+    .dropdown { display: none; position: absolute; top: 105%; left: 50%; transform: translateX(-50%); background: #161b2d; border: 1px solid var(--primary); border-radius: 8px; width: 180px; z-index: 100; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+    .dropdown a { display: block; color: white; padding: 12px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .dropdown a:last-child { border: none; }
+    .dropdown a:hover { background: var(--primary); color: black; }
+    .subject-card.active .dropdown { display: block; }
+    .footer { text-align: center; padding: 20px; color: #666; }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <div class="header">
     <h1>High Stars Aimers</h1>
-  </div>
-
-  <!-- Navigation -->
-  <div class="navigation">
-    <a href="home.html"><i class="fas fa-home"></i> Home</a>
-    <a href="papers.html"><i class="fas fa-file-alt"></i> Papers View</a>
-    <a href="#">Subjects</a>
+    <a href="home.html" style="color:white; text-decoration:none;"><i class="fas fa-home"></i> Home</a>
   </div>
 
   <main>
-    <h2>Select a Subject</h2>
+    <h2>Revision Papers</h2>
     <div class="subjects-container">
+      
+      <script>
+        const subjects = [
+          { name: "Mathematics", icon: "fa-square-root-alt" },
+          { name: "English", icon: "fa-book" },
+          { name: "Kiswahili", icon: "fa-language" },
+          { name: "Physics", icon: "fa-atom" },
+          { name: "Chemistry", icon: "fa-flask" },
+          { name: "Biology", icon: "fa-dna" },
+          { name: "Geography", icon: "fa-globe-africa" },
+          { name: "History", icon: "fa-landmark" },
+          { name: "CRE", icon: "fa-cross" },
+          { name: "Business Studies", icon: "fa-briefcase" },
+          { name: "Agriculture", icon: "fa-seedling" },
+          { name: "Computer Studies", icon: "fa-laptop-code" }
+        ];
 
-      <!-- Mathematics -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-square-root-alt fa-3x"></i>
-        <h3>Mathematics</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=math&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=math&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=math&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=math&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- English -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-book fa-3x"></i>
-        <h3>English</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=eng&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=eng&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=eng&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=eng&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Kiswahili -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-language fa-3x"></i>
-        <h3>Kiswahili</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=kis&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=kis&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=kis&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=kis&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Physics -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-atom fa-3x"></i>
-        <h3>Physics</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=phy&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=phy&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=phy&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=phy&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Chemistry -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-flask fa-3x"></i>
-        <h3>Chemistry</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=chem&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=chem&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=chem&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=chem&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Biology -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-dna fa-3x"></i>
-        <h3>Biology</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=bio&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=bio&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=bio&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=bio&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Geography -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-globe-africa fa-3x"></i>
-        <h3>Geography</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=geo&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=geo&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=geo&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=geo&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- History -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-landmark fa-3x"></i>
-        <h3>History</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=hist&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=hist&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=hist&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=hist&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- CRE -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-cross fa-3x"></i>
-        <h3>CRE</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=cre&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=cre&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=cre&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=cre&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Business Studies -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-briefcase fa-3x"></i>
-        <h3>Business Studies</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=bus&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=bus&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=bus&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=bus&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Agriculture -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-seedling fa-3x"></i>
-        <h3>Agriculture</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=agr&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=agr&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=agr&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=agr&frm=f4">Form 4</a>
-        </div>
-      </div>
-
-      <!-- Computer Studies -->
-      <div class="subject-card" onclick="toggleDropdown(this)">
-        <i class="fas fa-laptop-code fa-3x"></i>
-        <h3>Computer Studies</h3>
-        <div class="dropdown">
-          <a href="pp-view.html?sub=comp&frm=f1">Form 1</a>
-          <a href="pp-view.html?sub=comp&frm=f2">Form 2</a>
-          <a href="pp-view.html?sub=comp&frm=f3">Form 3</a>
-          <a href="pp-view.html?sub=comp&frm=f4">Form 4</a>
-        </div>
-      </div>
+        subjects.forEach(sub => {
+          document.write(`
+            <div class="subject-card" onclick="this.classList.toggle('active')">
+              <i class="fas ${sub.icon} fa-3x" style="color:var(--primary)"></i>
+              <h3>${sub.name}</h3>
+              <div class="dropdown">
+                <a href="view-resources.html?type=revision_papers&subject=${sub.name}&form=Form 1">Form 1</a>
+                <a href="view-resources.html?type=revision_papers&subject=${sub.name}&form=Form 2">Form 2</a>
+                <a href="view-resources.html?type=revision_papers&subject=${sub.name}&form=Form 3">Form 3</a>
+                <a href="view-resources.html?type=revision_papers&subject=${sub.name}&form=Form 4">Form 4</a>
+              </div>
+            </div>
+          `);
+        });
+      </script>
 
     </div>
   </main>
-
-  <footer class="footer">
-    &copy; 2025 High Stars Aimers. All Rights Reserved.
-  </footer>
-
-  <script>
-    function toggleDropdown(card) {
-      const dropdowns = document.querySelectorAll('.dropdown');
-      const cards = document.querySelectorAll('.subject-card');
-      dropdowns.forEach(d => d.style.display = 'none');
-      cards.forEach(c => c.classList.remove('active'));
-      const dropdown = card.querySelector('.dropdown');
-      if (dropdown.style.display === 'block') {
-        dropdown.style.display = 'none';
-        card.classList.remove('active');
-      } else {
-        dropdown.style.display = 'block';
-        card.classList.add('active');
-      }
-    }
-
-    window.addEventListener('click', function(e) {
-      if (!e.target.closest('.subject-card')) {
-        document.querySelectorAll('.dropdown').forEach(d => d.style.display = 'none');
-        document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('active'));
-      }
-    });
-  </script>
+  <footer class="footer">&copy; 2026 High Stars Aimers</footer>
 </body>
 </html>
