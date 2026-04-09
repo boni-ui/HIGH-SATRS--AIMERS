@@ -17,8 +17,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
         color: white;
+        padding: 20px 0;
     }
     .signup-container {
         position: relative;
@@ -115,6 +116,43 @@
         background: #00c0cc;
         box-shadow: 0 0 20px #00f0ff;
     }
+
+    /* Google Sign In Styling */
+    .divider {
+        margin: 20px 0;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: #666;
+    }
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #444;
+    }
+    .divider:not(:empty)::before { margin-right: .25em; }
+    .divider:not(:empty)::after { margin-left: .25em; }
+
+    .google-btn {
+        width: 100%;
+        padding: 10px;
+        background: white;
+        border-radius: 25px;
+        border: none;
+        color: #000;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .google-btn:hover {
+        background: #eee;
+        transform: scale(1.02);
+    }
+
     .message {
         margin-top: 15px;
         font-size: 14px;
@@ -155,6 +193,13 @@
             <input type="submit" value="Sign Up">
         </form>
 
+        <div class="divider">OR</div>
+
+        <button class="google-btn" id="googleBtn">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+            Continue with Google
+        </button>
+
         <p class="message" id="signupMsg"></p>
 
         <a class="back-link" href="signin1.html">Already have an account? Sign In</a>
@@ -162,7 +207,6 @@
 </div>
 
 <script>
-    // Simple DOM manipulation is fine outside the module block
     function togglePassword(fieldId, icon) {
         const field = document.getElementById(fieldId);
         const type = field.getAttribute("type") === "password" ? "text" : "password";
@@ -173,15 +217,15 @@
 </script>
 
 <script type="module">
-    // --- Firebase Modular Imports (v9+) ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { 
         getAuth, 
         createUserWithEmailAndPassword, 
-        sendEmailVerification 
+        sendEmailVerification,
+        GoogleAuthProvider,
+        signInWithPopup 
     } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-    // --- YOUR NEW FIREBASE CONFIGURATION ---
     const firebaseConfig = {
       apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
       authDomain: "high-stars-aimers-5972f.firebaseapp.com",
@@ -192,14 +236,26 @@
       measurementId: "G-JEV6M3EP1D"
     };
 
-    // --- Initialization ---
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app); 
+    const googleProvider = new GoogleAuthProvider();
     
-    // --- Global exposure for HTML inline events ---
     window.registerUser = registerUser;
 
-    // --- Core Logic ---
+    // --- Google Sign In Logic ---
+    document.getElementById('googleBtn').onclick = () => {
+        signInWithPopup(auth, googleProvider)
+            .then(() => {
+                window.location.href = "index.html"; // Redirect to dashboard
+            })
+            .catch((error) => {
+                const message = document.getElementById("signupMsg");
+                message.style.color = "red";
+                message.textContent = error.message;
+            });
+    };
+
+    // --- Standard Signup Logic ---
     function registerUser() {
         const email = document.getElementById("newEmail").value.trim();
         const password = document.getElementById("newPassword").value;
@@ -219,7 +275,7 @@
                 const user = userCredential.user;
                 sendEmailVerification(user).then(() => {
                     message.style.color = "green";
-                    message.textContent = "Account created successfully! A verification email has been sent. Please check your inbox and log in on the Sign In page after verifying.";
+                    message.textContent = "Account created successfully! Check your email to verify your account before logging in.";
                     
                     document.getElementById("newEmail").value = '';
                     document.getElementById("newPassword").value = '';
@@ -228,21 +284,10 @@
             })
             .catch((error) => {
                 message.style.color = "red";
-                let errorMessage = "An unknown error occurred. Please try again.";
-                switch(error.code) {
-                  case 'auth/email-already-in-use':
-                    errorMessage = 'This email is already registered. Try logging in.';
-                    break;
-                  case 'auth/invalid-email':
-                    errorMessage = 'The email address is not valid.';
-                    break;
-                  case 'auth/weak-password':
-                    errorMessage = 'Password is too weak. It must be at least 6 characters.';
-                    break;
-                  default:
-                    console.error('Signup error:', error.message);
-                    errorMessage = error.message; 
-                }
+                let errorMessage = error.message;
+                if(error.code === 'auth/email-already-in-use') errorMessage = 'Email already registered.';
+                if(error.code === 'auth/weak-password') errorMessage = 'Password must be at least 6 characters.';
+                
                 message.textContent = errorMessage;
             });
 
