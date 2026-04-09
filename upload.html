@@ -20,15 +20,12 @@
 
 html, body { margin:0; padding:0; font-family:'Inter', 'Segoe UI', sans-serif; background-color: var(--background-dark); color: var(--text-light); }
 
-/* Navigation Tabs */
 .nav-container {
     display: flex;
     justify-content: center;
     background: #151a2f;
     border-bottom: 2px solid var(--secondary-color);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    position: sticky; top: 0; z-index: 1000;
 }
 .nav-tab {
     padding: 15px 30px;
@@ -45,11 +42,9 @@ html, body { margin:0; padding:0; font-family:'Inter', 'Segoe UI', sans-serif; b
 .tab-content { display: none; padding: 20px; }
 .tab-content.active { display: block; }
 
-/* Header Styling */
 .header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background-color: var(--background-dark); }
 .header a { color:white; text-decoration:none; }
 
-/* Upload Section Styling */
 main { padding:30px; max-width:700px; margin:0 auto; }
 h2 { color: var(--secondary-color); margin-bottom:20px; text-align:center; }
 .upload-card { background: var(--card-background); padding:25px 30px; border-radius:10px; border:1px solid var(--border-color); box-shadow:0 4px 12px rgba(0,240,255,0.1); }
@@ -59,11 +54,9 @@ button { width:100%; padding:10px; background-color: var(--secondary-color); col
 button:hover:not(:disabled) { background-color:#03e3f0; transform:scale(1.02); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Progress Bar */
 .progress-container { width: 100%; background-color: #151a2f; border-radius: 4px; margin-top: 10px; }
 .progress-bar { width: 0%; height: 8px; background-color: var(--secondary-color); border-radius: 4px; transition: width 0.3s; }
 
-/* Dashboard / File Manager Styling */
 .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
 .stats-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
 .file-card {
@@ -73,8 +66,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   padding: 1rem 1.25rem;
   margin-bottom: 0.75rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; align-items: center;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 .file-info { display: flex; align-items: center; gap: 1rem; }
@@ -84,19 +76,11 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-delete {
   background: rgba(220, 38, 38, 0.1);
   color: #ff6b6b;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
+  width: 35px; height: 35px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;
 }
 .btn-delete:hover { background: var(--danger); color: white; }
-.loading-spinner { text-align: center; padding: 3rem; color: #aaa; }
 
-/* Status Boxes */
 .status-box { padding: 10px; border-radius: 6px; margin-top: 15px; text-align: center; font-size: 14px; }
 .status-info { background-color: rgba(0, 240, 255, 0.1); border: 1px solid var(--secondary-color); }
 .status-error { background-color: rgba(255, 0, 0, 0.1); border: 1px solid red; color: #ff6b6b; }
@@ -108,8 +92,8 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 <body>
 
 <div class="nav-container">
-    <div class="nav-tab active" onclick="openTab('upload-tab')"><i class="fas fa-upload"></i> Upload File</div>
-    <div class="nav-tab" onclick="openTab('manager-tab')"><i class="fas fa-folder-open"></i> File Manager</div>
+    <div class="nav-tab active" onclick="openTab('upload-tab')"><i class="fas fa-upload"></i> Upload Portal</div>
+    <div class="nav-tab" onclick="openTab('manager-tab')"><i class="fas fa-folder-open"></i> Manage Files</div>
 </div>
 
 <div class="header">
@@ -133,7 +117,6 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
         <label for="subject">Select Subject:</label>
         <select id="subject" required>
-          <option value="" disabled selected>-- Select Subject --</option>
           <option value="Mathematics">Mathematics</option>
           <option value="English">English</option>
           <option value="Kiswahili">Kiswahili</option>
@@ -163,7 +146,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
           <div class="progress-bar" id="progressBar"></div>
         </div>
         
-        <p id="uploadStatus" class="status-box status-info">Checking connection...</p>
+        <p id="uploadStatus" class="status-box status-info">Waiting for Auth...</p>
         <button type="submit" id="uploadBtn" disabled>Upload to Firebase</button>
       </form>
     </div>
@@ -174,16 +157,16 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   <div class="container">
     <div class="stats-bar">
       <div>
-        <h3 id="folderTitle">Firebase Storage Explorer</h3>
-        <p id="fileCount" style="font-size: 0.85rem; color: #aaa;">Select a category to scan...</p>
+        <h3>Stored Resources</h3>
+        <p id="fileCount" style="font-size: 0.85rem; color: #aaa;">Scanning...</p>
       </div>
       <button class="btn" style="background:var(--secondary-color); color:black; border-radius:8px; padding:8px 15px;" id="refreshBtn">
-        <i class="fas fa-sync-alt"></i> Refresh List
+        <i class="fas fa-sync-alt"></i> Refresh
       </button>
     </div>
 
     <div style="margin-bottom: 20px;">
-        <label>View Folder:</label>
+        <label>Category Filter:</label>
         <select id="viewFolder">
             <option value="revision_papers">Revision Papers</option>
             <option value="subject_notes">Subject Notes</option>
@@ -191,22 +174,18 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
     </div>
 
     <div id="fileList">
-      <div class="loading-spinner">
-        <p>Please log in or select a category to view files.</p>
-      </div>
+      <div class="status-box status-info">Loading files...</div>
     </div>
   </div>
 </div>
 
-<footer class="footer">
-  &copy; 2026 High Stars Aimers. Admin Access Only.
-</footer>
+<footer class="footer">&copy; 2026 High Stars Aimers. Admin Access Only.</footer>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, deleteDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
@@ -222,7 +201,6 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // DOM Elements
     const uploadForm = document.getElementById("uploadForm");
     const progressBar = document.getElementById("progressBar");
     const uploadStatus = document.getElementById("uploadStatus");
@@ -230,33 +208,25 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
     const fileListElement = document.getElementById('fileList');
     const fileCountElement = document.getElementById('fileCount');
     const viewFolderSelect = document.getElementById('viewFolder');
-    const refreshBtn = document.getElementById('refreshBtn');
 
-    // Tab Logic
     window.openTab = (tabId) => {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         event.currentTarget.classList.add('active');
-        if(tabId === 'manager-tab') listFiles();
+        if(tabId === 'manager-tab') fetchFiles();
     };
 
-    const showStatus = (msg, type) => {
-        uploadStatus.textContent = msg;
-        uploadStatus.className = `status-box status-${type}`;
-    };
-
-    signInAnonymously(auth).catch(e => showStatus("Connection Error: " + e.message, "error"));
-
+    signInAnonymously(auth).catch(e => console.error("Auth failed", e));
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            showStatus("System Ready. Authenticated.", "success");
+            uploadStatus.textContent = "Authenticated. Ready.";
+            uploadStatus.className = "status-box status-success";
             uploadButton.disabled = false;
-            listFiles();
+            fetchFiles();
         }
     });
 
-    // UPLOAD LOGIC
     uploadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const title = document.getElementById("title").value;
@@ -265,67 +235,45 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
         const form = document.getElementById("form").value;
         const file = document.getElementById("file").files[0];
 
-        if (!file) return;
         uploadButton.disabled = true;
         const storagePath = `${type}/${subject}/${form}/${title}.pdf`;
         const storageRef = ref(storage, storagePath);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadTask.on('state_changed', 
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                progressBar.style.width = progress + "%";
-                showStatus(`Uploading... ${Math.round(progress)}%`, "info");
-            }, 
-            (error) => {
-                showStatus("Upload Failed: " + error.message, "error");
-                uploadButton.disabled = false;
-            }, 
+            (snap) => progressBar.style.width = (snap.bytesTransferred / snap.totalBytes) * 100 + "%",
+            (err) => { alert(err.message); uploadButton.disabled = false; },
             async () => {
-                try {
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    const docId = Date.now().toString();
-                    await setDoc(doc(db, "papers", docId), {
-                        title: title,
-                        category: type,
-                        subject: subject,
-                        form: form,
-                        url: downloadURL,
-                        storagePath: storagePath, // Storing path to make deletion easier
-                        timestamp: new Date().toISOString()
-                    });
-                    showStatus("✅ Upload Successful!", "success");
-                    uploadForm.reset();
-                    setTimeout(() => { progressBar.style.width = "0%"; }, 2000);
-                    if(document.getElementById('manager-tab').classList.contains('active')) listFiles();
-                } catch (err) {
-                    showStatus("Database record failed: " + err.message, "error");
-                } finally {
-                    uploadButton.disabled = false;
-                }
+                const url = await getDownloadURL(uploadTask.snapshot.ref);
+                const docId = Date.now().toString();
+                await setDoc(doc(db, "papers", docId), {
+                    title, category: type, subject, form, url, storagePath, timestamp: new Date().toISOString()
+                });
+                alert("Upload Success!");
+                uploadForm.reset();
+                progressBar.style.width = "0%";
+                uploadButton.disabled = false;
+                fetchFiles();
             }
         );
     });
 
-    // FILE MANAGER LOGIC
-    async function listFiles() {
-        const folder = viewFolderSelect.value;
-        fileListElement.innerHTML = `<div class="loading-spinner"><i class="fas fa-circle-notch fa-spin fa-2x"></i><p>Scanning ${folder}...</p></div>`;
+    async function fetchFiles() {
+        const category = viewFolderSelect.value;
+        fileListElement.innerHTML = '<div class="status-box status-info">Scanning Database...</div>';
         
         try {
-            // We fetch from Firestore to get clean metadata
-            const q = query(collection(db, "papers"), where("category", "==", folder));
-            const querySnapshot = await getDocs(q);
-            
+            const q = query(collection(db, "papers"), where("category", "==", category));
+            const snap = await getDocs(q);
             fileListElement.innerHTML = '';
-            fileCountElement.innerText = `${querySnapshot.size} records found in ${folder}`;
+            fileCountElement.innerText = `${snap.size} files found`;
 
-            if (querySnapshot.empty) {
-                fileListElement.innerHTML = `<div style="text-align:center; padding: 3rem; color: #aaa;"><p>No files found in this category.</p></div>`;
+            if (snap.empty) {
+                fileListElement.innerHTML = '<div class="status-box">No files found for this category.</div>';
                 return;
             }
 
-            querySnapshot.forEach((docSnap) => {
+            snap.forEach((docSnap) => {
                 const data = docSnap.data();
                 const card = document.createElement('div');
                 card.className = 'file-card';
@@ -334,45 +282,30 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
                     <div class="file-icon"><i class="fas fa-file-pdf"></i></div>
                     <div>
                       <div class="file-name">${data.title}</div>
-                      <div class="file-path">${data.subject} - ${data.form}</div>
+                      <div class="file-path">${data.subject} | ${data.form}</div>
                     </div>
                   </div>
-                  <button class="btn-delete" data-id="${docSnap.id}" data-path="${data.storagePath || ''}" title="Delete">
+                  <button class="btn-delete" onclick="window.removeFile('${docSnap.id}', '${data.storagePath}')">
                     <i class="fas fa-trash-alt"></i>
                   </button>
                 `;
                 fileListElement.appendChild(card);
             });
-
-            // Add delete events
-            document.querySelectorAll('.btn-delete').forEach(btn => {
-                btn.onclick = () => deleteFile(btn.getAttribute('data-id'), btn.getAttribute('data-path'));
-            });
-
-        } catch (error) {
-            fileListElement.innerHTML = `<p style="color:red; text-align:center;">Error: ${error.message}</p>`;
-        }
+        } catch (e) { console.error(e); }
     }
 
-    async function deleteFile(docId, storagePath) {
-        if (confirm("Delete this file permanently?")) {
+    window.removeFile = async (docId, storagePath) => {
+        if(confirm("Delete this file?")) {
             try {
-                // 1. Delete from Firestore
                 await deleteDoc(doc(db, "papers", docId));
-                // 2. Delete from Storage if path exists
-                if(storagePath) {
-                    const fileRef = ref(storage, storagePath);
-                    await deleteObject(fileRef);
-                }
-                listFiles(); 
-            } catch (error) {
-                alert("Deletion error: " + error.message);
-            }
+                if(storagePath) await deleteObject(ref(storage, storagePath));
+                fetchFiles();
+            } catch (e) { alert("Error: " + e.message); }
         }
     }
 
-    refreshBtn.addEventListener('click', listFiles);
-    viewFolderSelect.addEventListener('change', listFiles);
+    document.getElementById('refreshBtn').onclick = fetchFiles;
+    viewFolderSelect.onchange = fetchFiles;
 
 </script>
 </body>
