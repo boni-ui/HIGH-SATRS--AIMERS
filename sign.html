@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Stars Aimers - Auth</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://raw.githubusercontent.com/boni-ui/HIGH-SATRS--AIMERS/main/1777633761799-ezremove.png');
+            background-size: cover;
+            background-position: center;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            width: 768px;
+            max-width: 95%;
+            min-height: 520px;
+            color: white;
+        }
+
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
+        }
+
+        /* FIX: Ensure inactive form is completely hidden and unclickable */
+        .sign-in { left: 0; width: 50%; z-index: 2; opacity: 1; pointer-events: all; }
+        .container.active .sign-in { transform: translateX(100%); opacity: 0; pointer-events: none; }
+
+        .sign-up { left: 0; width: 50%; opacity: 0; z-index: 1; pointer-events: none; }
+        .container.active .sign-up { transform: translateX(100%); opacity: 1; z-index: 5; pointer-events: all; }
+
+        .container form {
+            background-color: transparent;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; padding: 0 35px; height: 100%; text-align: center;
+        }
+
+        .container h1 { font-size: 28px; margin-bottom: 10px; }
+
+        .container input {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; margin: 8px 0; padding: 12px 15px;
+            font-size: 13px; border-radius: 8px; width: 100%; color: #333;
+        }
+
+        /* The Orange Buttons */
+        .container button {
+            background-color: #e65100;
+            color: #fff; font-size: 12px; padding: 12px 45px;
+            border: 1px solid transparent; border-radius: 8px;
+            font-weight: 600; letter-spacing: 0.5px;
+            text-transform: uppercase; margin-top: 15px; cursor: pointer;
+            transition: transform 80ms ease-in;
+        }
+
+        .container button:active { transform: scale(0.95); }
+        .container button.hidden { background-color: transparent; border: 1px solid #fff; }
+
+        .social-icons { margin: 15px 0; }
+        .social-icons a {
+            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 50%;
+            display: inline-flex; justify-content: center; align-items: center;
+            margin: 0 5px; width: 35px; height: 35px; color: white; text-decoration: none;
+        }
+
+        /* Sliding Toggle Overlay */
+        .toggle-container {
+            position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
+            overflow: hidden; transition: all 0.6s ease-in-out; border-radius: 150px 0 0 100px; z-index: 1000;
+        }
+
+        .container.active .toggle-container { transform: translateX(-100%); border-radius: 0 150px 100px 0; }
+
+        .toggle {
+            background: linear-gradient(to right, #f57c00, #e65100);
+            height: 100%; width: 200%; color: #fff;
+            position: relative; left: -100%; transform: translateX(0);
+            transition: all 0.6s ease-in-out;
+        }
+
+        .container.active .toggle { transform: translateX(50%); }
+
+        .toggle-panel {
+            position: absolute; width: 50%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; padding: 0 30px; text-align: center;
+            top: 0; transition: all 0.6s ease-in-out;
+        }
+
+        .toggle-left { transform: translateX(-200%); }
+        .container.active .toggle-left { transform: translateX(0); }
+
+        .toggle-right { right: 0; transform: translateX(0); }
+        .container.active .toggle-right { transform: translateX(200%); }
+
+        #errorMsg, #signupMsg { font-size: 12px; margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="container">
+        <!-- SIGN UP FORM -->
+        <div class="form-container sign-up">
+            <form onsubmit="return false;">
+                <h1>Create Account</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon" id="googleSignup"><i class="fa-brands fa-google"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                </div>
+                <span>or use your email for registration</span>
+                <input type="email" id="newEmail" placeholder="Email">
+                <input type="password" id="newPassword" placeholder="Password">
+                <button onclick="registerUser()">Sign Up</button>
+                <p id="signupMsg"></p>
+            </form>
+        </div>
+
+        <!-- SIGN IN FORM -->
+        <div class="form-container sign-in">
+            <form onsubmit="return false;">
+                <h1>Sign In</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon" id="googleSignin"><i class="fa-brands fa-google"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                </div>
+                <span>or use your email password</span>
+                <input type="email" id="email" placeholder="Email">
+                <input type="password" id="password" placeholder="Password">
+                <a href="#" id="forgot-password" style="font-size: 12px; margin-top: 10px;">Forgot Your Password?</a>
+                <button onclick="signIn()">Sign In</button>
+                <p id="errorMsg"></p>
+            </form>
+        </div>
+
+        <!-- OVERLAY PANELS -->
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="hidden" id="login">Sign In</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <button class="hidden" id="register">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { 
+            getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
+            sendEmailVerification, GoogleAuthProvider, signInWithPopup 
+        } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+            authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+            projectId: "high-stars-aimers-5972f",
+            storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+            messagingSenderId: "233345875942",
+            appId: "1:233345875942:web:0b21df2fd59b744d2ce027"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // UI Toggling
+        const container = document.getElementById('container');
+        const registerBtn = document.getElementById('register');
+        const loginBtn = document.getElementById('login');
+
+        registerBtn.onclick = () => container.classList.add("active");
+        loginBtn.onclick = () => container.classList.remove("active");
+
+        // Firebase Functions
+        window.signIn = () => {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => window.location.href = "home.html")
+                .catch(err => document.getElementById("errorMsg").textContent = err.message);
+        };
+
+        window.registerUser = () => {
+            const email = document.getElementById("newEmail").value;
+            const password = document.getElementById("newPassword").value;
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(userCredential => {
+                    sendEmailVerification(userCredential.user);
+                    document.getElementById("signupMsg").textContent = "Verification email sent!";
+                })
+                .catch(err => document.getElementById("signupMsg").textContent = err.message);
+        };
+    </script>
+</body>
+</html>
