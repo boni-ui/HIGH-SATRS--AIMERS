@@ -3,165 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>High Stars Aimers - Auth</title>
+    <title>High Stars Aimers | Secure Auth</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        
-        body {
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
-                        url('https://raw.githubusercontent.com/boni-ui/HIGH-SATRS--AIMERS/main/1777633761799-ezremove.png');
-            background-size: cover;
-            background-position: center;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; overflow: hidden;
+        :root {
+            --primary: #f57c00;
+            --accent: #e65100;
+            --secondary: #38bdf8;
+            --bg-deep: #030712;
+            --card-glass: rgba(17, 24, 39, 0.75);
+            --text: #f9fafb;
+            --text-dim: #9ca3af;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(245, 124, 0, 0.2);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .mesh-gradient {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; filter: blur(120px); opacity: 0.5;
+        }
+        .blob {
+            position: absolute; border-radius: 50%;
+            animation: drift 20s infinite alternate cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        .b1 { width: 600px; height: 600px; background: var(--primary); top: -10%; left: -10%; }
+        .b2 { width: 500px; height: 500px; background: var(--secondary); bottom: -10%; right: -10%; animation-delay: -5s; }
+
+        @keyframes drift { from { transform: translate(0,0) rotate(0deg); } to { transform: translate(100px, 100px) rotate(30deg); } }
 
         .container {
-            background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            position: relative;
+            position: relative; width: 1100px; max-width: 100%; height: 780px;
+            background: var(--card-glass); backdrop-filter: blur(50px);
+            border: 1px solid var(--border); border-radius: 40px;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.7);
             overflow: hidden;
-            width: 768px;
-            max-width: 95%;
-            min-height: 520px;
-            color: white;
+            display: flex;
         }
 
-        .form-container {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            transition: all 0.6s ease-in-out;
+        .form-box {
+            position: absolute; top: 0; width: 50%; height: 100%;
+            padding: 60px; transition: all 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex; flex-direction: column; justify-content: center;
+            z-index: 5;
         }
 
-        /* FIX: Ensure inactive form is completely hidden and unclickable */
-        .sign-in { left: 0; width: 50%; z-index: 2; opacity: 1; pointer-events: all; }
-        .container.active .sign-in { transform: translateX(100%); opacity: 0; pointer-events: none; }
+        .login-side { left: 0; opacity: 1; transform: translateX(0) scale(1); }
+        .signup-side { left: 0; opacity: 0; transform: translateX(-100px) scale(0.95); visibility: hidden; }
 
-        .sign-up { left: 0; width: 50%; opacity: 0; z-index: 1; pointer-events: none; }
-        .container.active .sign-up { transform: translateX(100%); opacity: 1; z-index: 5; pointer-events: all; }
-
-        .container form {
-            background-color: transparent;
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; padding: 0 35px; height: 100%; text-align: center;
+        .container.active .login-side { opacity: 0; transform: translateX(100px) scale(0.95); visibility: hidden; }
+        .container.active .signup-side { 
+            opacity: 1; 
+            visibility: visible; 
+            transform: translateX(100%) scale(1); 
         }
 
-        .container h1 { font-size: 28px; margin-bottom: 10px; }
-
-        .container input {
-            background-color: rgba(255, 255, 255, 0.9);
-            border: none; margin: 8px 0; padding: 12px 15px;
-            font-size: 13px; border-radius: 8px; width: 100%; color: #333;
-        }
-
-        /* The Orange Buttons */
-        .container button {
-            background-color: #e65100;
-            color: #fff; font-size: 12px; padding: 12px 45px;
-            border: 1px solid transparent; border-radius: 8px;
-            font-weight: 600; letter-spacing: 0.5px;
-            text-transform: uppercase; margin-top: 15px; cursor: pointer;
-            transition: transform 80ms ease-in;
-        }
-
-        .container button:active { transform: scale(0.95); }
-        .container button.hidden { background-color: transparent; border: 1px solid #fff; }
-
-        .social-icons { margin: 15px 0; }
-        .social-icons a {
-            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 50%;
-            display: inline-flex; justify-content: center; align-items: center;
-            margin: 0 5px; width: 35px; height: 35px; color: white; text-decoration: none;
-        }
-
-        /* Sliding Toggle Overlay */
-        .toggle-container {
+        .overlay-panel {
             position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
-            overflow: hidden; transition: all 0.6s ease-in-out; border-radius: 150px 0 0 100px; z-index: 1000;
+            background: linear-gradient(165deg, #f57c00 0%, #e65100 50%, #d84315 100%);
+            background-size: 300% 300%; animation: gradientShift 12s infinite ease-in-out;
+            z-index: 10; transition: transform 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+        }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .container.active .overlay-panel { transform: translateX(-100%); }
+
+        .input-group { position: relative; margin-bottom: 18px; }
+        label { display: block; font-size: 0.7rem; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+        
+        input {
+            width: 100%; padding: 14px 20px 14px 52px; border-radius: 12px;
+            background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border);
+            color: white; outline: none; transition: 0.4s;
+            font-size: 0.9rem;
+        }
+        input:focus { border-color: var(--primary); background: rgba(0,0,0,0.4); box-shadow: 0 0 15px var(--glow); }
+        
+        .input-group i:not(.view-toggle) { position: absolute; left: 20px; bottom: 15px; color: var(--text-dim); transition: 0.3s; }
+        input:focus + i { color: var(--primary); }
+
+        .view-toggle { position: absolute; right: 20px; bottom: 15px; cursor: pointer; color: var(--text-dim); opacity: 0.6; }
+
+        .requirements { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 15px 0; }
+        .req-item { font-size: 0.65rem; color: var(--text-dim); display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px; transition: 0.3s; }
+        .req-item.valid { color: var(--success); background: rgba(16, 185, 129, 0.08); }
+        .req-item i { font-size: 0.7rem; }
+
+        .btn-action {
+            width: 100%; padding: 16px; border-radius: 12px; border: none;
+            background: var(--text); color: var(--bg-deep); font-weight: 800; cursor: pointer;
+            transition: 0.4s; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .btn-action:hover:not(:disabled) { transform: translateY(-2px); background: #fff; }
+        .btn-action:disabled { opacity: 0.2; cursor: not-allowed; }
+
+        .social-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            color: white; width: 100%; padding: 12px; border-radius: 12px;
+            cursor: pointer; transition: 0.3s; margin-bottom: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-weight: 600; font-size: 0.85rem;
         }
 
-        .container.active .toggle-container { transform: translateX(-100%); border-radius: 0 150px 100px 0; }
-
-        .toggle {
-            background: linear-gradient(to right, #f57c00, #e65100);
-            height: 100%; width: 200%; color: #fff;
-            position: relative; left: -100%; transform: translateX(0);
-            transition: all 0.6s ease-in-out;
+        #toast {
+            position: fixed; top: 30px; right: 30px; background: var(--card-glass);
+            padding: 18px 30px; border-radius: 20px; border: 1px solid var(--border);
+            backdrop-filter: blur(20px); transform: translateX(200%); transition: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1000; display: flex; align-items: center; gap: 12px;
         }
+        #toast.active { transform: translateX(0); }
 
-        .container.active .toggle { transform: translateX(50%); }
-
-        .toggle-panel {
-            position: absolute; width: 50%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; padding: 0 30px; text-align: center;
-            top: 0; transition: all 0.6s ease-in-out;
+        @media (max-width: 900px) {
+            .overlay-panel { display: none; }
+            .form-box { width: 100%; padding: 30px; }
+            .container.active .signup-side { transform: translateX(0); }
         }
-
-        .toggle-left { transform: translateX(-200%); }
-        .container.active .toggle-left { transform: translateX(0); }
-
-        .toggle-right { right: 0; transform: translateX(0); }
-        .container.active .toggle-right { transform: translateX(200%); }
-
-        #errorMsg, #signupMsg { font-size: 12px; margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
+    <div class="mesh-gradient">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+    </div>
+
+    <div id="toast">
+        <i class="fas fa-info-circle" id="toast-icon"></i>
+        <span id="toast-msg"></span>
+    </div>
+
     <div class="container" id="container">
-        <!-- SIGN UP FORM -->
-        <div class="form-container sign-up">
+        
+        <div class="form-box login-side">
+            <div style="margin-bottom: 25px;">
+                <h1 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -1px;">Welcome Back</h1>
+                <p style="color: var(--text-dim); margin-top: 5px;">High Stars Aimers Portal</p>
+            </div>
+
+            <button class="social-btn" id="google-signin-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="16"> Continue with Google
+            </button>
+
+            <div style="display: flex; align-items: center; margin-bottom: 15px; opacity: 0.2;">
+                <div style="flex: 1; height: 1px; background: white;"></div>
+                <span style="padding: 0 15px; font-size: 0.6rem;">OR</span>
+                <div style="flex: 1; height: 1px; background: white;"></div>
+            </div>
+            
             <form onsubmit="return false;">
-                <h1>Create Account</h1>
-                <div class="social-icons">
-                    <a href="#" class="icon" id="googleSignup"><i class="fa-brands fa-google"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="name@email.com" required>
+                    <i class="fas fa-envelope"></i>
                 </div>
-                <span>or use your email for registration</span>
-                <input type="email" id="newEmail" placeholder="Email">
-                <input type="password" id="newPassword" placeholder="Password">
-                <button onclick="registerUser()">Sign Up</button>
-                <p id="signupMsg"></p>
+                <div class="input-group">
+                    <label>Passkey</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <i class="fas fa-lock"></i>
+                    <i class="fas fa-eye view-toggle" onclick="toggleView('password', this)"></i>
+                </div>
+                <button type="button" onclick="signIn()" class="btn-action" id="login-submit">Sign In</button>
             </form>
+            <p style="margin-top: 25px; text-align: center; color: var(--text-dim); font-size: 0.8rem;">
+                New here? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" onclick="switchMode()">Register Now</span>
+            </p>
         </div>
 
-        <!-- SIGN IN FORM -->
-        <div class="form-container sign-in">
+        <div class="form-box signup-side">
+            <div style="margin-bottom: 15px;">
+                <h1 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -1px;">Join High Stars</h1>
+                <p style="color: var(--text-dim); margin-top: 5px;">Initialize your educational profile</p>
+            </div>
+
             <form onsubmit="return false;">
-                <h1>Sign In</h1>
-                <div class="social-icons">
-                    <a href="#" class="icon" id="googleSignin"><i class="fa-brands fa-google"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="newEmail" placeholder="student@email.com" required>
+                    <i class="fas fa-at"></i>
                 </div>
-                <span>or use your email password</span>
-                <input type="email" id="email" placeholder="Email">
-                <input type="password" id="password" placeholder="Password">
-                <a href="#" id="forgot-password" style="font-size: 12px; margin-top: 10px;">Forgot Your Password?</a>
-                <button onclick="signIn()">Sign In</button>
-                <p id="errorMsg"></p>
+                
+                <div class="input-group">
+                    <label>Create Passkey</label>
+                    <input type="password" id="newPassword" placeholder="••••••••" required oninput="validate()">
+                    <i class="fas fa-shield-alt"></i>
+                    <i class="fas fa-eye view-toggle" onclick="toggleView('newPassword', this)"></i>
+                </div>
+
+                <div class="input-group">
+                    <label>Confirm Passkey</label>
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required oninput="validate()">
+                    <i class="fas fa-check-double"></i>
+                    <i class="fas fa-eye view-toggle" onclick="toggleView('confirmPassword', this)"></i>
+                </div>
+
+                <div class="requirements">
+                    <div class="req-item" id="r-len"><i class="fas fa-circle"></i> 8+ Characters</div>
+                    <div class="req-item" id="r-up"><i class="fas fa-circle"></i> Uppercase</div>
+                    <div class="req-item" id="r-num"><i class="fas fa-circle"></i> Numbers</div>
+                    <div class="req-item" id="r-match"><i class="fas fa-circle"></i> Matching</div>
+                </div>
+
+                <button type="button" id="reg-btn" onclick="registerUser()" class="btn-action" disabled style="background: var(--primary); color: white;">Create Account</button>
             </form>
+            <p style="margin-top: 20px; text-align: center; color: var(--text-dim); font-size: 0.8rem;">
+                Already have an account? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" onclick="switchMode()">Log In</span>
+            </p>
         </div>
 
-        <!-- OVERLAY PANELS -->
-        <div class="toggle-container">
-            <div class="toggle">
-                <div class="toggle-panel toggle-left">
-                    <h1>Welcome Back!</h1>
-                    <p>To keep connected with us please login with your personal info</p>
-                    <button class="hidden" id="login">Sign In</button>
-                </div>
-                <div class="toggle-panel toggle-right">
-                    <h1>Hello, Friend!</h1>
-                    <p>Enter your personal details and start journey with us</p>
-                    <button class="hidden" id="register">Sign Up</button>
-                </div>
+        <div class="overlay-panel">
+            <div style="padding: 50px;">
+                <h2 id="ov-h" style="font-size: 2.8rem; font-weight: 800; margin-bottom: 20px;">Aim for the Stars</h2>
+                <p id="ov-p" style="font-size: 1.1rem; line-height: 1.6; opacity: 0.9; margin-bottom: 40px;">Access premium notes and revision papers within seconds.</p>
+                <button onclick="switchMode()" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 16px 45px; border-radius: 50px; cursor: pointer; font-weight: 800; backdrop-filter: blur(10px);">TOGGLE VIEW</button>
             </div>
         </div>
     </div>
@@ -186,33 +257,92 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // UI Toggling
-        const container = document.getElementById('container');
-        const registerBtn = document.getElementById('register');
-        const loginBtn = document.getElementById('login');
+        window.toggleView = (id, icon) => {
+            const el = document.getElementById(id);
+            const isPass = el.type === "password";
+            el.type = isPass ? "text" : "password";
+            icon.className = isPass ? "fas fa-eye-slash view-toggle" : "fas fa-eye view-toggle";
+        };
 
-        registerBtn.onclick = () => container.classList.add("active");
-        loginBtn.onclick = () => container.classList.remove("active");
+        window.switchMode = () => {
+            document.getElementById('container').classList.toggle('active');
+            const isActive = document.getElementById('container').classList.contains('active');
+            document.getElementById('ov-h').innerText = isActive ? "Global Learning" : "Aim for the Stars";
+        };
 
-        // Firebase Functions
+        window.showToast = (msg, isError = false) => {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            document.getElementById('toast-icon').style.color = isError ? "var(--danger)" : "var(--success)";
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 4000);
+        };
+
+        window.validate = () => {
+            const p = document.getElementById('newPassword').value;
+            const cp = document.getElementById('confirmPassword').value;
+            
+            const checks = {
+                len: p.length >= 8,
+                up: /[A-Z]/.test(p),
+                num: /[0-9]/.test(p),
+                match: p === cp && p !== ""
+            };
+
+            for(const [key, val] of Object.entries(checks)) {
+                const el = document.getElementById('r-' + key);
+                el.className = val ? 'req-item valid' : 'req-item';
+                el.querySelector('i').className = val ? 'fas fa-check-circle' : 'fas fa-circle';
+            }
+            
+            document.getElementById('reg-btn').disabled = !Object.values(checks).every(Boolean);
+        };
+
         window.signIn = () => {
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
+            const btn = document.getElementById('login-submit');
+            
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
+            
             signInWithEmailAndPassword(auth, email, password)
-                .then(() => window.location.href = "home.html")
-                .catch(err => document.getElementById("errorMsg").textContent = err.message);
+                .then(() => {
+                    showToast("Access Granted.");
+                    setTimeout(() => window.location.href = "home.html", 1000);
+                })
+                .catch(err => {
+                    showToast(err.code.split('/')[1].replace(/-/g, ' '), true);
+                    btn.innerText = "Sign In";
+                });
         };
 
         window.registerUser = () => {
             const email = document.getElementById("newEmail").value;
             const password = document.getElementById("newPassword").value;
+            const btn = document.getElementById('reg-btn');
+
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Initializing...`;
+
             createUserWithEmailAndPassword(auth, email, password)
                 .then(userCredential => {
                     sendEmailVerification(userCredential.user);
-                    document.getElementById("signupMsg").textContent = "Verification email sent!";
+                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.8 } });
+                    showToast("Success! Verify your email.");
+                    btn.innerText = "Check Inbox";
                 })
-                .catch(err => document.getElementById("signupMsg").textContent = err.message);
+                .catch(err => {
+                    showToast(err.code.split('/')[1].replace(/-/g, ' '), true);
+                    btn.innerText = "Create Account";
+                });
         };
+
+        const handleGoogle = () => {
+            signInWithPopup(auth, provider)
+                .then(() => window.location.href = "home.html")
+                .catch(() => showToast("Auth Cancelled", true));
+        };
+
+        document.getElementById('google-signin-btn').onclick = handleGoogle;
     </script>
 </body>
 </html>
