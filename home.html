@@ -33,7 +33,7 @@
         radial-gradient(circle at 100% 100%, rgba(255, 179, 71, 0.05) 0%, transparent 35%);
       color: var(--text-bright);
       line-height: 1.6;
-      padding-bottom: 100px; /* Space for bottom nav */
+      padding-bottom: 100px;
     }
 
     /* === TOP NAVIGATION === */
@@ -158,30 +158,70 @@
 
     /* === MODAL === */
     .modal {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-        display: none; align-items: center; justify-content: center; z-index: 2000;
-        backdrop-filter: blur(15px);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+      display: none; align-items: center; justify-content: center; z-index: 2000;
+      backdrop-filter: blur(15px);
     }
     .modal.active { display: flex; }
     .modal-box {
-        background: #0b1120; padding: 45px; border-radius: 40px;
-        border: 1px solid var(--gold-primary); width: 90%; max-width: 420px;
-        text-align: center; position: relative;
+      background: #0b1120; padding: 45px; border-radius: 40px;
+      border: 1px solid var(--gold-primary); width: 90%; max-width: 600px;
+      text-align: center; position: relative; max-height: 90vh; overflow-y: auto;
     }
 
     .btn-action {
-        width: 100%; padding: 15px; border-radius: 15px; border: none;
-        font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 15px;
-        font-family: inherit;
+      width: 100%; padding: 15px; border-radius: 15px; border: none;
+      font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 15px;
+      font-family: inherit;
     }
     .btn-gold { background: var(--gold-gradient); color: #000; }
     .btn-outline { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
 
+    /* === SETTINGS TABS === */
+    .settings-tabs {
+      display: flex; gap: 10px; margin: 25px 0; border-bottom: 1px solid var(--border-gold);
+    }
+    .tab-btn {
+      flex: 1; padding: 12px; background: none; border: none; color: var(--text-dim);
+      cursor: pointer; font-weight: 600; border-bottom: 2px solid transparent; transition: 0.3s;
+    }
+    .tab-btn.active { color: var(--gold-primary); border-bottom-color: var(--gold-primary); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .setting-item {
+      margin: 20px 0; text-align: left;
+    }
+    .setting-item label {
+      display: block; color: var(--text-dim); font-size: 0.85rem; margin-bottom: 8px; font-weight: 600;
+    }
+    .setting-input {
+      width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-gold);
+      border-radius: 12px; color: var(--text-bright); font-family: inherit;
+    }
+    .setting-input:focus { outline: none; border-color: var(--gold-primary); }
+
+    .switch-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 15px 0; border-bottom: 1px solid var(--border-gold);
+    }
+    .switch-row input[type="checkbox"] {
+      width: 50px; height: 28px; cursor: pointer; accent-color: var(--gold-primary);
+    }
+
+    .btn-save {
+      width: 100%; padding: 12px; background: var(--gold-gradient); color: #000;
+      border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 15px;
+    }
+    .btn-save:hover { opacity: 0.9; }
+
     /* === RESPONSIVE === */
     @media (max-width: 768px) {
-        .hero { padding: 40px 6%; }
-        .feature-grid { grid-template-columns: 1fr; }
-        .nav-user span { display: none; }
+      .hero { padding: 40px 6%; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .nav-user span { display: none; }
+      .settings-tabs { flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -218,8 +258,8 @@
 </div>
 
 <header class="hero">
-    <h1>The <span class="gold-glow">Obsidian Tier</span> Experience</h1>
-    <p style="color: var(--text-dim); font-size: 1.1rem;">Engineering academic excellence through high-velocity data and elite resources.</p>
+  <h1>The <span class="gold-glow">Obsidian Tier</span> Experience</h1>
+  <p style="color: var(--text-dim); font-size: 1.1rem;">Engineering academic excellence through high-velocity data and elite resources.</p>
 </header>
 
 <main class="container">
@@ -228,201 +268,203 @@
 
   <div class="feature-grid">
     <a href="subjects.html" class="card">
-        <div class="premium-badge">Updated</div>
-        <div class="icon-box"><i class="fas fa-archive"></i></div>
-        <h3>Resource Vault 3.0</h3>
-        <p>10+ years of regional, mock, and national examinations with AI-verified marking schemes.</p>
+      <div class="premium-badge">Updated</div>
+      <div class="icon-box"><i class="fas fa-archive"></i></div>
+      <h3>Resource Vault 3.0</h3>
+      <p>10+ years of regional, mock, and national examinations with AI-verified marking schemes.</p>
     </a>
 
     <a href="#" class="card">
-        <div class="icon-box"><i class="fas fa-microchip"></i></div>
-        <h3>Adaptive Quiz Engine</h3>
-        <p>Questions that evolve based on your performance. Master weak topics automatically.</p>
+      <div class="icon-box"><i class="fas fa-microchip"></i></div>
+      <h3>Adaptive Quiz Engine</h3>
+      <p>Questions that evolve based on your performance. Master weak topics automatically.</p>
     </a>
 
     <a href="#" class="card">
-        <div class="icon-box"><i class="fas fa-chart-pie"></i></div>
-        <h3>Predictive Analytics</h3>
-        <p>See your grade trajectory. Our system predicts your final score based on current data.</p>
+      <div class="icon-box"><i class="fas fa-chart-pie"></i></div>
+      <h3>Predictive Analytics</h3>
+      <p>See your grade trajectory. Our system predicts your final score based on current data.</p>
+    </a>
+  </div>
+
+  <div class="grid-label">Advanced Learning Tech</div>
+
+  <div class="feature-grid">
+    <a href="#" class="card">
+      <div class="icon-box"><i class="fas fa-robot"></i></div>
+      <h3>Lumina AI Tutor</h3>
+      <p>A specialized academic LLM designed to solve complex STEM problems in seconds.</p>
     </a>
 
-    <div class="grid-label">Advanced Learning Tech</div>
+    <a href="#" class="card">
+      <div class="icon-box"><i class="fas fa-vr-cardboard"></i></div>
+      <h3>Virtual STEM Labs</h3>
+      <p>Interactive 3D simulations for Biology, Chemistry, and Physics experiments.</p>
+    </a>
 
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-robot"></i></div>
-        <h3>Lumina AI Tutor</h3>
-        <p>A specialized academic LLM designed to solve complex STEM problems in seconds.</p>
-    </div>
+    <a href="#" class="card">
+      <div class="icon-box"><i class="fas fa-layer-group"></i></div>
+      <h3>Concept Mapping</h3>
+      <p>Visual node-based study maps that show how different syllabus topics connect.</p>
+    </a>
+  </div>
 
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-vr-cardboard"></i></div>
-        <h3>Virtual STEM Labs</h3>
-        <p>Interactive 3D simulations for Biology, Chemistry, and Physics experiments.</p>
-    </div>
+  <div class="grid-label">Elite Ecosystem Features</div>
 
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-layer-group"></i></div>
-        <h3>Concept Mapping</h3>
-        <p>Visual node-based study maps that show how different syllabus topics connect.</p>
-    </div>
+  <div class="feature-grid">
+    <a href="#" class="card">
+      <div class="icon-box"><i class="fas fa-trophy"></i></div>
+      <h3>National Leaderboard</h3>
+      <p>Compete with the top 1% of students nationwide. Win monthly academic grants.</p>
+    </a>
 
-    <div class="grid-label">Elite Ecosystem Features</div>
+    <a href="#" class="card">
+      <div class="icon-box"><i class="fas fa-headphones-alt"></i></div>
+      <h3>Audio Study Notes</h3>
+      <p>High-quality summary narrations for hands-free learning during commutes.</p>
+    </a>
 
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-trophy"></i></div>
-        <h3>National Leaderboard</h3>
-        <p>Compete with the top 1% of students nationwide. Win monthly academic grants.</p>
-    </div>
-
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-headphones-alt"></i></div>
-        <h3>Audio Study Notes</h3>
-        <p>High-quality summary narrations for hands-free learning during commutes.</p>
-    </div>
-
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-file-invoice"></i></div>
-        <h3>One-Click Summarizer</h3>
-        <p>Upload a 50-page PDF and get a 2-page bulleted summary instantly.</p>
-    </div>
+    <a href="#" class="card">
+      <div class="icon-box"><i class="fas fa-file-invoice"></i></div>
+      <h3>One-Click Summarizer</h3>
+      <p>Upload a 50-page PDF and get a 2-page bulleted summary instantly.</p>
+    </a>
   </div>
 
   <div class="grid-label">30+ Total Features Integrated</div>
   <div class="tag-cloud">
-      <div class="tag"><i class="fas fa-check-circle"></i> Flashcard Sync</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Night Mode Pro</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Offline PDF Access</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Speed Reading Mode</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Career Pathfinding</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Scholarship Tracker</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Live Tutor Chat</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Daily Study Reminders</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Dark Matter UI</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Multi-Device Sync</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Group Study Rooms</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Formula Sheets</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Essay Proofreader</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Focus Timer (Pomodoro)</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Mental Health Hub</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Syllabus Progress Bar</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Revision Heatmaps</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Digital Certificate Vault</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Custom Profile Themes</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Parental Insights</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Smart Search 2.0</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Flashcard Sync</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Night Mode Pro</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Offline PDF Access</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Speed Reading Mode</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Career Pathfinding</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Scholarship Tracker</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Live Tutor Chat</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Daily Study Reminders</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Dark Matter UI</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Multi-Device Sync</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Group Study Rooms</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Formula Sheets</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Essay Proofreader</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Focus Timer (Pomodoro)</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Mental Health Hub</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Syllabus Progress Bar</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Revision Heatmaps</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Digital Certificate Vault</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Custom Profile Themes</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Parental Insights</div>
+    <div class="tag"><i class="fas fa-check-circle"></i> Smart Search 2.0</div>
   </div>
 
 </main>
 
 <div id="profileModal" class="modal">
-    <div class="modal-box">
-        <div style="position: relative; display: inline-block;">
-            <img id="userProfilePic" src="" style="width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--gold-primary); padding: 5px;">
-            <div onclick="document.getElementById('profileInput').click()" style="position: absolute; bottom: 5px; right: 5px; background: var(--gold-primary); border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-                <i class="fas fa-pen" style="color: #000; font-size: 0.9rem;"></i>
-            </div>
-        </div>
-        <input type="file" id="profileInput" accept="image/*" style="display: none;">
-        
-        <h2 id="welcomeMessage" style="margin-top: 20px; letter-spacing: -1px;">User Name</h2>
-        <p id="userEmail" style="color: var(--text-dim); margin-bottom: 30px;"></p>
-        
-        <button class="btn-action btn-gold">Upgrade to Gold+ Plan</button>
-        <button class="btn-action btn-outline" id="signOutButton">Logout Account</button>
-        
-        <p onclick="document.getElementById('profileModal').classList.remove('active')" style="margin-top: 20px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim);">Close Settings</p>
-               </div>
-
-        <div class="settings-tabs">
-            <button class="tab-btn active" onclick="openTab(event, 'account')">Account</button>
-            <button class="tab-btn" onclick="openTab(event, 'academic')">Academic</button>
-            <button class="tab-btn" onclick="openTab(event, 'preferences')">Preferences</button>
-            <button class="tab-btn" onclick="openTab(event, 'security')">Security</button>
-        </div>
-
-        <div id="account" class="tab-content active">
-            <div class="setting-item">
-                <label>Full Name</label>
-                <input type="text" id="editDisplayName" class="setting-input" placeholder="Your Name">
-            </div>
-            <div class="setting-item">
-                <label>Email Address</label>
-                <input type="email" id="userEmail" class="setting-input" readonly style="opacity: 0.6;">
-            </div>
-            <button class="btn-save" id="saveProfile">Save Changes</button>
-        </div>
-
-        <div id="academic" class="tab-content">
-            <div class="setting-item">
-                <label>Current Level</label>
-                <select class="setting-input">
-                    <option>Form 4 (Candidate)</option>
-                    <option>Form 3</option>
-                    <option>Form 2</option>
-                    <option>Form 1</option>
-                </select>
-            </div>-item">
-                <label>Target Mean Grade</label>
-                <select class="setting-input">
-                    <option>A (Plain)</option>
-                    <option>A- (Minus)</option>
-                    <option>B+ (Plus)</option>
-                    <option>B (Plus)</option>
-                    <option>B- (Plus)</option>
-                    <option>c+ (Plus)</option>
-                    <option>c (Plus)</option>
-                </select>
-            </div>
-            <div class="setting-item">
-                <label>Primary Focus Subject</label>
-                <select class="setting-input">
-                    <option>Mathematics</option>
-                    <option>Physics</option>
-                    <option>Chemistry</option>
-                    <option>Biology</option>
-                    <option>English/Kiswahili</option>
-                </select>
-            </div>
-            <button class="btn-save">Update Academic Path</button>
-        </div>
-
-        <div id="preferences" class="tab-content">
-            <div class="switch-row">
-                <span>Study Reminders</span>
-                <input type="checkbox" checked>
-            </div>
-            <div class="switch-row">
-                <span>Leaderboard Visibility</span>
-                <input type="checkbox" checked>
-            </div>
-            <div class="switch-row">
-                <span>Power Saver Mode</span>
-                <input type="checkbox">
-            </div>
-            <div class="setting-item" style="margin-top: 15px;">
-                <label>Data Management</label>
-                <button style="background: none; border: 1px solid #ef4444; color: #ef4444; padding: 10px; width: 100%; border-radius: 10px; cursor: pointer; font-size: 0.75rem;">Clear Offline Vault Cache</button>
-            </div>
-        </div>
-
-        <div id="security" class="tab-content">
-            <div class="setting-item">
-                <label>New Password</label>
-                <input type="password" id="newPassword" class="setting-input" placeholder="Minimum 6 characters">
-            </div>
-            <button class="btn-save" id="changePassBtn">Update Password</button>
-            
-            <div class="danger-zone">
-                <button class="btn-save" id="signOutButton" style="background: #ef4444; color: white;">Sign Out of All Devices</button>
-            </div>
-        </div>
-
-        <p onclick="document.getElementById('profileModal').classList.remove('active')" style="text-align: center; padding: 20px; font-size: 0.75rem; cursor: pointer; color: var(--text-dim);">Close Command Center</p>
+  <div class="modal-box">
+    <div style="position: relative; display: inline-block;">
+      <img id="userProfilePic" src="" style="width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--gold-primary); padding: 5px;">
+      <div onclick="document.getElementById('profileInput').click()" style="position: absolute; bottom: 5px; right: 5px; background: var(--gold-primary); border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+        <i class="fas fa-pen" style="color: #000; font-size: 0.9rem;"></i>
+      </div>
     </div>
+    <input type="file" id="profileInput" accept="image/*" style="display: none;">
+    
+    <h2 id="welcomeMessage" style="margin-top: 20px; letter-spacing: -1px;">User Name</h2>
+    <p id="userEmail" style="color: var(--text-dim); margin-bottom: 30px;"></p>
+    
+    <button class="btn-action btn-gold">Upgrade to Gold+ Plan</button>
+    <button class="btn-action btn-outline" id="signOutButton">Logout Account</button>
+    
+    <div class="settings-tabs">
+      <button class="tab-btn active" onclick="openTab(event, 'account')">Account</button>
+      <button class="tab-btn" onclick="openTab(event, 'academic')">Academic</button>
+      <button class="tab-btn" onclick="openTab(event, 'preferences')">Preferences</button>
+      <button class="tab-btn" onclick="openTab(event, 'security')">Security</button>
+    </div>
+
+    <div id="account" class="tab-content active">
+      <div class="setting-item">
+        <label>Full Name</label>
+        <input type="text" id="editDisplayName" class="setting-input" placeholder="Your Name">
+      </div>
+      <div class="setting-item">
+        <label>Email Address</label>
+        <input type="email" class="setting-input" readonly style="opacity: 0.6;">
+      </div>
+      <button class="btn-save" id="saveProfile">Save Changes</button>
+    </div>
+
+    <div id="academic" class="tab-content">
+      <div class="setting-item">
+        <label>Current Level</label>
+        <select class="setting-input">
+          <option>Form 4 (Candidate)</option>
+          <option>Form 3</option>
+          <option>Form 2</option>
+          <option>Form 1</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <label>Target Mean Grade</label>
+        <select class="setting-input">
+          <option>A (Plain)</option>
+          <option>A- (Minus)</option>
+          <option>B+ (Plus)</option>
+          <option>B (Plain)</option>
+          <option>B- (Minus)</option>
+          <option>C+ (Plus)</option>
+          <option>C (Plain)</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <label>Primary Focus Subject</label>
+        <select class="setting-input">
+          <option>Mathematics</option>
+          <option>Physics</option>
+          <option>Chemistry</option>
+          <option>Biology</option>
+          <option>English/Kiswahili</option>
+        </select>
+      </div>
+      <button class="btn-save">Update Academic Path</button>
+    </div>
+
+    <div id="preferences" class="tab-content">
+      <div class="switch-row">
+        <span>Study Reminders</span>
+        <input type="checkbox" checked>
+      </div>
+      <div class="switch-row">
+        <span>Leaderboard Visibility</span>
+        <input type="checkbox" checked>
+      </div>
+      <div class="switch-row">
+        <span>Power Saver Mode</span>
+        <input type="checkbox">
+      </div>
+      <div class="setting-item" style="margin-top: 15px;">
+        <label>Data Management</label>
+        <button style="background: none; border: 1px solid #ef4444; color: #ef4444; padding: 10px; width: 100%; border-radius: 10px; cursor: pointer; font-size: 0.75rem;">Clear Offline Vault</button>
+      </div>
+    </div>
+
+    <div id="security" class="tab-content">
+      <div class="setting-item">
+        <label>New Password</label>
+        <input type="password" id="newPassword" class="setting-input" placeholder="Minimum 6 characters">
+      </div>
+      <button class="btn-save" id="changePassBtn">Update Password</button>
+      
+      <div class="danger-zone">
+        <button class="btn-save" id="signOutAllDevices" style="background: #ef4444; color: white;">Sign Out of All Devices</button>
+      </div>
+    </div>
+
+    <p onclick="document.getElementById('profileModal').classList.remove('active')" style="text-align: center; padding: 20px; font-size: 0.75rem; cursor: pointer; color: var(--text-dim);">Close Settings</p>
+  </div>
 </div>
 
 <footer style="text-align: center; padding: 40px 0; border-top: 1px solid var(--border-gold); margin-top: 50px;">
-    <p style="color: var(--text-dim); font-size: 0.8rem;">&copy; 2026 High Stars Aimers • Absolute Academic Mastery</p>
+  <p style="color: var(--text-dim); font-size: 0.8rem;">&copy; 2026 High Stars Aimers • Absolute Academic Mastery</p>
 </footer>
 
 <script type="module">
@@ -444,24 +486,9 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 
 onAuthStateChanged(auth, (user) => {
-    if (user) {
-        const name = user.displayName || user.email.split('@')[0];
-        const userPhoto = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
+  if (user) {
+    const name = user.displayName || user.email.split('@')[0];
+    const userPhoto = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
 
-        document.getElementById("navUserName").innerText = name;
-        document.getElementById("welcomeMessage").innerText = name;
-        document.getElementById("userEmail").innerText = user.email;
-        document.getElementById("userProfilePic").src = userPhoto;
-        document.getElementById("topNavAvatar").src = userPhoto;
-    } else {
-        window.location.href = "signin1.html"; 
-    }
-});
-
-// Navigation & Modals
-const profileModal = document.getElementById('profileModal');
-document.getElementById('profileTrigger').onclick = () => profileModal.classList.add('active');
-document.getElementById('mobileProfile').onclick = (e) => { e.preventDefault(); profileModal.classList.add('active'); };
-
-// Profile Image Upload
-document.getElementById('profileInput').onchange = asy
+    document.getElementById("navUserName").innerText = name;
+ 
