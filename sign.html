@@ -30,16 +30,42 @@
             background-color: var(--bg-deep);
             color: var(--text);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
+            padding: 20px 0;
         }
 
         #sparks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #111a2e 0%, #05080f 100%); }
 
+        /* 1. FEATURES GRID SECTION */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            width: 90%;
+            max-width: 1000px;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .feature-card:hover { background: rgba(245, 124, 0, 0.05); transform: translateY(-5px); }
+        .feature-card i { color: var(--primary); font-size: 1.2rem; margin-bottom: 8px; }
+        .feature-card h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .feature-card p { font-size: 0.65rem; color: var(--text-dim); }
+
+        /* TOAST */
         .toast-container {
-            position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 380px; padding: 15px 20px;
             background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4);
             backdrop-filter: blur(15px); border-radius: 18px; display: flex; align-items: center; gap: 12px;
@@ -54,6 +80,7 @@
             background: var(--card-bg); border-radius: 35px; border: 1px solid var(--border);
             box-shadow: 0 40px 100px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
             transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 30px;
         }
 
         h1 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
@@ -79,29 +106,49 @@
         .field-wrapper i:first-child { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #334155; }
         .view-toggle { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-dim); }
 
-        .strength-bar { height: 3px; background: rgba(255,255,255,0.05); margin: 10px 0; border-radius: 10px; overflow: hidden; }
-        .strength-progress { height: 100%; width: 0%; transition: 0.5s; background: var(--primary); }
+        /* 2. STRENGTH BAR DETAILS */
+        .strength-bar { height: 4px; background: rgba(255,255,255,0.05); margin: 10px 0; border-radius: 10px; overflow: hidden; }
+        .strength-progress { height: 100%; width: 0%; transition: 0.5s; background: var(--danger); }
         
         .requirements { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 20px; }
         .req-item { font-size: 0.65rem; color: var(--text-dim); display: flex; align-items: center; gap: 6px; padding: 8px; background: rgba(255,255,255,0.02); border-radius: 8px; }
         .req-item.valid { color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .req-item i { font-size: 0.5rem; }
 
-        .switch-text { margin-top: 20px; font-size: 0.8rem; color: var(--text-dim); }
+        .switch-text { margin-top: 20px; font-size: 0.8rem; color: var(--text-dim); text-align: center; }
         .switch-text span { color: var(--primary); cursor: pointer; font-weight: 700; }
+
+        /* 1. FOOTER TERMS */
+        .footer-terms { text-align: center; color: var(--text-dim); font-size: 0.7rem; margin-top: 10px; line-height: 1.6; }
+        .footer-terms a { color: var(--primary); text-decoration: none; font-weight: 600; }
 
         #access-overlay { position: fixed; inset: 0; background: rgba(5,8,15,0.98); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(15px); }
         .success-shield { font-size: 4rem; color: var(--success); margin-bottom: 15px; animation: pulse 2s infinite; }
         
         .shake { animation: shake 0.4s ease-in-out; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .form-content { display: none; }
         .form-content.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
     </style>
 </head>
 <body>
 
     <canvas id="sparks-canvas"></canvas>
+
+    <div class="features-grid">
+        <div class="feature-card"><i class="fas fa-brain"></i><h4>AI Tutoring</h4><p>24/7 Personalized Help</p></div>
+        <div class="feature-card"><i class="fas fa-cloud"></i><h4>Academic Cloud</h4><p>Sync Across Devices</p></div>
+        <div class="feature-card"><i class="fas fa-bolt"></i><h4>Elite Speed</h4><p>Optimized Learning</p></div>
+        <div class="feature-card"><i class="fas fa-shield-alt"></i><h4>Secure Auth</h4><p>Firebase Protected</p></div>
+        <div class="feature-card"><i class="fas fa-users"></i><h4>Study Guilds</h4><p>Collaborative Groups</p></div>
+        <div class="feature-card"><i class="fas fa-chart-line"></i><h4>Progress Tracking</h4><p>Data-Driven Insights</p></div>
+        <div class="feature-card"><i class="fas fa-medal"></i><h4>Rank System</h4><p>Gamified Achievements</p></div>
+        <div class="feature-card"><i class="fas fa-file-pdf"></i><h4>Resource Hub</h4><p>Unlimited Handouts</p></div>
+        <div class="feature-card"><i class="fas fa-calendar-alt"></i><h4>Smart Planner</h4><p>Automated Schedules</p></div>
+        <div class="feature-card"><i class="fas fa-infinity"></i><h4>Lifetime Access</h4><p>Always High Stars</p></div>
+    </div>
 
     <div class="toast-container" id="toast">
         <i id="toastIcon" class="fas fa-exclamation-triangle"></i>
@@ -161,23 +208,32 @@
                     <label>Academic Email</label>
                     <div class="field-wrapper">
                         <i class="fas fa-at"></i>
-                        <input type="email" id="newEmail" required>
+                        <input type="email" id="newEmail" required placeholder="your@email.com">
                     </div>
                 </div>
                 <div class="input-group">
                     <label>Create Passkey</label>
                     <div class="field-wrapper">
                         <i class="fas fa-shield-alt"></i>
-                        <input type="password" id="newPassword" required oninput="validatePassword()">
+                        <input type="password" id="newPassword" required oninput="validatePassword()" placeholder="••••••••">
                         <i class="fas fa-eye view-toggle" onclick="togglePass('newPassword', this)"></i>
                     </div>
                 </div>
                 <div class="strength-bar"><div id="strengthProgress" class="strength-progress"></div></div>
+                
+                <div class="input-group">
+                    <label>Confirm Passkey</label>
+                    <div class="field-wrapper">
+                        <i class="fas fa-check-double"></i>
+                        <input type="password" id="confirmPassword" required oninput="validatePassword()" placeholder="••••••••">
+                    </div>
+                </div>
+
                 <div class="requirements">
                     <div class="req-item" id="r-len"><i class="fas fa-circle"></i> 8+ Char</div>
                     <div class="req-item" id="r-up"><i class="fas fa-circle"></i> Caps</div>
                     <div class="req-item" id="r-num"><i class="fas fa-circle"></i> Number</div>
-                    <div class="req-item" id="r-spec"><i class="fas fa-circle"></i> Symbol</div>
+                    <div class="req-item" id="r-match"><i class="fas fa-circle"></i> Match</div>
                 </div>
                 <button type="submit" class="btn-action btn-signup" id="regBtn" disabled style="background: var(--bronze-dim); color: #fff;">Finalize Profile</button>
             </form>
@@ -185,11 +241,17 @@
         </div>
     </div>
 
+    <div class="footer-terms">
+        By continuing, you agree to the High Stars Aimers<br>
+        <a href="#">Terms of Use</a> & <a href="#">Privacy Policy</a><br>
+        © 2026 High Stars Aimers
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
             getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
-            sendEmailVerification, GoogleAuthProvider, signInWithPopup, getRedirectResult 
+            sendEmailVerification, GoogleAuthProvider, signInWithPopup 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -219,107 +281,89 @@
             setTimeout(() => { window.location.href = "home.html"; }, 2000);
         };
 
-        // --- GOOGLE LOGIN ---
         window.handleGoogleLogin = async () => {
             try {
-                // signInWithPopup is more compatible for most users
                 const result = await signInWithPopup(auth, provider);
                 if(result.user) triggerSuccess();
             } catch (err) {
-                console.error("Google Auth Error:", err.code);
-                showToast(mapError(err.code));
+                showToast(`Auth Failed: ${err.code.split('/')[1]}`);
             }
         };
 
-        const mapError = (code) => {
-            switch(code) {
-                case 'auth/email-already-in-use': return 'This email is already registered.';
-                case 'auth/invalid-credential': return 'Wrong email or password.';
-                case 'auth/popup-closed-by-user': return 'Login window closed.';
-                case 'auth/operation-not-allowed': return 'Google login is not enabled in Firebase.';
-                default: return `System Error: ${code.split('/')[1]?.replace(/-/g, ' ') || 'Refused'}`;
-            }
-        };
-
-        // --- EMAIL LOGIN ---
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
-
             try {
-                const res = await signInWithEmailAndPassword(auth, email, pass);
+                const res = await signInWithEmailAndPassword(auth, email.value, password.value);
                 if (!res.user.emailVerified) {
-                    showToast("Please check your email and verify your account.");
+                    showToast("Verify your email first! Check your inbox.");
                     btn.disabled = false;
-                    btn.innerHTML = "Authorize Session";
-                } else {
-                    triggerSuccess();
-                }
+                } else triggerSuccess();
             } catch (err) {
                 document.getElementById('mainContainer').classList.add('shake');
                 setTimeout(() => document.getElementById('mainContainer').classList.remove('shake'), 500);
-                showToast(mapError(err.code));
+                showToast("Invalid Credentials");
                 btn.disabled = false;
-                btn.innerHTML = "Authorize Session";
             }
         });
 
-        // --- SIGNUP ---
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('regBtn');
-            const email = document.getElementById('newEmail').value;
-            const pass = document.getElementById('newPassword').value;
-
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Setting up...';
-
             try {
-                const res = await createUserWithEmailAndPassword(auth, email, pass);
+                const res = await createUserWithEmailAndPassword(auth, newEmail.value, newPassword.value);
                 await sendEmailVerification(res.user);
-                showToast("Identity Created! Check your email for verification.", "success");
+                showToast("Identity Created! Check email for link.", "success");
                 window.toggleForm();
                 btn.disabled = false;
-                btn.innerHTML = "Finalize Profile";
             } catch (err) {
-                showToast(mapError(err.code));
+                showToast(`Error: ${err.code.split('/')[1]}`);
                 btn.disabled = false;
-                btn.innerHTML = "Finalize Profile";
             }
         });
     </script>
 
     <script>
-        // UI Helpers
-        window.toggleForm = () => {
-            document.querySelectorAll('.form-content').forEach(f => f.classList.toggle('active'));
-        };
+        window.toggleForm = () => document.querySelectorAll('.form-content').forEach(f => f.classList.toggle('active'));
         window.togglePass = (id, icon) => {
             const input = document.getElementById(id);
             input.type = input.type === 'password' ? 'text' : 'password';
             icon.className = input.type === 'password' ? 'fas fa-eye view-toggle' : 'fas fa-eye-slash view-toggle';
         };
+
+        // 2 & 3. VALIDATION LOGIC
         window.validatePassword = () => {
             const p = document.getElementById('newPassword').value;
-            const checks = { len: p.length >= 8, up: /[A-Z]/.test(p), num: /[0-9]/.test(p), spec: /[^A-Za-z0-9]/.test(p) };
+            const cp = document.getElementById('confirmPassword').value;
+            const progress = document.getElementById('strengthProgress');
+            
+            const checks = {
+                len: p.length >= 8,
+                up: /[A-Z]/.test(p),
+                num: /[0-9]/.test(p),
+                match: (p === cp && p.length > 0)
+            };
+
             let score = 0;
             Object.entries(checks).forEach(([k, v]) => {
                 const el = document.getElementById('r-' + k);
                 if(v) { el.classList.add('valid'); score++; }
                 else el.classList.remove('valid');
             });
-            document.getElementById('strengthProgress').style.width = (score * 25) + "%";
+
+            // Strength bar colors
+            const colors = ['#ef4444', '#f57c00', '#f57c00', '#10b981'];
+            progress.style.width = (score * 25) + "%";
+            progress.style.background = colors[score-1] || '#ef4444';
+
             const btn = document.getElementById('regBtn');
             btn.disabled = score < 4;
             btn.style.background = score === 4 ? "var(--primary)" : "var(--bronze-dim)";
         };
 
-        // Sparks
+        // Canvas Sparks
         const canvas = document.getElementById('sparks-canvas');
         const ctx = canvas.getContext('2d');
         let parts = [];
