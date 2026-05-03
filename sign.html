@@ -37,7 +37,6 @@
             perspective: 1000px;
         }
 
-        /* Dark Spark Engine */
         .sparks-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; background: radial-gradient(circle at 50% 50%, #0f172a, #020617);
@@ -63,7 +62,6 @@
 
         @keyframes rotate { from { transform: rotate(0deg) translate(50px); } to { transform: rotate(360deg) translate(50px); } }
 
-        /* 3D Container */
         .container {
             position: relative; width: 1100px; max-width: 95%; height: 800px;
             background: var(--card-glass); backdrop-filter: blur(50px);
@@ -96,7 +94,6 @@
         @keyframes grad { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
         .container.active .overlay-panel { transform: translateX(-100%); }
 
-        /* Inputs & Visuals */
         .input-group { position: relative; margin-bottom: 22px; }
         label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
         
@@ -168,7 +165,7 @@
                 <h1 style="font-size: 2.8rem; font-weight: 800; letter-spacing: -2px;">Aim High.</h1>
                 <p style="color: var(--text-dim);">Access your Academic Cloud Profile</p>
             </div>
-            <form onsubmit="return false;">
+            <form id="loginForm">
                 <div class="input-group">
                     <label>Identity Email</label>
                     <input type="email" id="email" placeholder="student@email.com." required>
@@ -178,19 +175,19 @@
                     <label>Secure Passkey</label>
                     <input type="password" id="password" placeholder="••••••••" required>
                     <i class="fas fa-lock"></i>
-                    <i class="fas fa-eye view-toggle" onclick="toggleView('password', this)"></i>
+                    <i class="fas fa-eye view-toggle" data-target="password"></i>
                 </div>
-                <button type="button" onclick="processRequest('in')" class="btn-action" id="login-btn">Authorize Session</button>
+                <button type="submit" class="btn-action" id="login-btn">Authorize Session</button>
             </form>
             <p style="margin-top: 30px; text-align: center; color: var(--text-dim); font-size: 0.85rem;">
-                New Aimer? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" onclick="switchMode()">Create Profile</span>
+                New Aimer? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" class="mode-switch">Create Profile</span>
             </p>
         </div>
 
         <div class="form-box signup-side">
             <h1 style="font-size: 2.4rem; font-weight: 800; margin-bottom: 10px;">Elite Membership</h1>
             <p style="color: var(--text-dim); margin-bottom: 30px;">Initialize your learning cloud identity</p>
-            <form onsubmit="return false;">
+            <form id="signupForm">
                 <div class="input-group">
                     <label>Academic Email</label>
                     <input type="email" id="newEmail" placeholder="name@email.com" required>
@@ -198,16 +195,16 @@
                 </div>
                 <div class="input-group">
                     <label>Create Passkey</label>
-                    <input type="password" id="newPassword" placeholder="••••••••" required oninput="validate()">
+                    <input type="password" id="newPassword" placeholder="••••••••" required>
                     <i class="fas fa-shield-alt"></i>
-                    <i class="fas fa-eye view-toggle" onclick="toggleView('newPassword', this)"></i>
+                    <i class="fas fa-eye view-toggle" data-target="newPassword"></i>
                 </div>
                 <div class="strength-meter"><div class="strength-fill" id="strength"></div></div>
                 <div class="input-group">
                     <label>Confirm Passkey</label>
-                    <input type="password" id="confirmPassword" placeholder="••••••••" required oninput="validate()">
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
                     <i class="fas fa-check-double"></i>
-                    <i class="fas fa-eye view-toggle" onclick="toggleView('confirmPassword', this)"></i>
+                    <i class="fas fa-eye view-toggle" data-target="confirmPassword"></i>
                 </div>
                 <div class="requirements">
                     <div class="req-item" id="r-len"><i class="fas fa-circle"></i> 8+ Char</div>
@@ -215,18 +212,18 @@
                     <div class="req-item" id="r-num"><i class="fas fa-circle"></i> 1 Numeric</div>
                     <div class="req-item" id="r-spec"><i class="fas fa-circle"></i> 1 Special ($@!)</div>
                 </div>
-                <button type="button" id="reg-btn" onclick="processRequest('up')" class="btn-action" disabled style="background: var(--primary); color: white;">Finalize Identity</button>
+                <button type="submit" id="reg-btn" class="btn-action" disabled style="background: var(--primary); color: white;">Finalize Identity</button>
             </form>
             <p style="margin-top: 25px; text-align: center; color: var(--text-dim); font-size: 0.85rem;">
-                Already verified? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" onclick="switchMode()">Secure Login</span>
+                Already verified? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" class="mode-switch">Secure Login</span>
             </p>
         </div>
 
         <div class="overlay-panel">
             <div style="padding: 50px;">
                 <h2 id="ov-h" style="font-size: 3.5rem; font-weight: 800; margin-bottom: 20px;">Secure Hub.</h2>
-                <p style="font-size: 1.2rem; opacity: 0.8; line-height: 1.8;">"The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice."</p>
-                <button onclick="switchMode()" style="margin-top: 40px; background: transparent; border: 2px solid white; color: white; padding: 15px 50px; border-radius: 50px; cursor: pointer; font-weight: 800; transition: 0.3s;">FLIP VIEW</button>
+                <p style="font-size: 1.2rem; opacity: 0.8; line-height: 1.8;">"The capacity to learn is a gift; the ability to learn is a skill."</p>
+                <button class="mode-switch" style="margin-top: 40px; background: transparent; border: 2px solid white; color: white; padding: 15px 50px; border-radius: 50px; cursor: pointer; font-weight: 800; transition: 0.3s;">FLIP VIEW</button>
             </div>
         </div>
 
@@ -244,6 +241,7 @@
             sendEmailVerification 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // --- FIREBASE SETUP ---
         const firebaseConfig = {
             apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
             authDomain: "high-stars-aimers-5972f.firebaseapp.com",
@@ -257,7 +255,114 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // UI & Animation logic
+        // --- UI HELPERS ---
+        const notify = (msg, error = false) => {
+            const t = document.getElementById('toast');
+            const icon = document.getElementById('t-icon');
+            document.getElementById('t-msg').innerText = msg;
+            t.style.borderLeftColor = error ? "var(--danger)" : "var(--success)";
+            icon.className = error ? "fas fa-exclamation-circle" : "fas fa-shield-check";
+            icon.style.color = error ? "var(--danger)" : "var(--success)";
+            t.classList.add('active');
+            setTimeout(() => t.classList.remove('active'), 5000);
+        };
+
+        // --- PASSWORD VALIDATION ---
+        const validate = () => {
+            const p = document.getElementById('newPassword').value;
+            const cp = document.getElementById('confirmPassword').value;
+            const meter = document.getElementById('strength');
+            const checks = {
+                len: p.length >= 8,
+                up: /[A-Z]/.test(p),
+                num: /[0-9]/.test(p),
+                spec: /[^A-Za-z0-9]/.test(p)
+            };
+            const score = Object.values(checks).filter(Boolean).length;
+            meter.style.width = (score / 4) * 100 + "%";
+            meter.style.background = score < 2 ? "var(--danger)" : score < 4 ? "var(--primary)" : "var(--success)";
+            
+            for(const [key, val] of Object.entries(checks)) {
+                const el = document.getElementById('r-' + key);
+                if(el) el.className = val ? 'req-item valid' : 'req-item';
+            }
+            
+            document.getElementById('reg-btn').disabled = !(score === 4 && p === cp && p !== "");
+        };
+
+        // --- AUTH LOGIC ---
+        const processAuth = async (event, type) => {
+            event.preventDefault();
+            const isLogin = type === 'in';
+            const btn = isLogin ? document.getElementById('login-btn') : document.getElementById('reg-btn');
+            const email = document.getElementById(isLogin ? 'email' : 'newEmail').value;
+            const password = document.getElementById(isLogin ? 'password' : 'newPassword').value;
+            
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+
+            try {
+                if (isLogin) {
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    if (userCredential.user.emailVerified) {
+                        notify("Access Granted. Welcome back.");
+                        setTimeout(() => window.location.href = "home.html", 1500);
+                    } else {
+                        notify("Please verify your email first.", true);
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }
+                } else {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    await sendEmailVerification(userCredential.user);
+                    confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+                    notify("Success! Check your email to activate.");
+                    btn.innerText = "Check Inbox";
+                }
+            } catch (error) {
+                console.error(error);
+                let msg = "Error: " + error.message;
+                if (error.code === 'auth/email-already-in-use') msg = "Email already registered.";
+                if (error.code === 'auth/invalid-credential') msg = "Invalid login details.";
+                notify(msg, true);
+                btn.innerText = originalText;
+                btn.disabled = isLogin ? false : true;
+            }
+        };
+
+        // --- EVENT LISTENERS ---
+        
+        // Form Submissions
+        document.getElementById('loginForm').addEventListener('submit', (e) => processAuth(e, 'in'));
+        document.getElementById('signupForm').addEventListener('submit', (e) => processAuth(e, 'up'));
+
+        // Real-time validation
+        document.getElementById('newPassword').addEventListener('input', validate);
+        document.getElementById('confirmPassword').addEventListener('input', validate);
+
+        // View Toggles
+        document.querySelectorAll('.view-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-target');
+                const el = document.getElementById(targetId);
+                const isPass = el.type === "password";
+                el.type = isPass ? "text" : "password";
+                btn.className = isPass ? "fas fa-eye-slash view-toggle" : "fas fa-eye view-toggle";
+            });
+        });
+
+        // Mode Switches (Flip View)
+        document.querySelectorAll('.mode-switch').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const card = document.getElementById('container');
+                card.classList.toggle('active');
+                const isActive = card.classList.contains('active');
+                document.getElementById('ov-h').innerText = isActive ? "Global Reach." : "Secure Hub.";
+            });
+        });
+
+        // Visual Animations
         const sparksContainer = document.getElementById('sparks');
         for(let i=0; i<60; i++) {
             const s = document.createElement('div');
@@ -275,87 +380,6 @@
             const y = (window.innerHeight / 2 - e.pageY) / 60;
             card.style.transform = `rotateX(${y}deg) rotateY(${-x}deg)`;
         });
-
-        window.toggleView = (id, icon) => {
-            const el = document.getElementById(id);
-            const isPass = el.type === "password";
-            el.type = isPass ? "text" : "password";
-            icon.className = isPass ? "fas fa-eye-slash view-toggle" : "fas fa-eye view-toggle";
-        };
-
-        window.switchMode = () => {
-            card.classList.toggle('active');
-            const isActive = card.classList.contains('active');
-            document.getElementById('ov-h').innerText = isActive ? "Global Reach." : "Secure Hub.";
-        };
-
-        window.notify = (msg, error = false) => {
-            const t = document.getElementById('toast');
-            const icon = document.getElementById('t-icon');
-            document.getElementById('t-msg').innerText = msg;
-            t.style.borderLeftColor = error ? "var(--danger)" : "var(--success)";
-            icon.className = error ? "fas fa-exclamation-circle" : "fas fa-shield-check";
-            icon.style.color = error ? "var(--danger)" : "var(--success)";
-            t.classList.add('active');
-            setTimeout(() => t.classList.remove('active'), 5000);
-        };
-
-        window.validate = () => {
-            const p = document.getElementById('newPassword').value;
-            const cp = document.getElementById('confirmPassword').value;
-            const meter = document.getElementById('strength');
-            const checks = {
-                len: p.length >= 8,
-                up: /[A-Z]/.test(p),
-                num: /[0-9]/.test(p),
-                spec: /[^A-Za-z0-9]/.test(p)
-            };
-            const score = Object.values(checks).filter(Boolean).length;
-            meter.style.width = (score / 4) * 100 + "%";
-            meter.style.background = score < 2 ? "var(--danger)" : score < 4 ? "var(--primary)" : "var(--success)";
-            for(const [key, val] of Object.entries(checks)) {
-                document.getElementById('r-' + key).className = val ? 'req-item valid' : 'req-item';
-            }
-            document.getElementById('reg-btn').disabled = !(score === 4 && p === cp && p !== "");
-        };
-
-        window.processRequest = async (type) => {
-            const isLogin = type === 'in';
-            const btn = isLogin ? document.getElementById('login-btn') : document.getElementById('reg-btn');
-            const email = document.getElementById(isLogin ? 'email' : 'newEmail').value;
-            const password = document.getElementById(isLogin ? 'password' : 'newPassword').value;
-            
-            const originalText = btn.innerText;
-            btn.disabled = true;
-            btn.innerText = "Processing...";
-
-            try {
-                if (isLogin) {
-                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                    if (userCredential.user.emailVerified) {
-                        notify("Access Granted. Welcome back, Aimer.");
-                        setTimeout(() => window.location.href = "home.html", 1500);
-                    } else {
-                        notify("Please verify your email before logging in.", true);
-                        btn.innerText = originalText;
-                        btn.disabled = false;
-                    }
-                } else {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    await sendEmailVerification(userCredential.user);
-                    confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
-                    notify("Identity Finalized. Check email to activate.");
-                    btn.innerText = "Check Inbox";
-                }
-            } catch (error) {
-                let msg = "Handshake Failed.";
-                if (error.code === 'auth/email-already-in-use') msg = "Email already registered.";
-                if (error.code === 'auth/invalid-credential') msg = "Invalid login details.";
-                notify(msg, true);
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }
-        };
     </script>
 </body>
 </html>
