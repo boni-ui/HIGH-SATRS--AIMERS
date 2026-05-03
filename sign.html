@@ -38,84 +38,65 @@
 
         #sparks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #111a2e 0%, #05080f 100%); }
 
-        /* TOAST NOTIFICATION SYSTEM */
         .toast-container {
-            position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+            position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 380px; padding: 15px 20px;
-            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);
-            backdrop-filter: blur(12px); border-radius: 18px; display: flex; align-items: center; gap: 12px;
-            z-index: 2000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; pointer-events: none;
+            background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4);
+            backdrop-filter: blur(15px); border-radius: 18px; display: flex; align-items: center; gap: 12px;
+            z-index: 2000; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0;
         }
-        .toast-container.active { top: 20px; opacity: 1; pointer-events: auto; }
-        .toast-container i { font-size: 1.2rem; color: var(--danger); }
-        .toast-container.success { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
-        .toast-container.success i { color: var(--success); }
-        .toast-msg { font-size: 0.85rem; font-weight: 600; color: #fff; }
+        .toast-container.active { top: 25px; opacity: 1; }
+        .toast-container.success { background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); }
+        .toast-msg { font-size: 0.85rem; font-weight: 600; color: #fff; line-height: 1.4; }
 
         .container {
             position: relative; width: 440px; max-width: 90%; padding: 45px 40px;
             background: var(--card-bg); border-radius: 35px; border: 1px solid var(--border);
             box-shadow: 0 40px 100px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        h1 { font-size: 2.1rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.8px; }
-        .subtitle { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 35px; font-weight: 500; }
-
-        .input-group { position: relative; margin-bottom: 22px; }
-        label { display: block; font-size: 0.65rem; font-weight: 800; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1.2px; }
-        
-        .field-wrapper { position: relative; border-radius: 14px; overflow: hidden; }
-        input {
-            width: 100%; padding: 16px 48px; background: var(--input-bg); border: 1px solid var(--border);
-            color: white; outline: none; transition: 0.4s; font-size: 0.95rem;
-        }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(245, 124, 0, 0.15); }
-        input:focus ~ i:first-child { color: var(--primary); }
-        
-        .field-wrapper i:first-child { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #334155; transition: 0.3s; }
-        .view-toggle { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-dim); font-size: 0.85rem; z-index: 5; }
-
-        .divider { display: flex; align-items: center; text-align: center; margin: 25px 0; color: var(--text-dim); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
-        .divider:not(:empty)::before { margin-right: 15px; }
-        .divider:not(:empty)::after { margin-left: 15px; }
+        h1 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .subtitle { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 30px; }
 
         .btn-action {
-            width: 100%; padding: 16px; border-radius: 14px; border: none; background: #ffffff; 
+            width: 100%; padding: 16px; border-radius: 14px; border: none; background: #fff; 
             color: #000; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; 
-            letter-spacing: 1px; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-action:active { transform: scale(0.98); }
+        .btn-google { background: #1a2235; color: white; border: 1px solid var(--border); margin-bottom: 10px; }
+        .btn-google i { color: #4285F4; }
         
-        .btn-google { background: #1a2235; color: white; border: 1px solid var(--border); }
-        .btn-google i { color: #4285F4; font-size: 1.1rem; }
+        .divider { display: flex; align-items: center; text-align: center; margin: 20px 0; color: var(--text-dim); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+        .divider::before { margin-right: 15px; } .divider::after { margin-left: 15px; }
+
+        .input-group { margin-bottom: 18px; text-align: left; }
+        label { display: block; font-size: 0.65rem; font-weight: 800; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; }
+        .field-wrapper { position: relative; }
+        input { width: 100%; padding: 14px 45px; background: var(--input-bg); border: 1px solid var(--border); color: white; border-radius: 12px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+        .field-wrapper i:first-child { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #334155; }
+        .view-toggle { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-dim); }
+
+        .strength-bar { height: 3px; background: rgba(255,255,255,0.05); margin: 10px 0; border-radius: 10px; overflow: hidden; }
+        .strength-progress { height: 100%; width: 0%; transition: 0.5s; background: var(--primary); }
         
-        .btn-signup { background: var(--bronze-dim); color: rgba(255,255,255,0.7); }
+        .requirements { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 20px; }
+        .req-item { font-size: 0.65rem; color: var(--text-dim); display: flex; align-items: center; gap: 6px; padding: 8px; background: rgba(255,255,255,0.02); border-radius: 8px; }
+        .req-item.valid { color: var(--success); background: rgba(16, 185, 129, 0.05); }
 
-        #access-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 15, 0.95);
-            display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(20px);
-        }
-        .success-shield { font-size: 5rem; color: var(--success); margin-bottom: 20px; animation: pulse 2s infinite; }
+        .switch-text { margin-top: 20px; font-size: 0.8rem; color: var(--text-dim); }
+        .switch-text span { color: var(--primary); cursor: pointer; font-weight: 700; }
 
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        .shake { animation: shake 0.4s both; }
-        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
-
+        #access-overlay { position: fixed; inset: 0; background: rgba(5,8,15,0.98); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(15px); }
+        .success-shield { font-size: 4rem; color: var(--success); margin-bottom: 15px; animation: pulse 2s infinite; }
+        
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
         .form-content { display: none; }
-        .form-content.active { display: block; animation: slideIn 0.5s ease forwards; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .switch-text { margin-top: 25px; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
-        .switch-text span { color: var(--primary); cursor: pointer; font-weight: 700; margin-left: 5px; }
-        
-        .strength-bar { height: 3px; width: 100%; background: rgba(255,255,255,0.05); margin-top: -10px; margin-bottom: 20px; border-radius: 10px; overflow: hidden; }
-        .strength-progress { height: 100%; width: 0%; background: linear-gradient(90deg, #ff4d4d, #f57c00, #10b981); transition: 0.6s ease; }
-        .requirements { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 25px; }
-        .req-item { font-size: 0.7rem; color: var(--text-dim); display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: rgba(255,255,255,0.03); border-radius: 10px; }
-        .req-item.valid { color: #f1f5f9; background: rgba(16, 185, 129, 0.1); }
-        .req-item.valid i { color: var(--success); }
+        .form-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -123,37 +104,37 @@
     <canvas id="sparks-canvas"></canvas>
 
     <div class="toast-container" id="toast">
-        <i id="toastIcon" class="fas fa-exclamation-circle"></i>
-        <span class="toast-msg" id="toastMsg">Error message here</span>
+        <i id="toastIcon" class="fas fa-exclamation-triangle"></i>
+        <span class="toast-msg" id="toastMsg">Verification required</span>
     </div>
 
     <div id="access-overlay">
         <i class="fas fa-shield-check success-shield"></i>
-        <h1 style="color: var(--success)">ACCESS GRANTED</h1>
-        <p style="color: var(--text-dim); margin-top: 10px;">Initializing Academic Cloud Profile...</p>
+        <h1 style="color: var(--success)">AUTHENTICATED</h1>
+        <p style="color: var(--text-dim)">Accessing Secure Environment...</p>
     </div>
 
     <div class="container" id="mainContainer">
         <div id="loginSection" class="form-content active">
             <h1>Aim High.</h1>
-            <p class="subtitle">Access your Academic Cloud Profile</p>
+            <p class="subtitle">Secure Academic Identity Cloud</p>
             
-            <button type="button" class="btn-action btn-google" id="googleBtn">
+            <button type="button" class="btn-action btn-google" onclick="handleGoogleLogin()">
                 <i class="fab fa-google"></i> Continue with Google
             </button>
 
-            <div class="divider">or use credentials</div>
+            <div class="divider">or credentials</div>
 
             <form id="loginForm">
                 <div class="input-group">
                     <label>Identity Email</label>
                     <div class="field-wrapper">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" id="email" placeholder="student@email.com" required>
+                        <input type="email" id="email" placeholder="name@email.com" required>
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>Secure Passkey</label>
+                    <label>Passkey</label>
                     <div class="field-wrapper">
                         <i class="fas fa-lock"></i>
                         <input type="password" id="password" placeholder="••••••••" required>
@@ -162,65 +143,53 @@
                 </div>
                 <button type="submit" class="btn-action" id="loginBtn">Authorize Session</button>
             </form>
-            <p class="switch-text">New Aimer? <span onclick="toggleForm()">Create Profile</span></p>
+            <p class="switch-text">First time? <span onclick="toggleForm()">Create Profile</span></p>
         </div>
 
         <div id="signupSection" class="form-content">
-            <h1>Elite Membership</h1>
-            <p class="subtitle">Initialize your learning cloud identity</p>
+            <h1>Initialize</h1>
+            <p class="subtitle">Create your learning cloud identity</p>
             
-            <button type="button" class="btn-action btn-google" id="googleBtnSignup">
+            <button type="button" class="btn-action btn-google" onclick="handleGoogleLogin()">
                 <i class="fab fa-google"></i> Sign up with Google
             </button>
 
-            <div class="divider">or create profile</div>
+            <div class="divider">or secure setup</div>
 
             <form id="signupForm">
                 <div class="input-group">
                     <label>Academic Email</label>
                     <div class="field-wrapper">
                         <i class="fas fa-at"></i>
-                        <input type="email" id="newEmail" placeholder="name@email.com" required>
+                        <input type="email" id="newEmail" required>
                     </div>
                 </div>
-                <div class="input-group" style="margin-bottom: 12px;">
+                <div class="input-group">
                     <label>Create Passkey</label>
                     <div class="field-wrapper">
                         <i class="fas fa-shield-alt"></i>
-                        <input type="password" id="newPassword" placeholder="••••••••" required oninput="validatePassword()">
+                        <input type="password" id="newPassword" required oninput="validatePassword()">
                         <i class="fas fa-eye view-toggle" onclick="togglePass('newPassword', this)"></i>
                     </div>
                 </div>
                 <div class="strength-bar"><div id="strengthProgress" class="strength-progress"></div></div>
-                <div class="input-group">
-                    <label>Confirm Passkey</label>
-                    <div class="field-wrapper">
-                        <i class="fas fa-check-double"></i>
-                        <input type="password" id="confirmPassword" placeholder="••••••••" required oninput="validatePassword()">
-                        <i class="fas fa-eye view-toggle" onclick="togglePass('confirmPassword', this)"></i>
-                    </div>
-                </div>
                 <div class="requirements">
                     <div class="req-item" id="r-len"><i class="fas fa-circle"></i> 8+ Char</div>
-                    <div class="req-item" id="r-up"><i class="fas fa-circle"></i> 1 Uppercase</div>
-                    <div class="req-item" id="r-num"><i class="fas fa-circle"></i> 1 Numeric</div>
-                    <div class="req-item" id="r-spec"><i class="fas fa-circle"></i> 1 Special ($@!)</div>
+                    <div class="req-item" id="r-up"><i class="fas fa-circle"></i> Caps</div>
+                    <div class="req-item" id="r-num"><i class="fas fa-circle"></i> Number</div>
+                    <div class="req-item" id="r-spec"><i class="fas fa-circle"></i> Symbol</div>
                 </div>
-                <button type="submit" class="btn-action btn-signup" id="regBtn" disabled>Finalize Identity</button>
+                <button type="submit" class="btn-action btn-signup" id="regBtn" disabled style="background: var(--bronze-dim); color: #fff;">Finalize Profile</button>
             </form>
-            <p class="switch-text">Already verified? <span onclick="toggleForm()">Secure Login</span></p>
+            <p class="switch-text">Already a member? <span onclick="toggleForm()">Secure Login</span></p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            sendEmailVerification,
-            GoogleAuthProvider,
-            signInWithPopup 
+            getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
+            sendEmailVerification, GoogleAuthProvider, signInWithPopup, getRedirectResult 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -236,47 +205,43 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        const showToast = (message, type = 'error') => {
+        const showToast = (msg, type = 'error') => {
             const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            const toastIcon = document.getElementById('toastIcon');
-            toastMsg.innerText = message;
+            document.getElementById('toastMsg').innerText = msg;
             toast.className = `toast-container active ${type}`;
-            toastIcon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
-            setTimeout(() => toast.classList.remove('active'), 4000);
-        };
-
-        const getFriendlyError = (code) => {
-            switch (code) {
-                case 'auth/email-already-in-use': return 'This email is already registered.';
-                case 'auth/invalid-email': return 'Please enter a valid email address.';
-                case 'auth/user-not-found': return 'No profile found with this email.';
-                case 'auth/wrong-password': return 'Incorrect passkey. Please try again.';
-                case 'auth/popup-closed-by-user': return 'Login window was closed.';
-                default: return 'Identity verification failed. Try again.';
-            }
+            document.getElementById('toastIcon').className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+            setTimeout(() => toast.classList.remove('active'), 5000);
         };
 
         const triggerSuccess = () => {
             document.getElementById('access-overlay').style.display = 'flex';
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#f57c00', '#ffffff'] });
-            setTimeout(() => { window.location.href = "home.html"; }, 2500);
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            setTimeout(() => { window.location.href = "home.html"; }, 2000);
         };
 
-        // GOOGLE LOGIN HANDLER
-        const handleGoogleLogin = async () => {
+        // --- GOOGLE LOGIN ---
+        window.handleGoogleLogin = async () => {
             try {
+                // signInWithPopup is more compatible for most users
                 const result = await signInWithPopup(auth, provider);
-                triggerSuccess();
+                if(result.user) triggerSuccess();
             } catch (err) {
-                showToast(getFriendlyError(err.code));
+                console.error("Google Auth Error:", err.code);
+                showToast(mapError(err.code));
             }
         };
 
-        document.getElementById('googleBtn').addEventListener('click', handleGoogleLogin);
-        document.getElementById('googleBtnSignup').addEventListener('click', handleGoogleLogin);
+        const mapError = (code) => {
+            switch(code) {
+                case 'auth/email-already-in-use': return 'This email is already registered.';
+                case 'auth/invalid-credential': return 'Wrong email or password.';
+                case 'auth/popup-closed-by-user': return 'Login window closed.';
+                case 'auth/operation-not-allowed': return 'Google login is not enabled in Firebase.';
+                default: return `System Error: ${code.split('/')[1]?.replace(/-/g, ' ') || 'Refused'}`;
+            }
+        };
 
-        // Standard Login
+        // --- EMAIL LOGIN ---
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
@@ -284,24 +249,27 @@
             const pass = document.getElementById('password').value;
 
             btn.disabled = true;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Verifying...`;
-            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
             try {
-                const cred = await signInWithEmailAndPassword(auth, email, pass);
-                if (!cred.user.emailVerified) {
-                    throw { code: 'custom', message: "Please verify your email first." };
+                const res = await signInWithEmailAndPassword(auth, email, pass);
+                if (!res.user.emailVerified) {
+                    showToast("Please check your email and verify your account.");
+                    btn.disabled = false;
+                    btn.innerHTML = "Authorize Session";
+                } else {
+                    triggerSuccess();
                 }
-                triggerSuccess();
             } catch (err) {
                 document.getElementById('mainContainer').classList.add('shake');
                 setTimeout(() => document.getElementById('mainContainer').classList.remove('shake'), 500);
-                showToast(err.code ? getFriendlyError(err.code) : err.message);
+                showToast(mapError(err.code));
                 btn.disabled = false;
                 btn.innerHTML = "Authorize Session";
             }
         });
 
-        // Signup Handler
+        // --- SIGNUP ---
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('regBtn');
@@ -309,68 +277,62 @@
             const pass = document.getElementById('newPassword').value;
 
             btn.disabled = true;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Initializing...`;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Setting up...';
 
             try {
-                const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                await sendEmailVerification(cred.user);
-                showToast("Verification link sent! Check your inbox.", "success");
+                const res = await createUserWithEmailAndPassword(auth, email, pass);
+                await sendEmailVerification(res.user);
+                showToast("Identity Created! Check your email for verification.", "success");
                 window.toggleForm();
                 btn.disabled = false;
-                btn.innerHTML = "Finalize Identity";
+                btn.innerHTML = "Finalize Profile";
             } catch (err) {
-                showToast(getFriendlyError(err.code));
+                showToast(mapError(err.code));
                 btn.disabled = false;
-                btn.innerHTML = "Finalize Identity";
+                btn.innerHTML = "Finalize Profile";
             }
         });
     </script>
 
     <script>
-        // Sparks Animation Engine
-        const canvas = document.getElementById('sparks-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        class Particle {
-            constructor() { this.reset(); }
-            reset() { this.x = Math.random() * canvas.width; this.y = canvas.height + 10; this.size = Math.random() * 2 + 0.5; this.speedY = Math.random() * 1.5 + 0.5; this.speedX = (Math.random() - 0.5) * 1; this.opacity = Math.random() * 0.5 + 0.1; }
-            update() { this.y -= this.speedY; this.x += this.speedX; if (this.y < -10) this.reset(); }
-            draw() { ctx.fillStyle = `rgba(245, 124, 0, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
-        }
-        for (let i = 0; i < 50; i++) particles.push(new Particle());
-        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
-        initCanvas(); animate();
-
+        // UI Helpers
         window.toggleForm = () => {
-            const sections = document.querySelectorAll('.form-content');
-            sections.forEach(s => s.classList.toggle('active'));
+            document.querySelectorAll('.form-content').forEach(f => f.classList.toggle('active'));
         };
-
         window.togglePass = (id, icon) => {
             const input = document.getElementById(id);
             input.type = input.type === 'password' ? 'text' : 'password';
             icon.className = input.type === 'password' ? 'fas fa-eye view-toggle' : 'fas fa-eye-slash view-toggle';
         };
-
         window.validatePassword = () => {
             const p = document.getElementById('newPassword').value;
-            const cp = document.getElementById('confirmPassword').value;
-            const progress = document.getElementById('strengthProgress');
             const checks = { len: p.length >= 8, up: /[A-Z]/.test(p), num: /[0-9]/.test(p), spec: /[^A-Za-z0-9]/.test(p) };
             let score = 0;
-            for(const [key, passed] of Object.entries(checks)) {
-                const el = document.getElementById('r-' + key);
-                if(passed) { el.classList.add('valid'); score++; }
-                else { el.classList.remove('valid'); }
-            }
-            progress.style.width = (score * 25) + "%";
+            Object.entries(checks).forEach(([k, v]) => {
+                const el = document.getElementById('r-' + k);
+                if(v) { el.classList.add('valid'); score++; }
+                else el.classList.remove('valid');
+            });
+            document.getElementById('strengthProgress').style.width = (score * 25) + "%";
             const btn = document.getElementById('regBtn');
-            const isValid = score === 4 && p === cp && p.length > 0;
-            btn.disabled = !isValid;
-            btn.style.background = isValid ? "var(--primary)" : "var(--bronze-dim)";
-            btn.style.color = isValid ? "#fff" : "rgba(255,255,255,0.7)";
+            btn.disabled = score < 4;
+            btn.style.background = score === 4 ? "var(--primary)" : "var(--bronze-dim)";
         };
+
+        // Sparks
+        const canvas = document.getElementById('sparks-canvas');
+        const ctx = canvas.getContext('2d');
+        let parts = [];
+        const init = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+        class P {
+            constructor() { this.reset(); }
+            reset() { this.x = Math.random() * canvas.width; this.y = canvas.height + 10; this.s = Math.random() * 2; this.sy = Math.random() * 1.5 + 0.5; this.o = Math.random() * 0.5; }
+            update() { this.y -= this.sy; if (this.y < -10) this.reset(); }
+            draw() { ctx.fillStyle = `rgba(245,124,0,${this.o})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.s, 0, 7); ctx.fill(); }
+        }
+        for(let i=0; i<40; i++) parts.push(new P());
+        const loop = () => { ctx.clearRect(0,0,canvas.width,canvas.height); parts.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(loop); };
+        init(); loop(); window.onresize = init;
     </script>
 </body>
 </html>
