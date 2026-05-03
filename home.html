@@ -21,7 +21,6 @@
       --glass: blur(16px);
       --shadow-gold: 0 15px 35px -12px rgba(255, 179, 71, 0.25);
       --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-      --danger: #ef4444;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,7 +33,7 @@
         radial-gradient(circle at 100% 100%, rgba(255, 179, 71, 0.05) 0%, transparent 35%);
       color: var(--text-bright);
       line-height: 1.6;
-      padding-bottom: 100px;
+      padding-bottom: 100px; /* Space for bottom nav */
     }
 
     /* === TOP NAVIGATION === */
@@ -62,7 +61,8 @@
       cursor: pointer; transition: var(--transition);
     }
 
-    .nav-user img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--gold-primary); object-fit: cover; }
+    .nav-user:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--gold-primary); }
+    .nav-user img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--gold-primary); }
 
     /* === BOTTOM NAVIGATION === */
     .bottom-nav {
@@ -83,232 +83,351 @@
       display: flex; flex-direction: column; align-items: center; gap: 4px;
       font-size: 0.7rem; font-weight: 600; transition: 0.3s;
     }
-    .b-nav-item.active { color: var(--gold-primary); }
 
-    /* === MODAL & QUICK LINKS === */
+    .b-nav-item i { font-size: 1.2rem; }
+    .b-nav-item.active { color: var(--gold-primary); }
+    .b-nav-item:hover { color: var(--gold-secondary); }
+
+    /* === HERO === */
+    .hero { padding: 80px 6% 40px; text-align: center; }
+    .hero h1 { font-size: clamp(2.2rem, 6vw, 4.5rem); font-weight: 800; margin-bottom: 15px; letter-spacing: -2px; }
+    .gold-glow { text-shadow: 0 0 30px rgba(255, 179, 71, 0.3); background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    /* === FEATURE ARCHITECTURE === */
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 6%; }
+    
+    .grid-label {
+      display: flex; align-items: center; gap: 15px; margin: 50px 0 30px;
+      text-transform: uppercase; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; color: var(--gold-primary);
+    }
+    .grid-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-gold), transparent); }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: 28px;
+      padding: 35px;
+      position: relative;
+      transition: var(--transition);
+      cursor: pointer;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+    }
+
+    .card:hover {
+      background: rgba(255, 179, 71, 0.05);
+      border-color: var(--gold-primary);
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .icon-box {
+      width: 55px; height: 55px;
+      background: linear-gradient(135deg, rgba(255, 179, 71, 0.2), transparent);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 25px; color: var(--gold-primary);
+      font-size: 1.6rem; border: 1px solid var(--border-gold);
+    }
+
+    .card h3 { font-size: 1.25rem; margin-bottom: 12px; font-weight: 700; letter-spacing: -0.5px; }
+    .card p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; }
+
+    .premium-badge {
+      position: absolute; top: 20px; right: 20px;
+      font-size: 0.65rem; font-weight: 900; background: var(--gold-gradient);
+      color: #000; padding: 4px 10px; border-radius: 8px; text-transform: uppercase;
+    }
+
+    /* === TAG CLOUD === */
+    .tag-cloud {
+      display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+      margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.02); border-radius: 30px;
+    }
+    .tag {
+      padding: 8px 20px; border-radius: 50px; border: 1px solid var(--border-gold);
+      font-size: 0.8rem; font-weight: 600; color: var(--text-dim); transition: 0.3s;
+    }
+    .tag:hover { border-color: var(--gold-primary); color: var(--gold-primary); background: rgba(255,179,71,0.05); }
+
+    /* === MODAL === */
     .modal {
         position: fixed; inset: 0; background: rgba(0,0,0,0.95);
         display: none; align-items: center; justify-content: center; z-index: 2000;
         backdrop-filter: blur(15px);
     }
     .modal.active { display: flex; }
-    
     .modal-box {
-        background: #0b1120; border-radius: 35px;
-        border: 1px solid var(--border-gold); width: 95%; max-width: 480px;
-        max-height: 90vh; overflow-y: auto; position: relative;
+        background: #0b1120; padding: 45px; border-radius: 40px;
+        border: 1px solid var(--gold-primary); width: 90%; max-width: 420px;
+        text-align: center; position: relative;
     }
 
-    .modal-header { padding: 25px; text-align: center; background: rgba(255,255,255,0.02); }
-    
-    .quick-actions-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        padding: 20px;
-        background: rgba(15, 23, 42, 0.5);
+    .btn-action {
+        width: 100%; padding: 15px; border-radius: 15px; border: none;
+        font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 15px;
+        font-family: inherit;
     }
+    .btn-gold { background: var(--gold-gradient); color: #000; }
+    .btn-outline { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
 
-    .action-card {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid var(--border-gold);
-        border-radius: 16px;
-        padding: 15px 10px;
-        text-align: center;
-        cursor: pointer;
-        transition: 0.3s;
-        text-decoration: none;
-        color: inherit;
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+        .hero { padding: 40px 6%; }
+        .feature-grid { grid-template-columns: 1fr; }
+        .nav-user span { display: none; }
     }
-
-    .action-card:hover { background: rgba(255, 179, 71, 0.1); border-color: var(--gold-primary); }
-    .action-card i { color: var(--gold-primary); font-size: 1.2rem; margin-bottom: 8px; display: block; }
-    .action-card span { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .settings-tabs {
-        display: flex; border-bottom: 1px solid var(--border-gold);
-        position: sticky; top: 0; background: #0b1120; z-index: 5;
-    }
-    .tab-btn {
-        flex: 1; padding: 15px; border: none; background: none; color: var(--text-dim);
-        font-weight: 700; cursor: pointer; font-size: 0.8rem;
-    }
-    .tab-btn.active { color: var(--gold-primary); border-bottom: 2px solid var(--gold-primary); }
-
-    .tab-content { padding: 25px; display: none; }
-    .tab-content.active { display: block; }
-
-    .setting-item { margin-bottom: 18px; }
-    .setting-item label { display: block; font-size: 0.7rem; color: var(--gold-primary); margin-bottom: 5px; text-transform: uppercase; font-weight: 800; }
-    .setting-input {
-        width: 100%; padding: 12px; background: rgba(2, 4, 8, 0.5);
-        border: 1px solid var(--border-gold); border-radius: 12px; color: #fff; font-family: inherit;
-    }
-
-    .btn-save { width: 100%; padding: 15px; border-radius: 15px; border: none; background: var(--gold-gradient); font-weight: 800; cursor: pointer; margin-top: 10px; font-family: inherit; }
-    .btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
-
-    .vault-item {
-        display: flex; align-items: center; gap: 15px;
-        padding: 12px; background: rgba(255,255,255,0.02);
-        border-radius: 15px; margin-bottom: 10px; border: 1px solid var(--border-gold);
-    }
-
-    .rank-tag {
-        display: inline-block; padding: 3px 10px; background: rgba(255, 179, 71, 0.1);
-        color: var(--gold-primary); border: 1px solid var(--gold-primary);
-        border-radius: 50px; font-size: 0.6rem; font-weight: 800; margin-top: 8px;
-    }
-
-    /* Toggle Switch */
-    .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
-    .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; inset: 0; background-color: #334155; transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background: var(--gold-gradient); }
-    input:checked + .slider:before { transform: translateX(20px); }
-
   </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="brand"><i class="fas fa-bolt"></i><span>HIGH STARS AIMERS</span></div>
+  <div class="brand">
+    <i class="fas fa-bolt"></i>
+    <span>HIGH STARS <span style="font-weight: 300;">AIMERS</span></span>
+  </div>
   <div class="nav-user" id="profileTrigger">
-    <span id="navUserName">Loading...</span>
-    <img id="topNavAvatar" src="" alt="Avatar">
+    <span id="navUserName">Elite Member</span>
+    <img id="topNavAvatar" src="https://api.dicebear.com/7.x/initials/svg?seed=User" alt="Avatar">
   </div>
 </nav>
 
 <div class="bottom-nav">
-  <a href="#" class="b-nav-item active"><i class="fas fa-th-large"></i><span>Hub</span></a>
-  <a href="subjects.html" class="b-nav-item"><i class="fas fa-book"></i><span>Library</span></a>
-  <a href="#" class="b-nav-item"><i class="fas fa-brain"></i><span>AI Bot</span></a>
-  <a href="#" class="b-nav-item" id="mobileProfileTrigger"><i class="fas fa-cog"></i><span>Settings</span></a>
+  <a href="#" class="b-nav-item active">
+    <i class="fas fa-th-large"></i>
+    <span>Hub</span>
+  </a>
+  <a href="subjects.html" class="b-nav-item">
+    <i class="fas fa-book"></i>
+    <span>Library</span>
+  </a>
+  <a href="#" class="b-nav-item">
+    <i class="fas fa-brain"></i>
+    <span>AI Bot</span>
+  </a>
+  <a href="#" class="b-nav-item" id="mobileProfile">
+    <i class="fas fa-user-shield"></i>
+    <span>Profile</span>
+  </a>
 </div>
+
+<header class="hero">
+    <h1>The <span class="gold-glow">Obsidian Tier</span> Experience</h1>
+    <p style="color: var(--text-dim); font-size: 1.1rem;">Engineering academic excellence through high-velocity data and elite resources.</p>
+</header>
+
+<main class="container">
+  
+  <div class="grid-label">Core Mastery Pillars</div>
+
+  <div class="feature-grid">
+    <a href="subjects.html" class="card">
+        <div class="premium-badge">Updated</div>
+        <div class="icon-box"><i class="fas fa-archive"></i></div>
+        <h3>Resource Vault 3.0</h3>
+        <p>10+ years of regional, mock, and national examinations with AI-verified marking schemes.</p>
+    </a>
+
+    <a href="#" class="card">
+        <div class="icon-box"><i class="fas fa-microchip"></i></div>
+        <h3>Adaptive Quiz Engine</h3>
+        <p>Questions that evolve based on your performance. Master weak topics automatically.</p>
+    </a>
+
+    <a href="#" class="card">
+        <div class="icon-box"><i class="fas fa-chart-pie"></i></div>
+        <h3>Predictive Analytics</h3>
+        <p>See your grade trajectory. Our system predicts your final score based on current data.</p>
+    </a>
+
+    <div class="grid-label">Advanced Learning Tech</div>
+
+    <div class="card">
+        <div class="icon-box"><i class="fas fa-robot"></i></div>
+        <h3>Lumina AI Tutor</h3>
+        <p>A specialized academic LLM designed to solve complex STEM problems in seconds.</p>
+    </div>
+
+    <div class="card">
+        <div class="icon-box"><i class="fas fa-vr-cardboard"></i></div>
+        <h3>Virtual STEM Labs</h3>
+        <p>Interactive 3D simulations for Biology, Chemistry, and Physics experiments.</p>
+    </div>
+
+    <div class="card">
+        <div class="icon-box"><i class="fas fa-layer-group"></i></div>
+        <h3>Concept Mapping</h3>
+        <p>Visual node-based study maps that show how different syllabus topics connect.</p>
+    </div>
+
+    <div class="grid-label">Elite Ecosystem Features</div>
+
+    <div class="card">
+        <div class="icon-box"><i class="fas fa-trophy"></i></div>
+        <h3>National Leaderboard</h3>
+        <p>Compete with the top 1% of students nationwide. Win monthly academic grants.</p>
+    </div>
+
+    <div class="card">
+        <div class="icon-box"><i class="fas fa-headphones-alt"></i></div>
+        <h3>Audio Study Notes</h3>
+        <p>High-quality summary narrations for hands-free learning during commutes.</p>
+    </div>
+
+    <div class="card">
+        <div class="icon-box"><i class="fas fa-file-invoice"></i></div>
+        <h3>One-Click Summarizer</h3>
+        <p>Upload a 50-page PDF and get a 2-page bulleted summary instantly.</p>
+    </div>
+  </div>
+
+  <div class="grid-label">30+ Total Features Integrated</div>
+  <div class="tag-cloud">
+      <div class="tag"><i class="fas fa-check-circle"></i> Flashcard Sync</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Night Mode Pro</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Offline PDF Access</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Speed Reading Mode</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Career Pathfinding</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Scholarship Tracker</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Live Tutor Chat</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Daily Study Reminders</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Dark Matter UI</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Multi-Device Sync</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Group Study Rooms</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Formula Sheets</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Essay Proofreader</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Focus Timer (Pomodoro)</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Mental Health Hub</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Syllabus Progress Bar</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Revision Heatmaps</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Digital Certificate Vault</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Custom Profile Themes</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Parental Insights</div>
+      <div class="tag"><i class="fas fa-check-circle"></i> Smart Search 2.0</div>
+  </div>
+
+</main>
 
 <div id="profileModal" class="modal">
     <div class="modal-box">
-        <div class="modal-header">
-            <div style="position: relative; display: inline-block;">
-                <img id="userProfilePic" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--gold-primary); object-fit: cover;">
-                <div onclick="document.getElementById('profileInput').click()" style="position: absolute; bottom: 0; right: 0; background: var(--gold-primary); border-radius: 50%; padding: 6px; cursor: pointer;">
-                    <i class="fas fa-pen" style="color: #000; font-size: 0.6rem;"></i>
-                </div>
-            </div>
-            <h3 id="welcomeMessage" style="margin-top: 10px;">User Name</h3>
-            <div class="rank-tag">ELITE RANK: STAR AIMER</div>
-            <input type="file" id="profileInput" accept="image/*" style="display: none;">
-        </div>
-
-        <div class="quick-actions-grid">
-            <div class="action-card" onclick="openTab(null, 'security')">
-                <i class="fas fa-shield-alt"></i>
-                <span>Security</span>
-            </div>
-            <div class="action-card" onclick="openTab(null, 'vault')">
-                <i class="fas fa-cloud-download-alt"></i>
-                <span>Vault</span>
-            </div>
-            <div class="action-card" onclick="alert('Night Mode Synchronized with System')">
-                <i class="fas fa-moon"></i>
-                <span>Night</span>
-            </div>
-            <div class="action-card">
-                <i class="fas fa-medal"></i>
-                <span>Stats</span>
-            </div>
-            <div class="action-card">
-                <i class="fas fa-fingerprint"></i>
-                <span>Verify</span>
-            </div>
-            <div class="action-card" id="signOutAction">
-                <i class="fas fa-power-off" style="color: #ef4444;"></i>
-                <span style="color: #ef4444;">Exit</span>
+        <div style="position: relative; display: inline-block;">
+            <img id="userProfilePic" src="" style="width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--gold-primary); padding: 5px;">
+            <div onclick="document.getElementById('profileInput').click()" style="position: absolute; bottom: 5px; right: 5px; background: var(--gold-primary); border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <i class="fas fa-pen" style="color: #000; font-size: 0.9rem;"></i>
             </div>
         </div>
+        <input type="file" id="profileInput" accept="image/*" style="display: none;">
+        
+        <h2 id="welcomeMessage" style="margin-top: 20px; letter-spacing: -1px;">User Name</h2>
+        <p id="userEmail" style="color: var(--text-dim); margin-bottom: 30px;"></p>
+        
+        <button class="btn-action btn-gold">Upgrade to Gold+ Plan</button>
+        <button class="btn-action btn-outline" id="signOutButton">Logout Account</button>
+        
+        <p onclick="document.getElementById('profileModal').classList.remove('active')" style="margin-top: 20px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim);">Close Settings</p>
+               </div>
 
         <div class="settings-tabs">
-            <button class="tab-btn active" id="btn-general" onclick="openTab(event, 'general')">Profile</button>
-            <button class="tab-btn" id="btn-vault" onclick="openTab(event, 'vault')">Saved</button>
-            <button class="tab-btn" id="btn-security" onclick="openTab(event, 'security')">Safety</button>
+            <button class="tab-btn active" onclick="openTab(event, 'account')">Account</button>
+            <button class="tab-btn" onclick="openTab(event, 'academic')">Academic</button>
+            <button class="tab-btn" onclick="openTab(event, 'preferences')">Preferences</button>
+            <button class="tab-btn" onclick="openTab(event, 'security')">Security</button>
         </div>
 
-        <div id="general" class="tab-content active">
+        <div id="account" class="tab-content active">
             <div class="setting-item">
-                <label>Display Name</label>
+                <label>Full Name</label>
                 <input type="text" id="editDisplayName" class="setting-input" placeholder="Your Name">
             </div>
             <div class="setting-item">
-                <label>Registered Email</label>
-                <input type="text" id="userEmailDisplay" class="setting-input" disabled style="opacity: 0.6;">
+                <label>Email Address</label>
+                <input type="email" id="userEmail" class="setting-input" readonly style="opacity: 0.6;">
             </div>
-            <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-                <div style="font-size: 0.6rem; color: var(--gold-primary); font-weight: 800; margin-bottom: 5px;">ACCOUNT METADATA</div>
-                <div style="font-size: 0.75rem; display: flex; justify-content: space-between; margin-bottom: 4px;">
-                    <span style="color: var(--text-dim);">Joined:</span>
-                    <span id="metaCreated">...</span>
-                </div>
-                <div style="font-size: 0.75rem; display: flex; justify-content: space-between;">
-                    <span style="color: var(--text-dim);">Last Login:</span>
-                    <span id="metaLastLogin">...</span>
-                </div>
-            </div>
-            <button class="btn-save" id="saveProfile">Save Identity Changes</button>
+            <button class="btn-save" id="saveProfile">Save Changes</button>
         </div>
 
-        <div id="vault" class="tab-content">
-            <div class="vault-item">
-                <i class="fas fa-file-pdf" style="color: var(--gold-primary);"></i>
-                <div style="flex: 1;">
-                    <div style="font-size: 0.8rem; font-weight: 700;">Physics Molar Heat.pdf</div>
-                    <div style="font-size: 0.6rem; color: var(--text-dim);">Saved May 3, 2026</div>
-                </div>
-                <i class="fas fa-trash-alt" style="color: #ef4444; font-size: 0.8rem; cursor: pointer;"></i>
+        <div id="academic" class="tab-content">
+            <div class="setting-item">
+                <label>Current Level</label>
+                <select class="setting-input">
+                    <option>Form 4 (Candidate)</option>
+                    <option>Form 3</option>
+                    <option>Form 2</option>
+                    <option>Form 1</option>
+                </select>
+            </div>-item">
+                <label>Target Mean Grade</label>
+                <select class="setting-input">
+                    <option>A (Plain)</option>
+                    <option>A- (Minus)</option>
+                    <option>B+ (Plus)</option>
+                    <option>B (Plus)</option>
+                    <option>B- (Plus)</option>
+                    <option>c+ (Plus)</option>
+                    <option>c (Plus)</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <label>Primary Focus Subject</label>
+                <select class="setting-input">
+                    <option>Mathematics</option>
+                    <option>Physics</option>
+                    <option>Chemistry</option>
+                    <option>Biology</option>
+                    <option>English/Kiswahili</option>
+                </select>
+            </div>
+            <button class="btn-save">Update Academic Path</button>
+        </div>
+
+        <div id="preferences" class="tab-content">
+            <div class="switch-row">
+                <span>Study Reminders</span>
+                <input type="checkbox" checked>
+            </div>
+            <div class="switch-row">
+                <span>Leaderboard Visibility</span>
+                <input type="checkbox" checked>
+            </div>
+            <div class="switch-row">
+                <span>Power Saver Mode</span>
+                <input type="checkbox">
+            </div>
+            <div class="setting-item" style="margin-top: 15px;">
+                <label>Data Management</label>
+                <button style="background: none; border: 1px solid #ef4444; color: #ef4444; padding: 10px; width: 100%; border-radius: 10px; cursor: pointer; font-size: 0.75rem;">Clear Offline Vault Cache</button>
             </div>
         </div>
 
         <div id="security" class="tab-content">
             <div class="setting-item">
-                <label>Update Password</label>
-                <input type="password" id="newPassword" class="setting-input" placeholder="Enter new password">
+                <label>New Password</label>
+                <input type="password" id="newPassword" class="setting-input" placeholder="Minimum 6 characters">
             </div>
-            <button class="btn-save" id="changePassBtn">Encrypt New Password</button>
-
-            <div style="margin-top: 30px; border-top: 1px solid var(--border-gold); padding-top: 20px;">
-                <label style="font-size: 0.7rem; color: var(--gold-primary); font-weight: 800;">ADVANCED PROTECTION</label>
-                
-                <div class="switch-row">
-                    <div style="font-size: 0.8rem;">2-Factor Authentication</div>
-                    <label class="switch">
-                        <input type="checkbox" id="twoFactorToggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-
-                <div class="switch-row">
-                    <div style="font-size: 0.8rem;">Login Alerts</div>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
-
-            <div style="margin-top: 20px;">
-                <label style="font-size: 0.7rem; color: #ef4444; font-weight: 800;">DANGER ZONE</label>
-                <button class="btn-save btn-danger" id="deleteAccountBtn">Delete Elite Profile</button>
+            <button class="btn-save" id="changePassBtn">Update Password</button>
+            
+            <div class="danger-zone">
+                <button class="btn-save" id="signOutButton" style="background: #ef4444; color: white;">Sign Out of All Devices</button>
             </div>
         </div>
 
-        <p onclick="document.getElementById('profileModal').classList.remove('active')" style="text-align: center; padding: 20px; font-size: 0.7rem; cursor: pointer; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px;">Dismiss Settings</p>
+        <p onclick="document.getElementById('profileModal').classList.remove('active')" style="text-align: center; padding: 20px; font-size: 0.75rem; cursor: pointer; color: var(--text-dim);">Close Command Center</p>
     </div>
 </div>
 
+<footer style="text-align: center; padding: 40px 0; border-top: 1px solid var(--border-gold); margin-top: 50px;">
+    <p style="color: var(--text-dim); font-size: 0.8rem;">&copy; 2026 High Stars Aimers • Absolute Academic Mastery</p>
+</footer>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword, deleteUser } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 
 const firebaseConfig = {
@@ -324,108 +443,25 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-// Global Tab Switcher
-window.openTab = (evt, tabName) => {
-    const contents = document.getElementsByClassName("tab-content");
-    for (let i = 0; i < contents.length; i++) contents[i].style.display = "none";
-    
-    const btns = document.getElementsByClassName("tab-btn");
-    for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
-    
-    document.getElementById(tabName).style.display = "block";
-    if(evt) {
-        evt.currentTarget.classList.add("active");
-    } else {
-        const targetBtn = document.getElementById('btn-' + tabName);
-        if(targetBtn) targetBtn.classList.add("active");
-    }
-}
-
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const name = user.displayName || user.email.split('@')[0];
         const userPhoto = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
-        
-        // UI Updates
+
         document.getElementById("navUserName").innerText = name;
         document.getElementById("welcomeMessage").innerText = name;
+        document.getElementById("userEmail").innerText = user.email;
         document.getElementById("userProfilePic").src = userPhoto;
         document.getElementById("topNavAvatar").src = userPhoto;
-        document.getElementById("editDisplayName").value = name;
-        document.getElementById("userEmailDisplay").value = user.email;
-
-        // Metadata handling
-        const createdDate = new Date(user.metadata.creationTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        const loginDate = new Date(user.metadata.lastSignInTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
-        document.getElementById("metaCreated").innerText = createdDate;
-        document.getElementById("metaLastLogin").innerText = loginDate;
-
     } else {
         window.location.href = "signin1.html"; 
     }
 });
 
-const trigger = () => document.getElementById('profileModal').classList.add('active');
-document.getElementById('profileTrigger').onclick = trigger;
-document.getElementById('mobileProfileTrigger').onclick = (e) => { e.preventDefault(); trigger(); };
+// Navigation & Modals
+const profileModal = document.getElementById('profileModal');
+document.getElementById('profileTrigger').onclick = () => profileModal.classList.add('active');
+document.getElementById('mobileProfile').onclick = (e) => { e.preventDefault(); profileModal.classList.add('active'); };
 
-// Feature 1: Profile Save
-document.getElementById('saveProfile').onclick = async () => {
-    const newName = document.getElementById('editDisplayName').value;
-    if(!newName) return;
-    try {
-        await updateProfile(auth.currentUser, { displayName: newName });
-        alert("Identity Synced Successfully.");
-        location.reload();
-    } catch(err) { alert(err.message); }
-};
-
-// Feature 2: Password Encryption
-document.getElementById('changePassBtn').onclick = async () => {
-    const newPass = document.getElementById('newPassword').value;
-    if(newPass.length < 6) { alert("Security requires 6+ characters."); return; }
-    try {
-        await updatePassword(auth.currentUser, newPass);
-        alert("Password Encrypted and Updated.");
-        document.getElementById('newPassword').value = "";
-    } catch (e) { alert("Recent login required. Please sign out and back in to change security keys."); }
-};
-
-// Feature 3: Avatar Upload
-document.getElementById('profileInput').onchange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-        const storageRef = ref(storage, 'avatars/' + auth.currentUser.uid);
-        const snapshot = await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        await updateProfile(auth.currentUser, { photoURL: downloadURL });
-        location.reload();
-    } catch(err) { alert("Upload failed. Verify storage rules."); }
-};
-
-// Feature 4: 2FA State Manager (Visual)
-document.getElementById('twoFactorToggle').onchange = (e) => {
-    if(e.target.checked) {
-        alert("Enhanced Security Shield Activated for this session.");
-    } else {
-        alert("Warning: Primary shield deactivated.");
-    }
-};
-
-// Feature 5: Account Termination
-document.getElementById('deleteAccountBtn').onclick = async () => {
-    const confirmDelete = confirm("Are you sure? This will permanently wipe your Elite Profile data.");
-    if(confirmDelete) {
-        try {
-            await deleteUser(auth.currentUser);
-            window.location.href = "signin1.html";
-        } catch(e) { alert("Re-authentication required for account deletion."); }
-    }
-};
-
-document.getElementById("signOutAction").onclick = () => signOut(auth);
-</script>
-
-</body>
-</html>
+// Profile Image Upload
+document.getElementById('profileInput').onchange = asy
