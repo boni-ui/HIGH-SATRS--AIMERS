@@ -38,7 +38,7 @@
       padding-bottom: 120px;
     }
 
-    /* === NETFLFY SYSTEM NOTIFICATION === */
+    /* === SYSTEM NOTIFICATION === */
     .system-announcer {
         background: rgba(255, 179, 71, 0.1);
         border-bottom: 1px solid var(--border-gold);
@@ -85,7 +85,20 @@
       cursor: pointer; transition: var(--transition);
     }
     .nav-user:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--gold-primary); }
-    .nav-user img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--gold-primary); object-fit: cover; }
+    .nav-user img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--gold-primary); object-fit: cover; }
+
+    /* === UNDER DEVELOPMENT POPUP === */
+    #devPopup {
+        display: none; position: fixed; inset: 0; z-index: 9999;
+        background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+        align-items: center; justify-content: center;
+    }
+    .dev-card {
+        background: #0f172a; border: 1px solid var(--gold-primary);
+        padding: 40px; border-radius: 30px; text-align: center; max-width: 400px;
+        box-shadow: var(--shadow-gold);
+    }
+    .dev-card i { font-size: 3rem; color: var(--gold-primary); margin-bottom: 20px; }
 
     /* === BOTTOM NAVIGATION === */
     .bottom-nav {
@@ -94,79 +107,18 @@
       background: rgba(15, 23, 42, 0.8);
       backdrop-filter: blur(20px);
       border: 1px solid var(--border-gold);
-      border-radius: 24px;
-      padding: 12px 25px;
+      border-radius: 24px; padding: 12px 25px;
       display: flex; justify-content: space-between; align-items: center;
-      z-index: 1001;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      z-index: 1001; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
     .b-nav-item {
       color: var(--text-dim); text-decoration: none;
       display: flex; flex-direction: column; align-items: center; gap: 4px;
       font-size: 0.7rem; font-weight: 600; transition: 0.3s;
     }
-    .b-nav-item i { font-size: 1.2rem; }
     .b-nav-item.active { color: var(--gold-primary); }
 
-    /* === HERO === */
-    .hero { padding: 60px 6% 40px; text-align: center; }
-    .hero h1 { font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 800; margin-bottom: 15px; letter-spacing: -2px; }
-    .gold-glow { text-shadow: 0 0 30px rgba(255, 179, 71, 0.3); background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-    /* === GRID STYLES === */
-    .container { max-width: 1400px; margin: 0 auto; padding: 0 6%; }
-    .grid-label {
-      display: flex; align-items: center; gap: 15px; margin: 50px 0 30px;
-      text-transform: uppercase; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; color: var(--gold-primary);
-    }
-    .grid-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-gold), transparent); }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 25px;
-    }
-
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-gold);
-      border-radius: 28px;
-      padding: 30px;
-      position: relative;
-      transition: var(--transition);
-      cursor: pointer;
-      text-decoration: none; color: inherit;
-      display: flex; flex-direction: column;
-    }
-    .card:hover {
-      background: rgba(255, 179, 71, 0.05);
-      border-color: var(--gold-primary);
-      transform: translateY(-8px);
-      box-shadow: var(--shadow-gold);
-    }
-
-    .icon-box {
-      width: 50px; height: 50px;
-      background: linear-gradient(135deg, rgba(255, 179, 71, 0.2), transparent);
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px; color: var(--gold-primary);
-      font-size: 1.4rem; border: 1px solid var(--border-gold);
-    }
-
-    .card h3 { font-size: 1.1rem; margin-bottom: 8px; font-weight: 700; color: #fff; }
-    .card p { color: var(--text-dim); font-size: 0.88rem; line-height: 1.5; }
-
-    .tag-cloud {
-      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
-      margin-top: 20px; padding: 20px;
-    }
-    .tag {
-      padding: 8px 16px; border-radius: 50px; border: 1px solid var(--border-gold);
-      font-size: 0.75rem; font-weight: 600; color: var(--text-dim); transition: 0.3s;
-    }
-
-    /* === MODAL & 2FA UI === */
+    /* === MODAL & TABS === */
     .modal {
         position: fixed; inset: 0; background: rgba(0,0,0,0.95);
         display: none; align-items: center; justify-content: center; z-index: 2000;
@@ -176,25 +128,43 @@
     .modal-box {
         background: #0b1120; padding: 30px; border-radius: 40px;
         border: 1px solid var(--gold-primary); width: 90%; max-width: 500px;
-        max-height: 90vh; overflow-y: auto;
     }
+    .tab-content { display: none; margin-top: 20px; }
+    .tab-content.active { display: block; }
+    .settings-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-gold); color: white; cursor: pointer; }
+    .tab-btn.active { background: var(--gold-gradient); color: black; font-weight: bold; }
+
+    /* === AVATAR UPLOAD === */
+    .profile-img-container { position: relative; width: 100px; height: 100px; margin: 0 auto; cursor: pointer; }
+    .profile-img-container:hover .overlay { opacity: 1; }
+    .profile-img-container .overlay {
+        position: absolute; inset: 0; background: rgba(0,0,0,0.5); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s;
+    }
+
     .btn-save { width: 100%; padding: 12px; background: var(--gold-gradient); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
     .setting-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-gold); padding: 12px; border-radius: 12px; color: white; margin-bottom: 15px; }
-    .mfa-badge { padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; }
-    .mfa-off { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-    .mfa-on { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
     
     @media (max-width: 768px) {
         .nav-user span { display: none; }
-        .feature-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
+<div id="devPopup">
+    <div class="dev-card">
+        <i class="fas fa-tools"></i>
+        <h2 style="color: var(--gold-primary); margin-bottom: 10px;">Under Construction</h2>
+        <p style="color: var(--text-dim); margin-bottom: 20px;">We are currently refining the Obsidian Modules to ensure a premium experience. Some features might be limited.</p>
+        <button class="btn-save" onclick="closeDevPopup()">Enter Hub Anyway</button>
+    </div>
+</div>
+
 <div class="system-announcer">
     <div class="announcer-content">
-        NETFLFY SAYS: Welcome to the Obsidian Command Center. • SYSTEM STATUS: 100% Operational • NEW FEATURE: 2-Factor Authentication now live • PRO TIP: Use Lumina AI for Physics Paper 2...
+        NETFLFY SAYS: Welcome to the Obsidian Command Center. • SYSTEM STATUS: 100% Operational • NEW FEATURE: 2-Factor Authentication now live...
     </div>
 </div>
 
@@ -205,137 +175,70 @@
   </div>
   <div class="nav-user" id="profileTrigger">
     <span id="navUserName">Elite Member</span>
-    <img id="topNavAvatar" src="https://api.dicebear.com/7.x/initials/svg?seed=User" alt="Avatar">
+    <img id="topNavAvatar" src="https://api.dicebear.com/7.x/initials/svg?seed=User" alt="Profile">
   </div>
 </nav>
 
-<header class="hero">
-    <h1>The <span class="gold-glow">Obsidian Tier</span> Hub</h1>
+<header class="hero" style="text-align: center; padding: 60px 6%;">
+    <h1 id="dynamicWelcome">The <span class="gold-glow" style="background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Obsidian Tier</span> Hub</h1>
     <p style="color: var(--text-dim);">Unlocking 20+ Premium Modules for absolute academic dominance.</p>
 </header>
 
-<main class="container">
-  
-  <div class="grid-label">Elite Modules & Features</div>
-  <div class="feature-grid">
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-brain"></i></div>
-        <h3>Neural-Sync Library</h3>
-        <p>Direct integration with 50+ national databases for the fastest exam retrieval in the industry.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-shield-halved"></i></div>
-        <h3>Ghost Mode Privacy</h3>
-        <p>Study without appearing on global leaderboards. Total anonymity for your prep phase.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-microchip"></i></div>
-        <h3>Lumina AI Solve</h3>
-        <p>Upload a photo of any complex equation; Lumina breaks it down into 5 simplified steps.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-dna"></i></div>
-        <h3>Biology 3D Lab</h3>
-        <p>Explore microscopic cellular structures with an interactive 360-degree rendering engine.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-stopwatch-20"></i></div>
-        <h3>Velocity Practice</h3>
-        <p>Time-pressured drills designed to increase your reading speed and response accuracy.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-cloud-arrow-down"></i></div>
-        <h3>Offline Master Sync</h3>
-        <p>One-tap download of the entire 2026 syllabus for use in areas without internet connectivity.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-chart-line"></i></div>
-        <h3>Grade Trajectory</h3>
-        <p>Predictive ML models that forecast your final grade based on your last 10 quizzes.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-users-viewfinder"></i></div>
-        <h3>Expert Peer Review</h3>
-        <p>Get your essays graded by top-performing Obsidian members within 24 hours.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-moon"></i></div>
-        <h3>Deep Focus Engine</h3>
-        <p>Audio-visual mode that blocks notifications and plays alpha-wave binaural beats.</p>
-    </div>
-  </div>
-
-  <div class="grid-label">Integrated Tools</div>
-  <div class="tag-cloud">
-      <span class="tag"><i class="fas fa-check"></i> Smart Flashcards</span>
-      <span class="tag"><i class="fas fa-check"></i> Citation Generator</span>
-      <span class="tag"><i class="fas fa-check"></i> Math LaTeX Editor</span>
-      <span class="tag"><i class="fas fa-check"></i> Dark Theme Pro</span>
-      <span class="tag"><i class="fas fa-check"></i> PDF Annotator</span>
-      <span class="tag"><i class="fas fa-check"></i> Weekly Progress SMS</span>
-      <span class="tag"><i class="fas fa-check"></i> Revision Heatmaps</span>
-      <span class="tag"><i class="fas fa-check"></i> Scholarship Alerts</span>
-      <span class="tag"><i class="fas fa-check"></i> Custom Study Timers</span>
-      <span class="tag"><i class="fas fa-check"></i> Multi-Device Sync</span>
-      <span class="tag"><i class="fas fa-check"></i> Exam Countdown</span>
-      <span class="tag"><i class="fas fa-check"></i> Leaderboard Rewards</span>
-  </div>
+<main class="container" style="max-width: 1400px; margin: 0 auto; padding: 0 6%;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px;">
+        <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-gold); border-radius: 28px; padding: 30px;">
+            <i class="fas fa-brain" style="font-size: 1.5rem; color: var(--gold-primary);"></i>
+            <h3 style="margin-top: 15px;">Neural-Sync Library</h3>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Direct integration with 50+ national databases.</p>
+        </div>
+        </div>
 </main>
-
-<div class="bottom-nav">
-  <a href="#" class="b-nav-item active"><i class="fas fa-th-large"></i><span>Hub</span></a>
-  <a href="#" class="b-nav-item"><i class="fas fa-book-open"></i><span>Library</span></a>
-  <a href="#" class="b-nav-item"><i class="fas fa-bolt"></i><span>AI Solve</span></a>
-  <a href="#" class="b-nav-item" id="mobileProfile"><i class="fas fa-user-shield"></i><span>Security</span></a>
-</div>
 
 <div id="profileModal" class="modal">
     <div class="modal-box">
         <div style="text-align: center;">
-            <img id="userProfilePic" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--gold-primary);">
+            <div class="profile-img-container" onclick="document.getElementById('avatarInput').click()">
+                <img id="userProfilePic" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--gold-primary); object-fit: cover;">
+                <div class="overlay"><i class="fas fa-camera"></i></div>
+            </div>
+            <input type="file" id="avatarInput" hidden accept="image/*">
             <h2 id="welcomeMessage" style="margin-top: 15px;">User Name</h2>
             <p id="userEmailDisplay" style="color: var(--text-dim); font-size: 0.8rem;"></p>
         </div>
 
         <div class="settings-tabs" style="margin-top: 20px;">
             <button class="tab-btn active" onclick="openTab(event, 'account')">Profile</button>
-            <button class="tab-btn" onclick="openTab(event, 'security')">Security (2FA)</button>
+            <button class="tab-btn" onclick="openTab(event, 'security')">Security</button>
         </div>
 
         <div id="account" class="tab-content active">
-            <input type="text" id="editDisplayName" class="setting-input" placeholder="Display Name">
+            <label style="font-size: 0.8rem; color: var(--gold-primary);">Display Name</label>
+            <input type="text" id="editDisplayName" class="setting-input" placeholder="Enter Name">
             <button class="btn-save" id="saveProfile">Save Changes</button>
         </div>
 
         <div id="security" class="tab-content">
             <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; border: 1px solid var(--border-gold);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <span style="font-size: 0.9rem; font-weight: 700;">Phone 2FA</span>
-                    <span id="mfaStatus" class="mfa-badge mfa-off">OFF</span>
-                </div>
-                <div id="mfaEnrollmentBox">
-                    <input type="tel" id="phoneNumber" class="setting-input" placeholder="+1234567890">
-                    <button class="btn-save" id="btnEnrollMFA">Send SMS Code</button>
-                </div>
-                <div id="mfaVerificationBox" style="display:none;">
-                    <input type="text" id="mfaCode" class="setting-input" placeholder="Enter 6-Digit Code">
-                    <button class="btn-save" id="btnVerifyMFA">Activate 2FA</button>
-                </div>
+                <label style="font-size: 0.8rem; color: var(--gold-primary);">Mobile Number for SMS Alerts</label>
+                <input type="tel" id="phoneNumber" class="setting-input" placeholder="+254 700 000 000">
+                <button class="btn-save" id="btnEnrollMFA">Update Mobile Details</button>
             </div>
-            <div id="recaptcha-container"></div>
-            <button class="btn-save" style="background: transparent; border: 1px solid #ef4444; color: #ef4444;" id="signOutButton">Logout</button>
+            <button class="btn-save" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; margin-top: 20px;" id="signOutButton">Logout</button>
         </div>
 
-        <p onclick="document.getElementById('profileModal').classList.remove('active')" style="text-align: center; margin-top: 20px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim);">Exit Command</p>
+        <p onclick="document.getElementById('profileModal').classList.remove('active')" style="text-align: center; margin-top: 20px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim);">Close Settings</p>
     </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="#" class="b-nav-item active"><i class="fas fa-th-large"></i><span>Hub</span></a>
+  <a href="#" class="b-nav-item"><i class="fas fa-book-open"></i><span>Library</span></a>
+  <a href="#" class="b-nav-item" id="mobileProfile"><i class="fas fa-user-shield"></i><span>Account</span></a>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { 
-    getAuth, onAuthStateChanged, signOut, updateProfile, 
-    multiFactor, PhoneAuthProvider, PhoneMultiFactorGenerator, RecaptchaVerifier 
-} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
@@ -348,45 +251,50 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-let verificationId = null;
+
+// Show Dev Popup on Load
+window.onload = () => {
+    if(!sessionStorage.getItem('devNotified')) {
+        document.getElementById('devPopup').style.display = 'flex';
+    }
+};
+
+window.closeDevPopup = () => {
+    document.getElementById('devPopup').style.display = 'none';
+    sessionStorage.setItem('devNotified', 'true');
+};
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const name = user.displayName || user.email.split('@')[0];
+        const photo = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
+        
+        // Update UI Elements
         document.getElementById("navUserName").innerText = name;
+        document.getElementById("dynamicWelcome").innerHTML = `Welcome back, <span style="color: var(--gold-primary)">${name}</span>`;
         document.getElementById("welcomeMessage").innerText = name;
         document.getElementById("userEmailDisplay").innerText = user.email;
-        document.getElementById("userProfilePic").src = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
-        
-        if (user.multiFactor.enrolledFactors.length > 0) {
-            document.getElementById("mfaStatus").innerText = "ON";
-            document.getElementById("mfaStatus").className = "mfa-badge mfa-on";
-            document.getElementById("mfaEnrollmentBox").style.display = "none";
-        }
-    } else {
-        // Redirect if not logged in
-        // window.location.href = "login.html";
+        document.getElementById("userProfilePic").src = photo;
+        document.getElementById("topNavAvatar").src = photo;
     }
 });
 
-// 2FA Flow
-document.getElementById('btnEnrollMFA').onclick = async () => {
-    const phone = document.getElementById('phoneNumber').value;
-    const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
-    const session = await multiFactor(auth.currentUser).getSession();
-    const provider = new PhoneAuthProvider(auth);
-    verificationId = await provider.verifyPhoneNumber({ phoneNumber: phone, session }, verifier);
-    document.getElementById('mfaEnrollmentBox').style.display = 'none';
-    document.getElementById('mfaVerificationBox').style.display = 'block';
-};
-
-document.getElementById('btnVerifyMFA').onclick = async () => {
-    const code = document.getElementById('mfaCode').value;
-    const cred = PhoneAuthProvider.credential(verificationId, code);
-    const assertion = PhoneMultiFactorGenerator.assertion(cred);
-    await multiFactor(auth.currentUser).enroll(assertion, "Primary Phone");
-    alert("Security Enhanced!");
-    location.reload();
+// Image Upload Logic (Local Preview + Profile Update)
+document.getElementById('avatarInput').onchange = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = async function(event) {
+            const imageUrl = event.target.result;
+            document.getElementById('userProfilePic').src = imageUrl;
+            document.getElementById('topNavAvatar').src = imageUrl;
+            
+            // In a real app, you would upload file to Firebase Storage here
+            // Then run updateProfile(auth.currentUser, { photoURL: downloadURL });
+            alert("Avatar preview updated! (Requires Firebase Storage for permanent save)");
+        };
+        reader.readAsDataURL(file);
+    }
 };
 
 // UI Interactions
@@ -398,12 +306,16 @@ window.openTab = (e, name) => {
 };
 
 document.getElementById('profileTrigger').onclick = () => document.getElementById('profileModal').classList.add('active');
-document.getElementById('mobileProfile').onclick = () => document.getElementById('profileModal').classList.add('active');
+document.getElementById('mobileProfile').onclick = (e) => { e.preventDefault(); document.getElementById('profileModal').classList.add('active'); };
 document.getElementById('signOutButton').onclick = () => signOut(auth).then(() => location.reload());
 
 document.getElementById('saveProfile').onclick = async () => {
-    await updateProfile(auth.currentUser, { displayName: document.getElementById('editDisplayName').value });
-    alert("Profile Saved!");
+    const newName = document.getElementById('editDisplayName').value;
+    if(newName) {
+        await updateProfile(auth.currentUser, { displayName: newName });
+        alert("Identity Updated, Commander.");
+        location.reload();
+    }
 };
 </script>
 
