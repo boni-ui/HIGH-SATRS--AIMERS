@@ -145,18 +145,15 @@
       color: #000; padding: 4px 10px; border-radius: 8px; text-transform: uppercase;
     }
 
-    /* === TAG CLOUD === */
-    .tag-cloud {
-      display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
-      margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.02); border-radius: 30px;
+    /* === MODAL & TOASTS === */
+    .toast {
+        position: fixed; top: 20px; right: 20px; background: var(--gold-gradient);
+        color: #000; padding: 12px 25px; border-radius: 12px; font-weight: 700;
+        z-index: 3000; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease-out;
     }
-    .tag {
-      padding: 8px 20px; border-radius: 50px; border: 1px solid var(--border-gold);
-      font-size: 0.8rem; font-weight: 600; color: var(--text-dim); transition: 0.3s;
-    }
-    .tag:hover { border-color: var(--gold-primary); color: var(--gold-primary); background: rgba(255,179,71,0.05); }
+    @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
-    /* === MODAL === */
     .modal {
         position: fixed; inset: 0; background: rgba(0,0,0,0.95);
         display: none; align-items: center; justify-content: center; z-index: 2000;
@@ -176,6 +173,7 @@
     }
     .btn-gold { background: var(--gold-gradient); color: #000; }
     .btn-outline { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
+    .btn-secure { background: #10b981; color: white; border: none; }
 
     /* === SETTINGS STYLES === */
     .settings-tabs { display: flex; gap: 10px; margin: 20px 0; border-bottom: 1px solid var(--border-gold); padding-bottom: 10px; overflow-x: auto; }
@@ -187,8 +185,11 @@
     .setting-item { margin-bottom: 15px; }
     .setting-item label { display: block; font-size: 0.8rem; color: var(--gold-primary); margin-bottom: 5px; }
     .setting-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-gold); padding: 12px; border-radius: 12px; color: white; outline: none; }
-    .btn-save { width: 100%; padding: 12px; background: var(--gold-gradient); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-    .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    
+    .loading-overlay {
+        position: absolute; inset: 0; background: rgba(0,0,0,0.6);
+        border-radius: 50%; display: none; align-items: center; justify-content: center;
+    }
 
     /* === RESPONSIVE === */
     @media (max-width: 768px) {
@@ -199,6 +200,8 @@
   </style>
 </head>
 <body>
+
+<div id="customToast" class="toast"></div>
 
 <nav class="nav">
   <div class="brand">
@@ -244,45 +247,16 @@
         <h3>Resource Vault 3.0</h3>
         <p>10+ years of regional, mock, and national examinations with AI-verified marking schemes.</p>
     </a>
-    <a href="#" class="card">
+    <div class="card">
         <div class="icon-box"><i class="fas fa-microchip"></i></div>
         <h3>Adaptive Quiz Engine</h3>
-        <p>Questions that evolve based on your performance. Master weak topics automatically.</p>
-    </a>
-    <a href="#" class="card">
+        <p>Questions that evolve based on your performance.</p>
+    </div>
+    <div class="card">
         <div class="icon-box"><i class="fas fa-chart-pie"></i></div>
         <h3>Predictive Analytics</h3>
-        <p>See your grade trajectory. Our system predicts your final score based on current data.</p>
-    </a>
-
-    <div class="grid-label">Advanced Learning Tech</div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-robot"></i></div>
-        <h3>Lumina AI Tutor</h3>
-        <p>A specialized academic LLM designed to solve complex STEM problems in seconds.</p>
+        <p>See your grade trajectory based on current data.</p>
     </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-vr-cardboard"></i></div>
-        <h3>Virtual STEM Labs</h3>
-        <p>Interactive 3D simulations for Biology, Chemistry, and Physics experiments.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-layer-group"></i></div>
-        <h3>Concept Mapping</h3>
-        <p>Visual node-based study maps that show how different syllabus topics connect.</p>
-    </div>
-  </div>
-
-  <div class="grid-label">30+ Total Features Integrated</div>
-  <div class="tag-cloud">
-      <div class="tag"><i class="fas fa-check-circle"></i> Flashcard Sync</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Night Mode Pro</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Offline PDF Access</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Speed Reading Mode</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Scholarship Tracker</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Live Tutor Chat</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Focus Timer (Pomodoro)</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Revision Heatmaps</div>
   </div>
 </main>
 
@@ -291,6 +265,7 @@
         <div style="text-align: center;">
             <div style="position: relative; display: inline-block;">
                 <img id="userProfilePic" src="" style="width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--gold-primary); padding: 5px; object-fit: cover;">
+                <div id="imgLoader" class="loading-overlay"><i class="fas fa-circle-notch fa-spin"></i></div>
                 <div onclick="document.getElementById('profileInput').click()" style="position: absolute; bottom: 5px; right: 5px; background: var(--gold-primary); border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
                     <i class="fas fa-pen" style="color: #000; font-size: 0.9rem;"></i>
                 </div>
@@ -302,8 +277,6 @@
 
         <div class="settings-tabs">
             <button class="tab-btn active" onclick="openTab(event, 'account')">Account</button>
-            <button class="tab-btn" onclick="openTab(event, 'academic')">Academic</button>
-            <button class="tab-btn" onclick="openTab(event, 'preferences')">Preferences</button>
             <button class="tab-btn" onclick="openTab(event, 'security')">Security</button>
         </div>
 
@@ -312,36 +285,15 @@
                 <label>Full Name</label>
                 <input type="text" id="editDisplayName" class="setting-input" placeholder="Your Name">
             </div>
-            <button class="btn-save" id="saveProfile">Save Changes</button>
-        </div>
-
-        <div id="academic" class="tab-content">
-            <div class="setting-item">
-                <label>Current Level</label>
-                <select class="setting-input">
-                    <option>Form 4 (Candidate)</option>
-                    <option>Form 3</option>
-                    <option>Form 2</option>
-                    <option>Form 1</option>
-                </select>
-            </div>
-            <div class="setting-item">
-                <label>Target Mean Grade</label>
-                <select class="setting-input">
-                    <option>A (Plain)</option>
-                    <option>A- (Minus)</option>
-                    <option>B+ (Plus)</option>
-                </select>
-            </div>
-            <button class="btn-save">Update Academic Path</button>
-        </div>
-
-        <div id="preferences" class="tab-content">
-            <div class="switch-row"><span>Study Reminders</span><input type="checkbox" checked></div>
-            <div class="switch-row"><span>Leaderboard Visibility</span><input type="checkbox" checked></div>
+            <button class="btn-action btn-gold" id="saveProfile">Save Changes</button>
         </div>
 
         <div id="security" class="tab-content">
+            <div class="setting-item">
+                <label>Two-Factor Auth (2FA)</label>
+                <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 10px;">Secure your account with phone verification.</p>
+                <button class="btn-action btn-secure" id="enable2FA"><i class="fas fa-shield-alt"></i> Setup 2FA</button>
+            </div>
             <button class="btn-action btn-outline" id="signOutButton">Logout Account</button>
         </div>
 
@@ -349,13 +301,9 @@
     </div>
 </div>
 
-<footer style="text-align: center; padding: 40px 0; border-top: 1px solid var(--border-gold); margin-top: 50px;">
-    <p style="color: var(--text-dim); font-size: 0.8rem;">&copy; 2026 High Stars Aimers • Absolute Academic Mastery</p>
-</footer>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut, updateProfile, multiFactor, PhoneAuthProvider, PhoneMultiFactorGenerator } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 
 const firebaseConfig = {
@@ -371,11 +319,19 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
+// Custom Notification (Replaces 'Netlify says')
+function showToast(msg) {
+    const toast = document.getElementById('customToast');
+    toast.innerText = msg;
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 3000);
+}
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const name = user.displayName || user.email.split('@')[0];
         const userPhoto = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
-
+        
         document.getElementById("navUserName").innerText = name;
         document.getElementById("welcomeMessage").innerText = name;
         document.getElementById("userEmailDisplay").innerText = user.email;
@@ -387,7 +343,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Modal Logic
+// Modal & Tabs
 window.openTab = (evt, tabName) => {
     let contents = document.getElementsByClassName("tab-content");
     for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
@@ -397,38 +353,49 @@ window.openTab = (evt, tabName) => {
     evt.currentTarget.classList.add("active");
 }
 
-const profileModal = document.getElementById('profileModal');
-document.getElementById('profileTrigger').onclick = () => profileModal.classList.add('active');
-document.getElementById('mobileProfile').onclick = (e) => { e.preventDefault(); profileModal.classList.add('active'); };
-
-// Sign Out
+document.getElementById('profileTrigger').onclick = () => document.getElementById('profileModal').classList.add('active');
+document.getElementById('mobileProfile').onclick = (e) => { e.preventDefault(); document.getElementById('profileModal').classList.add('active'); };
 document.getElementById('signOutButton').onclick = () => signOut(auth);
 
-// Update Profile Name
+// 2FA Setup Placeholder (Requires phone input modal in production)
+document.getElementById('enable2FA').onclick = async () => {
+    showToast("Redirecting to Secure 2FA Setup...");
+    // In a full implementation, you'd trigger: multiFactor(auth.currentUser).getSession()
+};
+
+// Update Profile
 document.getElementById('saveProfile').onclick = async () => {
     const newName = document.getElementById('editDisplayName').value;
     try {
         await updateProfile(auth.currentUser, { displayName: newName });
-        alert("Profile Updated Successfully!");
-        location.reload();
-    } catch (err) { alert(err.message); }
+        showToast("Profile Updated Successfully!");
+    } catch (err) { showToast("Error: " + err.message); }
 };
 
-// Profile Image Upload
+// Profile Image Upload Fix (No navigation reload flicker)
 document.getElementById('profileInput').onchange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    
+    const loader = document.getElementById('imgLoader');
+    loader.style.display = 'flex'; // Start loading state
     
     const storageRef = ref(storage, `profiles/${auth.currentUser.uid}`);
     try {
         const snapshot = await uploadBytes(storageRef, file);
         const photoURL = await getDownloadURL(snapshot.ref);
+        
         await updateProfile(auth.currentUser, { photoURL });
+        
+        // Update images in UI without refreshing
         document.getElementById("userProfilePic").src = photoURL;
         document.getElementById("topNavAvatar").src = photoURL;
-        alert("Profile photo updated!");
+        
+        loader.style.display = 'none';
+        showToast("Photo synced to cloud!");
     } catch (error) {
-        alert("Upload failed: " + error.message);
+        loader.style.display = 'none';
+        showToast("Upload Failed.");
     }
 };
 </script>
