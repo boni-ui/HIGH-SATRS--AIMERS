@@ -3,279 +3,292 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard | High Stars Aimers</title>
+  <title>Elite Dashboard | High Stars Aimers</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-glow: rgba(37, 99, 235, 0.2);
-      --secondary: #7c3aed;
-      --success: #10b981;
-      --bg: #f8fafc;
-      --card-bg: rgba(255, 255, 255, 0.9);
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --border: rgba(226, 232, 240, 0.8);
-      --radius-lg: 16px;
-      --radius-md: 12px;
-      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --gold-primary: #ffb347;
+      --gold-secondary: #ffcc33;
+      --gold-gradient: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%);
+      --bg-deep: #05070a;
+      --bg-card: rgba(15, 23, 42, 0.6);
+      --text-bright: #ffffff;
+      --text-dim: #94a3b8;
+      --border-gold: rgba(255, 179, 71, 0.2);
+      --glass: blur(12px);
+      --shadow-gold: 0 10px 30px -10px rgba(255, 179, 71, 0.3);
+      --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #020617;
-        --card-bg: rgba(30, 41, 59, 0.7);
-        --text-main: #f1f5f9;
-        --text-muted: #94a3b8;
-        --border: rgba(51, 65, 85, 0.5);
-      }
-    }
-
-    html { scroll-behavior: smooth; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      background-image: radial-gradient(circle at top right, var(--primary-glow), transparent 400px);
-      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-deep);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 179, 71, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 179, 71, 0.05) 0%, transparent 40%);
+      color: var(--text-bright);
       line-height: 1.6;
-      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    .header {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0.75rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+    /* === NAVIGATION === */
+    .nav {
+      position: sticky; top: 0; z-index: 1000;
+      background: rgba(5, 7, 10, 0.8);
+      backdrop-filter: var(--glass);
+      border-bottom: 1px solid var(--border-gold);
+      padding: 1rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
     }
 
     .brand {
-      font-size: 1.4rem;
-      font-weight: 800;
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 1.5rem; font-weight: 800; letter-spacing: -1px;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      display: flex; align-items: center; gap: 10px;
     }
 
-    .dashboard-grid {
-      max-width: 1300px;
-      margin: 2rem auto;
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 2.5rem;
-      padding: 0 1.5rem;
+    .nav-user {
+      display: flex; align-items: center; gap: 15px;
+      padding: 5px 15px; border-radius: 50px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-gold);
+      cursor: pointer; transition: var(--transition);
     }
 
-    .user-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 2.5rem 1.5rem;
+    .nav-user:hover { background: rgba(255, 255, 255, 0.1); }
+
+    .nav-user img { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold-primary); }
+
+    /* === HERO SECTION === */
+    .hero-dash {
+      padding: 60px 5% 40px;
       text-align: center;
-      box-shadow: var(--shadow);
-      position: sticky;
-      top: 100px;
     }
 
-    /* PROFILE IMAGE STYLES */
-    .profile-img-container {
-      position: relative;
-      width: 110px; height: 110px;
-      margin: 0 auto 1.5rem;
-      padding: 5px;
-      border: 2px dashed var(--primary);
-      border-radius: 50%;
-      cursor: pointer;
-      overflow: hidden;
-      transition: var(--transition);
+    .hero-dash h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800; line-height: 1.1; margin-bottom: 20px;
     }
 
-    .profile-img-container:hover {
-        border-style: solid;
-        transform: scale(1.05);
+    .gold-text { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    /* === GRID LAYOUT === */
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 5% 100px; }
+
+    .section-title {
+      font-size: 1.8rem; font-weight: 700; margin-bottom: 30px;
+      display: flex; align-items: center; gap: 15px;
     }
 
-    .user-card img {
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      background: var(--bg);
-    }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border-gold); }
 
-    .upload-overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(0,0,0,0.4);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: 0.3s;
-        border-radius: 50%;
-    }
-
-    .profile-img-container:hover .upload-overlay {
-        opacity: 1;
-    }
-
-    .btn {
-      width: 100%; padding: 0.8rem;
-      border-radius: var(--radius-md);
-      font-weight: 600; cursor: pointer; border: none;
-      transition: var(--transition);
-      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
-    }
-
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text-main); margin-top: 0.75rem; }
-
-    .resource-grid {
+    .feature-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
     }
 
-    .resource-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.75rem;
-      text-decoration: none; color: inherit;
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: 24px;
+      padding: 30px;
+      position: relative; overflow: hidden;
       transition: var(--transition);
-      display: flex; flex-direction: column; gap: 1rem;
+      cursor: pointer;
+      text-decoration: none; color: inherit;
     }
 
-    .resource-card:hover { border-color: var(--primary); transform: translateY(-5px); }
-
-    .icon-box {
-      width: 48px; height: 48px;
-      background: linear-gradient(135deg, var(--primary-glow), transparent);
-      color: var(--primary); border-radius: 10px;
-      display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+    .card:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 179, 71, 0.03);
+      border-color: var(--gold-primary);
+      box-shadow: var(--shadow-gold);
     }
 
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(2, 6, 23, 0.8);
-      backdrop-filter: blur(8px); display: none;
-      justify-content: center; align-items: center; z-index: 2000;
-    }
-    .modal-overlay.active { display: flex; }
-
-    .modal-content {
-      background: var(--card-bg); padding: 3rem; border-radius: 24px;
-      width: 90%; max-width: 450px; text-align: center; border: 1px solid var(--border);
+    .icon-wrap {
+      width: 50px; height: 50px;
+      background: rgba(255, 179, 71, 0.1);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px; color: var(--gold-primary);
+      font-size: 1.5rem;
     }
 
-    footer { margin-top: 5rem; padding: 4rem 2rem; text-align: center; }
-    .social-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
-    .social-links a { color: var(--text-muted); font-size: 1.5rem; }
+    .card h3 { font-size: 1.3rem; margin-bottom: 10px; font-weight: 700; }
+    .card p { color: var(--text-dim); font-size: 0.95rem; }
 
-    @media (max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr; } }
+    .badge {
+      position: absolute; top: 20px; right: 20px;
+      background: var(--gold-gradient); color: #000;
+      padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    /* === MODAL === */
+    .modal {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+        display: none; align-items: center; justify-content: center; z-index: 2000;
+        backdrop-filter: blur(10px);
+    }
+    .modal.active { display: flex; }
+    .modal-box {
+        background: #0f172a; padding: 40px; border-radius: 30px;
+        border: 1px solid var(--gold-primary); width: 90%; max-width: 400px;
+        text-align: center;
+    }
+
+    .btn-gold {
+        background: var(--gold-gradient); color: #000;
+        padding: 12px 25px; border-radius: 12px; border: none;
+        font-weight: 700; cursor: pointer; transition: 0.3s; width: 100%;
+        margin-top: 15px;
+    }
+
+    /* === FOOTER === */
+    footer { border-top: 1px solid var(--border-gold); padding: 50px 5%; text-align: center; }
+    .social-links { display: flex; justify-content: center; gap: 25px; margin-top: 20px; }
+    .social-links a { color: var(--text-dim); font-size: 1.5rem; transition: 0.3s; }
+    .social-links a:hover { color: var(--gold-primary); }
+
   </style>
 </head>
 <body>
 
-<header class="header">
+<nav class="nav">
   <div class="brand">
-    <i class="fas fa-star-half-alt"></i>
-    <span>High Stars Aimers</span>
+    <i class="fas fa-crown"></i>
+    <span>HIGH STARS AIMERS</span>
   </div>
-  <div class="nav-actions">
-    <div style="width: 35px; height: 35px; background: var(--border); border-radius: 50%; overflow: hidden; border: 1px solid var(--primary);">
-        <img id="topNavAvatar" src="https://via.placeholder.com/35" alt="User">
-    </div>
+  <div class="nav-user" id="profileTrigger">
+    <span id="navUserName" style="font-weight: 600; font-size: 0.9rem;">Member</span>
+    <img id="topNavAvatar" src="https://api.dicebear.com/7.x/initials/svg?seed=User" alt="Avatar">
   </div>
+</nav>
+
+<header class="hero-dash">
+    <h1>The Elite <span class="gold-text">Gold Standard</span><br>of Academic Mastery.</h1>
+    <p style="color: var(--text-dim); max-width: 600px; margin: 0 auto;">Welcome back to your premium command center. Access the 25+ core pillars of academic excellence.</p>
 </header>
 
-<main class="dashboard-grid">
-  <aside class="profile-sidebar">
-    <div class="user-card">
-      <div class="profile-img-container" onclick="document.getElementById('profileInput').click()">
-        <img id="userProfilePic" src="https://api.dicebear.com/7.x/initials/svg?seed=User" alt="Profile">
-        <div class="upload-overlay">
-            <i class="fas fa-camera"></i>
-        </div>
-      </div>
-      <input type="file" id="profileInput" accept="image/*" style="display: none;">
+<main class="container">
+  
+  <h2 class="section-title">Premium Architecture</h2>
 
-      <h3 id="welcomeMessage">Verifying...</h3>
-      <p id="userEmail">Please wait...</p>
-      
-      <button class="btn btn-primary" id="viewProfileButton">
-        <i class="fas fa-user-circle"></i> Profile Settings
-      </button>
-      <button class="btn btn-outline" id="signOutButton">
-        <i class="fas fa-power-off"></i> Sign Out
-      </button>
+  <div class="feature-grid">
+    <a href="subjects.html" class="card">
+        <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
+        <h3>Resource Vault 2.0</h3>
+        <p>Searchable database of regional & national exams from the last decade.</p>
+        <span class="badge">Elite</span>
+    </a>
+
+    <a href="#" class="card">
+        <div class="icon-wrap"><i class="fas fa-bolt"></i></div>
+        <h3>Quiz Master Engine</h3>
+        <p>Interactive modules utilizing Spaced Repetition algorithms for memory retention.</p>
+    </a>
+
+    <a href="#" class="card">
+        <div class="icon-wrap"><i class="fas fa-chart-line"></i></div>
+        <h3>Performance Analytics</h3>
+        <p>Real-time data tracking your syllabus coverage and exam readiness.</p>
+    </a>
+
+    <div class="card">
+        <div class="icon-wrap"><i class="fas fa-brain"></i></div>
+        <h3>AI Study Buddy</h3>
+        <p>Ask complex questions and get instant, simplified explanations.</p>
     </div>
-  </aside>
 
-  <section class="resource-section">
-    <h2 style="display:flex; align-items:center; gap:10px; margin-bottom: 20px;">
-        Academic Dashboard <div style="flex:1; height:1px; background:var(--border)"></div>
-    </h2>
-    <div class="resource-grid">
-      <a href="subjects.html" class="resource-card">
-        <div class="icon-box"><i class="fas fa-graduation-cap"></i></div>
-        <h4>Academic Subjects</h4>
-        <p>Master STEM and Humanities with expert-curated notes.</p>
-      </a>
-      
-      <a href="papers.html" class="resource-card">
-        <div class="icon-box"><i class="fas fa-layer-group"></i></div>
-        <h4>Past Papers Archive</h4>
-        <p>Access to quality revision papers for all forms.</p>
-      </a>
-
-      <div class="resource-card" style="opacity: 0.7;">
-        <div class="icon-box"><i class="fas fa-laptop-code"></i></div>
-        <h4>Interactive Quizzes</h4>
-        <p>Test your knowledge with adaptive testing (Coming Soon).</p>
-      </div>
-
-      <a href="contact.html" class="resource-card">
-        <div class="icon-box"><i class="fas fa-headset"></i></div>
-        <h4>Expert Support</h4>
-        <p>Connect with Boni Mbugua for personalized guidance.</p>
-      </a>
+    <div class="card">
+        <div class="icon-wrap"><i class="fas fa-video"></i></div>
+        <h3>Elite Video Hub</h3>
+        <p>Curated masterclasses from top-ranking educators nationwide.</p>
     </div>
-  </section>
+
+    <div class="card">
+        <div class="icon-wrap"><i class="fas fa-calendar-check"></i></div>
+        <h3>Smart Study Planner</h3>
+        <p>AI-generated timetables based on your weak areas and exam dates.</p>
+    </div>
+
+    <div class="card">
+        <div class="icon-wrap"><i class="fas fa-microscope"></i></div>
+        <h3>Virtual Labs</h3>
+        <p>Conduct STEM experiments in a 3D simulated environment.</p>
+        <span class="badge">New</span>
+    </div>
+
+    <div class="card">
+        <div class="icon-wrap"><i class="fas fa-users"></i></div>
+        <h3>Peer Ranking</h3>
+        <p>Compete in weekly leaderboards with top students across the country.</p>
+    </div>
+
+    <div class="card">
+        <div class="icon-wrap"><i class="fas fa-file-pdf"></i></div>
+        <h3>Marking Schemes</h3>
+        <p>Verified official marking schemes for all past papers.</p>
+    </div>
+
+    <div class="card">
+        <div class="icon-wrap"><i class="fas fa-clock"></i></div>
+        <h3>Speed Drill Mode</h3>
+        <p>Timed challenges to improve your exam finishing speed.</p>
+    </div>
+
+    <div class="card" style="grid-column: 1 / -1; display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; justify-content: center; background: rgba(255, 179, 71, 0.05);">
+        <span style="font-size: 0.8rem; border: 1px solid var(--border-gold); padding: 5px 15px; border-radius: 50px;">Essay Grading AI</span>
+        <span style="font-size: 0.8rem; border: 1px solid var(--border-gold); padding: 5px 15px; border-radius: 50px;">STEM Calculator</span>
+        <span style="font-size: 0.8rem; border: 1px solid var(--border-gold); padding: 5px 15px; border-radius: 50px;">Flashcard Deck</span>
+        <span style="font-size: 0.8rem; border: 1px solid var(--border-gold); padding: 5px 15px; border-radius: 50px;">Night Mode</span>
+        <span style="font-size: 0.8rem; border: 1px solid var(--border-gold); padding: 5px 15px; border-radius: 50px;">Offline Sync</span>
+        <span style="font-size: 0.8rem; border: 1px solid var(--border-gold); padding: 5px 15px; border-radius: 50px;">Scholarship Alerts</span>
+        <span style="font-size: 0.8rem; border: 1px solid var(--border-gold); padding: 5px 15px; border-radius: 50px;">Career Mentorship</span>
+        <span style="font-size: 0.8rem; border: 1px solid var(--border-gold); padding: 5px 15px; border-radius: 50px;">Direct Tutor Chat</span>
+        <span style="font-size: 0.8rem; border: 1px solid var(--border-gold); padding: 5px 15px; border-radius: 50px;">Audio Summary</span>
+        <span style="font-size: 0.8rem; border: 1px solid var(--border-gold); padding: 5px 15px; border-radius: 50px;">Exam Predictions</span>
+    </div>
+
+  </div>
 </main>
 
-<footer>
-  <div class="social-links">
-    <a href="#"><i class="fab fa-facebook"></i></a>
-    <a href="https://instagram.com/boni.mbugua"><i class="fab fa-instagram"></i></a>
-    <a href="https://wa.me/254762187843"><i class="fab fa-whatsapp"></i></a>
-  </div>
-  <p>&copy; 2026 <strong>High Stars Aimers</strong>. Built by <span style="color:var(--primary)">Boni Mbugua</span></p>
-</footer>
-
-<div id="profileModal" class="modal-overlay">
-  <div class="modal-content">
-    <div style="text-align: right;">
-        <button id="closeModal" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+<div id="profileModal" class="modal">
+    <div class="modal-box">
+        <div style="position: relative; display: inline-block;">
+            <img id="userProfilePic" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--gold-primary);">
+            <div onclick="document.getElementById('profileInput').click()" style="position: absolute; bottom: 0; right: 0; background: var(--gold-primary); border-radius: 50%; padding: 8px; cursor: pointer;">
+                <i class="fas fa-camera" style="color: #000; font-size: 0.8rem;"></i>
+            </div>
+        </div>
+        <input type="file" id="profileInput" accept="image/*" style="display: none;">
+        
+        <h3 id="welcomeMessage" style="margin-top: 15px;">Elite Member</h3>
+        <p id="userEmail" style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 20px;"></p>
+        
+        <button class="btn-gold" id="signOutButton" style="background: #ef4444; color: white;">Sign Out</button>
+        <button class="btn-gold" onclick="document.getElementById('profileModal').classList.remove('active')">Back to Dashboard</button>
     </div>
-    <img id="modalPic" src="" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem; object-fit: cover;">
-    <h3 id="modalName"></h3>
-    <p id="modalEmail" style="color: var(--text-muted); margin-bottom: 2rem;"></p>
-    <button class="btn btn-outline" onclick="document.getElementById('profileModal').classList.remove('active')">Close</button>
-  </div>
 </div>
+
+<footer>
+    <div class="brand" style="justify-content: center; margin-bottom: 20px;">
+        <i class="fas fa-crown"></i> High Stars Aimers
+    </div>
+    <p style="color: var(--text-dim); font-size: 0.9rem;">The high-velocity educational ecosystem built for absolute mastery.</p>
+    <div class="social-links">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+    </div>
+    <p style="margin-top: 30px; font-size: 0.8rem; color: #475569;">© 2026 Developed by Boni Mbugua</p>
+</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
@@ -298,135 +311,36 @@ const storage = getStorage(app);
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const name = user.displayName || user.email.split('@')[0];
-        const fallbackAvatar = `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
-        const userPhoto = user.photoURL || fallbackAvatar;
+        const userPhoto = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
 
+        document.getElementById("navUserName").innerText = name;
         document.getElementById("welcomeMessage").innerText = `Hello, ${name}`;
         document.getElementById("userEmail").innerText = user.email;
         document.getElementById("userProfilePic").src = userPhoto;
         document.getElementById("topNavAvatar").src = userPhoto;
-
-        document.getElementById("viewProfileButton").onclick = () => {
-            document.getElementById("profileModal").classList.add("active");
-            document.getElementById("modalPic").src = userPhoto;
-            document.getElementById("modalName").innerText = name;
-            document.getElementById("modalEmail").innerText = user.email;
-        };
     } else {
         window.location.href = "signin1.html"; 
     }
 });
 
-// IMAGE UPLOAD LOGIC
+document.getElementById('profileTrigger').onclick = () => document.getElementById('profileModal').classList.add('active');
+
 document.getElementById('profileInput').onchange = async (e) => {
     const file = e.target.files[0];
     const user = auth.currentUser;
     if (!file || !user) return;
-
     try {
-        // 1. Create reference in storage (path: avatars/userId)
         const storageRef = ref(storage, 'avatars/' + user.uid);
-        
-        // 2. Upload
         const snapshot = await uploadBytes(storageRef, file);
-        
-        // 3. Get URL
         const downloadURL = await getDownloadURL(snapshot.ref);
-        
-        // 4. Update Auth Profile
         await updateProfile(user, { photoURL: downloadURL });
-        
-        // 5. Update UI instantly
-        document.getElementById("userProfilePic").src = downloadURL;
-        document.getElementById("topNavAvatar").src = downloadURL;
-        
-        alert("Profile picture updated successfully!");
+        location.reload();
     } catch (error) {
-        console.error("Upload failed", error);
-        alert("Upload failed. Check your Firebase Storage rules.");
+        alert("Update failed. Check Firebase rules.");
     }
 };
 
 document.getElementById("signOutButton").onclick = () => signOut(auth);
-document.getElementById("closeModal").onclick = () => document.getElementById("profileModal").classList.remove("active");
-
-window.onclick = (e) => {
-    if (e.target.id === "profileModal") document.getElementById("profileModal").classList.remove("active");
-};
-<div class="faq-item" onclick="this.classList.toggle('active')">
-            <div class="faq-question">Can I access resources without internet? <i class="fas fa-chevron-down"></i></div>
-            <div class="faq-answer">Yes. Elite members can download resources directly to their local storage via the platform dashboard for offline study.</div>
-        </div>
-
-        <div class="faq-item" onclick="this.classList.toggle('active')">
-            <div class="faq-question">Is my data secure? <i class="fas fa-chevron-down"></i></div>
-            <div class="faq-answer">Yes. We use encryption and secure cloud systems to protect all user data.</div>
-        </div>
-    </div>
-  </section>
-
-  <!-- ===== FOOTER ===== -->
-  <footer>
-    <div class="footer-main">
-
-      <div class="footer-col">
-        <div class="footer-logo">High Stars <span>Aimers</span></div>
-        <p style="color: var(--text-dim); font-size: 0.9rem;">
-          Elite academic cloud built for top-performing students. Learn smarter, faster, and better.
-        </p>
-
-        <div class="social-links">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-linkedin-in"></i></a>
-        </div>
-      </div>
-
-      <div class="footer-col">
-        <h5>Platform</h5>
-        <ul>
-          <li><a href="#">Subjects</a></li>
-          <li><a href="#">Exam Papers</a></li>
-          <li><a href="#">Leaderboard</a></li>
-          <li><a href="#">Study Plan</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h5>Resources</h5>
-        <ul>
-          <li><a href="#">Calculator</a></li>
-          <li><a href="#">STEM Hub</a></li>
-          <li><a href="#">Virtual Labs</a></li>
-          <li><a href="#">Scholarships</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h5>Newsletter</h5>
-        <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 10px;">
-          Get updates & new resources.
-        </p>
-        <form style="display:flex; gap:10px;">
-          <input type="email" placeholder="Email"
-            style="flex:1; padding:10px; border:none; border-radius:8px; outline:none;">
-          <button class="btn-main" style="padding:10px 15px;">Join</button>
-        </form>
-      </div>
-
-    </div>
-
-    <div class="developer-box">
-      <p style="color: var(--text-dim); font-size: 0.85rem;">
-        © 2026 High Stars Aimers. All rights reserved.
-      </p>
-      <span class="developer-tag">Built for Excellence</span>
-    </div>
-  </footer>
-
-</body>
-</html>
 </script>
 
 </body>
