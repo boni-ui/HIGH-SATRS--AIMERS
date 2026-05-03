@@ -178,15 +178,154 @@
         border: 1px solid var(--gold-primary); width: 90%; max-width: 500px;
         max-height: 90vh; overflow-y: auto;
     }
-    .btn-save { width: 100%; padding: 12px; background: var(--gold-gradient); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-    .setting-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-gold); padding: 12px; border-radius: 12px; color: white; margin-bottom: 15px; }
+    .btn-save { 
+        width: 100%; padding: 12px; background: var(--gold-gradient); 
+        border: none; border-radius: 12px; font-weight: 700; cursor: pointer; 
+        margin-top: 10px; color: #000; transition: var(--transition);
+    }
+    .btn-save:hover { transform: scale(1.02); box-shadow: var(--shadow-gold); }
+    .setting-input { 
+        width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-gold); 
+        padding: 12px; border-radius: 12px; color: white; margin-bottom: 15px; 
+    }
     .mfa-badge { padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; }
     .mfa-off { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
     .mfa-on { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+
+    /* === NEW: TAB STYLING === */
+    .settings-tabs {
+        display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-gold);
+    }
+    .tab-btn {
+        padding: 12px 20px; background: transparent; border: none; color: var(--text-dim);
+        cursor: pointer; font-weight: 700; border-bottom: 3px solid transparent; transition: var(--transition);
+    }
+    .tab-btn.active {
+        color: var(--gold-primary); border-bottom-color: var(--gold-primary);
+    }
+    .tab-btn:hover { color: var(--gold-primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* === NEW: PROFILE PICTURE UPLOAD === */
+    .profile-pic-section {
+        text-align: center; margin: 20px 0;
+    }
+    .profile-pic-section img {
+        width: 120px; height: 120px; border-radius: 50%; 
+        border: 3px solid var(--gold-primary); object-fit: cover;
+        transition: var(--transition);
+    }
+    .profile-pic-section img:hover { transform: scale(1.05); }
+    .upload-btn {
+        display: inline-block; margin-top: 15px; padding: 10px 20px;
+        background: rgba(255, 179, 71, 0.2); border: 2px solid var(--gold-primary);
+        color: var(--gold-primary); border-radius: 12px; cursor: pointer;
+        font-weight: 700; transition: var(--transition);
+    }
+    .upload-btn:hover { background: var(--gold-primary); color: #000; }
+    #profilePicInput { display: none; }
+
+    /* === NEW: SMS CONTACT SECTION === */
+    .contact-section {
+        background: rgba(255, 179, 71, 0.05); padding: 20px; border-radius: 16px;
+        border: 1px solid var(--border-gold); margin: 20px 0;
+    }
+    .contact-item {
+        display: flex; align-items: center; gap: 12px; margin-bottom: 15px;
+    }
+    .contact-item:last-child { margin-bottom: 0; }
+    .contact-icon {
+        width: 45px; height: 45px; background: rgba(255, 179, 71, 0.2);
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        color: var(--gold-primary); font-size: 1.2rem; border: 1px solid var(--border-gold);
+    }
+    .contact-input {
+        flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border-gold);
+        padding: 10px 15px; border-radius: 10px; color: white; font-size: 0.9rem;
+    }
+    .contact-input::placeholder { color: var(--text-dim); }
+
+    /* === NEW: WELCOME POPUP === */
+    .welcome-popup {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none;
+        align-items: center; justify-content: center; z-index: 2500;
+        backdrop-filter: blur(15px);
+    }
+    .welcome-popup.active { display: flex; animation: popupIn 0.5s ease-out; }
+    @keyframes popupIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .welcome-box {
+        background: linear-gradient(135deg, rgba(255, 179, 71, 0.15), rgba(15, 23, 42, 0.9));
+        border: 2px solid var(--gold-primary); border-radius: 40px; padding: 50px 40px;
+        width: 90%; max-width: 600px; text-align: center;
+    }
+    .welcome-box h2 { font-size: 2.2rem; margin-bottom: 15px; color: var(--gold-primary); }
+    .welcome-box p { color: var(--text-dim); margin-bottom: 10px; font-size: 1.05rem; }
+    .welcome-animation { animation: bounce 1s infinite; }
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+    .close-welcome {
+        margin-top: 25px; padding: 12px 30px; background: var(--gold-gradient);
+        border: none; border-radius: 12px; color: #000; font-weight: 700;
+        cursor: pointer; font-size: 1rem; transition: var(--transition);
+    }
+    .close-welcome:hover { transform: scale(1.05); }
+
+    /* === NEW: DEVELOPMENT POPUP === */
+    .dev-popup {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none;
+        align-items: center; justify-content: center; z-index: 2500;
+        backdrop-filter: blur(20px);
+    }
+    .dev-popup.active { display: flex; animation: devPopupIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes devPopupIn {
+        0% { opacity: 0; transform: scale(0.5) rotate(-5deg); }
+        100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    .dev-box {
+        background: linear-gradient(135deg, rgba(255, 179, 71, 0.2), rgba(34, 197, 94, 0.1));
+        border: 2px solid var(--gold-primary); border-radius: 40px; padding: 40px;
+        width: 90%; max-width: 650px; text-align: center;
+    }
+    .dev-icon { font-size: 4rem; margin-bottom: 20px; animation: bounce 1.5s infinite; }
+    .dev-box h2 { font-size: 2rem; margin-bottom: 15px; color: var(--gold-primary); }
+    .dev-box p { color: var(--text-dim); margin-bottom: 15px; font-size: 1rem; line-height: 1.7; }
+    .dev-features {
+        text-align: left; background: rgba(255,255,255,0.03); padding: 20px;
+        border-radius: 16px; margin: 20px 0; border: 1px solid var(--border-gold);
+    }
+    .dev-feature-item {
+        display: flex; align-items: center; gap: 10px; margin: 8px 0;
+        color: var(--text-dim); font-size: 0.95rem;
+    }
+    .dev-feature-item i { color: var(--success); font-size: 1.1rem; }
+    .dev-buttons {
+        display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; justify-content: center;
+    }
+    .btn-dev-close {
+        padding: 12px 30px; background: var(--gold-gradient); border: none;
+        border-radius: 12px; color: #000; font-weight: 700; cursor: pointer;
+        transition: var(--transition);
+    }
+    .btn-dev-close:hover { transform: translateY(-3px); box-shadow: var(--shadow-gold); }
+    .btn-notify {
+        padding: 12px 30px; background: transparent; border: 2px solid var(--gold-primary);
+        color: var(--gold-primary); border-radius: 12px; font-weight: 700;
+        cursor: pointer; transition: var(--transition);
+    }
+    .btn-notify:hover { background: var(--gold-primary); color: #000; }
     
     @media (max-width: 768px) {
         .nav-user span { display: none; }
         .feature-grid { grid-template-columns: 1fr; }
+        .dev-buttons { flex-direction: column; }
+        .dev-box { padding: 30px 20px; }
     }
   </style>
 </head>
@@ -194,7 +333,7 @@
 
 <div class="system-announcer">
     <div class="announcer-content">
-        NETFLFY SAYS: Welcome to the Obsidian Command Center. • SYSTEM STATUS: 100% Operational • NEW FEATURE: 2-Factor Authentication now live • PRO TIP: Use Lumina AI for Physics Paper 2...
+        NETFLFY SAYS: Welcome to the Obsidian Command Center. • SYSTEM STATUS: 100% Operational • NEW FEATURE: 2-Factor Authentication now live • PRO TIP: Use Lumina AI for Physics Paper 2.[...]
     </div>
 </div>
 
@@ -205,7 +344,7 @@
   </div>
   <div class="nav-user" id="profileTrigger">
     <span id="navUserName">Elite Member</span>
-    <img id="topNavAvatar" src="https://api.dicebear.com/7.x/initials/svg?seed=User" alt="Avatar">
+    <img id="topNavAvatar" src="https://api.dicebear.com/7.x/initials/svg?seed=User" alt="Profile Picture" title="Profile Picture">
   </div>
 </nav>
 
@@ -216,7 +355,7 @@
 
 <main class="container">
   
-  <div class="grid-label">Elite Modules & Features</div>
+  <div class="grid-label">⭐ 10 Cool Features</div>
   <div class="feature-grid">
     <div class="card">
         <div class="icon-box"><i class="fas fa-brain"></i></div>
@@ -263,6 +402,11 @@
         <h3>Deep Focus Engine</h3>
         <p>Audio-visual mode that blocks notifications and plays alpha-wave binaural beats.</p>
     </div>
+    <div class="card">
+        <div class="icon-box"><i class="fas fa-rocket"></i></div>
+        <h3>Lightning Fast Sync</h3>
+        <p>Synchronize your progress across all devices in real-time with zero lag or delays.</p>
+    </div>
   </div>
 
   <div class="grid-label">Integrated Tools</div>
@@ -289,123 +433,33 @@
   <a href="#" class="b-nav-item" id="mobileProfile"><i class="fas fa-user-shield"></i><span>Security</span></a>
 </div>
 
-<div id="profileModal" class="modal">
-    <div class="modal-box">
-        <div style="text-align: center;">
-            <img id="userProfilePic" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--gold-primary);">
-            <h2 id="welcomeMessage" style="margin-top: 15px;">User Name</h2>
-            <p id="userEmailDisplay" style="color: var(--text-dim); font-size: 0.8rem;"></p>
-        </div>
-
-        <div class="settings-tabs" style="margin-top: 20px;">
-            <button class="tab-btn active" onclick="openTab(event, 'account')">Profile</button>
-            <button class="tab-btn" onclick="openTab(event, 'security')">Security (2FA)</button>
-        </div>
-
-        <div id="account" class="tab-content active">
-            <input type="text" id="editDisplayName" class="setting-input" placeholder="Display Name">
-            <button class="btn-save" id="saveProfile">Save Changes</button>
-        </div>
-
-        <div id="security" class="tab-content">
-            <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; border: 1px solid var(--border-gold);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <span style="font-size: 0.9rem; font-weight: 700;">Phone 2FA</span>
-                    <span id="mfaStatus" class="mfa-badge mfa-off">OFF</span>
-                </div>
-                <div id="mfaEnrollmentBox">
-                    <input type="tel" id="phoneNumber" class="setting-input" placeholder="+1234567890">
-                    <button class="btn-save" id="btnEnrollMFA">Send SMS Code</button>
-                </div>
-                <div id="mfaVerificationBox" style="display:none;">
-                    <input type="text" id="mfaCode" class="setting-input" placeholder="Enter 6-Digit Code">
-                    <button class="btn-save" id="btnVerifyMFA">Activate 2FA</button>
-                </div>
-            </div>
-            <div id="recaptcha-container"></div>
-            <button class="btn-save" style="background: transparent; border: 1px solid #ef4444; color: #ef4444;" id="signOutButton">Logout</button>
-        </div>
-
-        <p onclick="document.getElementById('profileModal').classList.remove('active')" style="text-align: center; margin-top: 20px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim);">Exit Command</p>
+<!-- Welcome Popup -->
+<div id="welcomePopup" class="welcome-popup">
+    <div class="welcome-box">
+        <div class="welcome-animation" style="font-size: 3.5rem; margin-bottom: 20px;">👋</div>
+        <h2>Welcome Back, <span id="welcomeName">Achiever</span>!</h2>
+        <p>Your academic excellence journey continues here.</p>
+        <p style="font-size: 0.95rem; margin-top: 15px;">Access 20+ premium features designed to boost your performance. Let's make today count!</p>
+        <button class="close-welcome" onclick="closeWelcome()">Start Learning 🚀</button>
     </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { 
-    getAuth, onAuthStateChanged, signOut, updateProfile, 
-    multiFactor, PhoneAuthProvider, PhoneMultiFactorGenerator, RecaptchaVerifier 
-} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
-  authDomain: "high-stars-aimers-5972f.firebaseapp.com",
-  projectId: "high-stars-aimers-5972f",
-  storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
-  messagingSenderId: "233345875942",
-  appId: "1:233345875942:web:cf7610de84f0b2262ce027"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-let verificationId = null;
-
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        const name = user.displayName || user.email.split('@')[0];
-        document.getElementById("navUserName").innerText = name;
-        document.getElementById("welcomeMessage").innerText = name;
-        document.getElementById("userEmailDisplay").innerText = user.email;
-        document.getElementById("userProfilePic").src = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
+<!-- Under Development Popup -->
+<div id="devPopup" class="dev-popup">
+    <div class="dev-box">
+        <div class="dev-icon">🚧</div>
+        <h2>Website Under Development</h2>
+        <p>We're building something incredible for you! This feature is currently being refined to deliver the best experience possible.</p>
         
-        if (user.multiFactor.enrolledFactors.length > 0) {
-            document.getElementById("mfaStatus").innerText = "ON";
-            document.getElementById("mfaStatus").className = "mfa-badge mfa-on";
-            document.getElementById("mfaEnrollmentBox").style.display = "none";
-        }
-    } else {
-        // Redirect if not logged in
-        // window.location.href = "login.html";
-    }
-});
-
-// 2FA Flow
-document.getElementById('btnEnrollMFA').onclick = async () => {
-    const phone = document.getElementById('phoneNumber').value;
-    const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
-    const session = await multiFactor(auth.currentUser).getSession();
-    const provider = new PhoneAuthProvider(auth);
-    verificationId = await provider.verifyPhoneNumber({ phoneNumber: phone, session }, verifier);
-    document.getElementById('mfaEnrollmentBox').style.display = 'none';
-    document.getElementById('mfaVerificationBox').style.display = 'block';
-};
-
-document.getElementById('btnVerifyMFA').onclick = async () => {
-    const code = document.getElementById('mfaCode').value;
-    const cred = PhoneAuthProvider.credential(verificationId, code);
-    const assertion = PhoneMultiFactorGenerator.assertion(cred);
-    await multiFactor(auth.currentUser).enroll(assertion, "Primary Phone");
-    alert("Security Enhanced!");
-    location.reload();
-};
-
-// UI Interactions
-window.openTab = (e, name) => {
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(name).classList.add('active');
-    e.currentTarget.classList.add('active');
-};
-
-document.getElementById('profileTrigger').onclick = () => document.getElementById('profileModal').classList.add('active');
-document.getElementById('mobileProfile').onclick = () => document.getElementById('profileModal').classList.add('active');
-document.getElementById('signOutButton').onclick = () => signOut(auth).then(() => location.reload());
-
-document.getElementById('saveProfile').onclick = async () => {
-    await updateProfile(auth.currentUser, { displayName: document.getElementById('editDisplayName').value });
-    alert("Profile Saved!");
-};
-</script>
-
-</body>
-</html>
+        <div class="dev-features">
+            <div class="dev-feature-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Advanced profile customization</span>
+            </div>
+            <div class="dev-feature-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Real-time progress tracking</span>
+            </div>
+            <div class="dev-feature-item">
+                <i class="fas fa-check-circle"></i>
+        
