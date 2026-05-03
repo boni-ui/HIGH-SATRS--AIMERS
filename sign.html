@@ -34,7 +34,6 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            perspective: 1000px;
         }
 
         .sparks-container {
@@ -59,7 +58,6 @@
         }
         .b1 { width: 500px; height: 500px; background: var(--primary); top: -10%; left: -10%; opacity: 0.2; }
         .b2 { width: 400px; height: 400px; background: var(--secondary); bottom: -10%; right: -10%; opacity: 0.15; }
-
         @keyframes rotate { from { transform: rotate(0deg) translate(50px); } to { transform: rotate(360deg) translate(50px); } }
 
         .container {
@@ -68,7 +66,19 @@
             border: 1px solid var(--border); border-radius: 40px;
             box-shadow: 0 50px 100px -20px rgba(0,0,0,0.9);
             display: flex; overflow: hidden;
-            transition: transform 0.1s ease-out;
+        }
+
+        .scanner-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            box-shadow: 0 0 15px var(--primary);
+            z-index: 100; display: none;
+            animation: scan 2s infinite ease-in-out;
+        }
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
         }
 
         .form-box {
@@ -78,9 +88,9 @@
         }
 
         .login-side { left: 0; opacity: 1; }
-        .signup-side { left: 0; opacity: 0; transform: scale(0.9) rotateY(-20deg); visibility: hidden; }
+        .signup-side { left: 0; opacity: 0; transform: scale(0.9); visibility: hidden; }
 
-        .container.active .login-side { opacity: 0; transform: scale(0.9) rotateY(20deg); visibility: hidden; }
+        .container.active .login-side { opacity: 0; transform: scale(0.9); visibility: hidden; }
         .container.active .signup-side { opacity: 1; visibility: visible; transform: translateX(100%) scale(1); }
 
         .overlay-panel {
@@ -120,9 +130,10 @@
             width: 100%; padding: 18px; border-radius: 15px; border: none;
             background: white; color: var(--bg-deep); font-weight: 800; cursor: pointer;
             transition: 0.4s; text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .btn-action:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.4); background: #f0f0f0; }
-        .btn-action:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-action:disabled { opacity: 0.7; cursor: not-allowed; }
 
         #toast {
             position: fixed; top: 30px; right: 30px; background: #1e293b;
@@ -136,14 +147,6 @@
         .privacy-bottom {
             position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
             font-size: 0.7rem; color: var(--text-dim); z-index: 20; width: 100%; text-align: center;
-        }
-        .privacy-bottom span { color: var(--primary); cursor: pointer; font-weight: 700; }
-
-        @media (max-width: 900px) {
-            .overlay-panel { display: none; }
-            .form-box { width: 100%; padding: 30px; }
-            .container { height: auto; min-height: 85vh; padding-bottom: 40px; }
-            .container.active .signup-side { transform: translateX(0); }
         }
     </style>
 </head>
@@ -160,34 +163,38 @@
     </div>
 
     <div class="container" id="container">
+        <div class="scanner-line" id="scanner"></div>
+
         <div class="form-box login-side">
             <div style="margin-bottom: 35px;">
                 <h1 style="font-size: 2.8rem; font-weight: 800; letter-spacing: -2px;">Aim High.</h1>
                 <p style="color: var(--text-dim);">Access your Academic Cloud Profile</p>
             </div>
-            <form id="loginForm">
+            <form id="loginForm" onsubmit="window.processAuth(event, 'in')">
                 <div class="input-group">
                     <label>Identity Email</label>
-                    <input type="email" id="email" placeholder="student@email.com." required>
+                    <input type="email" id="email" placeholder="student@email.com" required>
                     <i class="fas fa-envelope"></i>
                 </div>
                 <div class="input-group">
                     <label>Secure Passkey</label>
                     <input type="password" id="password" placeholder="••••••••" required>
                     <i class="fas fa-lock"></i>
-                    <i class="fas fa-eye view-toggle" data-target="password"></i>
+                    <i class="fas fa-eye view-toggle" onclick="window.toggleView('password', this)"></i>
                 </div>
-                <button type="submit" class="btn-action" id="login-btn">Authorize Session</button>
+                <button type="submit" class="btn-action" id="login-btn">
+                    <span class="btn-text">Authorize Session</span>
+                </button>
             </form>
             <p style="margin-top: 30px; text-align: center; color: var(--text-dim); font-size: 0.85rem;">
-                New Aimer? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" class="mode-switch">Create Profile</span>
+                New Aimer? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" onclick="window.switchMode()">Create Profile</span>
             </p>
         </div>
 
         <div class="form-box signup-side">
             <h1 style="font-size: 2.4rem; font-weight: 800; margin-bottom: 10px;">Elite Membership</h1>
             <p style="color: var(--text-dim); margin-bottom: 30px;">Initialize your learning cloud identity</p>
-            <form id="signupForm">
+            <form id="signupForm" onsubmit="window.processAuth(event, 'up')">
                 <div class="input-group">
                     <label>Academic Email</label>
                     <input type="email" id="newEmail" placeholder="name@email.com" required>
@@ -195,16 +202,16 @@
                 </div>
                 <div class="input-group">
                     <label>Create Passkey</label>
-                    <input type="password" id="newPassword" placeholder="••••••••" required>
+                    <input type="password" id="newPassword" placeholder="••••••••" required oninput="window.validate()">
                     <i class="fas fa-shield-alt"></i>
-                    <i class="fas fa-eye view-toggle" data-target="newPassword"></i>
+                    <i class="fas fa-eye view-toggle" onclick="window.toggleView('newPassword', this)"></i>
                 </div>
                 <div class="strength-meter"><div class="strength-fill" id="strength"></div></div>
                 <div class="input-group">
                     <label>Confirm Passkey</label>
-                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required oninput="window.validate()">
                     <i class="fas fa-check-double"></i>
-                    <i class="fas fa-eye view-toggle" data-target="confirmPassword"></i>
+                    <i class="fas fa-eye view-toggle" onclick="window.toggleView('confirmPassword', this)"></i>
                 </div>
                 <div class="requirements">
                     <div class="req-item" id="r-len"><i class="fas fa-circle"></i> 8+ Char</div>
@@ -212,10 +219,12 @@
                     <div class="req-item" id="r-num"><i class="fas fa-circle"></i> 1 Numeric</div>
                     <div class="req-item" id="r-spec"><i class="fas fa-circle"></i> 1 Special ($@!)</div>
                 </div>
-                <button type="submit" id="reg-btn" class="btn-action" disabled style="background: var(--primary); color: white;">Finalize Identity</button>
+                <button type="submit" id="reg-btn" class="btn-action" disabled style="background: var(--primary); color: white;">
+                    <span class="btn-text">Finalize Identity</span>
+                </button>
             </form>
             <p style="margin-top: 25px; text-align: center; color: var(--text-dim); font-size: 0.85rem;">
-                Already verified? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" class="mode-switch">Secure Login</span>
+                Already verified? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" onclick="window.switchMode()">Secure Login</span>
             </p>
         </div>
 
@@ -223,7 +232,7 @@
             <div style="padding: 50px;">
                 <h2 id="ov-h" style="font-size: 3.5rem; font-weight: 800; margin-bottom: 20px;">Secure Hub.</h2>
                 <p style="font-size: 1.2rem; opacity: 0.8; line-height: 1.8;">"The capacity to learn is a gift; the ability to learn is a skill."</p>
-                <button class="mode-switch" style="margin-top: 40px; background: transparent; border: 2px solid white; color: white; padding: 15px 50px; border-radius: 50px; cursor: pointer; font-weight: 800; transition: 0.3s;">FLIP VIEW</button>
+                <button onclick="window.switchMode()" style="margin-top: 40px; background: transparent; border: 2px solid white; color: white; padding: 15px 50px; border-radius: 50px; cursor: pointer; font-weight: 800; transition: 0.3s;">FLIP VIEW</button>
             </div>
         </div>
 
@@ -241,37 +250,86 @@
             sendEmailVerification 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // --- FIREBASE SETUP ---
         const firebaseConfig = {
             apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
             authDomain: "high-stars-aimers-5972f.firebaseapp.com",
             projectId: "high-stars-aimers-5972f",
             storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
             messagingSenderId: "233345875942",
-            appId: "1:233345875942:web:cf7610de84f0b2262ce027",
-            measurementId: "G-X475KTSH5J"
+            appId: "1:233345875942:web:cf7610de84f0b2262ce027"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // --- UI HELPERS ---
-        const notify = (msg, error = false) => {
+        // --- GLOBAL TOOLS ---
+        window.notify = (msg, error = false) => {
             const t = document.getElementById('toast');
-            const icon = document.getElementById('t-icon');
-            document.getElementById('t-msg').innerText = msg;
+            const msgEl = document.getElementById('t-msg');
+            msgEl.innerText = msg;
             t.style.borderLeftColor = error ? "var(--danger)" : "var(--success)";
-            icon.className = error ? "fas fa-exclamation-circle" : "fas fa-shield-check";
-            icon.style.color = error ? "var(--danger)" : "var(--success)";
             t.classList.add('active');
             setTimeout(() => t.classList.remove('active'), 5000);
         };
 
-        // --- PASSWORD VALIDATION ---
-        const validate = () => {
+        window.setLoading = (btn, isLoading) => {
+            const scanner = document.getElementById('scanner');
+            const btnText = btn.querySelector('.btn-text');
+            if (isLoading) {
+                scanner.style.display = 'block';
+                btn.disabled = true;
+                let msgs = ["Verifying...", "Linking Account...", "Encrypting..."];
+                let i = 0;
+                btnText.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${msgs[0]}`;
+                btn.timer = setInterval(() => {
+                    i = (i + 1) % msgs.length;
+                    btnText.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${msgs[i]}`;
+                }, 800);
+            } else {
+                scanner.style.display = 'none';
+                btn.disabled = false;
+                clearInterval(btn.timer);
+            }
+        };
+
+        window.processAuth = async (event, type) => {
+            event.preventDefault();
+            const isLogin = type === 'in';
+            const btn = document.getElementById(isLogin ? 'login-btn' : 'reg-btn');
+            const email = document.getElementById(isLogin ? 'email' : 'newEmail').value;
+            const password = document.getElementById(isLogin ? 'password' : 'newPassword').value;
+            
+            window.setLoading(btn, true);
+
+            try {
+                if (isLogin) {
+                    const cred = await signInWithEmailAndPassword(auth, email, password);
+                    if (cred.user.emailVerified) {
+                        window.notify("Identity Authorized.");
+                        setTimeout(() => window.location.href = "home.html", 1500);
+                    } else {
+                        window.notify("Verification Required. Check Email.", true);
+                        window.setLoading(btn, false);
+                        btn.querySelector('.btn-text').innerText = "Authorize Session";
+                    }
+                } else {
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    await sendEmailVerification(cred.user);
+                    confetti({ particleCount: 150, spread: 70 });
+                    window.notify("Success! Verify your email.");
+                    window.setLoading(btn, false);
+                    btn.querySelector('.btn-text').innerText = "Check Inbox";
+                }
+            } catch (err) {
+                window.setLoading(btn, false);
+                btn.querySelector('.btn-text').innerText = isLogin ? "Authorize Session" : "Finalize Identity";
+                window.notify(err.code.replace('auth/', '').replace(/-/g, ' '), true);
+            }
+        };
+
+        window.validate = () => {
             const p = document.getElementById('newPassword').value;
             const cp = document.getElementById('confirmPassword').value;
-            const meter = document.getElementById('strength');
             const checks = {
                 len: p.length >= 8,
                 up: /[A-Z]/.test(p),
@@ -279,107 +337,36 @@
                 spec: /[^A-Za-z0-9]/.test(p)
             };
             const score = Object.values(checks).filter(Boolean).length;
-            meter.style.width = (score / 4) * 100 + "%";
-            meter.style.background = score < 2 ? "var(--danger)" : score < 4 ? "var(--primary)" : "var(--success)";
-            
-            for(const [key, val] of Object.entries(checks)) {
-                const el = document.getElementById('r-' + key);
-                if(el) el.className = val ? 'req-item valid' : 'req-item';
+            document.getElementById('strength').style.width = (score / 4) * 100 + "%";
+            for(const [k, v] of Object.entries(checks)) {
+                document.getElementById('r-' + k).className = v ? 'req-item valid' : 'req-item';
             }
-            
-            document.getElementById('reg-btn').disabled = !(score === 4 && p === cp && p !== "");
+            document.getElementById('reg-btn').disabled = !(score === 4 && p === cp);
         };
 
-        // --- AUTH LOGIC ---
-        const processAuth = async (event, type) => {
-            event.preventDefault();
-            const isLogin = type === 'in';
-            const btn = isLogin ? document.getElementById('login-btn') : document.getElementById('reg-btn');
-            const email = document.getElementById(isLogin ? 'email' : 'newEmail').value;
-            const password = document.getElementById(isLogin ? 'password' : 'newPassword').value;
-            
-            const originalText = btn.innerText;
-            btn.disabled = true;
-            btn.innerText = "Processing...";
-
-            try {
-                if (isLogin) {
-                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                    if (userCredential.user.emailVerified) {
-                        notify("Access Granted. Welcome back.");
-                        setTimeout(() => window.location.href = "home.html", 1500);
-                    } else {
-                        notify("Please verify your email first.", true);
-                        btn.innerText = originalText;
-                        btn.disabled = false;
-                    }
-                } else {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    await sendEmailVerification(userCredential.user);
-                    confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
-                    notify("Success! Check your email to activate.");
-                    btn.innerText = "Check Inbox";
-                }
-            } catch (error) {
-                console.error(error);
-                let msg = "Error: " + error.message;
-                if (error.code === 'auth/email-already-in-use') msg = "Email already registered.";
-                if (error.code === 'auth/invalid-credential') msg = "Invalid login details.";
-                notify(msg, true);
-                btn.innerText = originalText;
-                btn.disabled = isLogin ? false : true;
-            }
+        window.switchMode = () => {
+            document.getElementById('container').classList.toggle('active');
+            const isActive = document.getElementById('container').classList.contains('active');
+            document.getElementById('ov-h').innerText = isActive ? "Global Reach." : "Secure Hub.";
         };
 
-        // --- EVENT LISTENERS ---
-        
-        // Form Submissions
-        document.getElementById('loginForm').addEventListener('submit', (e) => processAuth(e, 'in'));
-        document.getElementById('signupForm').addEventListener('submit', (e) => processAuth(e, 'up'));
+        window.toggleView = (id, icon) => {
+            const el = document.getElementById(id);
+            el.type = el.type === "password" ? "text" : "password";
+            icon.className = el.type === "password" ? "fas fa-eye view-toggle" : "fas fa-eye-slash view-toggle";
+        };
 
-        // Real-time validation
-        document.getElementById('newPassword').addEventListener('input', validate);
-        document.getElementById('confirmPassword').addEventListener('input', validate);
-
-        // View Toggles
-        document.querySelectorAll('.view-toggle').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const targetId = btn.getAttribute('data-target');
-                const el = document.getElementById(targetId);
-                const isPass = el.type === "password";
-                el.type = isPass ? "text" : "password";
-                btn.className = isPass ? "fas fa-eye-slash view-toggle" : "fas fa-eye view-toggle";
-            });
-        });
-
-        // Mode Switches (Flip View)
-        document.querySelectorAll('.mode-switch').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const card = document.getElementById('container');
-                card.classList.toggle('active');
-                const isActive = card.classList.contains('active');
-                document.getElementById('ov-h').innerText = isActive ? "Global Reach." : "Secure Hub.";
-            });
-        });
-
-        // Visual Animations
-        const sparksContainer = document.getElementById('sparks');
+        // Sparks BG
+        const sc = document.getElementById('sparks');
         for(let i=0; i<60; i++) {
             const s = document.createElement('div');
             s.className = 'spark';
             s.style.left = Math.random() * 100 + '%';
-            s.style.width = s.style.height = (Math.random() * 3 + 1) + 'px';
-            s.style.setProperty('--d', (Math.random() * 4 + 3) + 's');
-            s.style.animationDelay = Math.random() * 5 + 's';
-            sparksContainer.appendChild(s);
+            s.style.width = s.style.height = (Math.random()*3+1)+'px';
+            s.style.setProperty('--d', (Math.random()*4+3)+'s');
+            s.style.animationDelay = Math.random()*5+'s';
+            sc.appendChild(s);
         }
-
-        const card = document.getElementById('container');
-        document.addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.pageX) / 60;
-            const y = (window.innerHeight / 2 - e.pageY) / 60;
-            card.style.transform = `rotateX(${y}deg) rotateY(${-x}deg)`;
-        });
     </script>
 </body>
 </html>
