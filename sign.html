@@ -20,6 +20,7 @@
             --text-dim: #64748b;
             --border: rgba(255, 255, 255, 0.06);
             --success: #10b981;
+            --danger: #ef4444;
             --bronze-dim: #824b21;
         }
 
@@ -35,145 +36,80 @@
             overflow: hidden;
         }
 
-        /* 1. SPARKS BACKGROUND SYSTEM */
-        #sparks-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #111a2e 0%, #05080f 100%);
-        }
+        #sparks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #111a2e 0%, #05080f 100%); }
 
-        /* CONTAINER SETUP */
         .container {
-            position: relative;
-            width: 440px;
-            max-width: 90%;
-            padding: 45px 40px;
-            background: var(--card-bg);
-            border-radius: 35px;
-            border: 1px solid var(--border);
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
+            position: relative; width: 440px; max-width: 90%; padding: 45px 40px;
+            background: var(--card-bg); border-radius: 35px; border: 1px solid var(--border);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         h1 { font-size: 2.1rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.8px; }
         .subtitle { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 35px; font-weight: 500; }
 
-        /* INPUT GROUP ENHANCEMENTS */
-        .input-group { position: relative; margin-bottom: 22px; transition: 0.3s; }
-        
-        label { 
-            display: block; 
-            font-size: 0.65rem; 
-            font-weight: 800; 
-            color: var(--text-dim); 
-            margin-bottom: 10px; 
-            text-transform: uppercase; 
-            letter-spacing: 1.2px;
-            transition: 0.3s;
-        }
+        .input-group { position: relative; margin-bottom: 22px; }
+        label { display: block; font-size: 0.65rem; font-weight: 800; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1.2px; }
         
         .field-wrapper { position: relative; border-radius: 14px; overflow: hidden; }
-        
         input {
-            width: 100%; 
-            padding: 16px 48px; 
-            background: var(--input-bg); 
-            border: 1px solid var(--border);
-            color: white; 
-            outline: none; 
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 0.95rem;
+            width: 100%; padding: 16px 48px; background: var(--input-bg); border: 1px solid var(--border);
+            color: white; outline: none; transition: 0.4s; font-size: 0.95rem;
         }
-
         input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(245, 124, 0, 0.15); }
         input:focus ~ i:first-child { color: var(--primary); }
         
         .field-wrapper i:first-child { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #334155; transition: 0.3s; }
-        .view-toggle { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-dim); font-size: 0.85rem; padding: 5px; }
+        .view-toggle { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-dim); font-size: 0.85rem; z-index: 5; }
 
-        /* PASSWORD STRENGTH METER */
-        .strength-bar {
-            height: 3px;
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            margin-top: -10px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .strength-progress {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #ff4d4d, #f57c00, #10b981);
-            transition: 0.6s ease;
-        }
+        .strength-bar { height: 3px; width: 100%; background: rgba(255,255,255,0.05); margin-top: -10px; margin-bottom: 20px; border-radius: 10px; overflow: hidden; }
+        .strength-progress { height: 100%; width: 0%; background: linear-gradient(90deg, #ff4d4d, #f57c00, #10b981); transition: 0.6s ease; }
 
-        /* REQUIREMENT CHIPS */
         .requirements { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 25px; }
-        .req-item { 
-            font-size: 0.7rem; 
-            color: var(--text-dim); 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            padding: 10px 12px; 
-            background: rgba(255,255,255,0.03); 
-            border-radius: 10px;
-            font-weight: 600;
-        }
+        .req-item { font-size: 0.7rem; color: var(--text-dim); display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: rgba(255,255,255,0.03); border-radius: 10px; }
         .req-item.valid { color: #f1f5f9; background: rgba(16, 185, 129, 0.1); }
         .req-item.valid i { color: var(--success); }
 
-        /* BUTTONS */
         .btn-action {
-            width: 100%; 
-            padding: 18px; 
-            border-radius: 14px; 
-            border: none;
-            background: #ffffff; 
-            color: #000; 
-            font-weight: 800; 
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            font-size: 0.85rem;
+            width: 100%; padding: 18px; border-radius: 14px; border: none; background: #ffffff; 
+            color: #000; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; 
+            letter-spacing: 1px; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-action:active { transform: scale(0.97); }
         .btn-signup { background: var(--bronze-dim); color: rgba(255,255,255,0.7); }
 
-        /* FORM SWITCHING ANIMATION */
+        /* ACCESS GRANTED OVERLAY */
+        #access-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 15, 0.95);
+            display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(20px);
+        }
+        .success-shield { font-size: 5rem; color: var(--success); margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.4)); animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+
         .form-content { display: none; }
-        .form-content.active { display: block; animation: slideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .switch-text { margin-top: 30px; text-align: center; color: var(--text-dim); font-size: 0.85rem; font-weight: 500; }
+        .form-content.active { display: block; animation: slideIn 0.5s ease forwards; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .switch-text { margin-top: 30px; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
         .switch-text span { color: var(--primary); cursor: pointer; font-weight: 700; margin-left: 5px; }
-
-        .footer-branding {
-            position: absolute; bottom: -50px; left: 0; width: 100%;
-            text-align: center; font-size: 0.75rem; color: var(--text-dim);
-        }
-        .footer-branding span { color: var(--primary); font-weight: 700; }
-
     </style>
 </head>
 <body>
 
     <canvas id="sparks-canvas"></canvas>
 
-    <div class="container">
+    <div id="access-overlay">
+        <i class="fas fa-shield-check success-shield"></i>
+        <h1 style="color: var(--success)">ACCESS GRANTED</h1>
+        <p style="color: var(--text-dim)">Initializing Academic Cloud Profile...</p>
+    </div>
+
+    <div class="container" id="mainContainer">
         <div id="loginSection" class="form-content active">
             <h1>Aim High.</h1>
             <p class="subtitle">Access your Academic Cloud Profile</p>
-            
-            <form onsubmit="handleAuth(event, 'login')">
+            <form id="loginForm">
                 <div class="input-group">
                     <label>Identity Email</label>
                     <div class="field-wrapper">
@@ -197,8 +133,7 @@
         <div id="signupSection" class="form-content">
             <h1>Elite Membership</h1>
             <p class="subtitle">Initialize your learning cloud identity</p>
-            
-            <form onsubmit="handleAuth(event, 'signup')">
+            <form id="signupForm">
                 <div class="input-group">
                     <label>Academic Email</label>
                     <div class="field-wrapper">
@@ -214,9 +149,7 @@
                         <i class="fas fa-eye view-toggle" onclick="togglePass('newPassword', this)"></i>
                     </div>
                 </div>
-                
                 <div class="strength-bar"><div id="strengthProgress" class="strength-progress"></div></div>
-
                 <div class="input-group">
                     <label>Confirm Passkey</label>
                     <div class="field-wrapper">
@@ -225,130 +158,152 @@
                         <i class="fas fa-eye view-toggle" onclick="togglePass('confirmPassword', this)"></i>
                     </div>
                 </div>
-
                 <div class="requirements">
                     <div class="req-item" id="r-len"><i class="fas fa-circle"></i> 8+ Char</div>
                     <div class="req-item" id="r-up"><i class="fas fa-circle"></i> 1 Uppercase</div>
                     <div class="req-item" id="r-num"><i class="fas fa-circle"></i> 1 Numeric</div>
                     <div class="req-item" id="r-spec"><i class="fas fa-circle"></i> 1 Special ($@!)</div>
                 </div>
-
                 <button type="submit" class="btn-action btn-signup" id="regBtn" disabled>Finalize Identity</button>
             </form>
             <p class="switch-text">Already verified? <span onclick="toggleForm()">Secure Login</span></p>
         </div>
-
-        <div class="footer-branding">
-            &copy; 2026 High Stars Aimers. <span>Privacy Policy</span> & <span>Terms of Use</span>
-        </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+            authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+            projectId: "high-stars-aimers-5972f",
+            storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+            messagingSenderId: "233345875942",
+            appId: "1:233345875942:web:cf7610de84f0b2262ce027"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // UI Helpers
+        const showProcessing = (btn, text) => {
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
+        };
+
+        const resetBtn = (btn, text) => {
+            btn.disabled = false;
+            btn.innerHTML = text;
+        };
+
+        const triggerShake = () => {
+            const container = document.getElementById('mainContainer');
+            container.classList.add('shake');
+            setTimeout(() => container.classList.remove('shake'), 500);
+        };
+
+        // Firebase Logic
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+
+            showProcessing(btn, "Verifying Identity...");
+            
+            try {
+                const cred = await signInWithEmailAndPassword(auth, email, pass);
+                if (!cred.user.emailVerified) {
+                    throw new Error("Please verify your email first.");
+                }
+                
+                // Final Processing Stage
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="fas fa-sync fa-spin"></i> Syncing Profile...`;
+                    setTimeout(() => {
+                        document.getElementById('access-overlay').style.display = 'flex';
+                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                        // Redirect logic here
+                    }, 1200);
+                }, 800);
+
+            } catch (err) {
+                triggerShake();
+                alert(err.message);
+                resetBtn(btn, "Authorize Session");
+            }
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('regBtn');
+            const email = document.getElementById('newEmail').value;
+            const pass = document.getElementById('newPassword').value;
+
+            showProcessing(btn, "Creating Identity...");
+
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                await sendEmailVerification(cred.user);
+                alert("Identity Created! Verify your email to login.");
+                toggleForm();
+                resetBtn(btn, "Finalize Identity");
+            } catch (err) {
+                triggerShake();
+                alert(err.message);
+                resetBtn(btn, "Finalize Identity");
+            }
+        });
+    </script>
+
     <script>
-        // --- 1. SPARKS ENGINE ---
+        // Sparks Animation
         const canvas = document.getElementById('sparks-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
+        function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         class Particle {
-            constructor() {
-                this.reset();
-            }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = canvas.height + 10;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedY = Math.random() * 1.5 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 1;
-                this.opacity = Math.random() * 0.5 + 0.1;
-            }
-            update() {
-                this.y -= this.speedY;
-                this.x += this.speedX;
-                if (this.y < -10) this.reset();
-            }
-            draw() {
-                ctx.fillStyle = `rgba(245, 124, 0, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            constructor() { this.reset(); }
+            reset() { this.x = Math.random() * canvas.width; this.y = canvas.height + 10; this.size = Math.random() * 2 + 0.5; this.speedY = Math.random() * 1.5 + 0.5; this.speedX = (Math.random() - 0.5) * 1; this.opacity = Math.random() * 0.5 + 0.1; }
+            update() { this.y -= this.speedY; this.x += this.speedX; if (this.y < -10) this.reset(); }
+            draw() { ctx.fillStyle = `rgba(245, 124, 0, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
         }
-
         for (let i = 0; i < 50; i++) particles.push(new Particle());
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+        initCanvas(); animate();
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
-        window.addEventListener('resize', initCanvas);
-        initCanvas();
-        animate();
-
-        // --- 2. LOGIC & FEATURES ---
-        function toggleForm() {
+        // Form Logic
+        window.toggleForm = () => {
             const sections = document.querySelectorAll('.form-content');
             sections.forEach(s => s.classList.toggle('active'));
-        }
+        };
 
-        function togglePass(id, icon) {
+        window.togglePass = (id, icon) => {
             const input = document.getElementById(id);
             const isPass = input.type === 'password';
             input.type = isPass ? 'text' : 'password';
             icon.className = isPass ? 'fas fa-eye-slash view-toggle' : 'fas fa-eye view-toggle';
-        }
+        };
 
-        function validatePassword() {
+        window.validatePassword = () => {
             const p = document.getElementById('newPassword').value;
             const cp = document.getElementById('confirmPassword').value;
             const progress = document.getElementById('strengthProgress');
-            
-            const checks = {
-                len: p.length >= 8,
-                up: /[A-Z]/.test(p),
-                num: /[0-9]/.test(p),
-                spec: /[^A-Za-z0-9]/.test(p)
-            };
-
+            const checks = { len: p.length >= 8, up: /[A-Z]/.test(p), num: /[0-9]/.test(p), spec: /[^A-Za-z0-9]/.test(p) };
             let score = 0;
             for(const [key, passed] of Object.entries(checks)) {
                 const el = document.getElementById('r-' + key);
                 if(passed) { el.classList.add('valid'); score++; }
                 else { el.classList.remove('valid'); }
             }
-
             progress.style.width = (score * 25) + "%";
-            
             const btn = document.getElementById('regBtn');
             const isValid = score === 4 && p === cp && p.length > 0;
-            
             btn.disabled = !isValid;
             btn.style.background = isValid ? "var(--primary)" : "var(--bronze-dim)";
             btn.style.color = isValid ? "#fff" : "rgba(255,255,255,0.7)";
-        }
-
-        async function handleAuth(e, type) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
-
-            setTimeout(() => {
-                if(type === 'signup') {
-                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#f57c00', '#ffffff'] });
-                }
-                btn.disabled = false;
-                btn.innerText = originalText;
-                alert(type === 'login' ? "Session Authorized!" : "Identity Created! Please check email.");
-            }, 1800);
-        }
+        };
     </script>
 </body>
 </html>
