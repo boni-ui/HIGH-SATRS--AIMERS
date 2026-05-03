@@ -8,9 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
-
   <style>
     :root {
       --primary: #2563eb;
@@ -93,6 +90,7 @@
       top: 100px;
     }
 
+    /* PROFILE IMAGE STYLES */
     .profile-img-container {
       position: relative;
       width: 110px; height: 110px;
@@ -100,6 +98,14 @@
       padding: 5px;
       border: 2px dashed var(--primary);
       border-radius: 50%;
+      cursor: pointer;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .profile-img-container:hover {
+        border-style: solid;
+        transform: scale(1.05);
     }
 
     .user-card img {
@@ -107,6 +113,23 @@
       border-radius: 50%;
       object-fit: cover;
       background: var(--bg);
+    }
+
+    .upload-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: 0.3s;
+        border-radius: 50%;
+    }
+
+    .profile-img-container:hover .upload-overlay {
+        opacity: 1;
     }
 
     .btn {
@@ -172,8 +195,7 @@
     <span>High Stars Aimers</span>
   </div>
   <div class="nav-actions">
-    <div class="notif-btn"><i class="far fa-bell fa-lg"></i></div>
-    <div style="width: 35px; height: 35px; background: var(--border); border-radius: 50%; overflow: hidden;">
+    <div style="width: 35px; height: 35px; background: var(--border); border-radius: 50%; overflow: hidden; border: 1px solid var(--primary);">
         <img id="topNavAvatar" src="https://via.placeholder.com/35" alt="User">
     </div>
   </div>
@@ -182,9 +204,14 @@
 <main class="dashboard-grid">
   <aside class="profile-sidebar">
     <div class="user-card">
-      <div class="profile-img-container">
+      <div class="profile-img-container" onclick="document.getElementById('profileInput').click()">
         <img id="userProfilePic" src="https://api.dicebear.com/7.x/initials/svg?seed=User" alt="Profile">
+        <div class="upload-overlay">
+            <i class="fas fa-camera"></i>
+        </div>
       </div>
+      <input type="file" id="profileInput" accept="image/*" style="display: none;">
+
       <h3 id="welcomeMessage">Verifying...</h3>
       <p id="userEmail">Please wait...</p>
       
@@ -243,15 +270,18 @@
     <div style="text-align: right;">
         <button id="closeModal" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
     </div>
-    <img id="modalPic" src="" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem;">
+    <img id="modalPic" src="" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem; object-fit: cover;">
     <h3 id="modalName"></h3>
     <p id="modalEmail" style="color: var(--text-muted); margin-bottom: 2rem;"></p>
     <button class="btn btn-outline" onclick="document.getElementById('profileModal').classList.remove('active')">Close</button>
   </div>
 </div>
 
-<script>
-// 1. Initialize Firebase
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
   authDomain: "high-stars-aimers-5972f.firebaseapp.com",
@@ -261,26 +291,21 @@ const firebaseConfig = {
   appId: "1:233345875942:web:cf7610de84f0b2262ce027"
 };
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const storage = getStorage(app);
 
-// 2. Auth Listener
-auth.onAuthStateChanged(user => {
+onAuthStateChanged(auth, (user) => {
     if (user) {
-        // A user is signed in
         const name = user.displayName || user.email.split('@')[0];
-        const initial = name.charAt(0).toUpperCase();
         const fallbackAvatar = `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
+        const userPhoto = user.photoURL || fallbackAvatar;
 
-        // Update UI elements
         document.getElementById("welcomeMessage").innerText = `Hello, ${name}`;
         document.getElementById("userEmail").innerText = user.email;
-        
-        const userPhoto = user.photoURL || fallbackAvatar;
         document.getElementById("userProfilePic").src = userPhoto;
         document.getElementById("topNavAvatar").src = userPhoto;
 
-        // Modal Logic
         document.getElementById("viewProfileButton").onclick = () => {
             document.getElementById("profileModal").classList.add("active");
             document.getElementById("modalPic").src = userPhoto;
@@ -288,13 +313,41 @@ auth.onAuthStateChanged(user => {
             document.getElementById("modalEmail").innerText = user.email;
         };
     } else {
-        // No user is signed in, redirect to login page
         window.location.href = "signin1.html"; 
     }
 });
 
-// 3. Buttons & Modals
-document.getElementById("signOutButton").onclick = () => auth.signOut();
+// IMAGE UPLOAD LOGIC
+document.getElementById('profileInput').onchange = async (e) => {
+    const file = e.target.files[0];
+    const user = auth.currentUser;
+    if (!file || !user) return;
+
+    try {
+        // 1. Create reference in storage (path: avatars/userId)
+        const storageRef = ref(storage, 'avatars/' + user.uid);
+        
+        // 2. Upload
+        const snapshot = await uploadBytes(storageRef, file);
+        
+        // 3. Get URL
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        
+        // 4. Update Auth Profile
+        await updateProfile(user, { photoURL: downloadURL });
+        
+        // 5. Update UI instantly
+        document.getElementById("userProfilePic").src = downloadURL;
+        document.getElementById("topNavAvatar").src = downloadURL;
+        
+        alert("Profile picture updated successfully!");
+    } catch (error) {
+        console.error("Upload failed", error);
+        alert("Upload failed. Check your Firebase Storage rules.");
+    }
+};
+
+document.getElementById("signOutButton").onclick = () => signOut(auth);
 document.getElementById("closeModal").onclick = () => document.getElementById("profileModal").classList.remove("active");
 
 window.onclick = (e) => {
