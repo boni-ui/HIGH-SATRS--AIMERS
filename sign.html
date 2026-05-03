@@ -34,34 +34,10 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
             padding: 20px;
         }
 
         #sparks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #111a2e 0%, #05080f 100%); }
-
-        /* FEATURE 1: TOP SCROLLING MARQUEE (5 items) */
-        .marquee-container {
-            position: fixed; top: 0; width: 100%; overflow: hidden;
-            background: rgba(245, 124, 0, 0.05); border-bottom: 1px solid var(--border);
-            padding: 10px 0; backdrop-filter: blur(5px);
-        }
-        .marquee-content {
-            display: flex; white-space: nowrap; animation: scroll 20s linear infinite; gap: 50px;
-        }
-        .marquee-item { font-size: 0.7rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
-        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-
-        /* FEATURE 2: BOTTOM ICON BAR (5 items) */
-        .bottom-features {
-            position: fixed; bottom: 30px; display: flex; gap: 30px; 
-            padding: 15px 30px; border-radius: 50px; background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border); backdrop-filter: blur(10px);
-        }
-        .feature-icon-box { text-align: center; color: var(--text-dim); transition: 0.3s; cursor: default; }
-        .feature-icon-box:hover { color: var(--primary); transform: translateY(-3px); }
-        .feature-icon-box i { font-size: 1.2rem; display: block; margin-bottom: 5px; }
-        .feature-icon-box span { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; }
 
         .loading-overlay {
             position: absolute; inset: 0; background: rgba(12, 18, 30, 0.9);
@@ -82,7 +58,7 @@
             backdrop-filter: blur(15px); border-radius: 18px; display: flex; align-items: center; gap: 12px;
             z-index: 2000; transition: 0.5s; opacity: 0;
         }
-        .toast-container.active { top: 80px; opacity: 1; }
+        .toast-container.active { top: 25px; opacity: 1; }
         .toast-container.success { background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); }
 
         .container {
@@ -108,9 +84,18 @@
         .input-group { margin-bottom: 18px; text-align: left; }
         label { display: block; font-size: 0.65rem; font-weight: 800; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; }
         .field-wrapper { position: relative; }
-        input { width: 100%; padding: 14px 45px; background: var(--input-bg); border: 1px solid var(--border); color: white; border-radius: 12px; outline: none; }
+        input[type="email"], input[type="password"], input[type="text"] { width: 100%; padding: 14px 45px; background: var(--input-bg); border: 1px solid var(--border); color: white; border-radius: 12px; outline: none; }
         .field-wrapper i:first-child { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #334155; }
         .view-toggle { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-dim); }
+
+        /* Forgot Password link */
+        .forgot-link { display: block; text-align: right; font-size: 0.7rem; color: var(--primary); text-decoration: none; margin-top: -10px; margin-bottom: 20px; font-weight: 600; cursor: pointer; }
+
+        /* Checkbox Styles */
+        .terms-container { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; cursor: pointer; }
+        .terms-container input { width: 18px; height: 18px; margin-top: 2px; cursor: pointer; accent-color: var(--primary); }
+        .terms-text { font-size: 0.7rem; color: var(--text-dim); line-height: 1.4; }
+        .terms-text a { color: var(--primary); text-decoration: none; font-weight: 600; }
 
         .strength-bar { height: 4px; background: rgba(255,255,255,0.05); margin: 10px 0; border-radius: 10px; overflow: hidden; }
         .strength-progress { height: 100%; width: 0%; transition: 0.5s; background: var(--danger); }
@@ -133,18 +118,6 @@
 <body>
 
     <canvas id="sparks-canvas"></canvas>
-
-    <div class="marquee-container">
-        <div class="marquee-content">
-            <div class="marquee-item"><i class="fas fa-microchip"></i> Neural Study Engine</div>
-            <div class="marquee-item"><i class="fas fa-globe"></i> Global Academic Sync</div>
-            <div class="marquee-item"><i class="fas fa-fingerprint"></i> Biometric Passkeys</div>
-            <div class="marquee-item"><i class="fas fa-meteor"></i> Hyper-Performance CDN</div>
-            <div class="marquee-item"><i class="fas fa-infinity"></i> Uncapped Cloud Storage</div>
-            <div class="marquee-item"><i class="fas fa-microchip"></i> Neural Study Engine</div>
-            <div class="marquee-item"><i class="fas fa-globe"></i> Global Academic Sync</div>
-        </div>
-    </div>
 
     <div class="toast-container" id="toast">
         <i id="toastIcon" class="fas fa-exclamation-triangle"></i>
@@ -185,6 +158,7 @@
                         <i class="fas fa-eye view-toggle" onclick="togglePass('password', this)"></i>
                     </div>
                 </div>
+                <span class="forgot-link" onclick="handleForgotPassword()">Forgot Passkey?</span>
                 <button type="submit" class="btn-action" id="loginBtn">Authorize Session</button>
             </form>
             <p class="switch-text">First time? <span onclick="toggleForm()">Create Profile</span></p>
@@ -227,23 +201,23 @@
                     <div class="req-item" id="r-num"><i class="fas fa-circle"></i> Number</div>
                     <div class="req-item" id="r-match"><i class="fas fa-circle"></i> Match</div>
                 </div>
+
+                <div class="terms-container">
+                    <input type="checkbox" id="termsCheck" required onchange="validatePassword()">
+                    <label for="termsCheck" class="terms-text">
+                        I accept the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. I understand this is a secure academic environment.
+                    </label>
+                </div>
+
                 <button type="submit" class="btn-action" id="regBtn" disabled style="background: var(--bronze-dim); color: #fff;">Finalize Profile</button>
             </form>
             <p class="switch-text">Already a member? <span onclick="toggleForm()">Secure Login</span></p>
         </div>
     </div>
 
-    <div class="bottom-features">
-        <div class="feature-icon-box"><i class="fas fa-bolt"></i><span>Turbo</span></div>
-        <div class="feature-icon-box"><i class="fas fa-shield-halved"></i><span>End-to-End</span></div>
-        <div class="feature-icon-box"><i class="fas fa-brain"></i><span>AI Coach</span></div>
-        <div class="feature-icon-box"><i class="fas fa-users-rays"></i><span>Study Guilds</span></div>
-        <div class="feature-icon-box"><i class="fas fa-file-pdf"></i><span>Smart Handouts</span></div>
-    </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
@@ -267,6 +241,7 @@
 
         const toggleLoading = (show) => { document.getElementById('authLoader').style.display = show ? 'flex' : 'none'; };
 
+        // Global functions for Firebase
         window.handleGoogleLogin = async () => {
             toggleLoading(true);
             try {
@@ -276,6 +251,23 @@
                 setTimeout(() => { window.location.href = "home.html"; }, 2000);
             } catch (err) {
                 showToast(err.message);
+                toggleLoading(false);
+            }
+        };
+
+        window.handleForgotPassword = async () => {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                showToast("Please enter your email address first.");
+                return;
+            }
+            toggleLoading(true);
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showToast("Reset link sent to your email!", "success");
+            } catch (err) {
+                showToast("Error: " + err.message);
+            } finally {
                 toggleLoading(false);
             }
         };
@@ -331,6 +323,8 @@
         window.validatePassword = () => {
             const p = document.getElementById('newPassword').value;
             const cp = document.getElementById('confirmPassword').value;
+            const termsAccepted = document.getElementById('termsCheck').checked;
+
             const checks = {
                 len: p.length >= 8,
                 up: /[A-Z]/.test(p),
@@ -347,7 +341,8 @@
             document.getElementById('strengthProgress').style.width = (score / 4 * 100) + "%";
             
             const btn = document.getElementById('regBtn');
-            if (score === 4) {
+            // Finalize Profile only enabled if all 4 checks pass AND terms are accepted
+            if (score === 4 && termsAccepted) {
                 btn.disabled = false;
                 btn.style.background = "var(--primary)";
             } else {
