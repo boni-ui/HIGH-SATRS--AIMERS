@@ -84,18 +84,21 @@
         .input-group { margin-bottom: 18px; text-align: left; }
         label { display: block; font-size: 0.65rem; font-weight: 800; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; }
         .field-wrapper { position: relative; }
-        input[type="email"], input[type="password"], input[type="text"] { width: 100%; padding: 14px 45px; background: var(--input-bg); border: 1px solid var(--border); color: white; border-radius: 12px; outline: none; }
+        input[type="email"], input[type="password"], input[type="text"] { width: 100%; padding: 14px 45px; background: var(--input-bg); border: 1px solid var(--border); color: white; border-radius: 12px; font-size: 0.9rem; transition: 0.3s; }
+        input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus { outline: none; border-color: var(--primary); background: rgba(245, 124, 0, 0.05); }
         .field-wrapper i:first-child { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #334155; }
         .view-toggle { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-dim); }
 
         /* Forgot Password link */
-        .forgot-link { display: block; text-align: right; font-size: 0.7rem; color: var(--primary); text-decoration: none; margin-top: -10px; margin-bottom: 20px; font-weight: 600; cursor: pointer; }
+        .forgot-link { display: block; text-align: right; font-size: 0.7rem; color: var(--primary); text-decoration: none; margin-top: -10px; margin-bottom: 20px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .forgot-link:hover { color: var(--accent); }
 
         /* Checkbox Styles */
         .terms-container { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; cursor: pointer; }
         .terms-container input { width: 18px; height: 18px; margin-top: 2px; cursor: pointer; accent-color: var(--primary); }
         .terms-text { font-size: 0.7rem; color: var(--text-dim); line-height: 1.4; }
-        .terms-text a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .terms-text a { color: var(--primary); text-decoration: none; font-weight: 600; transition: 0.2s; }
+        .terms-text a:hover { color: var(--accent); text-decoration: underline; }
 
         .strength-bar { height: 4px; background: rgba(255,255,255,0.05); margin: 10px 0; border-radius: 10px; overflow: hidden; }
         .strength-progress { height: 100%; width: 0%; transition: 0.5s; background: var(--danger); }
@@ -105,9 +108,36 @@
         .req-item.valid { color: var(--success); }
 
         .switch-text { margin-top: 20px; font-size: 0.8rem; color: var(--text-dim); text-align: center; }
-        .switch-text span { color: var(--primary); cursor: pointer; font-weight: 700; }
+        .switch-text span { color: var(--primary); cursor: pointer; font-weight: 700; transition: 0.2s; }
+        .switch-text span:hover { color: var(--accent); }
 
-        #access-overlay { position: fixed; inset: 0; background: rgba(5,8,15,0.98); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(15px); }
+        /* Footer Links */
+        .footer-links {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: 0.2s;
+        }
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        .footer-divider {
+            color: var(--border);
+        }
+
+        #access-overlay { position: fixed; inset: 0; background: rgba(5,8,15,0.98); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(20px); }
         .form-content { display: none; }
         .form-content.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -205,13 +235,20 @@
                 <div class="terms-container">
                     <input type="checkbox" id="termsCheck" required onchange="validatePassword()">
                     <label for="termsCheck" class="terms-text">
-                        I accept the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. I understand this is a secure academic environment.
+                        I accept the <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>. I understand this is a secure academic environment.
                     </label>
                 </div>
 
                 <button type="submit" class="btn-action" id="regBtn" disabled style="background: var(--bronze-dim); color: #fff;">Finalize Profile</button>
             </form>
             <p class="switch-text">Already a member? <span onclick="toggleForm()">Secure Login</span></p>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="footer-links">
+            <a href="privacy.html" target="_blank">Privacy Policy</a>
+            <span class="footer-divider">•</span>
+            <a href="terms.html" target="_blank">Terms of Service</a>
         </div>
     </div>
 
