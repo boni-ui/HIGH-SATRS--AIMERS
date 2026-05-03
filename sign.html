@@ -76,20 +76,22 @@
         .field-wrapper i:first-child { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #334155; transition: 0.3s; }
         .view-toggle { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-dim); font-size: 0.85rem; z-index: 5; }
 
-        .strength-bar { height: 3px; width: 100%; background: rgba(255,255,255,0.05); margin-top: -10px; margin-bottom: 20px; border-radius: 10px; overflow: hidden; }
-        .strength-progress { height: 100%; width: 0%; background: linear-gradient(90deg, #ff4d4d, #f57c00, #10b981); transition: 0.6s ease; }
-
-        .requirements { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 25px; }
-        .req-item { font-size: 0.7rem; color: var(--text-dim); display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: rgba(255,255,255,0.03); border-radius: 10px; }
-        .req-item.valid { color: #f1f5f9; background: rgba(16, 185, 129, 0.1); }
-        .req-item.valid i { color: var(--success); }
+        .divider { display: flex; align-items: center; text-align: center; margin: 25px 0; color: var(--text-dim); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+        .divider:not(:empty)::before { margin-right: 15px; }
+        .divider:not(:empty)::after { margin-left: 15px; }
 
         .btn-action {
-            width: 100%; padding: 18px; border-radius: 14px; border: none; background: #ffffff; 
+            width: 100%; padding: 16px; border-radius: 14px; border: none; background: #ffffff; 
             color: #000; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; 
             letter-spacing: 1px; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
+        .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn-action:active { transform: scale(0.98); }
+        
+        .btn-google { background: #1a2235; color: white; border: 1px solid var(--border); }
+        .btn-google i { color: #4285F4; font-size: 1.1rem; }
+        
         .btn-signup { background: var(--bronze-dim); color: rgba(255,255,255,0.7); }
 
         #access-overlay {
@@ -105,8 +107,15 @@
         .form-content { display: none; }
         .form-content.active { display: block; animation: slideIn 0.5s ease forwards; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .switch-text { margin-top: 30px; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
+        .switch-text { margin-top: 25px; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
         .switch-text span { color: var(--primary); cursor: pointer; font-weight: 700; margin-left: 5px; }
+        
+        .strength-bar { height: 3px; width: 100%; background: rgba(255,255,255,0.05); margin-top: -10px; margin-bottom: 20px; border-radius: 10px; overflow: hidden; }
+        .strength-progress { height: 100%; width: 0%; background: linear-gradient(90deg, #ff4d4d, #f57c00, #10b981); transition: 0.6s ease; }
+        .requirements { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 25px; }
+        .req-item { font-size: 0.7rem; color: var(--text-dim); display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: rgba(255,255,255,0.03); border-radius: 10px; }
+        .req-item.valid { color: #f1f5f9; background: rgba(16, 185, 129, 0.1); }
+        .req-item.valid i { color: var(--success); }
     </style>
 </head>
 <body>
@@ -128,6 +137,13 @@
         <div id="loginSection" class="form-content active">
             <h1>Aim High.</h1>
             <p class="subtitle">Access your Academic Cloud Profile</p>
+            
+            <button type="button" class="btn-action btn-google" id="googleBtn">
+                <i class="fab fa-google"></i> Continue with Google
+            </button>
+
+            <div class="divider">or use credentials</div>
+
             <form id="loginForm">
                 <div class="input-group">
                     <label>Identity Email</label>
@@ -152,6 +168,13 @@
         <div id="signupSection" class="form-content">
             <h1>Elite Membership</h1>
             <p class="subtitle">Initialize your learning cloud identity</p>
+            
+            <button type="button" class="btn-action btn-google" id="googleBtnSignup">
+                <i class="fab fa-google"></i> Sign up with Google
+            </button>
+
+            <div class="divider">or create profile</div>
+
             <form id="signupForm">
                 <div class="input-group">
                     <label>Academic Email</label>
@@ -191,7 +214,14 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            sendEmailVerification,
+            GoogleAuthProvider,
+            signInWithPopup 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
@@ -204,107 +234,100 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
-        // --- NEW TOAST FUNCTION ---
         const showToast = (message, type = 'error') => {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toastMsg');
             const toastIcon = document.getElementById('toastIcon');
-            
             toastMsg.innerText = message;
             toast.className = `toast-container active ${type}`;
             toastIcon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
-
-            setTimeout(() => {
-                toast.classList.remove('active');
-            }, 4000);
+            setTimeout(() => toast.classList.remove('active'), 4000);
         };
 
-        // Firebase Error Mapper
         const getFriendlyError = (code) => {
             switch (code) {
                 case 'auth/email-already-in-use': return 'This email is already registered.';
                 case 'auth/invalid-email': return 'Please enter a valid email address.';
                 case 'auth/user-not-found': return 'No profile found with this email.';
                 case 'auth/wrong-password': return 'Incorrect passkey. Please try again.';
-                case 'auth/weak-password': return 'Passkey is too weak.';
+                case 'auth/popup-closed-by-user': return 'Login window was closed.';
                 default: return 'Identity verification failed. Try again.';
             }
         };
 
-        // UI Feedback
-        const showProcessing = (btn, text) => {
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
+        const triggerSuccess = () => {
+            document.getElementById('access-overlay').style.display = 'flex';
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#f57c00', '#ffffff'] });
+            setTimeout(() => { window.location.href = "home.html"; }, 2500);
         };
 
-        const resetBtn = (btn, text) => {
-            btn.disabled = false;
-            btn.innerHTML = text;
+        // GOOGLE LOGIN HANDLER
+        const handleGoogleLogin = async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                triggerSuccess();
+            } catch (err) {
+                showToast(getFriendlyError(err.code));
+            }
         };
 
-        const triggerShake = () => {
-            const container = document.getElementById('mainContainer');
-            container.classList.add('shake');
-            setTimeout(() => container.classList.remove('shake'), 500);
-        };
+        document.getElementById('googleBtn').addEventListener('click', handleGoogleLogin);
+        document.getElementById('googleBtnSignup').addEventListener('click', handleGoogleLogin);
 
-        // LOGIN HANDLER
+        // Standard Login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
 
-            showProcessing(btn, "Verifying Identity...");
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Verifying...`;
             
             try {
                 const cred = await signInWithEmailAndPassword(auth, email, pass);
                 if (!cred.user.emailVerified) {
                     throw { code: 'custom', message: "Please verify your email first." };
                 }
-                
-                setTimeout(() => {
-                    btn.innerHTML = `<i class="fas fa-sync fa-spin"></i> Syncing Profile...`;
-                    setTimeout(() => {
-                        document.getElementById('access-overlay').style.display = 'flex';
-                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                        setTimeout(() => { window.location.href = "home.html"; }, 2500);
-                    }, 1000);
-                }, 800);
-
+                triggerSuccess();
             } catch (err) {
-                triggerShake();
+                document.getElementById('mainContainer').classList.add('shake');
+                setTimeout(() => document.getElementById('mainContainer').classList.remove('shake'), 500);
                 showToast(err.code ? getFriendlyError(err.code) : err.message);
-                resetBtn(btn, "Authorize Session");
+                btn.disabled = false;
+                btn.innerHTML = "Authorize Session";
             }
         });
 
-        // SIGNUP HANDLER
+        // Signup Handler
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('regBtn');
             const email = document.getElementById('newEmail').value;
             const pass = document.getElementById('newPassword').value;
 
-            showProcessing(btn, "Creating Identity...");
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Initializing...`;
 
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 await sendEmailVerification(cred.user);
                 showToast("Verification link sent! Check your inbox.", "success");
                 window.toggleForm();
-                resetBtn(btn, "Finalize Identity");
+                btn.disabled = false;
+                btn.innerHTML = "Finalize Identity";
             } catch (err) {
-                triggerShake();
                 showToast(getFriendlyError(err.code));
-                resetBtn(btn, "Finalize Identity");
+                btn.disabled = false;
+                btn.innerHTML = "Finalize Identity";
             }
         });
     </script>
 
     <script>
-        // Animations and Form Toggles (Keep the same)
+        // Sparks Animation Engine
         const canvas = document.getElementById('sparks-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
