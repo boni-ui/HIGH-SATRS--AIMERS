@@ -40,36 +40,45 @@
 
         #sparks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #111a2e 0%, #05080f 100%); }
 
-        /* LOADING FEATURES */
+        /* --- NEW WAITING FEATURES --- */
         .loading-overlay {
-            position: absolute; inset: 0; background: rgba(12, 18, 30, 0.8);
-            backdrop-filter: blur(8px); border-radius: 35px; z-index: 100;
+            position: absolute; inset: 0; background: rgba(12, 18, 30, 0.85);
+            backdrop-filter: blur(10px); border-radius: 35px; z-index: 100;
             display: none; flex-direction: column; align-items: center; justify-content: center;
             animation: fadeIn 0.3s ease;
         }
-        .spinner {
-            width: 40px; height: 40px; border: 3px solid rgba(245, 124, 0, 0.1);
+        .spinner-ring {
+            width: 45px; height: 45px; border: 3px solid rgba(245, 124, 0, 0.1);
             border-top: 3px solid var(--primary); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 15px;
+            animation: spin 0.8s linear infinite; margin-bottom: 15px;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .btn-loading { pointer-events: none; opacity: 0.8; position: relative; color: transparent !important; }
+        .btn-loading { pointer-events: none; opacity: 0.7; position: relative; color: transparent !important; }
         .btn-loading::after {
-            content: ""; position: absolute; width: 20px; height: 20px;
+            content: ""; position: absolute; width: 18px; height: 18px;
             border: 2px solid transparent; border-top-color: currentColor;
-            border-radius: 50%; animation: spin 0.8s linear infinite;
-            left: calc(50% - 10px); top: calc(50% - 10px); color: #000;
+            border-radius: 50%; animation: spin 0.6s linear infinite;
+            left: calc(50% - 9px); top: calc(50% - 9px); color: #000;
         }
+        /* --------------------------- */
 
-        /* EXISTING STYLES */
         .features-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px; width: 90%; max-width: 1000px; margin-bottom: 40px; animation: fadeIn 1s ease;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            width: 90%;
+            max-width: 1000px;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease;
         }
         .feature-card {
-            background: rgba(255,255,255,0.02); border: 1px solid var(--border);
-            padding: 15px; border-radius: 15px; text-align: center; transition: 0.3s;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            transition: 0.3s;
         }
         .feature-card:hover { background: rgba(245, 124, 0, 0.05); transform: translateY(-5px); }
         .feature-card i { color: var(--primary); font-size: 1.2rem; margin-bottom: 8px; }
@@ -91,7 +100,8 @@
             position: relative; width: 440px; max-width: 90%; padding: 45px 40px;
             background: var(--card-bg); border-radius: 35px; border: 1px solid var(--border);
             box-shadow: 0 40px 100px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 30px;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 30px;
         }
 
         h1 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
@@ -138,6 +148,7 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .form-content { display: none; }
         .form-content.active { display: block; animation: fadeIn 0.4s ease; }
+
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
     </style>
 </head>
@@ -170,16 +181,16 @@
     </div>
 
     <div class="container" id="mainContainer">
-        <div class="loading-overlay" id="globalLoader">
-            <div class="spinner"></div>
-            <p style="font-size: 0.7rem; letter-spacing: 2px; color: var(--primary); font-weight: 800;">VERIFYING IDENTITY</p>
+        <div class="loading-overlay" id="authLoader">
+            <div class="spinner-ring"></div>
+            <p style="font-size: 0.65rem; color: var(--primary); font-weight: 800; letter-spacing: 2px;">HANDSHAKING IDENTITY</p>
         </div>
 
         <div id="loginSection" class="form-content active">
             <h1>Aim High.</h1>
             <p class="subtitle">Secure Academic Identity Cloud</p>
             
-            <button type="button" class="btn-action btn-google" id="googleLoginBtn" onclick="handleGoogleLogin()">
+            <button type="button" class="btn-action btn-google" id="googleBtnLogin" onclick="handleGoogleLogin()">
                 <i class="fab fa-google"></i> Continue with Google
             </button>
 
@@ -210,7 +221,7 @@
             <h1>Initialize</h1>
             <p class="subtitle">Create your learning cloud identity</p>
             
-            <button type="button" class="btn-action btn-google" id="googleSignUpBtn" onclick="handleGoogleLogin()">
+            <button type="button" class="btn-action btn-google" id="googleBtnSignup" onclick="handleGoogleLogin()">
                 <i class="fab fa-google"></i> Sign up with Google
             </button>
 
@@ -290,19 +301,22 @@
             setTimeout(() => toast.classList.remove('active'), 5000);
         };
 
-        const setLoading = (isLoading) => {
-            const loader = document.getElementById('globalLoader');
-            const loginBtn = document.getElementById('loginBtn');
-            const regBtn = document.getElementById('regBtn');
+        // NEW LOADING TOGGLE HELPER
+        const toggleLoadingState = (isLoading) => {
+            const loader = document.getElementById('authLoader');
+            const btns = [
+                document.getElementById('loginBtn'),
+                document.getElementById('regBtn'),
+                document.getElementById('googleBtnLogin'),
+                document.getElementById('googleBtnSignup')
+            ];
             
             if(isLoading) {
                 loader.style.display = 'flex';
-                loginBtn.classList.add('btn-loading');
-                regBtn.classList.add('btn-loading');
+                btns.forEach(b => { if(b) b.classList.add('btn-loading'); });
             } else {
                 loader.style.display = 'none';
-                loginBtn.classList.remove('btn-loading');
-                regBtn.classList.remove('btn-loading');
+                btns.forEach(b => { if(b) b.classList.remove('btn-loading'); });
             }
         };
 
@@ -313,45 +327,45 @@
         };
 
         window.handleGoogleLogin = async () => {
-            setLoading(true);
+            toggleLoadingState(true);
             try {
                 const result = await signInWithPopup(auth, provider);
                 if(result.user) triggerSuccess();
             } catch (err) {
                 showToast(`Auth Failed: ${err.code.split('/')[1]}`);
-                setLoading(false);
+                toggleLoadingState(false);
             }
         };
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            setLoading(true);
+            toggleLoadingState(true);
             try {
                 const res = await signInWithEmailAndPassword(auth, email.value, password.value);
                 if (!res.user.emailVerified) {
                     showToast("Verify your email first! Check your inbox.");
-                    setLoading(false);
+                    toggleLoadingState(false);
                 } else triggerSuccess();
             } catch (err) {
                 document.getElementById('mainContainer').classList.add('shake');
                 setTimeout(() => document.getElementById('mainContainer').classList.remove('shake'), 500);
                 showToast("Invalid Credentials");
-                setLoading(false);
+                toggleLoadingState(false);
             }
         });
 
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            setLoading(true);
+            toggleLoadingState(true);
             try {
                 const res = await createUserWithEmailAndPassword(auth, newEmail.value, newPassword.value);
                 await sendEmailVerification(res.user);
                 showToast("Identity Created! Check email for link.", "success");
                 window.toggleForm();
-                setLoading(false);
+                toggleLoadingState(false);
             } catch (err) {
                 showToast(`Error: ${err.code.split('/')[1]}`);
-                setLoading(false);
+                toggleLoadingState(false);
             }
         });
     </script>
@@ -373,12 +387,4 @@
             const checks = {
                 len: p.length >= 8,
                 up: /[A-Z]/.test(p),
-                num: /[0-9]/.test(p),
-                match: (p === cp && p.length > 0)
-            };
-
-            let score = 0;
-            Object.entries(checks).forEach(([k, v]) => {
-                const el = document.getElementById('r-' + k);
-                if(v) { el.classList.add('valid'); score++; }
-                else el.classList.remov
+             
