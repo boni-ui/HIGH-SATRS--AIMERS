@@ -6,22 +6,21 @@
     <title>High Stars Aimers | Secure Elite Auth</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
             --primary: #f57c00;
             --accent: #e65100;
-            --secondary: #38bdf8;
-            --bg-deep: #020617;
-            --card-glass: rgba(15, 23, 42, 0.9);
-            --text: #f8fafc;
-            --text-dim: #94a3b8;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --border: rgba(255, 255, 255, 0.1);
-            --glow: rgba(245, 124, 0, 0.5);
+            --bg-deep: #05080f;
+            --card-bg: #0c121e;
+            --input-bg: #05080f;
+            --text: #ffffff;
+            --text-dim: #64748b;
+            --border: rgba(255, 255, 255, 0.06);
+            --success: #10b981;
+            --bronze-dim: #824b21;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -36,336 +35,319 @@
             overflow: hidden;
         }
 
-        .sparks-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; background: radial-gradient(circle at 50% 50%, #0f172a, #020617);
-        }
-        .spark {
-            position: absolute; border-radius: 50%;
-            background: var(--primary); filter: blur(1px);
-            animation: drift var(--d) infinite linear;
-            opacity: 0;
-        }
-        @keyframes drift {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            20% { opacity: 0.4; }
-            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        /* 1. SPARKS BACKGROUND SYSTEM */
+        #sparks-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #111a2e 0%, #05080f 100%);
         }
 
-        .blob {
-            position: absolute; border-radius: 50%; filter: blur(120px);
-            animation: rotate 30s infinite linear; z-index: -1;
-        }
-        .b1 { width: 500px; height: 500px; background: var(--primary); top: -10%; left: -10%; opacity: 0.2; }
-        .b2 { width: 400px; height: 400px; background: var(--secondary); bottom: -10%; right: -10%; opacity: 0.15; }
-        @keyframes rotate { from { transform: rotate(0deg) translate(50px); } to { transform: rotate(360deg) translate(50px); } }
-
+        /* CONTAINER SETUP */
         .container {
-            position: relative; width: 1100px; max-width: 95%; height: 800px;
-            background: var(--card-glass); backdrop-filter: blur(50px);
-            border: 1px solid var(--border); border-radius: 40px;
-            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.9);
-            display: flex; overflow: hidden;
+            position: relative;
+            width: 440px;
+            max-width: 90%;
+            padding: 45px 40px;
+            background: var(--card-bg);
+            border-radius: 35px;
+            border: 1px solid var(--border);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
         }
 
-        .scanner-line {
-            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            box-shadow: 0 0 15px var(--primary);
-            z-index: 100; display: none;
-            animation: scan 2s infinite ease-in-out;
+        h1 { font-size: 2.1rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.8px; }
+        .subtitle { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 35px; font-weight: 500; }
+
+        /* INPUT GROUP ENHANCEMENTS */
+        .input-group { position: relative; margin-bottom: 22px; transition: 0.3s; }
+        
+        label { 
+            display: block; 
+            font-size: 0.65rem; 
+            font-weight: 800; 
+            color: var(--text-dim); 
+            margin-bottom: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 1.2px;
+            transition: 0.3s;
         }
-        @keyframes scan {
-            0% { top: 0%; opacity: 0; }
-            50% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
-
-        .form-box {
-            position: absolute; top: 0; width: 50%; height: 100%;
-            padding: 60px; transition: 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex; flex-direction: column; justify-content: center; z-index: 5;
-        }
-
-        .login-side { left: 0; opacity: 1; }
-        .signup-side { left: 0; opacity: 0; transform: scale(0.9); visibility: hidden; }
-
-        .container.active .login-side { opacity: 0; transform: scale(0.9); visibility: hidden; }
-        .container.active .signup-side { opacity: 1; visibility: visible; transform: translateX(100%) scale(1); }
-
-        .overlay-panel {
-            position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
-            background: linear-gradient(165deg, #f57c00, #e65100, #020617);
-            background-size: 200% 200%; animation: grad 8s infinite alternate;
-            z-index: 10; transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex; align-items: center; justify-content: center; text-align: center; color: white;
-            border-left: 1px solid var(--border);
-        }
-        @keyframes grad { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-        .container.active .overlay-panel { transform: translateX(-100%); }
-
-        .input-group { position: relative; margin-bottom: 22px; }
-        label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
+        
+        .field-wrapper { position: relative; border-radius: 14px; overflow: hidden; }
         
         input {
-            width: 100%; padding: 16px 20px 16px 55px; border-radius: 15px;
-            background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border);
-            color: white; outline: none; transition: 0.4s; font-size: 0.95rem;
+            width: 100%; 
+            padding: 16px 48px; 
+            background: var(--input-bg); 
+            border: 1px solid var(--border);
+            color: white; 
+            outline: none; 
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 25px var(--glow); background: rgba(0,0,0,0.6); }
+
+        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(245, 124, 0, 0.15); }
+        input:focus ~ i:first-child { color: var(--primary); }
         
-        .input-group i:not(.view-toggle) { position: absolute; left: 22px; bottom: 18px; color: var(--text-dim); transition: 0.3s; }
-        input:focus + i { color: var(--primary); transform: scale(1.1); }
+        .field-wrapper i:first-child { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #334155; transition: 0.3s; }
+        .view-toggle { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-dim); font-size: 0.85rem; padding: 5px; }
 
-        .view-toggle { position: absolute; right: 20px; bottom: 18px; cursor: pointer; color: var(--text-dim); z-index: 10; }
+        /* PASSWORD STRENGTH METER */
+        .strength-bar {
+            height: 3px;
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            margin-top: -10px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .strength-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff4d4d, #f57c00, #10b981);
+            transition: 0.6s ease;
+        }
 
-        .strength-meter { height: 4px; width: 100%; background: rgba(255,255,255,0.1); border-radius: 10px; margin: -10px 0 20px 0; overflow: hidden; }
-        .strength-fill { height: 100%; width: 0%; transition: 0.5s; background: var(--danger); }
+        /* REQUIREMENT CHIPS */
+        .requirements { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 25px; }
+        .req-item { 
+            font-size: 0.7rem; 
+            color: var(--text-dim); 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            padding: 10px 12px; 
+            background: rgba(255,255,255,0.03); 
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .req-item.valid { color: #f1f5f9; background: rgba(16, 185, 129, 0.1); }
+        .req-item.valid i { color: var(--success); }
 
-        .requirements { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .req-item { font-size: 0.65rem; color: var(--text-dim); display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 10px; }
-        .req-item.valid { color: var(--success); background: rgba(34, 197, 94, 0.05); }
-
+        /* BUTTONS */
         .btn-action {
-            width: 100%; padding: 18px; border-radius: 15px; border: none;
-            background: white; color: var(--bg-deep); font-weight: 800; cursor: pointer;
-            transition: 0.4s; text-transform: uppercase; letter-spacing: 1px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; 
+            padding: 18px; 
+            border-radius: 14px; 
+            border: none;
+            background: #ffffff; 
+            color: #000; 
+            font-weight: 800; 
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            font-size: 0.85rem;
         }
-        .btn-action:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.4); background: #f0f0f0; }
-        .btn-action:disabled { opacity: 0.7; cursor: not-allowed; }
+        .btn-action:active { transform: scale(0.97); }
+        .btn-signup { background: var(--bronze-dim); color: rgba(255,255,255,0.7); }
 
-        #toast {
-            position: fixed; top: 30px; right: 30px; background: #1e293b;
-            padding: 20px 30px; border-radius: 20px; border-left: 5px solid var(--primary);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6); z-index: 1000;
-            display: flex; align-items: center; gap: 15px;
-            transform: translateX(200%); transition: 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-        #toast.active { transform: translateX(0); }
+        /* FORM SWITCHING ANIMATION */
+        .form-content { display: none; }
+        .form-content.active { display: block; animation: slideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
 
-        .privacy-bottom {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            font-size: 0.7rem; color: var(--text-dim); z-index: 20; width: 100%; text-align: center;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        .switch-text { margin-top: 30px; text-align: center; color: var(--text-dim); font-size: 0.85rem; font-weight: 500; }
+        .switch-text span { color: var(--primary); cursor: pointer; font-weight: 700; margin-left: 5px; }
+
+        .footer-branding {
+            position: absolute; bottom: -50px; left: 0; width: 100%;
+            text-align: center; font-size: 0.75rem; color: var(--text-dim);
+        }
+        .footer-branding span { color: var(--primary); font-weight: 700; }
+
     </style>
 </head>
 <body>
 
-    <div class="sparks-container" id="sparks">
-        <div class="blob b1"></div>
-        <div class="blob b2"></div>
-    </div>
+    <canvas id="sparks-canvas"></canvas>
 
-    <div id="toast">
-        <i id="t-icon" class="fas fa-satellite-dish"></i>
-        <span id="t-msg" style="font-weight: 600;"></span>
-    </div>
-
-    <div class="container" id="container">
-        <div class="scanner-line" id="scanner"></div>
-
-        <div class="form-box login-side">
-            <div style="margin-bottom: 35px;">
-                <h1 style="font-size: 2.8rem; font-weight: 800; letter-spacing: -2px;">Aim High.</h1>
-                <p style="color: var(--text-dim);">Access your Academic Cloud Profile</p>
-            </div>
-            <form id="loginForm" onsubmit="window.processAuth(event, 'in')">
+    <div class="container">
+        <div id="loginSection" class="form-content active">
+            <h1>Aim High.</h1>
+            <p class="subtitle">Access your Academic Cloud Profile</p>
+            
+            <form onsubmit="handleAuth(event, 'login')">
                 <div class="input-group">
                     <label>Identity Email</label>
-                    <input type="email" id="email" placeholder="student@email.com" required>
-                    <i class="fas fa-envelope"></i>
+                    <div class="field-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" placeholder="student@email.com" required>
+                    </div>
                 </div>
                 <div class="input-group">
                     <label>Secure Passkey</label>
-                    <input type="password" id="password" placeholder="••••••••" required>
-                    <i class="fas fa-lock"></i>
-                    <i class="fas fa-eye view-toggle" onclick="window.toggleView('password', this)"></i>
+                    <div class="field-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                        <i class="fas fa-eye view-toggle" onclick="togglePass('password', this)"></i>
+                    </div>
                 </div>
-                <button type="submit" class="btn-action" id="login-btn">
-                    <span class="btn-text">Authorize Session</span>
-                </button>
+                <button type="submit" class="btn-action" id="loginBtn">Authorize Session</button>
             </form>
-            <p style="margin-top: 30px; text-align: center; color: var(--text-dim); font-size: 0.85rem;">
-                New Aimer? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" onclick="window.switchMode()">Create Profile</span>
-            </p>
+            <p class="switch-text">New Aimer? <span onclick="toggleForm()">Create Profile</span></p>
         </div>
 
-        <div class="form-box signup-side">
-            <h1 style="font-size: 2.4rem; font-weight: 800; margin-bottom: 10px;">Elite Membership</h1>
-            <p style="color: var(--text-dim); margin-bottom: 30px;">Initialize your learning cloud identity</p>
-            <form id="signupForm" onsubmit="window.processAuth(event, 'up')">
+        <div id="signupSection" class="form-content">
+            <h1>Elite Membership</h1>
+            <p class="subtitle">Initialize your learning cloud identity</p>
+            
+            <form onsubmit="handleAuth(event, 'signup')">
                 <div class="input-group">
                     <label>Academic Email</label>
-                    <input type="email" id="newEmail" placeholder="name@email.com" required>
-                    <i class="fas fa-at"></i>
+                    <div class="field-wrapper">
+                        <i class="fas fa-at"></i>
+                        <input type="email" id="newEmail" placeholder="name@email.com" required>
+                    </div>
                 </div>
-                <div class="input-group">
+                <div class="input-group" style="margin-bottom: 12px;">
                     <label>Create Passkey</label>
-                    <input type="password" id="newPassword" placeholder="••••••••" required oninput="window.validate()">
-                    <i class="fas fa-shield-alt"></i>
-                    <i class="fas fa-eye view-toggle" onclick="window.toggleView('newPassword', this)"></i>
+                    <div class="field-wrapper">
+                        <i class="fas fa-shield-alt"></i>
+                        <input type="password" id="newPassword" placeholder="••••••••" required oninput="validatePassword()">
+                        <i class="fas fa-eye view-toggle" onclick="togglePass('newPassword', this)"></i>
+                    </div>
                 </div>
-                <div class="strength-meter"><div class="strength-fill" id="strength"></div></div>
+                
+                <div class="strength-bar"><div id="strengthProgress" class="strength-progress"></div></div>
+
                 <div class="input-group">
                     <label>Confirm Passkey</label>
-                    <input type="password" id="confirmPassword" placeholder="••••••••" required oninput="window.validate()">
-                    <i class="fas fa-check-double"></i>
-                    <i class="fas fa-eye view-toggle" onclick="window.toggleView('confirmPassword', this)"></i>
+                    <div class="field-wrapper">
+                        <i class="fas fa-check-double"></i>
+                        <input type="password" id="confirmPassword" placeholder="••••••••" required oninput="validatePassword()">
+                        <i class="fas fa-eye view-toggle" onclick="togglePass('confirmPassword', this)"></i>
+                    </div>
                 </div>
+
                 <div class="requirements">
                     <div class="req-item" id="r-len"><i class="fas fa-circle"></i> 8+ Char</div>
                     <div class="req-item" id="r-up"><i class="fas fa-circle"></i> 1 Uppercase</div>
                     <div class="req-item" id="r-num"><i class="fas fa-circle"></i> 1 Numeric</div>
                     <div class="req-item" id="r-spec"><i class="fas fa-circle"></i> 1 Special ($@!)</div>
                 </div>
-                <button type="submit" id="reg-btn" class="btn-action" disabled style="background: var(--primary); color: white;">
-                    <span class="btn-text">Finalize Identity</span>
-                </button>
+
+                <button type="submit" class="btn-action btn-signup" id="regBtn" disabled>Finalize Identity</button>
             </form>
-            <p style="margin-top: 25px; text-align: center; color: var(--text-dim); font-size: 0.85rem;">
-                Already verified? <span style="color: var(--primary); cursor: pointer; font-weight: 800;" onclick="window.switchMode()">Secure Login</span>
-            </p>
+            <p class="switch-text">Already verified? <span onclick="toggleForm()">Secure Login</span></p>
         </div>
 
-        <div class="overlay-panel">
-            <div style="padding: 50px;">
-                <h2 id="ov-h" style="font-size: 3.5rem; font-weight: 800; margin-bottom: 20px;">Secure Hub.</h2>
-                <p style="font-size: 1.2rem; opacity: 0.8; line-height: 1.8;">"The capacity to learn is a gift; the ability to learn is a skill."</p>
-                <button onclick="window.switchMode()" style="margin-top: 40px; background: transparent; border: 2px solid white; color: white; padding: 15px 50px; border-radius: 50px; cursor: pointer; font-weight: 800; transition: 0.3s;">FLIP VIEW</button>
-            </div>
-        </div>
-
-        <div class="privacy-bottom">
+        <div class="footer-branding">
             &copy; 2026 High Stars Aimers. <span>Privacy Policy</span> & <span>Terms of Use</span>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            sendEmailVerification 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    <script>
+        // --- 1. SPARKS ENGINE ---
+        const canvas = document.getElementById('sparks-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
-            authDomain: "high-stars-aimers-5972f.firebaseapp.com",
-            projectId: "high-stars-aimers-5972f",
-            storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
-            messagingSenderId: "233345875942",
-            appId: "1:233345875942:web:cf7610de84f0b2262ce027"
-        };
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // --- GLOBAL TOOLS ---
-        window.notify = (msg, error = false) => {
-            const t = document.getElementById('toast');
-            const msgEl = document.getElementById('t-msg');
-            msgEl.innerText = msg;
-            t.style.borderLeftColor = error ? "var(--danger)" : "var(--success)";
-            t.classList.add('active');
-            setTimeout(() => t.classList.remove('active'), 5000);
-        };
-
-        window.setLoading = (btn, isLoading) => {
-            const scanner = document.getElementById('scanner');
-            const btnText = btn.querySelector('.btn-text');
-            if (isLoading) {
-                scanner.style.display = 'block';
-                btn.disabled = true;
-                let msgs = ["Verifying...", "Linking Account...", "Encrypting..."];
-                let i = 0;
-                btnText.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${msgs[0]}`;
-                btn.timer = setInterval(() => {
-                    i = (i + 1) % msgs.length;
-                    btnText.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${msgs[i]}`;
-                }, 800);
-            } else {
-                scanner.style.display = 'none';
-                btn.disabled = false;
-                clearInterval(btn.timer);
+        class Particle {
+            constructor() {
+                this.reset();
             }
-        };
-
-        window.processAuth = async (event, type) => {
-            event.preventDefault();
-            const isLogin = type === 'in';
-            const btn = document.getElementById(isLogin ? 'login-btn' : 'reg-btn');
-            const email = document.getElementById(isLogin ? 'email' : 'newEmail').value;
-            const password = document.getElementById(isLogin ? 'password' : 'newPassword').value;
-            
-            window.setLoading(btn, true);
-
-            try {
-                if (isLogin) {
-                    const cred = await signInWithEmailAndPassword(auth, email, password);
-                    if (cred.user.emailVerified) {
-                        window.notify("Identity Authorized.");
-                        setTimeout(() => window.location.href = "home.html", 1500);
-                    } else {
-                        window.notify("Verification Required. Check Email.", true);
-                        window.setLoading(btn, false);
-                        btn.querySelector('.btn-text').innerText = "Authorize Session";
-                    }
-                } else {
-                    const cred = await createUserWithEmailAndPassword(auth, email, password);
-                    await sendEmailVerification(cred.user);
-                    confetti({ particleCount: 150, spread: 70 });
-                    window.notify("Success! Verify your email.");
-                    window.setLoading(btn, false);
-                    btn.querySelector('.btn-text').innerText = "Check Inbox";
-                }
-            } catch (err) {
-                window.setLoading(btn, false);
-                btn.querySelector('.btn-text').innerText = isLogin ? "Authorize Session" : "Finalize Identity";
-                window.notify(err.code.replace('auth/', '').replace(/-/g, ' '), true);
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 10;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 1;
+                this.opacity = Math.random() * 0.5 + 0.1;
             }
-        };
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < -10) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(245, 124, 0, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
 
-        window.validate = () => {
+        for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        animate();
+
+        // --- 2. LOGIC & FEATURES ---
+        function toggleForm() {
+            const sections = document.querySelectorAll('.form-content');
+            sections.forEach(s => s.classList.toggle('active'));
+        }
+
+        function togglePass(id, icon) {
+            const input = document.getElementById(id);
+            const isPass = input.type === 'password';
+            input.type = isPass ? 'text' : 'password';
+            icon.className = isPass ? 'fas fa-eye-slash view-toggle' : 'fas fa-eye view-toggle';
+        }
+
+        function validatePassword() {
             const p = document.getElementById('newPassword').value;
             const cp = document.getElementById('confirmPassword').value;
+            const progress = document.getElementById('strengthProgress');
+            
             const checks = {
                 len: p.length >= 8,
                 up: /[A-Z]/.test(p),
                 num: /[0-9]/.test(p),
                 spec: /[^A-Za-z0-9]/.test(p)
             };
-            const score = Object.values(checks).filter(Boolean).length;
-            document.getElementById('strength').style.width = (score / 4) * 100 + "%";
-            for(const [k, v] of Object.entries(checks)) {
-                document.getElementById('r-' + k).className = v ? 'req-item valid' : 'req-item';
+
+            let score = 0;
+            for(const [key, passed] of Object.entries(checks)) {
+                const el = document.getElementById('r-' + key);
+                if(passed) { el.classList.add('valid'); score++; }
+                else { el.classList.remove('valid'); }
             }
-            document.getElementById('reg-btn').disabled = !(score === 4 && p === cp);
-        };
 
-        window.switchMode = () => {
-            document.getElementById('container').classList.toggle('active');
-            const isActive = document.getElementById('container').classList.contains('active');
-            document.getElementById('ov-h').innerText = isActive ? "Global Reach." : "Secure Hub.";
-        };
+            progress.style.width = (score * 25) + "%";
+            
+            const btn = document.getElementById('regBtn');
+            const isValid = score === 4 && p === cp && p.length > 0;
+            
+            btn.disabled = !isValid;
+            btn.style.background = isValid ? "var(--primary)" : "var(--bronze-dim)";
+            btn.style.color = isValid ? "#fff" : "rgba(255,255,255,0.7)";
+        }
 
-        window.toggleView = (id, icon) => {
-            const el = document.getElementById(id);
-            el.type = el.type === "password" ? "text" : "password";
-            icon.className = el.type === "password" ? "fas fa-eye view-toggle" : "fas fa-eye-slash view-toggle";
-        };
+        async function handleAuth(e, type) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
 
-        // Sparks BG
-        const sc = document.getElementById('sparks');
-        for(let i=0; i<60; i++) {
-            const s = document.createElement('div');
-            s.className = 'spark';
-            s.style.left = Math.random() * 100 + '%';
-            s.style.width = s.style.height = (Math.random()*3+1)+'px';
-            s.style.setProperty('--d', (Math.random()*4+3)+'s');
-            s.style.animationDelay = Math.random()*5+'s';
-            sc.appendChild(s);
+            setTimeout(() => {
+                if(type === 'signup') {
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#f57c00', '#ffffff'] });
+                }
+                btn.disabled = false;
+                btn.innerText = originalText;
+                alert(type === 'login' ? "Session Authorized!" : "Identity Created! Please check email.");
+            }, 1800);
         }
     </script>
 </body>
