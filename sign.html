@@ -38,6 +38,20 @@
 
         #sparks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #111a2e 0%, #05080f 100%); }
 
+        /* TOAST NOTIFICATION SYSTEM */
+        .toast-container {
+            position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 380px; padding: 15px 20px;
+            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);
+            backdrop-filter: blur(12px); border-radius: 18px; display: flex; align-items: center; gap: 12px;
+            z-index: 2000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; pointer-events: none;
+        }
+        .toast-container.active { top: 20px; opacity: 1; pointer-events: auto; }
+        .toast-container i { font-size: 1.2rem; color: var(--danger); }
+        .toast-container.success { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
+        .toast-container.success i { color: var(--success); }
+        .toast-msg { font-size: 0.85rem; font-weight: 600; color: #fff; }
+
         .container {
             position: relative; width: 440px; max-width: 90%; padding: 45px 40px;
             background: var(--card-bg); border-radius: 35px; border: 1px solid var(--border);
@@ -78,15 +92,14 @@
         .btn-action:active { transform: scale(0.98); }
         .btn-signup { background: var(--bronze-dim); color: rgba(255,255,255,0.7); }
 
-        /* ACCESS GRANTED OVERLAY */
         #access-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 15, 0.95);
             display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(20px);
         }
-        .success-shield { font-size: 5rem; color: var(--success); margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.4)); animation: pulse 2s infinite; }
+        .success-shield { font-size: 5rem; color: var(--success); margin-bottom: 20px; animation: pulse 2s infinite; }
 
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        .shake { animation: shake 0.4s both; }
         @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
 
         .form-content { display: none; }
@@ -99,6 +112,11 @@
 <body>
 
     <canvas id="sparks-canvas"></canvas>
+
+    <div class="toast-container" id="toast">
+        <i id="toastIcon" class="fas fa-exclamation-circle"></i>
+        <span class="toast-msg" id="toastMsg">Error message here</span>
+    </div>
 
     <div id="access-overlay">
         <i class="fas fa-shield-check success-shield"></i>
@@ -173,7 +191,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
@@ -187,13 +205,32 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Session persistence: Redirect if user is already logged in
-        onAuthStateChanged(auth, (user) => {
-            if (user && user.emailVerified) {
-                // Uncomment the line below to auto-redirect returning users
-                // window.location.href = "home.html";
+        // --- NEW TOAST FUNCTION ---
+        const showToast = (message, type = 'error') => {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastMsg.innerText = message;
+            toast.className = `toast-container active ${type}`;
+            toastIcon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 4000);
+        };
+
+        // Firebase Error Mapper
+        const getFriendlyError = (code) => {
+            switch (code) {
+                case 'auth/email-already-in-use': return 'This email is already registered.';
+                case 'auth/invalid-email': return 'Please enter a valid email address.';
+                case 'auth/user-not-found': return 'No profile found with this email.';
+                case 'auth/wrong-password': return 'Incorrect passkey. Please try again.';
+                case 'auth/weak-password': return 'Passkey is too weak.';
+                default: return 'Identity verification failed. Try again.';
             }
-        });
+        };
 
         // UI Feedback
         const showProcessing = (btn, text) => {
@@ -224,29 +261,21 @@
             try {
                 const cred = await signInWithEmailAndPassword(auth, email, pass);
                 if (!cred.user.emailVerified) {
-                    throw new Error("Please verify your email first.");
+                    throw { code: 'custom', message: "Please verify your email first." };
                 }
                 
-                // Professional Step-by-Step Transition
                 setTimeout(() => {
                     btn.innerHTML = `<i class="fas fa-sync fa-spin"></i> Syncing Profile...`;
-                    
                     setTimeout(() => {
-                        // Show Access Granted Screen
                         document.getElementById('access-overlay').style.display = 'flex';
-                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#f57c00', '#ffffff'] });
-
-                        // --- THE REDIRECTION ---
-                        setTimeout(() => {
-                            window.location.href = "home.html"; // Ensure home.html exists!
-                        }, 2500);
-
+                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                        setTimeout(() => { window.location.href = "home.html"; }, 2500);
                     }, 1000);
                 }, 800);
 
             } catch (err) {
                 triggerShake();
-                alert(err.message);
+                showToast(err.code ? getFriendlyError(err.code) : err.message);
                 resetBtn(btn, "Authorize Session");
             }
         });
@@ -263,19 +292,19 @@
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 await sendEmailVerification(cred.user);
-                alert("Identity Created Successfully! Please check your inbox for the verification link before logging in.");
+                showToast("Verification link sent! Check your inbox.", "success");
                 window.toggleForm();
                 resetBtn(btn, "Finalize Identity");
             } catch (err) {
                 triggerShake();
-                alert(err.message);
+                showToast(getFriendlyError(err.code));
                 resetBtn(btn, "Finalize Identity");
             }
         });
     </script>
 
     <script>
-        // Sparks Animation Engine
+        // Animations and Form Toggles (Keep the same)
         const canvas = document.getElementById('sparks-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -290,7 +319,6 @@
         function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
         initCanvas(); animate();
 
-        // Form Interactive Logic
         window.toggleForm = () => {
             const sections = document.querySelectorAll('.form-content');
             sections.forEach(s => s.classList.toggle('active'));
@@ -298,9 +326,8 @@
 
         window.togglePass = (id, icon) => {
             const input = document.getElementById(id);
-            const isPass = input.type === 'password';
-            input.type = isPass ? 'text' : 'password';
-            icon.className = isPass ? 'fas fa-eye-slash view-toggle' : 'fas fa-eye view-toggle';
+            input.type = input.type === 'password' ? 'text' : 'password';
+            icon.className = input.type === 'password' ? 'fas fa-eye view-toggle' : 'fas fa-eye-slash view-toggle';
         };
 
         window.validatePassword = () => {
