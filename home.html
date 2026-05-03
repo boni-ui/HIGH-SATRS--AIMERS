@@ -21,6 +21,8 @@
       --glass: blur(16px);
       --shadow-gold: 0 15px 35px -12px rgba(255, 179, 71, 0.25);
       --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      --error: #ef4444;
+      --success: #22c55e;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -145,27 +147,6 @@
       color: #000; padding: 4px 10px; border-radius: 8px; text-transform: uppercase;
     }
 
-    /* === CUSTOM NOTIFICATION (REPLACES ALERT) === */
-    #custom-toast {
-      position: fixed; top: 20px; right: 20px; padding: 15px 25px;
-      background: var(--gold-gradient); color: #000; font-weight: 700;
-      border-radius: 12px; z-index: 9999; display: none;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-      animation: slideIn 0.3s ease;
-    }
-    @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-
-    /* === TAG CLOUD === */
-    .tag-cloud {
-      display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
-      margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.02); border-radius: 30px;
-    }
-    .tag {
-      padding: 8px 20px; border-radius: 50px; border: 1px solid var(--border-gold);
-      font-size: 0.8rem; font-weight: 600; color: var(--text-dim); transition: 0.3s;
-    }
-    .tag:hover { border-color: var(--gold-primary); color: var(--gold-primary); background: rgba(255,179,71,0.05); }
-
     /* === MODAL === */
     .modal {
         position: fixed; inset: 0; background: rgba(0,0,0,0.95);
@@ -185,7 +166,7 @@
         font-family: inherit;
     }
     .btn-gold { background: var(--gold-gradient); color: #000; }
-    .btn-outline { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
+    .btn-outline { background: transparent; border: 1px solid var(--error); color: var(--error); }
 
     /* === SETTINGS STYLES === */
     .settings-tabs { display: flex; gap: 10px; margin: 20px 0; border-bottom: 1px solid var(--border-gold); padding-bottom: 10px; overflow-x: auto; }
@@ -200,6 +181,10 @@
     .btn-save { width: 100%; padding: 12px; background: var(--gold-gradient); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
     .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
+    .mfa-badge { padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; }
+    .mfa-off { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .mfa-on { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+
     /* === RESPONSIVE === */
     @media (max-width: 768px) {
         .hero { padding: 40px 6%; }
@@ -209,8 +194,6 @@
   </style>
 </head>
 <body>
-
-<div id="custom-toast"></div>
 
 <nav class="nav">
   <div class="brand">
@@ -266,35 +249,6 @@
         <h3>Predictive Analytics</h3>
         <p>See your grade trajectory. Our system predicts your final score based on current data.</p>
     </a>
-
-    <div class="grid-label">Advanced Learning Tech</div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-robot"></i></div>
-        <h3>Lumina AI Tutor</h3>
-        <p>A specialized academic LLM designed to solve complex STEM problems in seconds.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-vr-cardboard"></i></div>
-        <h3>Virtual STEM Labs</h3>
-        <p>Interactive 3D simulations for Biology, Chemistry, and Physics experiments.</p>
-    </div>
-    <div class="card">
-        <div class="icon-box"><i class="fas fa-layer-group"></i></div>
-        <h3>Concept Mapping</h3>
-        <p>Visual node-based study maps that show how different syllabus topics connect.</p>
-    </div>
-  </div>
-
-  <div class="grid-label">30+ Total Features Integrated</div>
-  <div class="tag-cloud">
-      <div class="tag"><i class="fas fa-check-circle"></i> Flashcard Sync</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Night Mode Pro</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Offline PDF Access</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Speed Reading Mode</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Scholarship Tracker</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Live Tutor Chat</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Focus Timer (Pomodoro)</div>
-      <div class="tag"><i class="fas fa-check-circle"></i> Revision Heatmaps</div>
   </div>
 </main>
 
@@ -315,7 +269,6 @@
         <div class="settings-tabs">
             <button class="tab-btn active" onclick="openTab(event, 'account')">Account</button>
             <button class="tab-btn" onclick="openTab(event, 'academic')">Academic</button>
-            <button class="tab-btn" onclick="openTab(event, 'preferences')">Preferences</button>
             <button class="tab-btn" onclick="openTab(event, 'security')">Security</button>
         </div>
 
@@ -337,44 +290,48 @@
                     <option>Form 1</option>
                 </select>
             </div>
-            <div class="setting-item">
-                <label>Target Mean Grade</label>
-                <select class="setting-input">
-                    <option>A (Plain)</option>
-                    <option>A- (Minus)</option>
-                    <option>B+ (Plus)</option>
-                </select>
-            </div>
-            <button class="btn-save">Update Academic Path</button>
-        </div>
-
-        <div id="preferences" class="tab-content">
-            <div class="switch-row"><span>Study Reminders</span><input type="checkbox" checked></div>
-            <div class="switch-row"><span>Leaderboard Visibility</span><input type="checkbox" checked></div>
+            <button class="btn-save">Update Path</button>
         </div>
 
         <div id="security" class="tab-content">
-            <div class="setting-item">
-                <label>2-Factor Authentication</label>
-                <div class="switch-row">
-                    <span>Enable Phone MFA</span>
-                    <input type="checkbox" id="mfaToggle">
+            <div class="setting-item" style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; border: 1px solid var(--border-gold);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 600;">2-Factor Authentication</span>
+                    <span id="mfaStatus" class="mfa-badge mfa-off">DISABLED</span>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 8px;">Add an extra layer of security to your Obsidian Tier account using phone verification.</p>
+                
+                <div id="mfaEnrollmentBox" style="margin-top: 15px;">
+                    <input type="tel" id="phoneNumber" class="setting-input" placeholder="+1234567890" style="margin-bottom: 10px;">
+                    <button class="btn-save" id="btnEnrollMFA" style="font-size: 0.8rem;">Enable Phone 2FA</button>
+                </div>
+
+                <div id="mfaVerificationBox" style="margin-top: 15px; display: none;">
+                    <label style="color: var(--gold-primary); font-size: 0.7rem;">Enter SMS Code</label>
+                    <input type="text" id="mfaCode" class="setting-input" placeholder="6-digit code">
+                    <button class="btn-save" id="btnVerifyMFA">Verify & Activate</button>
                 </div>
             </div>
-            <button class="btn-action btn-outline" id="signOutButton">Logout Account</button>
+
+            <div id="recaptcha-container"></div> <button class="btn-action btn-outline" id="signOutButton">Logout Account</button>
         </div>
 
         <p onclick="document.getElementById('profileModal').classList.remove('active')" style="text-align: center; margin-top: 25px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim);">Close Command Center</p>
     </div>
 </div>
 
-<footer style="text-align: center; padding: 40px 0; border-top: 1px solid var(--border-gold); margin-top: 50px;">
-    <p style="color: var(--text-dim); font-size: 0.8rem;">&copy; 2026 High Stars Aimers • Absolute Academic Mastery</p>
-</footer>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, updateProfile, multiFactor } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { 
+    getAuth, 
+    onAuthStateChanged, 
+    signOut, 
+    updateProfile,
+    multiFactor,
+    PhoneAuthProvider,
+    PhoneMultiFactorGenerator,
+    RecaptchaVerifier
+} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 
 const firebaseConfig = {
@@ -390,16 +347,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-// State flag to prevent image load logic on simple navigation/renders
-let isUploading = false;
-
-// Custom Notification Function
-function notify(message) {
-    const toast = document.getElementById('custom-toast');
-    toast.innerText = message;
-    toast.style.display = 'block';
-    setTimeout(() => { toast.style.display = 'none'; }, 3000);
-}
+let verificationId = null;
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -409,23 +357,23 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById("navUserName").innerText = name;
         document.getElementById("welcomeMessage").innerText = name;
         document.getElementById("userEmailDisplay").innerText = user.email;
-        
-        // Only update image source if we aren't mid-upload process
-        if (!isUploading) {
-            document.getElementById("userProfilePic").src = userPhoto;
-            document.getElementById("topNavAvatar").src = userPhoto;
-        }
+        document.getElementById("userProfilePic").src = userPhoto;
+        document.getElementById("topNavAvatar").src = userPhoto;
         document.getElementById("editDisplayName").value = user.displayName || "";
-        
-        // Update 2FA status in UI
-        const mfaUser = multiFactor(user);
-        document.getElementById('mfaToggle').checked = mfaUser.enrolledFactors.length > 0;
+
+        // Check MFA Status
+        const mfaStatus = document.getElementById('mfaStatus');
+        if (user.multiFactor.enrolledFactors.length > 0) {
+            mfaStatus.innerText = "ENABLED";
+            mfaStatus.className = "mfa-badge mfa-on";
+            document.getElementById('mfaEnrollmentBox').style.display = 'none';
+        }
     } else {
         window.location.href = "signin1.html"; 
     }
 });
 
-// Modal Logic
+// Tab Logic
 window.openTab = (evt, tabName) => {
     let contents = document.getElementsByClassName("tab-content");
     for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
@@ -439,26 +387,73 @@ const profileModal = document.getElementById('profileModal');
 document.getElementById('profileTrigger').onclick = () => profileModal.classList.add('active');
 document.getElementById('mobileProfile').onclick = (e) => { e.preventDefault(); profileModal.classList.add('active'); };
 
-// Sign Out
 document.getElementById('signOutButton').onclick = () => signOut(auth);
 
-// Update Profile Name
+// Update Profile
 document.getElementById('saveProfile').onclick = async () => {
     const newName = document.getElementById('editDisplayName').value;
     try {
         await updateProfile(auth.currentUser, { displayName: newName });
-        notify("Profile Updated Successfully!");
-        // Removed location.reload to prevent unwanted navigation reloads
-    } catch (err) { notify(err.message); }
+        alert("Profile Updated!");
+        location.reload();
+    } catch (err) { alert(err.message); }
 };
 
-// Profile Image Upload
+// === 2FA ENROLLMENT LOGIC ===
+const setupRecaptcha = () => {
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible'
+    });
+};
+
+document.getElementById('btnEnrollMFA').onclick = async () => {
+    const phoneNum = document.getElementById('phoneNumber').value;
+    if(!phoneNum) return alert("Enter phone number with +country code");
+
+    setupRecaptcha();
+    const session = await multiFactor(auth.currentUser).getSession();
+    const phoneInfoOptions = {
+        phoneNumber: phoneNum,
+        session: session
+    };
+    const phoneAuthProvider = new PhoneAuthProvider(auth);
+    
+    try {
+        verificationId = await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, window.recaptchaVerifier);
+        document.getElementById('mfaEnrollmentBox').style.display = 'none';
+        document.getElementById('mfaVerificationBox').style.display = 'block';
+        alert("SMS Sent!");
+    } catch (err) {
+        alert("MFA Error: " + err.message);
+    }
+};
+
+document.getElementById('btnVerifyMFA').onclick = async () => {
+    const code = document.getElementById('mfaCode').value;
+    const cred = PhoneAuthProvider.credential(verificationId, code);
+    const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
+    
+    try {
+        await multiFactor(auth.currentUser).enroll(multiFactorAssertion, "Primary Phone");
+        alert("2-Factor Authentication Enabled!");
+        location.reload();
+    } catch (err) {
+        alert("Verification Failed: " + err.message);
+    }
+};
+
+// Image Upload
 document.getElementById('profileInput').onchange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
-    isUploading = true; // Set flag to block image re-loads during the process
     const storageRef = ref(storage, `profiles/${auth.currentUser.uid}`);
-    
     try {
-        const snapshot 
+        const snapshot = await uploadBytes(storageRef, file);
+        const photoURL = await getDownloadURL(snapshot.ref);
+        await updateProfile(auth.currentUser, { photoURL });
+        location.reload();
+    } catch (error) { alert(error.message); }
+};
+</script>
+</body>
+</html>
