@@ -36,28 +36,7 @@
       color: var(--text-bright);
       line-height: 1.6;
       padding-bottom: 120px;
-    }
-
-    /* === NETFLFY SYSTEM NOTIFICATION === */
-    .system-announcer {
-        background: rgba(255, 179, 71, 0.1);
-        border-bottom: 1px solid var(--border-gold);
-        padding: 10px 6%;
-        overflow: hidden;
-        white-space: nowrap;
-        position: relative;
-    }
-    .announcer-content {
-        display: inline-block;
-        animation: scrollText 20s linear infinite;
-        color: var(--gold-primary);
-        font-weight: 700;
-        font-size: 0.85rem;
-        letter-spacing: 1px;
-    }
-    @keyframes scrollText {
-        0% { transform: translateX(100%); }
-        100% { transform: translateX(-100%); }
+      overflow-x: hidden;
     }
 
     /* === TOP NAVIGATION === */
@@ -85,7 +64,7 @@
       cursor: pointer; transition: var(--transition);
     }
     .nav-user:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--gold-primary); }
-    .nav-user img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--gold-primary); object-fit: cover; }
+    .nav-user img { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--gold-primary); object-fit: cover; background: #1e293b; }
 
     /* === BOTTOM NAVIGATION === */
     .bottom-nav {
@@ -166,7 +145,7 @@
       font-size: 0.75rem; font-weight: 600; color: var(--text-dim); transition: 0.3s;
     }
 
-    /* === MODAL & 2FA UI === */
+    /* === MODALS === */
     .modal {
         position: fixed; inset: 0; background: rgba(0,0,0,0.95);
         display: none; align-items: center; justify-content: center; z-index: 2000;
@@ -174,12 +153,24 @@
     }
     .modal.active { display: flex; }
     .modal-box {
-        background: #0b1120; padding: 30px; border-radius: 40px;
-        border: 1px solid var(--gold-primary); width: 90%; max-width: 500px;
-        max-height: 90vh; overflow-y: auto;
+        background: #0b1120; padding: 40px; border-radius: 40px;
+        border: 1px solid var(--gold-primary); width: 95%; max-width: 500px;
+        max-height: 90vh; overflow-y: auto; position: relative;
     }
-    .btn-save { width: 100%; padding: 12px; background: var(--gold-gradient); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-    .setting-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-gold); padding: 12px; border-radius: 12px; color: white; margin-bottom: 15px; }
+
+    .dev-popup h2 { color: var(--gold-primary); margin-bottom: 15px; font-weight: 800; }
+    .dev-popup p { color: var(--text-dim); margin-bottom: 25px; }
+
+    .btn-save { width: 100%; padding: 15px; background: var(--gold-gradient); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; color: #000; transition: 0.3s; }
+    .btn-save:hover { opacity: 0.9; transform: scale(0.98); }
+
+    .setting-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-gold); padding: 12px; border-radius: 12px; color: white; margin-bottom: 15px; outline: none; }
+    .settings-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-gold); padding-bottom: 10px; }
+    .tab-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 5px 15px; font-weight: 600; transition: 0.3s; }
+    .tab-btn.active { color: var(--gold-primary); border-bottom: 2px solid var(--gold-primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
     .mfa-badge { padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; }
     .mfa-off { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
     .mfa-on { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
@@ -192,9 +183,12 @@
 </head>
 <body>
 
-<div class="system-announcer">
-    <div class="announcer-content">
-        NETFLFY SAYS: Welcome to the Obsidian Command Center. • SYSTEM STATUS: 100% Operational • NEW FEATURE: 2-Factor Authentication now live • PRO TIP: Use Lumina AI for Physics Paper 2...
+<div id="devPopup" class="modal active">
+    <div class="modal-box dev-popup" style="text-align: center;">
+        <i class="fas fa-tools" style="font-size: 3rem; color: var(--gold-primary); margin-bottom: 20px;"></i>
+        <h2>System Under Construction</h2>
+        <p>The Obsidian Command Center is currently undergoing deep-core updates. We are "cooking" new AI modules and 3D laboratory features to enhance your dominance.</p>
+        <button class="btn-save" onclick="document.getElementById('devPopup').classList.remove('active')">Proceed to Hub</button>
     </div>
 </div>
 
@@ -215,7 +209,6 @@
 </header>
 
 <main class="container">
-  
   <div class="grid-label">Elite Modules & Features</div>
   <div class="feature-grid">
     <div class="card">
@@ -282,6 +275,43 @@
   </div>
 </main>
 
+<footer style="padding: 80px 8% 40px; background: #010409; border-top: 1px solid var(--border-gold); margin-top: 50px;">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 60px; margin-bottom: 60px;">
+    <div>
+      <div style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 20px;">HIGH STARS <span style="color: var(--gold-primary);">AIMERS</span></div>
+      <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 20px;">The elite academic cloud built for top-performing students. Bridge the gap to mastery.</p>
+      <p style="color: #fff; font-size: 0.85rem; font-weight: 700; margin-bottom: 10px;">Follow Boni Mbugua on:</p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="https://www.facebook.com/profile.php?id=61579327734565" target="_blank" style="width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--text-dim); border: 1px solid var(--border-gold); text-decoration: none;"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/b.boni.mbugua?igsh=MTJ2Nm13OXI2ajd6dw==" target="_blank" style="width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--text-dim); border: 1px solid var(--border-gold); text-decoration: none;"><i class="fab fa-instagram"></i></a>
+        <a href="https://x.com/mbugua_bon60636" target="_blank" style="width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--text-dim); border: 1px solid var(--border-gold); text-decoration: none;"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://youtube.com/@bonimbugua?si=qKTx2ZXewtIVz6_v" target="_blank" style="width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--text-dim); border: 1px solid var(--border-gold); text-decoration: none;"><i class="fab fa-youtube"></i></a>
+        <a href="https://wa.me/254119270436" target="_blank" style="width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--text-dim); border: 1px solid var(--border-gold); text-decoration: none;"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+    <div>
+      <h5 style="color: #fff; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.9rem;">Platform</h5>
+      <ul style="list-style: none; padding: 0;">
+        <li style="margin-bottom: 12px;"><a href="#" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;">Subjects Hub</a></li>
+        <li style="margin-bottom: 12px;"><a href="#" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;">Exam Archives</a></li>
+        <li style="margin-bottom: 12px;"><a href="#" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;">Global Leaderboard</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 style="color: #fff; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.9rem;">Contact Info</h5>
+      <ul style="list-style: none; padding: 0; color: var(--text-dim); font-size: 0.85rem;">
+        <li style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;"><i class="fas fa-envelope" style="color: var(--gold-primary);"></i><span>highstarsaimersexamnotes@gmail.com</span></li>
+        <li style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;"><i class="fas fa-phone-alt" style="color: var(--gold-primary);"></i><span>0119270436</span></li>
+        <li style="display: flex; gap: 10px; align-items: center;"><i class="fas fa-map-marker-alt" style="color: var(--gold-primary);"></i><span>Nyandarua, Kenya</span></li>
+      </ul>
+    </div>
+  </div>
+  <div style="text-align: center; border-top: 1px solid var(--border-gold); padding-top: 40px;">
+    <p style="color: var(--text-dim); font-size: 0.85rem;"><span style="color: var(--gold-primary); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 10px; display: block; margin-bottom: 10px;">TERMS OF SERVICES AND CONDITIONS APPLY</span>© 2023-2026 High Stars Aimers. All rights reserved</p>
+    <span style="color: var(--gold-primary); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; margin-top: 10px; display: block;">Built for Excellence By Boni Mbugua</span>
+  </div>
+</footer>
+
 <div class="bottom-nav">
   <a href="#" class="b-nav-item active"><i class="fas fa-th-large"></i><span>Hub</span></a>
   <a href="#" class="b-nav-item"><i class="fas fa-book-open"></i><span>Library</span></a>
@@ -291,51 +321,44 @@
 
 <div id="profileModal" class="modal">
     <div class="modal-box">
-        <div style="text-align: center;">
-            <img id="userProfilePic" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--gold-primary);">
-            <h2 id="welcomeMessage" style="margin-top: 15px;">User Name</h2>
-            <p id="userEmailDisplay" style="color: var(--text-dim); font-size: 0.8rem;"></p>
+        <div style="text-align: center; margin-bottom: 25px;">
+            <img id="userProfilePic" src="" style="width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--gold-primary); object-fit: cover;">
+            <h2 id="welcomeMessage" style="margin-top: 15px;">Elite User</h2>
+            <p id="userEmailDisplay" style="color: var(--text-dim); font-size: 0.85rem;"></p>
         </div>
-
-        <div class="settings-tabs" style="margin-top: 20px;">
+        <div class="settings-tabs">
             <button class="tab-btn active" onclick="openTab(event, 'account')">Profile</button>
-            <button class="tab-btn" onclick="openTab(event, 'security')">Security (2FA)</button>
+            <button class="tab-btn" onclick="openTab(event, 'security')">Security</button>
         </div>
-
         <div id="account" class="tab-content active">
-            <input type="text" id="editDisplayName" class="setting-input" placeholder="Display Name">
-            <button class="btn-save" id="saveProfile">Save Changes</button>
+            <input type="text" id="editDisplayName" class="setting-input" placeholder="Update Username">
+            <button class="btn-save" id="saveProfile">Update Profile</button>
         </div>
-
         <div id="security" class="tab-content">
             <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; border: 1px solid var(--border-gold);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <span style="font-size: 0.9rem; font-weight: 700;">Phone 2FA</span>
-                    <span id="mfaStatus" class="mfa-badge mfa-off">OFF</span>
+                    <span id="mfaStatus" class="mfa-badge mfa-off">INACTIVE</span>
                 </div>
                 <div id="mfaEnrollmentBox">
-                    <input type="tel" id="phoneNumber" class="setting-input" placeholder="+1234567890">
-                    <button class="btn-save" id="btnEnrollMFA">Send SMS Code</button>
+                    <input type="tel" id="phoneNumber" class="setting-input" placeholder="+254...">
+                    <button class="btn-save" id="btnEnrollMFA">Send SMS Verification</button>
                 </div>
                 <div id="mfaVerificationBox" style="display:none;">
-                    <input type="text" id="mfaCode" class="setting-input" placeholder="Enter 6-Digit Code">
-                    <button class="btn-save" id="btnVerifyMFA">Activate 2FA</button>
+                    <input type="text" id="mfaCode" class="setting-input" placeholder="6-Digit Code">
+                    <button class="btn-save" id="btnVerifyMFA">Activate Protection</button>
                 </div>
             </div>
             <div id="recaptcha-container"></div>
-            <button class="btn-save" style="background: transparent; border: 1px solid #ef4444; color: #ef4444;" id="signOutButton">Logout</button>
+            <button class="btn-save" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; margin-top: 20px;" id="signOutButton">Terminate Session</button>
         </div>
-
-        <p onclick="document.getElementById('profileModal').classList.remove('active')" style="text-align: center; margin-top: 20px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim);">Exit Command</p>
+        <p onclick="document.getElementById('profileModal').classList.remove('active')" style="text-align: center; margin-top: 25px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px;">Return to Command</p>
     </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { 
-    getAuth, onAuthStateChanged, signOut, updateProfile, 
-    multiFactor, PhoneAuthProvider, PhoneMultiFactorGenerator, RecaptchaVerifier 
-} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut, updateProfile, multiFactor, PhoneAuthProvider, PhoneMultiFactorGenerator, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
@@ -353,23 +376,20 @@ let verificationId = null;
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const name = user.displayName || user.email.split('@')[0];
+        const avatarUrl = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
         document.getElementById("navUserName").innerText = name;
+        document.getElementById("topNavAvatar").src = avatarUrl;
         document.getElementById("welcomeMessage").innerText = name;
         document.getElementById("userEmailDisplay").innerText = user.email;
-        document.getElementById("userProfilePic").src = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
-        
+        document.getElementById("userProfilePic").src = avatarUrl;
         if (user.multiFactor.enrolledFactors.length > 0) {
-            document.getElementById("mfaStatus").innerText = "ON";
+            document.getElementById("mfaStatus").innerText = "ACTIVE";
             document.getElementById("mfaStatus").className = "mfa-badge mfa-on";
             document.getElementById("mfaEnrollmentBox").style.display = "none";
         }
-    } else {
-        // Redirect if not logged in
-        // window.location.href = "login.html";
     }
 });
 
-// 2FA Flow
 document.getElementById('btnEnrollMFA').onclick = async () => {
     const phone = document.getElementById('phoneNumber').value;
     const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
@@ -389,7 +409,6 @@ document.getElementById('btnVerifyMFA').onclick = async () => {
     location.reload();
 };
 
-// UI Interactions
 window.openTab = (e, name) => {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -403,7 +422,8 @@ document.getElementById('signOutButton').onclick = () => signOut(auth).then(() =
 
 document.getElementById('saveProfile').onclick = async () => {
     await updateProfile(auth.currentUser, { displayName: document.getElementById('editDisplayName').value });
-    alert("Profile Saved!");
+    alert("Identity Updated!");
+    location.reload();
 };
 </script>
 
