@@ -363,4 +363,104 @@
             </div>
         </div>
         <div class="faq-item">
-            <div class
+            <div class="faq-question">How often is the content database updated? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">
+                Our database is updated weekly. We have a dedicated team that sources the latest national and regional examination papers, marking schemes, and curriculum changes.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Is my academic data and progress kept private? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">
+                Security is a core pillar of our architecture. We use industry-standard SSL encryption and secure cloud servers to protect your profile and performance analytics.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">How do I contact support? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">
+                We offer 24/7 technical support. You can reach out via the "Contact Us" page or use the direct WhatsApp link in the footer for urgent queries.
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-main">
+      <div class="footer-col">
+        <div class="footer-logo">High Stars <span>Aimers</span></div>
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 20px;">
+          The elite academic cloud built for top-performing students. Bridge the gap to mastery.
+        </p>
+        <p style="color: #fff; font-size: 0.85rem; font-weight: 700; margin-bottom: 10px;">Follow and contact Boni Mbugua on:</p>
+        <div class="social-links">
+          <a href="https://www.facebook.com/profile.php?id=61579327734565" target="_blank"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/b.boni.mbugua?igsh=MTJ2Nm13OXI2ajd6dw==" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://x.com/mbugua_bon60636" target="_blank"><i class="fab fa-x-twitter"></i></a>
+          <a href="https://youtube.com/@bonimbugua?si=qKTx2ZXewtIVz6_v" target="_blank"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.tiktok.com/@bonimbugua346?_r=1&_t=ZS-950IyTwg7ww" target="_blank"><i class="fab fa-tiktok"></i></a>
+          <a href="https://wa.me/254119270436" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="sign.html">Subjects Hub</a></li>
+          <li><a href="sign.html">Exam Archives</a></li>
+          <li><a href="sign.html">Global Leaderboard</a></li>
+          <li><a href="sign.html">Dynamic Study Plan</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="sign.html">Smart Calculator</a></li>
+          <li><a href="#stem">STEM Intelligence</a></li>
+          <li><a href="privacy.html">DATA PRIVACY</a></li>
+          <li><a href="terms.html">TERMS OF SERVICES</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Contact Info</h5>
+        <ul style="color: var(--text-dim); font-size: 0.85rem;">
+          <li style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+            <i class="fas fa-envelope" style="color: var(--primary);"></i>
+            <a href="mailto:highstarsaimersexamnotes@gmail.com">highstarsaimersexamnotes@gmail.com</a>
+          </li>
+          <li style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+            <i class="fas fa-phone-alt" style="color: var(--primary);"></i>
+            <a href="tel:0119270436">0119270436</a>
+          </li>
+          <li style="display: flex; gap: 10px; align-items: center;">
+            <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
+            <span>Nyandarua, Kenya</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="developer-box">
+      <p style="color: var(--text-dim); font-size: 0.85rem;">
+        <span class="developer-tag">terms of services and conditions apply</span>
+        © 2023-2026 High Stars Aimers. All rights reserved
+      </p>
+      <span class="developer-tag">Built for Excellence By boni mbugua</span>
+    </div>
+  </footer>
+
+  <script>
+    // Optimized FAQ Toggle Script
+    document.querySelectorAll('.faq-item').forEach(item => {
+        item.addEventListener('click', () => {
+            // Close other items if one is opened (optional)
+            document.querySelectorAll('.faq-item').forEach(other => {
+                if(other !== item) other.classList.remove('active');
+            });
+            // Toggle clicked item
+            item.classList.toggle('active');
+        });
+    });
+  </script>
+</body>
+</html>
