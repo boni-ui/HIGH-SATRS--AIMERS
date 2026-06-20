@@ -3,13 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>High Stars Aimers | Resources</title>
+    <title>High Stars Aimers | Resource Hub Vault</title>
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #f57c00;
+            --accent: #e65100;
+            --bg-deep: #05080f;
+            --card-bg: #0c121e;
+            --input-bg: #05080f;
+            --text: #ffffff;
+            --text-dim: #64748b;
+            --border: rgba(255, 255, 255, 0.06);
+            --success: #10b981;
+            --danger: #ef4444;
+            --pdf-color: #ef4444;
+            --word-color: #3b82f6;
+            --powerpoint-color: #f97316;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(245, 124, 0, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(245, 124, 0, 0.03) 0%, transparent 40%);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; position: relative; }
+
+        .hub-header { text-align: center; margin-bottom: 40px; position: relative; }
+        .hub-header i.main-icon { font-size: 3rem; color: var(--primary); margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(245, 124, 0, 0.3)); }
+        h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle-badge { display: inline-block; background: rgba(245, 124, 0, 0.1); border: 1px solid rgba(245, 124, 0, 0.2); color: var(--primary); padding: 6px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+        .control-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 25px; margin-bottom: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .search-wrapper { position: relative; display: flex; align-items: center; margin-bottom: 20px; }
+        .search-wrapper i { position: absolute; left: 20px; color: var(--text-dim); font-size: 1.1rem; }
+        .search-bar { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 16px 20px 16px 55px; border-radius: 14px; color: white; font-size: 0.95rem; transition: 0.3s; }
+        .search-bar:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(245, 124, 0, 0.1); }
+
+        .filter-row { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .tabs-container { display: flex; gap: 8px; }
+        .filter-tab { background: var(--input-bg); border: 1px solid var(--border); color: var(--text-dim); padding: 10px 18px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .filter-tab:hover, .filter-tab.active { border-color: var(--primary); color: white; }
+        .filter-tab.active { background: var(--primary); box-shadow: 0 4px 12px rgba(245, 124, 0, 0.25); }
+        .metrics-counter { font-size: 0.8rem; color: var(--text-dim); font-weight: 600; }
+        .metrics-counter span { color: var(--primary); font-weight: 800; }
+
+        .resource-list { display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Advanced Combined File Item Styling */
+        .file-item { background: var(--card-bg); border: 1px solid var(--border); padding: 24px; border-radius: 18px; display: flex; flex-direction: column; gap: 16px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .file-item:hover { transform: translateY(-2px); border-color: rgba(245, 124, 0, 0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        
+        .file-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .file-meta-zone { display: flex; align-items: center; gap: 18px; max-width: 70%; }
+        .file-icon-box { width: 48px; height: 48px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .text-details { display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
+        .file-name { font-weight: 700; font-size: 1.1rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-subtext { font-size: 0.75rem; color: var(--text-dim); font-weight: 600; text-transform: uppercase; }
+
+        /* Summary Segment styling */
+        .doc-summary { font-size: 0.85rem; color: #cbd5e1; background: rgba(5, 8, 15, 0.4); padding: 12px 16px; border-radius: 10px; border-left: 3px solid var(--primary); line-height: 1.5; }
+
+        /* Social Counters row */
+        .file-social-metrics { display: flex; gap: 20px; align-items: center; font-size: 0.8rem; color: var(--text-dim); font-weight: 700; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 14px; }
+        .metric-pill { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
+        .metric-pill:hover { color: var(--text); }
+        .metric-pill.liked { color: var(--primary); }
+        .metric-pill i { font-size: 0.95rem; }
+
+        .view-btn { background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; border: none; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.3s; }
+        .view-btn:hover { background: var(--primary); color: #ffffff; box-shadow: 0 5px 15px rgba(245, 124, 0, 0.3); }
+
+        /* Comments Sub-system Panel UI */
+        .comments-tray { background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: none; flex-direction: column; gap: 12px; margin-top: 5px; }
+        .comment-item { font-size: 0.8rem; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; }
+        .comment-item span { color: var(--primary); font-weight: 700; margin-right: 5px; }
+        .comment-input-group { display: flex; gap: 10px; margin-top: 5px; }
+        .comment-field { flex: 1; background: var(--card-bg); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; color: white; font-size: 0.8rem; }
+        .comment-field:focus { outline: none; border-color: var(--primary); }
+        .comment-post-btn { background: var(--primary); border: none; color: white; padding: 0 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; cursor: pointer; }
+
+        /* Skeletons */
+        .skeleton-item { height: 160px; background: linear-gradient(90deg, var(--card-bg) 25%, rgba(255,255,255,0.02) 50%, var(--card-bg) 75%); background-size: 200% 100%; animation: loadingMove 1.5s infinite; border-radius: 18px; border: 1px solid var(--border); }
+        @keyframes loadingMove { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* Viewer Elements */
+        .viewer-overlay { position: fixed; inset: 0; background: rgba(5, 8, 15, 0.95); backdrop-filter: blur(15px); z-index: 2000; display: none; opacity: 0; transition: 0.3s ease; padding: 30px; }
+        .viewer-overlay.active { display: block; opacity: 1; }
+        .viewer-window { width: 100%; height: 100%; background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .viewer-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(12, 18, 30, 0.5); }
+        .close-viewer-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .close-viewer-btn:hover { background: var(--danger); border-color: var(--danger); }
+        .viewer-content-workspace { flex: 1; position: relative; background: #020408; }
+        .viewer-iframe { width: 100%; height: 100%; border: none; }
+        .document-watermark-layer { position: absolute; inset: 0; pointer-events: none; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 40px; opacity: 0.04; transform: rotate(-15deg) scale(1.2); user-select: none; z-index: 1000; }
+        .watermark-stamp { font-size: 0.85rem; font-weight: 800; color: white; text-transform: uppercase; text-align: center; }
+
+        .scroll-top-btn { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 14px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 1500; }
+        .scroll-top-btn.visible { opacity: 1; visibility: visible; }
+        .msg-box { text-align: center; color: var(--text-dim); padding: 50px 0; font-weight: 600; }
+        .msg-box i { font-size: 2rem; color: var(--primary); margin-bottom: 15px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="hub-header">
+            <i class="fas fa-box-archive main-icon"></i>
+            <h1 id="pageTitle">Vault Core</h1>
+            <div class="subtitle-badge" id="categoryBadge">Syncing Library...</div>
+        </div>
+
+        <div class="control-panel">
+            <div class="search-wrapper">
+                <i class="fas fa-magnifying-glass"></i>
+                <input type="text" id="hubSearch" class="search-bar" placeholder="Search document titles in this vault tier...">
+            </div>
+            <div class="filter-row">
+                <div class="tabs-container">
+                    <button class="filter-tab active" data-filter="all">All Content</button>
+                    <button class="filter-tab" data-filter="notes">Notes</button>
+                    <button class="filter-tab" data-filter="papers">Exam Papers</button>
+                </div>
+                <div class="metrics-counter">Inventory Count: <span id="itemCounter">0</span> assets</div>
+            </div>
+        </div>
+
+        <div id="fileList" class="resource-list">
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+        </div>
+    </div>
+
+    <div class="viewer-overlay" id="portalViewer">
+        <div class="viewer-window">
+            <div class="viewer-header">
+                <div>
+                    <div style="font-size: 0.65rem; color: var(--primary); font-weight: 800; text-transform: uppercase;">Secure Vault Viewport</div>
+                    <h3 id="viewerDocName">Loading Document...</h3>
+                </div>
+                <button class="close-viewer-btn" id="closePortalBtn"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="viewer-content-workspace" id="secureWorkspace">
+                <div class="document-watermark-layer" id="watermarkGrid"></div>
+                <iframe id="viewerFrame" class="viewer-iframe" src=""></iframe>
+            </div>
+        </div>
+    </div>
+
+    <button class="scroll-top-btn" id="scrollToTop"><i class="fas fa-arrow-up"></i></button>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getStorage, ref, listAll, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-        // 1. YOUR API CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
             authDomain: "high-stars-aimers-5972f.firebaseapp.com",
@@ -20,86 +179,254 @@
             measurementId: "G-X475KTSH5J"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const storage = getStorage(app);
+        const db = getFirestore(app);
 
-        // 2. GET PARAMETERS FROM DROPDOWN
         const urlParams = new URLSearchParams(window.location.search);
-        const type = urlParams.get('type');       // revision_papers OR subject_notes
-        const subject = urlParams.get('subject'); // e.g., Biology
-        const form = urlParams.get('form');       // e.g., Form 1
+        const type = urlParams.get('type');       
+        const subject = urlParams.get('subject'); 
+        const form = urlParams.get('form');       
 
-        // UI Setup
         const listContainer = document.getElementById('fileList');
         const titleElement = document.getElementById('pageTitle');
+        const badgeElement = document.getElementById('categoryBadge');
+        const itemCounter = document.getElementById('itemCounter');
+        const searchBar = document.getElementById('hubSearch');
         
+        let localFilesDataset = [];
+        let currentActiveSegment = 'all';
+
+        const computeExtensionAesthetics = (filename) => {
+            const ext = filename.split('.').pop().toLowerCase();
+            if(ext === 'pdf') return { icon: 'fa-file-pdf', color: 'var(--pdf-color)', type: 'Portable Document' };
+            return { icon: 'fa-file-lines', color: 'var(--text-dim)', type: 'Standard Resource' };
+        };
+
         if (type && subject && form) {
-            titleElement.innerText = `${subject} - ${form}`;
+            titleElement.innerText = `${subject}`;
+            badgeElement.innerText = `${form.replace('_', ' ')} • ${type.replace('_', ' ')}`;
             
-            // 3. BUILD UNIVERSAL PATH
-            // Structure: folder_category / Subject / Form X
             const fetchPath = `${type}/${subject}/${form}`;
             const storageRef = ref(storage, fetchPath);
 
-            // 4. FETCH FILES
             listAll(storageRef).then((res) => {
-                listContainer.innerHTML = ""; // Clear loading msg
-
                 if (res.items.length === 0) {
-                    listContainer.innerHTML = "<p class='msg'>No documents uploaded yet for this section.</p>";
+                    listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-folder-open"></i>No academic assets found in this vault path.</div>`;
+                    itemCounter.innerText = "0";
                     return;
                 }
 
-                res.items.forEach((itemRef) => {
-                    getDownloadURL(itemRef).then((url) => {
-                        const fileItem = document.createElement('div');
-                        fileItem.className = 'file-item';
-                        
-                        // We use itemRef.name to show the "Document Title" you wrote in Admin
-                        fileItem.innerHTML = `
-                            <span class="file-name">${itemRef.name}</span>
-                            <a href="${url}" target="_blank" class="view-btn">VIEW</a>
-                        `;
-                        listContainer.appendChild(fileItem);
+                let fetchPromises = res.items.map(async (itemRef) => {
+                    const url = await getDownloadURL(itemRef);
+                    
+                    // Generate a clean valid ID reference for Firestore matching the document name
+                    const docId = btoa(itemRef.name).replace(/=/g, ''); 
+                    const docRef = doc(db, "resource_metrics", docId);
+                    let dbSnap = await getDoc(docRef);
+                    
+                    // If metadata entry doesn't exist yet, initialize standard placeholder structure
+                    if(!dbSnap.exists()) {
+                        const initData = {
+                            name: itemRef.name,
+                            downloads: 0,
+                            likes: 0,
+                            summary: "Comprehensive academic text compiled directly for High Stars Aimers syllabus core objectives.",
+                            comments: []
+                        };
+                        await setDoc(docRef, initData);
+                        dbSnap = await getDoc(docRef);
+                    }
+
+                    const metrics = dbSnap.data();
+
+                    localFilesDataset.push({
+                        id: docId,
+                        name: itemRef.name,
+                        downloadUrl: url,
+                        aesthetics: computeExtensionAesthetics(itemRef.name),
+                        downloads: metrics.downloads || 0,
+                        likes: metrics.likes || 0,
+                        summary: metrics.summary || "No summary listed.",
+                        comments: metrics.comments || []
                     });
                 });
+
+                Promise.all(fetchPromises).then(() => renderActiveDataset());
+
             }).catch((error) => {
                 console.error(error);
-                listContainer.innerHTML = "<p class='msg'>Error connecting to library.</p>";
+                listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-triangle-exclamation"></i>Connection to vault failed.</div>`;
             });
         }
-    </script>
 
-    <style>
-        body { font-family: sans-serif; background: #0a0f1f; color: white; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        h1 { color: #00f0ff; text-align: center; border-bottom: 2px solid #00f0ff; padding-bottom: 10px; }
-        .file-item { 
-            background: #161b2d; 
-            margin: 10px 0; 
-            padding: 15px; 
-            border-radius: 8px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-        }
-        .file-name { font-weight: bold; font-size: 1.1rem; }
-        .view-btn { 
-            background: #00f0ff; 
-            color: black; 
-            text-decoration: none; 
-            padding: 8px 15px; 
-            border-radius: 5px; 
-            font-weight: bold; 
-        }
-        .msg { text-align: center; color: #888; margin-top: 50px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1 id="pageTitle">Loading...</h1>
-        <div id="fileList"><p class="msg">Searching library...</p></div>
-    </div>
+        const renderActiveDataset = () => {
+            const query = searchBar.value.toLowerCase().trim();
+            listContainer.innerHTML = "";
+
+            let filtered = localFilesDataset.filter(file => {
+                const matchesSearch = file.name.toLowerCase().includes(query);
+                const nameLower = file.name.toLowerCase();
+                let matchesTab = true;
+                if (currentActiveSegment === 'notes') matchesTab = nameLower.includes('note') || nameLower.includes('summary');
+                if (currentActiveSegment === 'papers') matchesTab = nameLower.includes('paper') || nameLower.includes('exam');
+                return matchesSearch && matchesTab;
+            });
+
+            itemCounter.innerText = filtered.length;
+
+            filtered.forEach(file => {
+                const element = document.createElement('div');
+                element.className = 'file-item';
+                
+                // Build visual structural items for comments list layout
+                let commentsHTML = file.comments.map(c => `<div class="comment-item"><span>User:</span> ${c}</div>`).join('');
+
+                element.innerHTML = `
+                    <div class="file-top-row">
+                        <div class="file-meta-zone">
+                            <div class="file-icon-box" style="color: ${file.aesthetics.color}"><i class="fas ${file.aesthetics.icon}"></i></div>
+                            <div class="text-details">
+                                <span class="file-name" title="${file.name}">${file.name}</span>
+                                <span class="file-subtext">${file.aesthetics.type}</span>
+                            </div>
+                        </div>
+                        <button class="view-btn" data-id="${file.id}" data-url="${file.downloadUrl}" data-name="${file.name}">
+                            View File <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="doc-summary">
+                        <strong>Overview:</strong> ${file.summary}
+                    </div>
+
+                    <div class="file-social-metrics">
+                        <div class="metric-pill"><i class="fas fa-eye"></i> <span id="dl-${file.id}">${file.downloads}</span> Views</div>
+                        <div class="metric-pill like-trigger" data-id="${file.id}"><i class="fas fa-thumbs-up"></i> <span id="lk-${file.id}">${file.likes}</span> Likes</div>
+                        <div class="metric-pill comment-trigger" data-id="${file.id}"><i class="fas fa-comments"></i> ${file.comments.length} Comments</div>
+                    </div>
+
+                    <div class="comments-tray" id="tray-${file.id}">
+                        <div id="list-${file.id}" style="max-height: 120px; overflow-y: auto; display:flex; flex-direction:column; gap:6px;">
+                            ${commentsHTML || '<p style="font-size:0.75rem; color:var(--text-dim)">No responses written yet.</p>'}
+                        </div>
+                        <div class="comment-input-group">
+                            <input type="text" class="comment-field" id="input-${file.id}" placeholder="Type security review note...">
+                            <button class="comment-post-btn" data-id="${file.id}">Post</button>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(element);
+            });
+
+            bindInteractiveHooks();
+        };
+
+        const bindInteractiveHooks = () => {
+            // View Action Trigger & Counter Tracking Update Logic
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.onclick = async () => {
+                    const docId = btn.getAttribute('data-id');
+                    const url = btn.getAttribute('data-url');
+                    const name = btn.getAttribute('data-name');
+                    
+                    launchSecurePortal(url, name);
+                    
+                    // Increment download/view counter inside Firestore records
+                    const docRef = doc(db, "resource_metrics", docId);
+                    await updateDoc(docRef, { downloads: increment(1) });
+                    
+                    // Update current local UI tracking node framework dynamically
+                    const currentObj = localFilesDataset.find(f => f.id === docId);
+                    if(currentObj) {
+                        currentObj.downloads++;
+                        document.getElementById(`dl-${docId}`).innerText = currentObj.downloads;
+                    }
+                };
+            });
+
+            // Likes Handler Logic
+            document.querySelectorAll('.like-trigger').forEach(trigger => {
+                trigger.onclick = async () => {
+                    const docId = trigger.getAttribute('data-id');
+                    const docRef = doc(db, "resource_metrics", docId);
+                    
+                    await updateDoc(docRef, { likes: increment(1) });
+                    trigger.classList.add('liked');
+                    
+                    const currentObj = localFilesDataset.find(f => f.id === docId);
+                    if(currentObj) {
+                        currentObj.likes++;
+                        document.getElementById(`lk-${docId}`).innerText = currentObj.likes;
+                    }
+                };
+            });
+
+            // Comments Tray View Toggle Logic Overlay
+            document.querySelectorAll('.comment-trigger').forEach(trigger => {
+                trigger.onclick = () => {
+                    const docId = trigger.getAttribute('data-id');
+                    const tray = document.getElementById(`tray-${docId}`);
+                    tray.style.display = tray.style.display === 'flex' ? 'none' : 'flex';
+                };
+            });
+
+            // Write and Push Comment Execution Sequence
+            document.querySelectorAll('.comment-post-btn').forEach(btn => {
+                btn.onclick = async () => {
+                    const docId = btn.getAttribute('data-id');
+                    const inputField = document.getElementById(`input-${docId}`);
+                    const commentText = inputField.value.trim();
+
+                    if(commentText === "") return;
+
+                    const docRef = doc(db, "resource_metrics", docId);
+                    await updateDoc(docRef, { comments: arrayUnion(commentText) });
+
+                    const currentObj = localFilesDataset.find(f => f.id === docId);
+                    if(currentObj) {
+                        currentObj.comments.push(commentText);
+                        renderActiveDataset(); // Fast redraw grid system overlay elements UI
+                    }
+                };
+            });
+        };
+
+        // System Core Frame Navigation Hooks
+        searchBar.oninput = () => renderActiveDataset();
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.onclick = (e) => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                currentActiveSegment = e.target.getAttribute('data-filter');
+                renderActiveDataset();
+            };
+        });
+
+        const launchSecurePortal = (url, name) => {
+            document.getElementById('viewerDocName').innerText = name;
+            document.getElementById('viewerFrame').src = url;
+            document.getElementById('portalViewer').classList.add('active');
+            
+            // Build dynamic session security watermark array lines block
+            const matrix = document.getElementById('watermarkGrid');
+            matrix.innerHTML = '';
+            for(let i=0; i<9; i++) {
+                const block = document.createElement('div');
+                block.className = 'watermark-stamp';
+                block.innerText = `HSA SECURE CLOUD // ${new Date().toLocaleDateString()}`;
+                matrix.appendChild(block);
+            }
+        };
+
+        document.getElementById('closePortalBtn').onclick = () => {
+            document.getElementById('portalViewer').classList.remove('active');
+            document.getElementById('viewerFrame').src = "";
+        };
+
+        const scrollTopBtn = document.getElementById('scrollToTop');
+        window.onscroll = () => { window.scrollY > 300 ? scrollTopBtn.classList.add('visible') : scrollTopBtn.classList.remove('visible'); };
+        scrollTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    </script>
 </body>
 </html>
