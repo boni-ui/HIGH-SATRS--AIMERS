@@ -205,9 +205,9 @@
 
         if (type && subject && form) {
             titleElement.innerText = `${subject}`;
-            badgeElement.innerText = `${form.replace('_', ' ')} • ${type.replace('_', ' ')}`;
+            badgeElement.innerText = `${form.replace(/_/g, ' ')} • ${type.replace(/_/g, ' ')}`;
             
-            const fetchPath = `${type}/${subject}/${form}`;
+            const fetchPath = `${type}/${subject}/${form.replace(/_/g, ' ')}`;
             const storageRef = ref(storage, fetchPath);
 
             listAll(storageRef).then((res) => {
