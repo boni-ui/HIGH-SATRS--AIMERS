@@ -269,7 +269,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); }
             (err) => alert("Upload Error: " + err.message),
             async () => {
                 try {
-                    // Generate exact Base64 match key for custom metrics integration layout
+                    // FIX: Ensure docId key uses the finalized, extension-enforced title
                     const docId = btoa(title).replace(/=/g, '');
                     const docRef = doc(db, "resource_metrics", docId);
                     
