@@ -241,7 +241,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); }
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
-        event.currentTarget.classList.add('active');
+        if(event) event.currentTarget.classList.add('active');
         if(tabId === 'manager-tab') fetchStorageFiles();
     };
 
@@ -255,22 +255,34 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); }
         const form = document.getElementById("form").value;
         const file = document.getElementById("file").files[0];
         const pBar = document.getElementById("progressBar");
+        const statusBox = document.getElementById("uploadStatus");
 
         // Force .pdf extension if user didn't write it
         if(!title.toLowerCase().endsWith('.pdf')) {
             title += ".pdf";
         }
 
+        statusBox.innerText = "Initializing upload task...";
         const storagePath = `${type}/${subject}/${form}/${title}`;
         const uploadTask = uploadBytesResumable(ref(storage, storagePath), file);
 
         uploadTask.on('state_changed', 
-            (snap) => pBar.style.width = (snap.bytesTransferred / snap.totalBytes) * 100 + "%",
-            (err) => alert("Upload Error: " + err.message),
+            (snap) => {
+                const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+                pBar.style.width = pct + "%";
+                statusBox.innerText = `Uploading bytes to Storage: ${pct}%`;
+            },
+            (err) => {
+                console.error("Storage Error:", err);
+                statusBox.innerText = "Upload Error: " + err.message;
+                alert("Upload Error: " + err.message);
+            },
             async () => {
                 try {
-                    // FIX: Ensure docId key uses the finalized, extension-enforced title
-                    const docId = btoa(title).replace(/=/g, '');
+                    statusBox.innerText = "Storage done. Writing database metrics to Firestore...";
+                    
+                    // Safe base64 encoding configuration
+                    const docId = btoa(unescape(encodeURIComponent(title))).replace(/=/g, '');
                     const docRef = doc(db, "resource_metrics", docId);
                     
                     await setDoc(docRef, {
@@ -281,12 +293,15 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); }
                         comments: []
                     });
 
+                    statusBox.innerText = "Success! Asset fully synchronized.";
                     alert("Upload Complete! Storage and Database successfully initialized.");
                     uploadForm.reset();
                     pBar.style.width = "0%";
+                    setTimeout(() => { statusBox.innerText = "Ready for upload."; }, 3000);
                 } catch(firestoreError) {
-                    console.error(firestoreError);
-                    alert("Storage file pushed, but data metric creation failed.");
+                    console.error("Firestore Error:", firestoreError);
+                    statusBox.innerText = "Database Error: " + firestoreError.message;
+                    alert("Storage file pushed, but data metric creation failed: " + firestoreError.message);
                 }
             }
         );
@@ -318,7 +333,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); }
                                     <div class="file-path">${sub} | ${frm}</div>
                                 </div>
                             </div>
-                            <button class="btn-delete" onclick="window.del('${item.fullPath}', '${item.name}')"><i class="fas fa-trash"></i></button>
+                            <button class="btn-delete" onclick="window.del('${item.fullPath.replace(/'/g, "\\'")}', '${item.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i></button>
                         `;
                         listEl.appendChild(card);
                     });
@@ -328,16 +343,12 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); }
         document.getElementById('fileCount').innerText = `${count} active assets discovered.`;
     }
 
-    // CLEANUP CLEANING PATHWAYS
     window.del = async (storagePath, filename) => {
         if(confirm("Delete file permanently from Cloud Storage and database?")) {
             try {
                 await deleteObject(ref(storage, storagePath));
-                
-                // Clear the associated tracking metadata metrics node out of firestore instantly
-                const docId = btoa(filename).replace(/=/g, '');
+                const docId = btoa(unescape(encodeURIComponent(filename))).replace(/=/g, '');
                 await deleteDoc(doc(db, "resource_metrics", docId));
-                
                 fetchStorageFiles();
             } catch(e) {
                 alert("Error executing clean up process.");
