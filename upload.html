@@ -41,6 +41,9 @@ html, body { margin:0; padding:0; font-family:'Plus Jakarta Sans', sans-serif; b
     padding: 40px; border-radius: 20px; border: 1px solid var(--border-color);
     width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
 }
+.password-wrapper { position: relative; width: 100%; }
+.password-toggle-eye { position: absolute; right: 14px; top: 14px; cursor: pointer; opacity: 0.6; transition: 0.2s; }
+.password-toggle-eye:hover { opacity: 1; color: var(--primary-color); }
 
 #portal-content { display: none; }
 
@@ -73,7 +76,7 @@ h2 { color: var(--primary-color); margin-bottom:20px; text-align:center; font-we
     border-radius: var(--radius); padding: 35px; text-align: center; cursor: pointer;
     transition: 0.3s; margin-bottom: 20px; position: relative;
 }
-.drag-zone.dragover { background: rgba(245, 124, 0, 0.15); transform: scale(0.99); }
+.drag-zone.dragover { background: rgba(245, 124, 0, 0.15); transform: scale(0.99); box-shadow: 0 0 15px rgba(245,124,0,0.3); }
 .drag-zone i { color: var(--primary-color); margin-bottom: 10px; }
 
 .upload-card { background: var(--card-background); padding:30px; border-radius:16px; border:1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
@@ -83,7 +86,10 @@ input, select { width:100%; padding:14px; background-color: var(--input-bg); bor
 input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(245,124,0,0.15); }
 
 .queue-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-bottom: 15px; display: none; }
-.queue-title { font-size: 0.8rem; font-weight: 800; color: var(--secondary-color); margin-bottom: 8px; text-transform: uppercase; }
+.queue-header-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; margin-bottom: 8px; }
+.queue-title { font-size: 0.8rem; font-weight: 800; color: var(--secondary-color); text-transform: uppercase; margin: 0; }
+.queue-clear-btn { background: none; border: none; color: var(--danger); font-size: 0.75rem; font-weight: 700; width: auto; padding: 0; text-transform: uppercase; cursor: pointer; }
+.queue-clear-btn:hover { filter: brightness(1.2); box-shadow: none; transform: none; }
 .queue-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
 .queue-item:last-child { border: none; }
 .queue-remove { color: var(--danger); cursor: pointer; border: none; background: none; width: auto; padding: 0; font-size: 0.85rem; }
@@ -119,7 +125,8 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
 .file-card:hover { border-color: var(--primary-color); transform: translateX(2px); }
 .file-info { display: flex; align-items: center; gap: 1rem; max-width: 75%; }
 .file-icon { color: var(--primary-color); font-size: 1.8rem; }
-.file-name-text { font-weight: 700; font-size: 0.95rem; word-break: break-all; }
+.file-name-text { font-weight: 700; font-size: 0.95rem; word-break: break-all; cursor: pointer; }
+.file-name-text:hover { color: var(--primary-color); text-decoration: underline; }
 .file-path-badge { display: inline-block; background: rgba(245, 124, 0, 0.1); color: var(--secondary-color); font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 4px; border: 1px solid rgba(245,124,0,0.15); }
 .file-checkbox { width: 20px; height: 20px; accent-color: var(--primary-color); cursor: pointer; margin-right: 5px; }
 
@@ -137,7 +144,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
 
 .footer { text-align:center; padding:30px; color:#aaa; font-size: 0.8rem; opacity: 0.6; }
 
-/* PROFESSIONAL NOTIFICATION SYSTEM STYLES */
+/* NOTIFICATION SYSTEM STYLES */
 #toast-container {
     position: fixed; top: 20px; right: 20px; z-index: 10000;
     display: flex; flex-direction: column; gap: 10px; max-width: 350px; width: 90%;
@@ -147,43 +154,65 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
     padding: 15px 20px; border-radius: 6px; color: var(--text-light);
     box-shadow: 0 10px 25px rgba(0,0,0,0.3); font-size: 0.9rem; font-weight: 600;
     display: flex; align-items: center; gap: 12px;
-    animation: slideIn 0.3s ease forward; transition: 0.3s;
+    animation: slideIn 0.3s ease forwards; transition: 0.3s;
 }
 .toast-card.success { border-left-color: var(--success); }
 .toast-card.danger { border-left-color: var(--danger); }
 .toast-card.info { border-left-color: var(--primary-color); }
 @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-/* PROFESSIONAL MODAL WINDOW STYLES */
-#confirm-modal {
+/* MODERN CONFIRMATION MODAL */
+#confirm-modal, #details-modal {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(5, 8, 15, 0.8); backdrop-filter: blur(4px);
     display: none; justify-content: center; align-items: center; z-index: 10005;
 }
 .modal-body {
     background: var(--card-background); border: 1px solid var(--border-color);
-    padding: 25px 30px; border-radius: var(--radius); max-width: 420px; width: 90%;
+    padding: 25px 30px; border-radius: var(--radius); max-width: 440px; width: 90%;
     text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
 }
 .modal-body h3 { color: var(--primary-color); margin-top: 0; font-weight: 800; }
-.modal-body p { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; margin-bottom: 20px; }
-.modal-btn-row { display: flex; gap: 12px; }
+.modal-body p { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; margin-bottom: 20px; text-align: left; }
+.modal-btn-row { display: flex; gap: 12px; margin-top: 15px; }
 .btn-modal-cancel { background: rgba(255,255,255,0.05); color: var(--text-light); border: 1px solid var(--border-color); }
 .btn-modal-cancel:hover { background: rgba(255,255,255,0.1); color: var(--text-light); }
+
+/* LIVE SEARCH COMPONENT */
+.search-wrapper { position: relative; margin-bottom: 15px; }
+.search-wrapper i { position: absolute; right: 14px; top: 14px; opacity: 0.5; }
+
+/* NETWORK WATCHDOG BAR */
+#network-bar {
+    background: var(--danger); color: white; text-align: center;
+    padding: 6px; font-size: 0.8rem; font-weight: 700; position: fixed;
+    bottom: 0; left: 0; width: 100%; z-index: 9999; display: none;
+}
 </style>
 </head>
 <body>
 
+<div id="network-bar"><i class="fas fa-wifi"></i> Core Connectivity Severed. Operations Retrying...</div>
 <div id="toast-container"></div>
 
 <div id="confirm-modal">
     <div class="modal-body">
         <i class="fas fa-triangle-exclamation fa-3x" style="color: var(--primary-color); margin-bottom: 15px;"></i>
         <h3 id="modal-title">Confirm Action</h3>
-        <p id="modal-text">Are you sure you want to proceed?</p>
+        <p id="modal-text" style="text-align: center;">Are you sure you want to proceed?</p>
         <div class="modal-btn-row">
             <button type="button" class="btn-modal-cancel" id="modalCancelBtn">Cancel</button>
             <button type="button" id="modalConfirmBtn">Confirm Proceed</button>
+        </div>
+    </div>
+</div>
+
+<div id="details-modal">
+    <div class="modal-body" style="text-align: left;">
+        <h3 id="detailsTitle" style="margin-bottom: 15px;"><i class="fas fa-file-invoice"></i> File Blueprint Specifications</h3>
+        <div id="detailsContent" style="font-size: 0.9rem; space-y: 8px;"></div>
+        <div class="modal-btn-row">
+            <button type="button" class="btn-modal-cancel" style="width: 100%;" onclick="document.getElementById('details-modal').style.display='none'">Close Summary</button>
         </div>
     </div>
 </div>
@@ -193,7 +222,10 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         <i class="fas fa-user-shield fa-3x" style="color: var(--primary-color); margin-bottom: 20px;"></i>
         <h2>Admin Core Engine</h2>
         <input type="email" id="loginEmail" placeholder="Admin Email ID" required>
-        <input type="password" id="loginPass" placeholder="Security Token Pass" required>
+        <div class="password-wrapper">
+            <input type="password" id="loginPass" placeholder="Security Token Pass" required>
+            <i class="fas fa-eye password-toggle-eye" id="loginPassToggle"></i>
+        </div>
         <button id="loginBtn">Unlock Vault</button>
         <p id="loginError" style="color: #ff6b6b; font-size: 0.8rem; margin-top: 10px; font-weight:600;"></p>
     </div>
@@ -230,7 +262,10 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             </div>
 
             <div class="queue-box" id="queueBox">
-                <div class="queue-title">Staged Files In Load Queue</div>
+                <div class="queue-header-row">
+                    <div class="queue-title" id="queueTitleSummary">Staged Files In Load Queue</div>
+                    <button type="button" class="queue-clear-btn" id="clearQueueBtn"><i class="fas fa-trash-can"></i> Wipe Queue</button>
+                </div>
                 <div id="queueList"></div>
             </div>
 
@@ -257,8 +292,12 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             </div>
 
             <label>Subject Discipline Assignment:</label>
-            <select id="subject">
-              <option value="Mathematics">Mathematics</option>
+            <div class="search-wrapper">
+                <input type="text" id="subjectSearch" placeholder="Filter subject profiles..." style="margin-bottom: 8px;">
+                <i class="fas fa-magnifying-glass"></i>
+            </div>
+            <select id="subject" size="5" style="height: auto; max-height: 140px;">
+              <option value="Mathematics" selected>Mathematics</option>
               <option value="English">English</option>
               <option value="Kiswahili">Kiswahili</option>
               <option value="Chemistry">Chemistry</option>
@@ -299,11 +338,12 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         </div>
 
         <div class="action-control-cluster">
-            <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;">
+            <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center;">
                 <select id="mgrType" onchange="fetchStorageFiles()" style="margin:0;">
                     <option value="revision_papers">Directory Category: Revision Papers</option>
                     <option value="subject_notes">Directory Category: Subject Notes</option>
                 </select>
+                <button id="sortDirectionBtn" style="width: auto; padding: 12px 15px; background: var(--card-background); border: 1px solid var(--border-color); color: var(--text-light);" title="Toggle Sort Direction"><i class="fas fa-sort-alpha-down"></i> Sort</button>
                 <button id="refreshBtn" style="width: auto; padding: 12px 20px;"><i class="fas fa-arrows-rotate"></i> Sync Data</button>
             </div>
             
@@ -365,8 +405,19 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
     const queueBox = document.getElementById('queueBox');
     const queueList = document.getElementById('queueList');
     let stagedFilesArray = [];
+    let currentSortAscending = true;
 
-    // Global Professional Alert/Toast Micro-engine
+    // Feature 13: Live Connection Health Watchdog Tracker Engine
+    window.addEventListener('online', () => {
+        document.getElementById('network-bar').style.display = 'none';
+        window.showToast("Data connection re-established online.", "success");
+    });
+    window.addEventListener('offline', () => {
+        document.getElementById('network-bar').style.display = 'block';
+        window.showToast("Local system network state offline.", "danger");
+    });
+
+    // Integrated Toast Micro-engine System (Replaces browser alerts)
     window.showToast = (message, type = 'info') => {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
@@ -383,10 +434,19 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             toast.style.opacity = '0';
             toast.style.transform = 'scale(0.9)';
             setTimeout(() => toast.remove(), 300);
-        }, 4000);
+        }, 4100);
     };
 
-    // Premium Confirmation Async Promise Handler
+    // Override original browser alert pipeline safely
+    window.alert = function(msg) {
+        if (msg.toLowerCase().includes('fail') || msg.toLowerCase().includes('error') || msg.toLowerCase().includes('abort')) {
+            window.showToast(msg, 'danger');
+        } else {
+            window.showToast(msg, 'success');
+        }
+    };
+
+    // Premium Async Confirmation Promise Handler Module
     window.askConfirmation = (title, message) => {
         return new Promise((resolve) => {
             const modal = document.getElementById('confirm-modal');
@@ -406,18 +466,37 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         });
     };
 
+    // Feature 1: Password Visibility Icon Interactive Tracker
+    const loginPassInput = document.getElementById('loginPass');
+    const loginPassToggle = document.getElementById('loginPassToggle');
+    loginPassToggle.onclick = () => {
+        if(loginPassInput.type === 'password') {
+            loginPassInput.type = 'text';
+            loginPassToggle.className = 'fas fa-eye-slash password-toggle-eye';
+        } else {
+            loginPassInput.type = 'password';
+            loginPassToggle.className = 'fas fa-eye password-toggle-eye';
+        }
+    };
+
+    // Feature 15: Persistent Local Matrix Theme Cache Check
+    if(localStorage.getItem('theme-matrix-selection') === 'light') {
+        document.body.classList.add('light-theme');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+    }
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.onclick = () => {
         document.body.classList.toggle('light-theme');
         const isLight = document.body.classList.contains('light-theme');
         themeToggle.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        localStorage.setItem('theme-matrix-selection', isLight ? 'light' : 'dark');
     };
 
     const ADMIN_EMAIL = "bonimbugua13@gmail.com";
 
     loginBtn.onclick = async () => {
         const email = document.getElementById('loginEmail').value;
-        const pass = document.getElementById('loginPass').value;
+        const pass = loginPassInput.value;
         const errorMsg = document.getElementById('loginError');
         try {
             await signInWithEmailAndPassword(auth, email, pass);
@@ -438,6 +517,8 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             }
             loginOverlay.style.display = 'flex';
             portalContent.style.display = 'none';
+            // Feature 10: Auto-focus interface initialization rule
+            document.getElementById('loginEmail').focus();
         }
     });
 
@@ -461,6 +542,27 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
     };
     fileInput.onchange = (e) => handleFilePayloadSelection(e.target.files);
 
+    // Feature 4: Live Core Subject UI Option Filtering
+    const subjectSelect = document.getElementById('subject');
+    const subjectSearch = document.getElementById('subjectSearch');
+    const masterSubjectOptions = Array.from(subjectSelect.options);
+    subjectSearch.oninput = () => {
+        const query = subjectSearch.value.toLowerCase().trim();
+        subjectSelect.innerHTML = '';
+        masterSubjectOptions.forEach(opt => {
+            if(opt.text.toLowerCase().includes(query)) {
+                subjectSelect.appendChild(opt);
+            }
+        });
+    };
+
+    // Feature 11: Clear-All Queue Controller
+    document.getElementById('clearQueueBtn').onclick = () => {
+        stagedFilesArray = [];
+        refreshQueueDisplay();
+        window.showToast("Payload ingestion queue cleared.", "info");
+    };
+
     function handleFilePayloadSelection(fileListObject) {
         for(let file of fileListObject) {
             if(!file.name.toLowerCase().endsWith('.pdf')) {
@@ -472,6 +574,19 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
                 continue;
             }
             stagedFilesArray.push(file);
+
+            // Feature 2: Filename string parse structure matching patterns
+            const cleanName = file.name.toUpperCase();
+            if(cleanName.includes('FORM 1') || cleanName.includes('F1')) document.getElementById('form').value = 'Form 1';
+            if(cleanName.includes('FORM 2') || cleanName.includes('F2')) document.getElementById('form').value = 'Form 2';
+            if(cleanName.includes('FORM 3') || cleanName.includes('F3')) document.getElementById('form').value = 'Form 3';
+            if(cleanName.includes('FORM 4') || cleanName.includes('F4')) document.getElementById('form').value = 'Form 4';
+            
+            masterSubjectOptions.forEach(opt => {
+                if(cleanName.includes(opt.value.toUpperCase())) {
+                    opt.selected = true;
+                }
+            });
         }
         refreshQueueDisplay();
     }
@@ -483,7 +598,11 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         }
         queueBox.style.display = "block";
         queueList.innerHTML = "";
+        
+        // Feature 5: Sizing byte summation tracking accumulator logic
+        let aggregateBytes = 0;
         stagedFilesArray.forEach((file, index) => {
+            aggregateBytes += file.size;
             const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
             const row = document.createElement('div');
             row.className = "queue-item";
@@ -493,6 +612,9 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             `;
             queueList.appendChild(row);
         });
+        
+        const aggregateMB = (aggregateBytes / (1024 * 1024)).toFixed(2);
+        document.getElementById('queueTitleSummary').innerText = `Queue: ${stagedFilesArray.length} Selected [${aggregateMB} MB Total]`;
     }
 
     window.removeQueuedItem = (index) => {
@@ -510,6 +632,10 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         const pContainer = document.getElementById("progressContainer");
         const statusBox = document.getElementById("uploadStatus");
 
+        if(!subject) {
+            window.showToast("Assignment failure: select a primary Subject field target.", "danger");
+            return;
+        }
         if(stagedFilesArray.length === 0) {
             window.showToast("Payload injection aborted. Queue contains zero items.", "danger");
             return;
@@ -558,6 +684,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
                                 subject: subject,
                                 form: form,
                                 summary: customSummary || "Syllabus revision companion text uploaded for High Stars Aimers performance objectives.",
+                                fileSize: (file.size / (1024 * 1024)).toFixed(2) + " MB" // Added sizing tracking metadata
                             };
 
                             if(!snapCheck.exists()) {
@@ -572,8 +699,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
                     }
                 );
             }).catch(error => {
-                console.error("Batch interrupt point caught:", error);
-                statusBox.className = "status-box status-info";
+                console.error(error);
                 statusBox.style.backgroundColor = "rgba(239,68,68,0.1)";
                 statusBox.innerText = `Process error encountered on execution: ${error.message}`;
             });
@@ -602,7 +728,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         
         selectAllBox.checked = false;
         updateSelectionUiCounters(0);
-        listEl.innerHTML = '<p class="status-box status-info"><i class="fas fa-spinner fa-spin"></i> interrogating partition allocations inside primary bucket arrays...</p>';
+        listEl.innerHTML = '<p class="status-box status-info"><i class="fas fa-spinner fa-spin"></i> Interrogating partition allocations inside primary bucket arrays...</p>';
         
         masterFilesStateCache = [];
         
@@ -625,7 +751,15 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         renderFilteredStorageExplorerList();
     }
 
-    function renderFilteredStorageExplorerList() {
+    // Feature 12: Alphabetical Toggle Sorting Logic
+    document.getElementById('sortDirectionBtn').onclick = () => {
+        currentSortAscending = !currentSortAscending;
+        document.getElementById('sortDirectionBtn').innerHTML = currentSortAscending ? 
+            '<i class="fas fa-sort-alpha-down"></i> Sort A-Z' : '<i class="fas fa-sort-alpha-up"></i> Sort Z-A';
+        renderFilteredStorageExplorerList();
+    };
+
+    async function renderFilteredStorageExplorerList() {
         const listEl = document.getElementById('fileList');
         const searchQuery = document.getElementById('explorerSearch').value.toLowerCase().trim();
         
@@ -634,14 +768,30 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
 
         let filteredItems = masterFilesStateCache.filter(item => item.name.toLowerCase().includes(searchQuery));
 
+        // Sort execution sequence based on direction matrix
+        filteredItems.sort((a, b) => {
+            return currentSortAscending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+        });
+
         if(filteredItems.length === 0) {
             listEl.innerHTML = '<p class="status-box status-info">No structural matches found inside the selected layout filters.</p>';
             document.getElementById('fileCount').innerText = "0 matches found.";
             return;
         }
 
-        filteredItems.forEach(item => {
+        for (let item of filteredItems) {
             matchCount++;
+            
+            // Feature 8: Dynamic inline database parameters fetch injection
+            let statsSummaryString = "0 downloads";
+            try {
+                const liveMetricsDoc = await getDoc(doc(db, "resource_metrics", item.id));
+                if(liveMetricsDoc.exists()) {
+                    const trackingData = liveMetricsDoc.data();
+                    statsSummaryString = `${trackingData.downloads || 0} ↓ • Size: ${trackingData.fileSize || 'N/A'}`;
+                }
+            } catch(metricsError) { console.log("Inline metrics bypass active."); }
+
             const card = document.createElement('div');
             card.className = 'file-card';
             card.innerHTML = `
@@ -649,8 +799,8 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
                     <input type="checkbox" class="file-checkbox file-item-select" data-path="${item.fullPath.replace(/'/g, "\\'")}" data-name="${item.name.replace(/'/g, "\\'")}">
                     <i class="fas fa-file-pdf file-icon"></i>
                     <div>
-                        <div class="file-name-text">${item.name}</div>
-                        <span class="file-path-badge">${item.subject} • ${item.form}</span>
+                        <div class="file-name-text" onclick="window.launchAdvancedDataProfile('${item.id}')">${item.name}</div>
+                        <span class="file-path-badge">${item.subject} • ${item.form} • <span style="color:var(--text-light); opacity:0.8;">${statsSummaryString}</span></span>
                     </div>
                 </div>
                 <div class="card-actions-zone">
@@ -659,11 +809,38 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
                 </div>
             `;
             listEl.appendChild(card);
-        });
+        }
 
         document.getElementById('fileCount').innerText = `${matchCount} assets mapped across active array lists.`;
         hookItemSelectionTriggers();
     }
+
+    // Feature 14: Document Insight Profiler Renderer Module
+    window.launchAdvancedDataProfile = async (docId) => {
+        const dataModal = document.getElementById('details-modal');
+        const contentArea = document.getElementById('detailsContent');
+        contentArea.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Retrieving document records...`;
+        dataModal.style.display = 'flex';
+        
+        try {
+            const documentSnapshotRef = await getDoc(doc(db, "resource_metrics", docId));
+            if(documentSnapshotRef.exists()) {
+                const metadata = documentSnapshotRef.data();
+                contentArea.innerHTML = `
+                    <p><strong>Filestem Title:</strong> ${metadata.name}</p>
+                    <p><strong>Structural Type:</strong> ${metadata.type}</p>
+                    <p><strong>Discipline Class:</strong> ${metadata.subject} (${metadata.form})</p>
+                    <p><strong>System Size:</strong> ${metadata.fileSize || "Unknown size classification"}</p>
+                    <p><strong>Ingestion Summary Notes:</strong> <span style="font-style: italic; opacity:0.8;">"${metadata.summary}"</span></p>
+                    <p><strong>Analytics Engagement:</strong> ${metadata.downloads || 0} Downloads | ${metadata.likes || 0} Endorsements</p>
+                `;
+            } else {
+                contentArea.innerHTML = `<p style="color:var(--danger);"><i class="fas fa-triangle-exclamation"></i> Firestore synchronization schema entry missing for this element parameters.</p>`;
+            }
+        } catch(err) {
+            contentArea.innerHTML = `<p style="color:var(--danger);">Error processing identity fetch context routing.</p>`;
+        }
+    };
 
     function hookItemSelectionTriggers() {
         const checkboxes = document.querySelectorAll('.file-item-select');
@@ -687,15 +864,32 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
 
     document.getElementById('explorerSearch').oninput = () => renderFilteredStorageExplorerList();
 
+    // Feature 9: Clipboard Fallback programmatic logic engine
     window.copyRawLink = async (filename) => {
+        const docId = btoa(unescape(encodeURIComponent(filename))).replace(/=/g, '');
+        const dbEndpointToken = `https://high-stars-aimers-5972f.firebaseapp.com/resource_metrics/${docId}`;
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            try {
+                await navigator.clipboard.writeText(dbEndpointToken);
+                window.showToast("Path identity link copied to workspace clipboard!", "success");
+                return;
+            } catch(e) { console.warn("Primary API copy failed, attempting input fallback."); }
+        }
+        
+        // Backup Manual Textarea Workspace Node Strategy Selection
+        const fallbackTextareaNode = document.createElement("textarea");
+        fallbackTextareaNode.value = dbEndpointToken;
+        fallbackTextareaNode.style.position = "fixed"; 
+        document.body.appendChild(fallbackTextareaNode);
+        fallbackTextareaNode.select();
         try {
-            const docId = btoa(unescape(encodeURIComponent(filename))).replace(/=/g, '');
-            const dbEndpointToken = `https://high-stars-aimers-5972f.firebaseapp.com/resource_metrics/${docId}`;
-            await navigator.clipboard.writeText(dbEndpointToken);
-            window.showToast("Path identity link copied to workspace clipboard!", "success");
-        } catch(e) {
+            document.execCommand("copy");
+            window.showToast("Path identity link copied via workspace fallback execution matrix!", "success");
+        } catch (err) {
             window.showToast("Clipboard configuration blocked writes.", "danger");
         }
+        document.body.removeChild(fallbackTextareaNode);
     };
 
     window.del = async (storagePath, filename) => {
@@ -754,7 +948,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         } catch(err) {
             console.error(err);
             window.showToast("Network block occurred while compiling file bytes.", "danger");
-        } finally {
+        } finaly {
             btn.disabled = false;
             btn.innerHTML = oldHtml;
         }
