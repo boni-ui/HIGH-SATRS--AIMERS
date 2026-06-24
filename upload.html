@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,7 +43,7 @@ html, body { margin:0; padding:0; font-family:'Plus Jakarta Sans', sans-serif; b
     width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
 }
 .password-wrapper { position: relative; width: 100%; }
-.password-toggle-eye { position: absolute; right: 14px; top: 14px; cursor: pointer; opacity: 0.6; transition: 0.2s; }
+.password-toggle-eye { position: absolute; right: 14px; top: 14px; cursor: pointer; opacity: 0.6; transition: 0.2s; z-index: 10; }
 .password-toggle-eye:hover { opacity: 1; color: var(--primary-color); }
 
 #portal-content { display: none; }
@@ -227,7 +228,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             <i class="fas fa-eye password-toggle-eye" id="loginPassToggle"></i>
         </div>
         <button id="loginBtn">Unlock Vault</button>
-        <p id="loginError" style="color: #ff6b6b; font-size: 0.8rem; margin-top: 10px; font-weight:600;"></p>
+        <p id="loginError" style="color: #ff6b6b; font-size: 0.8rem; margin-top: 10px; font-weight:600; word-break: break-all; padding: 0 10px;"></p>
     </div>
 </div>
 
@@ -339,7 +340,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
 
         <div class="action-control-cluster">
             <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center;">
-                <select id="mgrType" onchange="fetchStorageFiles()" style="margin:0;">
+                <select id="mgrType" style="margin:0;">
                     <option value="revision_papers">Directory Category: Revision Papers</option>
                     <option value="subject_notes">Directory Category: Subject Notes</option>
                 </select>
@@ -466,18 +467,20 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         });
     };
 
-    // Feature 1: Password Visibility Icon Interactive Tracker
+    // Feature 1: Password Visibility Icon Interactive Tracker Bound inside Module Script
     const loginPassInput = document.getElementById('loginPass');
     const loginPassToggle = document.getElementById('loginPassToggle');
-    loginPassToggle.onclick = () => {
-        if(loginPassInput.type === 'password') {
+    loginPassToggle.addEventListener('click', () => {
+        if (loginPassInput.type === 'password') {
             loginPassInput.type = 'text';
-            loginPassToggle.className = 'fas fa-eye-slash password-toggle-eye';
+            loginPassToggle.classList.remove('fa-eye');
+            loginPassToggle.classList.add('fa-eye-slash');
         } else {
             loginPassInput.type = 'password';
-            loginPassToggle.className = 'fas fa-eye password-toggle-eye';
+            loginPassToggle.classList.remove('fa-eye-slash');
+            loginPassToggle.classList.add('fa-eye');
         }
-    };
+    });
 
     // Feature 15: Persistent Local Matrix Theme Cache Check
     if(localStorage.getItem('theme-matrix-selection') === 'light') {
@@ -498,10 +501,12 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         const email = document.getElementById('loginEmail').value;
         const pass = loginPassInput.value;
         const errorMsg = document.getElementById('loginError');
+        errorMsg.innerText = ""; 
         try {
             await signInWithEmailAndPassword(auth, email, pass);
         } catch (err) {
-            errorMsg.innerText = "Access Refused. Authorized structural token missing.";
+            // Updated directly output the accurate Firebase backend fault reason
+            errorMsg.innerText = `Auth Failure: ${err.message}`;
         }
     };
 
@@ -517,7 +522,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             }
             loginOverlay.style.display = 'flex';
             portalContent.style.display = 'none';
-            // Feature 10: Auto-focus interface initialization rule
             document.getElementById('loginEmail').focus();
         }
     });
@@ -599,7 +603,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         queueBox.style.display = "block";
         queueList.innerHTML = "";
         
-        // Feature 5: Sizing byte summation tracking accumulator logic
         let aggregateBytes = 0;
         stagedFilesArray.forEach((file, index) => {
             aggregateBytes += file.size;
@@ -684,7 +687,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
                                 subject: subject,
                                 form: form,
                                 summary: customSummary || "Syllabus revision companion text uploaded for High Stars Aimers performance objectives.",
-                                fileSize: (file.size / (1024 * 1024)).toFixed(2) + " MB" // Added sizing tracking metadata
+                                fileSize: (file.size / (1024 * 1024)).toFixed(2) + " MB"
                             };
 
                             if(!snapCheck.exists()) {
@@ -751,7 +754,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         renderFilteredStorageExplorerList();
     }
 
-    // Feature 12: Alphabetical Toggle Sorting Logic
     document.getElementById('sortDirectionBtn').onclick = () => {
         currentSortAscending = !currentSortAscending;
         document.getElementById('sortDirectionBtn').innerHTML = currentSortAscending ? 
@@ -768,7 +770,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
 
         let filteredItems = masterFilesStateCache.filter(item => item.name.toLowerCase().includes(searchQuery));
 
-        // Sort execution sequence based on direction matrix
         filteredItems.sort((a, b) => {
             return currentSortAscending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
         });
@@ -782,7 +783,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         for (let item of filteredItems) {
             matchCount++;
             
-            // Feature 8: Dynamic inline database parameters fetch injection
             let statsSummaryString = "0 downloads";
             try {
                 const liveMetricsDoc = await getDoc(doc(db, "resource_metrics", item.id));
@@ -815,7 +815,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         hookItemSelectionTriggers();
     }
 
-    // Feature 14: Document Insight Profiler Renderer Module
     window.launchAdvancedDataProfile = async (docId) => {
         const dataModal = document.getElementById('details-modal');
         const contentArea = document.getElementById('detailsContent');
@@ -835,7 +834,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
                     <p><strong>Analytics Engagement:</strong> ${metadata.downloads || 0} Downloads | ${metadata.likes || 0} Endorsements</p>
                 `;
             } else {
-                contentArea.innerHTML = `<p style="color:var(--danger);"><i class="fas fa-triangle-exclamation"></i> Firestore synchronization schema entry missing for this element parameters.</p>`;
+                contentArea.innerHTML = `<p style="color:var(--danger);"><i class="fas fa-triangle-exclamation"></i> Firestore synchronization entry missing.</p>`;
             }
         } catch(err) {
             contentArea.innerHTML = `<p style="color:var(--danger);">Error processing identity fetch context routing.</p>`;
@@ -863,8 +862,8 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
     };
 
     document.getElementById('explorerSearch').oninput = () => renderFilteredStorageExplorerList();
+    document.getElementById('mgrType').onchange = () => fetchStorageFiles();
 
-    // Feature 9: Clipboard Fallback programmatic logic engine
     window.copyRawLink = async (filename) => {
         const docId = btoa(unescape(encodeURIComponent(filename))).replace(/=/g, '');
         const dbEndpointToken = `https://high-stars-aimers-5972f.firebaseapp.com/resource_metrics/${docId}`;
@@ -877,7 +876,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             } catch(e) { console.warn("Primary API copy failed, attempting input fallback."); }
         }
         
-        // Backup Manual Textarea Workspace Node Strategy Selection
         const fallbackTextareaNode = document.createElement("textarea");
         fallbackTextareaNode.value = dbEndpointToken;
         fallbackTextareaNode.style.position = "fixed"; 
@@ -948,7 +946,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         } catch(err) {
             console.error(err);
             window.showToast("Network block occurred while compiling file bytes.", "danger");
-        } finaly {
+        } finally {
             btn.disabled = false;
             btn.innerHTML = oldHtml;
         }
