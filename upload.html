@@ -286,7 +286,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); }
                     const docId = btoa(unescape(encodeURIComponent(title))).replace(/=/g, '');
                     const docRef = doc(db, "resource_metrics", docId);
                     
-                    // Added type, subject, form, and url so the resource view filter system can read them
                     await setDoc(docRef, {
                         name: title,
                         url: downloadURL,
