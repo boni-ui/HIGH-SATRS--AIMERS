@@ -61,7 +61,6 @@
 
         .resource-list { display: flex; flex-direction: column; gap: 15px; }
         
-        /* Advanced Combined File Item Styling */
         .file-item { background: var(--card-bg); border: 1px solid var(--border); padding: 24px; border-radius: 18px; display: flex; flex-direction: column; gap: 16px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .file-item:hover { transform: translateY(-2px); border-color: rgba(245, 124, 0, 0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         
@@ -72,10 +71,8 @@
         .file-name { font-weight: 700; font-size: 1.1rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .file-subtext { font-size: 0.75rem; color: var(--text-dim); font-weight: 600; text-transform: uppercase; }
 
-        /* Summary Segment styling */
         .doc-summary { font-size: 0.85rem; color: #cbd5e1; background: rgba(5, 8, 15, 0.4); padding: 12px 16px; border-radius: 10px; border-left: 3px solid var(--primary); line-height: 1.5; }
 
-        /* Social Counters row */
         .file-social-metrics { display: flex; gap: 20px; align-items: center; font-size: 0.8rem; color: var(--text-dim); font-weight: 700; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 14px; }
         .metric-pill { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
         .metric-pill:hover { color: var(--text); }
@@ -85,7 +82,6 @@
         .view-btn { background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; border: none; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.3s; }
         .view-btn:hover { background: var(--primary); color: #ffffff; box-shadow: 0 5px 15px rgba(245, 124, 0, 0.3); }
 
-        /* Comments Sub-system Panel UI */
         .comments-tray { background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: none; flex-direction: column; gap: 12px; margin-top: 5px; }
         .comment-item { font-size: 0.8rem; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; }
         .comment-item span { color: var(--primary); font-weight: 700; margin-right: 5px; }
@@ -94,11 +90,9 @@
         .comment-field:focus { outline: none; border-color: var(--primary); }
         .comment-post-btn { background: var(--primary); border: none; color: white; padding: 0 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; cursor: pointer; }
 
-        /* Skeletons */
         .skeleton-item { height: 160px; background: linear-gradient(90deg, var(--card-bg) 25%, rgba(255,255,255,0.02) 50%, var(--card-bg) 75%); background-size: 200% 100%; animation: loadingMove 1.5s infinite; border-radius: 18px; border: 1px solid var(--border); }
         @keyframes loadingMove { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* Viewer Elements */
         .viewer-overlay { position: fixed; inset: 0; background: rgba(5, 8, 15, 0.95); backdrop-filter: blur(15px); z-index: 2000; display: none; opacity: 0; transition: 0.3s ease; padding: 30px; }
         .viewer-overlay.active { display: block; opacity: 1; }
         .viewer-window { width: 100%; height: 100%; background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
@@ -166,8 +160,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getStorage, ref, listAll, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
@@ -180,13 +173,12 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
         const db = getFirestore(app);
 
         const urlParams = new URLSearchParams(window.location.search);
-        const type = urlParams.get('type');       
-        const subject = urlParams.get('subject'); 
-        const form = urlParams.get('form');       
+        const typeParam = urlParams.get('type');       
+        const subjectParam = urlParams.get('subject'); 
+        const formParam = urlParams.get('form');       
 
         const listContainer = document.getElementById('fileList');
         const titleElement = document.getElementById('pageTitle');
@@ -203,69 +195,56 @@
             return { icon: 'fa-file-lines', color: 'var(--text-dim)', type: 'Standard Resource' };
         };
 
-        if (type && subject && form) {
-            titleElement.innerText = `${subject}`;
-            badgeElement.innerText = `${form.replace(/_/g, ' ')} • ${type.replace(/_/g, ' ')}`;
+        if (typeParam && subjectParam && formParam) {
+            const normalizedForm = formParam.replace(/_/g, ' ');
+            titleElement.innerText = `${subjectParam}`;
+            badgeElement.innerText = `${normalizedForm} • ${typeParam.replace(/_/g, ' ')}`;
             
-            const fetchPath = `${type}/${subject}/${form.replace(/_/g, ' ')}`;
-            const storageRef = ref(storage, fetchPath);
+            // Direct optimization: query documents directly by metadata tags
+            const metricsRef = collection(db, "resource_metrics");
+            const q = query(
+                metricsRef, 
+                where("type", "==", typeParam),
+                where("subject", "==", subjectParam),
+                where("form", "==", normalizedForm)
+            );
 
-            listAll(storageRef).then((res) => {
-                if (res.items.length === 0) {
-                    listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-folder-open"></i>No academic assets found in this vault path.</div>`;
+            getDocs(q).then((querySnapshot) => {
+                if (querySnapshot.empty) {
+                    listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-folder-open"></i>No academic assets found matching this tier query.</div>`;
                     itemCounter.innerText = "0";
                     return;
                 }
 
-                let fetchPromises = res.items.map(async (itemRef) => {
-                    const url = await getDownloadURL(itemRef);
-                    
-                    // Generate a clean valid ID reference for Firestore matching the document name
-                    const docId = btoa(itemRef.name).replace(/=/g, ''); 
-                    const docRef = doc(db, "resource_metrics", docId);
-                    let dbSnap = await getDoc(docRef);
-                    
-                    // If metadata entry doesn't exist yet, initialize standard placeholder structure
-                    if(!dbSnap.exists()) {
-                        const initData = {
-                            name: itemRef.name,
-                            downloads: 0,
-                            likes: 0,
-                            summary: "Comprehensive academic text compiled directly for High Stars Aimers syllabus core objectives.",
-                            comments: []
-                        };
-                        await setDoc(docRef, initData);
-                        dbSnap = await getDoc(docRef);
-                    }
-
-                    const metrics = dbSnap.data();
-
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
                     localFilesDataset.push({
-                        id: docId,
-                        name: itemRef.name,
-                        downloadUrl: url,
-                        aesthetics: computeExtensionAesthetics(itemRef.name),
-                        downloads: metrics.downloads || 0,
-                        likes: metrics.likes || 0,
-                        summary: metrics.summary || "No summary listed.",
-                        comments: metrics.comments || []
+                        id: docSnap.id,
+                        name: data.name,
+                        downloadUrl: data.url || "#",
+                        aesthetics: computeExtensionAesthetics(data.name),
+                        downloads: data.downloads || 0,
+                        likes: data.likes || 0,
+                        summary: data.summary || "No custom dynamic operational summary logged.",
+                        comments: data.comments || []
                     });
                 });
 
-                Promise.all(fetchPromises).then(() => renderActiveDataset());
-
+                renderActiveDataset();
             }).catch((error) => {
-                console.error(error);
-                listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-triangle-exclamation"></i>Connection to vault failed.</div>`;
+                console.error("Database Alignment Error: ", error);
+                listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-triangle-exclamation"></i>Failed to read matched index assets.</div>`;
             });
+        } else {
+            listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-circle-info"></i>Missing required routing context parameters.</div>`;
         }
 
         const renderActiveDataset = () => {
-            const query = searchBar.value.toLowerCase().trim();
+            const queryText = searchBar.value.toLowerCase().trim();
             listContainer.innerHTML = "";
 
             let filtered = localFilesDataset.filter(file => {
-                const matchesSearch = file.name.toLowerCase().includes(query);
+                const matchesSearch = file.name.toLowerCase().includes(queryText);
                 const nameLower = file.name.toLowerCase();
                 let matchesTab = true;
                 if (currentActiveSegment === 'notes') matchesTab = nameLower.includes('note') || nameLower.includes('summary');
@@ -275,11 +254,15 @@
 
             itemCounter.innerText = filtered.length;
 
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-magnifying-glass"></i>No structural files match your filtration criteria.</div>`;
+                return;
+            }
+
             filtered.forEach(file => {
                 const element = document.createElement('div');
                 element.className = 'file-item';
                 
-                // Build visual structural items for comments list layout
                 let commentsHTML = file.comments.map(c => `<div class="comment-item"><span>User:</span> ${c}</div>`).join('');
 
                 element.innerHTML = `
@@ -323,7 +306,6 @@
         };
 
         const bindInteractiveHooks = () => {
-            // View Action Trigger & Counter Tracking Update Logic
             document.querySelectorAll('.view-btn').forEach(btn => {
                 btn.onclick = async () => {
                     const docId = btn.getAttribute('data-id');
@@ -332,11 +314,9 @@
                     
                     launchSecurePortal(url, name);
                     
-                    // Increment download/view counter inside Firestore records
                     const docRef = doc(db, "resource_metrics", docId);
                     await updateDoc(docRef, { downloads: increment(1) });
                     
-                    // Update current local UI tracking node framework dynamically
                     const currentObj = localFilesDataset.find(f => f.id === docId);
                     if(currentObj) {
                         currentObj.downloads++;
@@ -345,7 +325,6 @@
                 };
             });
 
-            // Likes Handler Logic
             document.querySelectorAll('.like-trigger').forEach(trigger => {
                 trigger.onclick = async () => {
                     const docId = trigger.getAttribute('data-id');
@@ -362,7 +341,6 @@
                 };
             });
 
-            // Comments Tray View Toggle Logic Overlay
             document.querySelectorAll('.comment-trigger').forEach(trigger => {
                 trigger.onclick = () => {
                     const docId = trigger.getAttribute('data-id');
@@ -371,7 +349,6 @@
                 };
             });
 
-            // Write and Push Comment Execution Sequence
             document.querySelectorAll('.comment-post-btn').forEach(btn => {
                 btn.onclick = async () => {
                     const docId = btn.getAttribute('data-id');
@@ -386,13 +363,12 @@
                     const currentObj = localFilesDataset.find(f => f.id === docId);
                     if(currentObj) {
                         currentObj.comments.push(commentText);
-                        renderActiveDataset(); // Fast redraw grid system overlay elements UI
+                        renderActiveDataset();
                     }
                 };
             });
         };
 
-        // System Core Frame Navigation Hooks
         searchBar.oninput = () => renderActiveDataset();
         document.querySelectorAll('.filter-tab').forEach(tab => {
             tab.onclick = (e) => {
@@ -408,7 +384,6 @@
             document.getElementById('viewerFrame').src = url;
             document.getElementById('portalViewer').classList.add('active');
             
-            // Build dynamic session security watermark array lines block
             const matrix = document.getElementById('watermarkGrid');
             matrix.innerHTML = '';
             for(let i=0; i<9; i++) {
