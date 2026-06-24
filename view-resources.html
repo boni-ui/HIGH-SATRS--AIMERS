@@ -21,8 +21,6 @@
             --success: #10b981;
             --danger: #ef4444;
             --pdf-color: #ef4444;
-            --word-color: #3b82f6;
-            --powerpoint-color: #f97316;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -77,7 +75,6 @@
         .metric-pill { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
         .metric-pill:hover { color: var(--text); }
         .metric-pill.liked { color: var(--primary); }
-        .metric-pill i { font-size: 0.95rem; }
 
         .view-btn { background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; border: none; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.3s; }
         .view-btn:hover { background: var(--primary); color: #ffffff; box-shadow: 0 5px 15px rgba(245, 124, 0, 0.3); }
@@ -160,7 +157,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, arrayUnion, increment, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
@@ -190,9 +187,7 @@
         let currentActiveSegment = 'all';
 
         const computeExtensionAesthetics = (filename) => {
-            const ext = filename.split('.').pop().toLowerCase();
-            if(ext === 'pdf') return { icon: 'fa-file-pdf', color: 'var(--pdf-color)', type: 'Portable Document' };
-            return { icon: 'fa-file-lines', color: 'var(--text-dim)', type: 'Standard Resource' };
+            return { icon: 'fa-file-pdf', color: 'var(--pdf-color)', type: 'Portable Document' };
         };
 
         if (typeParam && subjectParam && formParam) {
@@ -201,14 +196,9 @@
             badgeElement.innerText = `${normalizedForm} • ${typeParam.replace(/_/g, ' ')}`;
             
             const metricsRef = collection(db, "resource_metrics");
-            const q = query(
-                metricsRef, 
-                where("type", "==", typeParam),
-                where("subject", "==", subjectParam),
-                where("form", "==", normalizedForm)
-            );
 
-            getDocs(q).then((querySnapshot) => {
+            // Option 2 Implementation: Query broadly to pick up documents lacking exact parameter fields
+            getDocs(metricsRef).then((querySnapshot) => {
                 if (querySnapshot.empty) {
                     listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-folder-open"></i>No academic assets found matching this tier query.</div>`;
                     itemCounter.innerText = "0";
@@ -217,22 +207,50 @@
 
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    localFilesDataset.push({
-                        id: docSnap.id,
-                        name: data.name,
-                        downloadUrl: data.url || "#",
-                        aesthetics: computeExtensionAesthetics(data.name),
-                        downloads: data.downloads || 0,
-                        likes: data.likes || 0,
-                        summary: data.summary || "No custom dynamic operational summary logged.",
-                        comments: data.comments || []
-                    });
+                    
+                    // Core Match Flag
+                    let isMatch = false;
+
+                    // Match Condition A: Match via newly written metadata properties
+                    if (data.type === typeParam && data.subject === subjectParam && data.form === normalizedForm) {
+                        isMatch = true;
+                    } 
+                    // Match Condition B: Match via URL fallback tokens for previous uploads
+                    else if (data.url) {
+                        const urlLower = data.url.toLowerCase();
+                        const checkType = typeParam.toLowerCase();
+                        const checkSubject = subjectParam.toLowerCase().replace(/ /g, '%20');
+                        const checkForm = normalizedForm.toLowerCase().replace(/ /g, '%20');
+
+                        if (urlLower.includes(checkType) && urlLower.includes(checkSubject) && urlLower.includes(checkForm)) {
+                            isMatch = true;
+                        }
+                    }
+
+                    if (isMatch) {
+                        // Hardwired Engagement Fallbacks: Safety assignment defaults if properties are missing
+                        localFilesDataset.push({
+                            id: docSnap.id,
+                            name: data.name || "Untitled Resource Document.pdf",
+                            downloadUrl: data.url || "#",
+                            aesthetics: computeExtensionAesthetics(data.name || ""),
+                            downloads: parseInt(data.downloads) || 0,
+                            likes: parseInt(data.likes) || 0,
+                            summary: data.summary || "Syllabus revision companion text uploaded for High Stars Aimers performance objectives.",
+                            comments: Array.isArray(data.comments) ? data.comments : []
+                        });
+                    }
                 });
 
-                renderActiveDataset();
+                if (localFilesDataset.length === 0) {
+                    listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-folder-open"></i>No matching items inside this specific folder tier.</div>`;
+                    itemCounter.innerText = "0";
+                } else {
+                    renderActiveDataset();
+                }
             }).catch((error) => {
-                console.error("Database Alignment Error: ", error);
-                listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-triangle-exclamation"></i>Failed to read matched index assets.</div>`;
+                console.error("Database Core Fetch Error: ", error);
+                listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-triangle-exclamation"></i>Failed to read matched library indexes.</div>`;
             });
         } else {
             listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-circle-info"></i>Missing required routing context parameters.</div>`;
@@ -254,7 +272,7 @@
             itemCounter.innerText = filtered.length;
 
             if (filtered.length === 0) {
-                listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-magnifying-glass"></i>No structural files match your filtration criteria.</div>`;
+                listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-magnifying-glass"></i>No files match your filtration criteria.</div>`;
                 return;
             }
 
@@ -285,12 +303,12 @@
                     <div class="file-social-metrics">
                         <div class="metric-pill"><i class="fas fa-eye"></i> <span id="dl-${file.id}">${file.downloads}</span> Views</div>
                         <div class="metric-pill like-trigger" data-id="${file.id}"><i class="fas fa-thumbs-up"></i> <span id="lk-${file.id}">${file.likes}</span> Likes</div>
-                        <div class="metric-pill comment-trigger" data-id="${file.id}"><i class="fas fa-comments"></i> ${file.comments.length} Comments</div>
+                        <div class="metric-pill comment-trigger" data-id="${file.id}"><i class="fas fa-comments"></i> <span id="cm-cnt-${file.id}">${file.comments.length}</span> Comments</div>
                     </div>
 
                     <div class="comments-tray" id="tray-${file.id}">
                         <div id="list-${file.id}" style="max-height: 120px; overflow-y: auto; display:flex; flex-direction:column; gap:6px;">
-                            ${commentsHTML || '<p style="font-size:0.75rem; color:var(--text-dim)">No responses written yet.</p>'}
+                            ${commentsHTML || '<p id="empty-hint-' + file.id + '" style="font-size:0.75rem; color:var(--text-dim)">No responses written yet.</p>'}
                         </div>
                         <div class="comment-input-group">
                             <input type="text" class="comment-field" id="input-${file.id}" placeholder="Type security review note...">
@@ -305,6 +323,7 @@
         };
 
         const bindInteractiveHooks = () => {
+            // Hardwired Click-Through Tracker
             document.querySelectorAll('.view-btn').forEach(btn => {
                 btn.onclick = async () => {
                     const docId = btn.getAttribute('data-id');
@@ -313,29 +332,54 @@
                     
                     launchSecurePortal(url, name);
                     
-                    const docRef = doc(db, "resource_metrics", docId);
-                    await updateDoc(docRef, { downloads: increment(1) });
-                    
+                    // Optimistic Count Update
                     const currentObj = localFilesDataset.find(f => f.id === docId);
                     if(currentObj) {
                         currentObj.downloads++;
                         document.getElementById(`dl-${docId}`).innerText = currentObj.downloads;
                     }
+
+                    try {
+                        const docRef = doc(db, "resource_metrics", docId);
+                        const docSnap = await getDoc(docRef);
+                        
+                        if (!docSnap.exists()) {
+                            // Creates missing document nodes automatically if tracked file is clicked
+                            await setDoc(docRef, { name: name, url: url, downloads: 1, likes: 0, comments: [], type: typeParam, subject: subjectParam, form: formParam.replace(/_/g, ' ') });
+                        } else {
+                            await updateDoc(docRef, { downloads: increment(1) });
+                        }
+                    } catch(err) {
+                        console.error("Non-blocking tracking metric error skipped safely.", err);
+                    }
                 };
             });
 
+            // Hardwired Resilient Likes
             document.querySelectorAll('.like-trigger').forEach(trigger => {
                 trigger.onclick = async () => {
                     const docId = trigger.getAttribute('data-id');
-                    const docRef = doc(db, "resource_metrics", docId);
-                    
-                    await updateDoc(docRef, { likes: increment(1) });
+                    if (trigger.classList.contains('liked')) return; 
+
                     trigger.classList.add('liked');
                     
+                    // Optimistic UI update
                     const currentObj = localFilesDataset.find(f => f.id === docId);
                     if(currentObj) {
                         currentObj.likes++;
                         document.getElementById(`lk-${docId}`).innerText = currentObj.likes;
+                    }
+
+                    try {
+                        const docRef = doc(db, "resource_metrics", docId);
+                        const docSnap = await getDoc(docRef);
+                        if (!docSnap.exists()) {
+                            await setDoc(docRef, { name: currentObj.name, url: currentObj.downloadUrl, downloads: currentObj.downloads, likes: 1, comments: [], type: typeParam, subject: subjectParam, form: formParam.replace(/_/g, ' ') });
+                        } else {
+                            await updateDoc(docRef, { likes: increment(1) });
+                        }
+                    } catch(err) {
+                        console.error("Metric sync error safely caught.", err);
                     }
                 };
             });
@@ -348,6 +392,7 @@
                 };
             });
 
+            // Hardwired Resilient Comments
             document.querySelectorAll('.comment-post-btn').forEach(btn => {
                 btn.onclick = async () => {
                     const docId = btn.getAttribute('data-id');
@@ -355,14 +400,35 @@
                     const commentText = inputField.value.trim();
 
                     if(commentText === "") return;
+                    inputField.value = ""; 
 
-                    const docRef = doc(db, "resource_metrics", docId);
-                    await updateDoc(docRef, { comments: arrayUnion(commentText) });
-
+                    // Optimistic UI updates
                     const currentObj = localFilesDataset.find(f => f.id === docId);
                     if(currentObj) {
                         currentObj.comments.push(commentText);
-                        renderActiveDataset();
+                        
+                        const hint = document.getElementById(`empty-hint-${docId}`);
+                        if(hint) hint.remove();
+
+                        const box = document.getElementById(`list-${docId}`);
+                        const item = document.createElement('div');
+                        item.className = 'comment-item';
+                        item.innerHTML = `<span>User:</span> ${commentText}`;
+                        box.appendChild(item);
+                        
+                        document.getElementById(`cm-cnt-${docId}`).innerText = currentObj.comments.length;
+                    }
+
+                    try {
+                        const docRef = doc(db, "resource_metrics", docId);
+                        const docSnap = await getDoc(docRef);
+                        if (!docSnap.exists()) {
+                            await setDoc(docRef, { name: currentObj.name, url: currentObj.downloadUrl, downloads: currentObj.downloads, likes: currentObj.likes, comments: [commentText], type: typeParam, subject: subjectParam, form: formParam.replace(/_/g, ' ') });
+                        } else {
+                            await updateDoc(docRef, { comments: arrayUnion(commentText) });
+                        }
+                    } catch(err) {
+                        console.error("Comment submission trace caught safely.", err);
                     }
                 };
             });
@@ -388,7 +454,7 @@
             for(let i=0; i<9; i++) {
                 const block = document.createElement('div');
                 block.className = 'watermark-stamp';
-                block.innerText = `HSA SECURE CLOUD // ${new Date().toLocaleDateString()}`;
+                block.innerText = `HSA SECURE CLOUD // 2026`;
                 matrix.appendChild(block);
             }
         };
