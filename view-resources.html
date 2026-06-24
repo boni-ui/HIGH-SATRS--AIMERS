@@ -104,7 +104,7 @@
         .document-watermark-layer { position: absolute; inset: 0; pointer-events: none; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 40px; opacity: 0.04; transform: rotate(-15deg) scale(1.2); user-select: none; z-index: 1000; }
         .watermark-stamp { font-size: 0.85rem; font-weight: 800; color: white; text-transform: uppercase; text-align: center; }
 
-        .scroll-top-btn { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 14px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 1500; }
+        .scroll-top-btn { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 14px; border: none; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 1500; }
         .scroll-top-btn.visible { opacity: 1; visibility: visible; }
         .msg-box { text-align: center; color: var(--text-dim); padding: 50px 0; font-weight: 600; }
         .msg-box i { font-size: 2rem; color: var(--primary); margin-bottom: 15px; display: block; }
@@ -200,7 +200,6 @@
             titleElement.innerText = `${subjectParam}`;
             badgeElement.innerText = `${normalizedForm} • ${typeParam.replace(/_/g, ' ')}`;
             
-            // Direct optimization: query documents directly by metadata tags
             const metricsRef = collection(db, "resource_metrics");
             const q = query(
                 metricsRef, 
