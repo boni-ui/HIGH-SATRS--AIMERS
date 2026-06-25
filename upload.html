@@ -4,45 +4,736 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Super Portal | High Stars Aimers</title>
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ... (Keep all your existing CSS here) ... */
-/* Add this to style the new editor */
-#editor-container { height: 150px; background: var(--input-bg); color: var(--text-light); border-radius: 8px; margin-bottom: 15px; }
-.ql-toolbar { background: var(--card-background); border-radius: 8px 8px 0 0; }
+:root {
+  --primary-color: #f57c00;
+  --secondary-color: #ffb347;
+  --background-dark: #05080f;
+  --card-background: #0c121e;
+  --input-bg: #05080f;
+  --text-light: #e0e0e0;
+  --border-color: rgba(255, 179, 71, 0.15);
+  --danger: #ef4444;
+  --success: #10b981;
+  --radius: 14px;
+}
+
+/* Light Mode Variables override toggled via JS */
+body.light-theme {
+  --background-dark: #f8fafc;
+  --card-background: #ffffff;
+  --input-bg: #f1f5f9;
+  --text-light: #1e293b;
+  --border-color: rgba(245, 124, 0, 0.2);
+}
+
+html, body { margin:0; padding:0; font-family:'Plus Jakarta Sans', sans-serif; background-color: var(--background-dark); color: var(--text-light); transition: background 0.3s, color 0.3s; }
+
+#login-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--background-dark);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999;
+}
+.login-card {
+    background: var(--card-background);
+    padding: 40px; border-radius: 20px; border: 1px solid var(--border-color);
+    width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+#portal-content { display: none; }
+
+.nav-container {
+    display: flex; justify-content: center; align-items: center;
+    background: var(--card-background); border-bottom: 2px solid var(--border-color);
+    position: sticky; top: 0; z-index: 1000; padding: 0 20px;
+}
+.nav-tabs-wrapper { display: flex; flex: 1; justify-content: center; }
+.nav-tab {
+    padding: 20px 30px; cursor: pointer; color: var(--text-light);
+    font-weight: 700; transition: 0.3s; border-bottom: 3px solid transparent; display: flex; align-items: center; gap: 8px;
+}
+.nav-tab.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
+
+.theme-toggle-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-light); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+
+.tab-content { display: none; padding: 20px; }
+.tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.header { display:flex; justify-content:space-between; align-items:center; padding:15px 25px; max-width: 1100px; margin: 0 auto; }
+.header h1 { font-size: 1.4rem; margin: 0; color: var(--primary-color); font-weight: 800; }
+
+main { padding:20px; max-width:750px; margin:0 auto; }
+h2 { color: var(--primary-color); margin-bottom:20px; text-align:center; font-weight: 800; }
+
+/* Drag and Drop Zone Premium Feature */
+.drag-zone {
+    border: 2px dashed var(--primary-color); background: rgba(245, 124, 0, 0.02);
+    border-radius: var(--radius); padding: 35px; text-align: center; cursor: pointer;
+    transition: 0.3s; margin-bottom: 20px; position: relative;
+}
+.drag-zone.dragover { background: rgba(245, 124, 0, 0.15); transform: scale(0.99); }
+.drag-zone i { color: var(--primary-color); margin-bottom: 10px; }
+
+.upload-card { background: var(--card-background); padding:30px; border-radius:16px; border:1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+
+label { display:block; margin-top:15px; margin-bottom:5px; color: var(--secondary-color); font-weight:700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+input, select { width:100%; padding:14px; background-color: var(--input-bg); border:1px solid var(--border-color); color:var(--text-light); border-radius:8px; margin-bottom:15px; box-sizing: border-box; font-size: 0.95rem; font-weight: 500; transition: 0.2s; }
+input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(245,124,0,0.15); }
+
+/* File Queue Component */
+.queue-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-bottom: 15px; display: none; }
+.queue-title { font-size: 0.8rem; font-weight: 800; color: var(--secondary-color); margin-bottom: 8px; text-transform: uppercase; }
+.queue-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.queue-item:last-child { border: none; }
+.queue-remove { color: var(--danger); cursor: pointer; border: none; background: none; width: auto; padding: 0; font-size: 0.85rem; }
+
+button { width:100%; padding:14px; background-color: var(--primary-color); color:#fff; font-weight:800; cursor:pointer; border:none; border-radius:8px; transition:0.2s; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; }
+button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px 15px rgba(245,124,0,0.2); }
+.btn-logout { background: transparent; color: #ff6b6b; border: 1px solid #ff6b6b; width: auto; padding: 6px 16px; font-size: 0.8rem; border-radius: 6px; }
+
+.progress-container { width: 100%; background-color: var(--input-bg); border-radius: 6px; height: 10px; margin-bottom: 15px; overflow: hidden; display: none; }
+.progress-bar { width: 0%; height: 100%; background-color: var(--primary-color); transition: width 0.1s linear; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-mini-card { background: var(--card-background); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; text-align: center; }
+.stat-mini-card div:first-child { font-size: 1.2rem; font-weight: 800; color: var(--primary-color); }
+.stat-mini-card div:last-child { font-size: 0.75rem; color: var(--text-light); opacity: 0.7; font-weight: 600; }
+
+.action-control-cluster {
+  background: var(--card-background); border: 1px solid var(--border-color);
+  padding: 16px 20px; border-radius: var(--radius); margin-bottom: 15px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.batch-actions-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
+
+.explorer-search-wrapper { position: relative; }
+.explorer-search-wrapper i { position: absolute; left: 14px; top: 14px; color: opacity 0.5; }
+.explorer-search-input { padding-left: 40px; margin-bottom: 0; }
+
+.file-card {
+  background: var(--card-background); border: 1px solid var(--border-color);
+  border-radius: var(--radius); padding: 1.2rem; margin-bottom: 0.75rem;
+  display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
+}
+.file-card:hover { border-color: var(--primary-color); transform: translateX(2px); }
+.file-info { display: flex; align-items: center; gap: 1rem; max-width: 75%; }
+.file-icon { color: var(--primary-color); font-size: 1.8rem; }
+.file-name-text { font-weight: 700; font-size: 0.95rem; word-break: break-all; }
+.file-path-badge { display: inline-block; background: rgba(245, 124, 0, 0.1); color: var(--secondary-color); font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 4px; border: 1px solid rgba(245,124,0,0.15); }
+.file-checkbox { width: 20px; height: 20px; accent-color: var(--primary-color); cursor: pointer; margin-right: 5px; }
+
+.card-actions-zone { display: flex; align-items: center; gap: 8px; }
+.btn-card-action { background: rgba(255,255,255,0.04); color: var(--text-light); width: 35px; height: 35px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.btn-card-action:hover { background: var(--primary-color); color: white; }
+.btn-card-action.delete-hover:hover { background: var(--danger); }
+
+.btn-batch-action { width: auto; padding: 10px 18px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+.btn-download-batch { background-color: var(--success); }
+.btn-delete-batch { background-color: var(--danger); }
+
+.status-box { padding: 12px; border-radius: 8px; margin-top: 15px; text-align: center; font-size: 14px; font-weight: 600; }
+.status-info { background-color: rgba(245, 124, 0, 0.08); border: 1px solid var(--border-color); color: var(--secondary-color); }
+
+.footer { text-align:center; padding:30px; color:#aaa; font-size: 0.8rem; opacity: 0.6; }
 </style>
 </head>
 <body>
 
-<label>Shared Resource Metadata Synopsis:</label>
-            <div id="editor-container"></div>
-            <input type="hidden" id="docSummaryInput">
+<div id="login-overlay">
+    <div class="login-card">
+        <i class="fas fa-user-shield fa-3x" style="color: var(--primary-color); margin-bottom: 20px;"></i>
+        <h2>Admin Core Engine</h2>
+        <input type="email" id="loginEmail" placeholder="Admin Email ID" required>
+        <input type="password" id="loginPass" placeholder="Security Token Pass" required>
+        <button id="loginBtn">Unlock Vault</button>
+        <p id="loginError" style="color: #ff6b6b; font-size: 0.8rem; margin-top: 10px; font-weight:600;"></p>
+    </div>
+</div>
+
+<div id="portal-content">
+    <div class="nav-container">
+        <div class="nav-tabs-wrapper">
+            <div class="nav-tab active" onclick="openTab('upload-tab')"><i class="fas fa-cloud-arrow-up"></i> Ingestion System</div>
+            <div class="nav-tab" onclick="openTab('manager-tab')"><i class="fas fa-database"></i> Storage Master Explorer</div>
+        </div>
+        <button class="theme-toggle-btn" id="themeToggle" title="Toggle Theme Matrix"><i class="fas fa-moon"></i></button>
+    </div>
+
+    <div class="header">
+      <h1>High Stars Aimers Admin Matrix</h1>
+      <div>
+          <a href="index.html" style="margin-right: 20px; color: var(--primary-color); font-size: 1.2rem;"><i class="fas fa-house-laptop"></i></a>
+          <button class="btn-logout" id="logoutBtn">Lock Console</button>
+      </div>
+    </div>
+
+    <div id="upload-tab" class="tab-content active">
+      <main>
+        <h2>Dynamic Batch Ingestion</h2>
+        <div class="upload-card">
+          <form id="uploadForm">
+            <label>Staging Zone Drop System:</label>
+            <div class="drag-zone" id="dropZone">
+                <i class="fas fa-folder-plus fa-3x"></i>
+                <p style="margin: 8px 0 4px; font-weight: 700;">Drag & Drop Academic PDFs Here</p>
+                <p style="font-size: 0.75rem; opacity: 0.6; margin: 0;">or click to select files from system registry browser</p>
+                <input type="file" id="file" accept=".pdf" multiple style="display: none;">
+            </div>
+
+            <div class="queue-box" id="queueBox">
+                <div class="queue-title">Staged Files In Load Queue</div>
+                <div id="queueList"></div>
+            </div>
+
+            <label>Shared Resource Metadata Synopsis:</label>
+            <input type="text" id="docSummaryInput" placeholder="Enter context overview summary notes or leave blank for dynamic defaults...">
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                    <label>Category Blueprint:</label>
+                    <select id="uploadType">
+                      <option value="revision_papers">Revision Papers</option>
+                      <option value="subject_notes">Subject Notes</option>
+                    </select>
                 </div>
+                <div>
+                    <label>Form Target:</label>
+                    <select id="form">
+                      <option value="Form 1">Form 1</option>
+                      <option value="Form 2">Form 2</option>
+                      <option value="Form 3">Form 3</option>
+                      <option value="Form 4">Form 4</option>
+                    </select>
+                </div>
+            </div>
 
-<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-<script type="module">
-    // ... (Keep all your Firebase imports and variables) ...
-    
-    // Initialize Quill Editor
-    const quill = new Quill('#editor-container', {
-      theme: 'snow',
-      placeholder: 'Use the toolbar to create bullet points and format your summary...',
-      modules: { toolbar: [['bold', 'italic', 'list']] }
-    });
+            <label>Subject Discipline Assignment:</label>
+            <select id="subject">
+              <option value="Mathematics">Mathematics</option>
+              <option value="English">English</option>
+              <option value="Kiswahili">Kiswahili</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Physics">Physics</option>
+              <option value="Biology">Biology</option>
+              <option value="Geography">Geography</option>
+              <option value="History">History</option>
+              <option value="CRE">CRE</option>
+              <option value="Business Studies">Business Studies</option>
+              <option value="Agriculture">Agriculture</option>
+              <option value="Computer Studies">Computer Studies</option>
+            </select>
 
-    uploadForm.onsubmit = async (e) => {
-        e.preventDefault();
-        // Capture the formatted HTML content instead of plain text
-        const customSummary = quill.root.innerHTML; 
+            <div class="progress-container" id="progressContainer"><div class="progress-bar" id="progressBar"></div></div>
+            <p id="uploadStatus" class="status-box status-info">Ready to process batch array queue.</p>
+            <button type="submit" id="uploadBtn">Execute Ingestion Array</button>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <div id="manager-tab" class="tab-content">
+      <div style="max-width: 900px; margin: 0 auto; padding: 10px;">
         
-        // ... (The rest of your existing uploadForm.onsubmit logic) ...
+        <div class="stats-grid">
+            <div class="stat-mini-card">
+                <div id="statTotal">0</div>
+                <div>Total Discovered</div>
+            </div>
+            <div class="stat-mini-card">
+                <div id="statPapers">0</div>
+                <div>Exam Blueprints</div>
+            </div>
+            <div class="stat-mini-card">
+                <div id="statNotes">0</div>
+                <div>Revision Digests</div>
+            </div>
+        </div>
+
+        <div class="action-control-cluster">
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;">
+                <select id="mgrType" onchange="fetchStorageFiles()" style="margin:0;">
+                    <option value="revision_papers">Directory Category: Revision Papers</option>
+                    <option value="subject_notes">Directory Category: Subject Notes</option>
+                </select>
+                <button id="refreshBtn" style="width: auto; padding: 12px 20px;"><i class="fas fa-arrows-rotate"></i> Sync Sync</button>
+            </div>
+            
+            <div class="explorer-search-wrapper">
+                <i class="fas fa-filter"></i>
+                <input type="text" id="explorerSearch" class="explorer-search-input" placeholder="Live text query filter matching filename array patterns...">
+            </div>
+
+            <div class="batch-actions-bar">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="selectAllFiles" class="file-checkbox">
+                    <label for="selectAllFiles" style="margin:0; cursor:pointer; font-size:0.85rem; font-weight:700;">Global Matrix Selector</label>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button id="batchDownloadBtn" class="btn-batch-action btn-download-batch"><i class="fas fa-file-zipper"></i> Download Selected (Zip) (<span class="selectCount">0</span>)</button>
+                    <button id="batchDeleteBtn" class="btn-batch-action btn-delete-batch"><i class="fas fa-dumpster-fire"></i> Purge Selected Elements (<span class="selectCount">0</span>)</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="fileList"></div>
+      </div>
+    </div>
+
+    <footer class="footer">&copy; 2026 High Stars Aimers. Scaled Architecture Infrastructure Panel Core.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll, deleteObject } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+    import { getFirestore, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
+      authDomain: "high-stars-aimers-5972f.firebaseapp.com",
+      projectId: "high-stars-aimers-5972f",
+      storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
+      messagingSenderId: "233345875942",
+      appId: "1:233345875942:web:cf7610de84f0b2262ce027"
     };
 
-    // ... (Keep the rest of your scripts exactly as they were) ...
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+    const db = getFirestore(app);
+
+    const loginOverlay = document.getElementById('login-overlay');
+    const portalContent = document.getElementById('portal-content');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const uploadForm = document.getElementById("uploadForm");
+    
+    // Staging drag and drop queue handlers
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('file');
+    const queueBox = document.getElementById('queueBox');
+    const queueList = document.getElementById('queueList');
+    let stagedFilesArray = [];
+
+    // Theme configuration matrix
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.onclick = () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        themeToggle.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    };
+
+    // Authenticated credentials checkpoint
+    const ADMIN_EMAIL = "bonimbugua13@gmail.com";
+
+    loginBtn.onclick = async () => {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPass').value;
+        const errorMsg = document.getElementById('loginError');
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+        } catch (err) {
+            errorMsg.innerText = "Access Refused. Authorized structural token missing.";
+        }
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        if (user && user.email === ADMIN_EMAIL) {
+            loginOverlay.style.display = 'none';
+            portalContent.style.display = 'block';
+            runGlobalTelemetryScan();
+        } else {
+            if(user) { alert("Access violations registered!"); signOut(auth); }
+            loginOverlay.style.display = 'flex';
+            portalContent.style.display = 'none';
+        }
+    });
+
+    logoutBtn.onclick = () => signOut(auth);
+
+    window.openTab = (tabId) => {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        if(window.event) window.event.currentTarget.classList.add('active');
+        if(tabId === 'manager-tab') fetchStorageFiles();
+    };
+
+    // Drag-Drop UI triggers
+    dropZone.onclick = () => fileInput.click();
+    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
+    dropZone.ondragleave = () => dropZone.classList.remove('dragover');
+    dropZone.ondrop = (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        handleFilePayloadSelection(e.dataTransfer.files);
+    };
+    fileInput.onchange = (e) => handleFilePayloadSelection(e.target.files);
+
+    function handleFilePayloadSelection(fileListObject) {
+        for(let file of fileListObject) {
+            if(!file.name.toLowerCase().endsWith('.pdf')) {
+                alert(`Discarded file: "${file.name}". Ingestion layer strictly requires format template signature configurations matching PDF files.`);
+                continue;
+            }
+            if(file.size === 0) {
+                alert(`File empty: "${file.name}". Rejected.`);
+                continue;
+            }
+            stagedFilesArray.push(file);
+        }
+        refreshQueueDisplay();
+    }
+
+    function refreshQueueDisplay() {
+        if(stagedFilesArray.length === 0) {
+            queueBox.style.display = "none";
+            return;
+        }
+        queueBox.style.display = "block";
+        queueList.innerHTML = "";
+        stagedFilesArray.forEach((file, index) => {
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            const row = document.createElement('div');
+            row.className = "queue-item";
+            row.innerHTML = `
+                <span><i class="fas fa-file-pdf" style="color:var(--primary-color); margin-right:6px;"></i> ${file.name} (${sizeMB} MB)</span>
+                <button type="button" class="queue-remove" onclick="window.removeQueuedItem(${index})"><i class="fas fa-circle-xmark"></i></button>
+            `;
+            queueList.appendChild(row);
+        });
+    }
+
+    window.removeQueuedItem = (index) => {
+        stagedFilesArray.splice(index, 1);
+        refreshQueueDisplay();
+    };
+
+    // Sequenced Multi-File Queue Push Architecture
+    uploadForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const customSummary = document.getElementById("docSummaryInput").value.trim();
+        const type = document.getElementById("uploadType").value;
+        const subject = document.getElementById("subject").value;
+        const form = document.getElementById("form").value;
+        const pBar = document.getElementById("progressBar");
+        const pContainer = document.getElementById("progressContainer");
+        const statusBox = document.getElementById("uploadStatus");
+
+        if(stagedFilesArray.length === 0) {
+            alert("Payload injection aborted. Ingestion queue contains zero items.");
+            return;
+        }
+
+        pContainer.style.style = "block";
+        pContainer.style.display = "block";
+        const totalItemsCount = stagedFilesArray.length;
+        
+        for(let i = 0; i < totalItemsCount; i++) {
+            let file = stagedFilesArray[i];
+            // Format check: enforce clean snake_case or parameterized formats with simple sanitization
+            let cleanTitle = file.name.replace(/[^a-zA-Z0-9.\-\s]/g, "").trim();
+            if(!cleanTitle.toLowerCase().endsWith('.pdf')) cleanTitle += ".pdf";
+
+            const storagePath = `${type}/${subject}/${form}/${cleanTitle}`;
+            const storageRef = ref(storage, storagePath);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            let startTime = Date.now();
+
+            await new Promise((resolve, reject) => {
+                uploadTask.on('state_changed', 
+                    (snap) => {
+                        const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+                        pBar.style.width = pct + "%";
+                        
+                        // ETA calculation engine metrics
+                        let elapsed = (Date.now() - startTime) / 1000;
+                        let speed = snap.bytesTransferred / elapsed; // bytes per sec
+                        let remainingBytes = snap.totalBytes - snap.bytesTransferred;
+                        let etaSeconds = speed > 0 ? Math.round(remainingBytes / speed) : 0;
+                        
+                        statusBox.innerText = `Ingesting [${i+1}/${totalItemsCount}]: ${pct}% | Speed: ${(speed/(1024*1024)).toFixed(1)}MB/s (ETA: ${etaSeconds}s)`;
+                    },
+                    (err) => reject(err),
+                    async () => {
+                        try {
+                            const downloadURL = await getDownloadURL(storageRef);
+                            const docId = btoa(unescape(encodeURIComponent(cleanTitle))).replace(/=/g, '');
+                            
+                            // Check if metric index exists to retain views/likes if file was re-uploaded
+                            const docRef = doc(db, "resource_metrics", docId);
+                            const snapCheck = await getDoc(docRef);
+                            
+                            let payloadData = {
+                                name: cleanTitle,
+                                url: downloadURL,
+                                type: type,
+                                subject: subject,
+                                form: form,
+                                summary: customSummary || "Syllabus revision companion text uploaded for High Stars Aimers performance objectives.",
+                            };
+
+                            if(!snapCheck.exists()) {
+                                payloadData.downloads = 0;
+                                payloadData.likes = 0;
+                                payloadData.comments = [];
+                            }
+
+                            await setDoc(docRef, payloadData, { merge: true });
+                            resolve();
+                        } catch(ferr) { reject(ferr); }
+                    }
+                );
+            }).catch(error => {
+                console.error("Batch interrupt point caught:", error);
+                statusBox.className = "status-box status-info";
+                statusBox.style.backgroundColor = "rgba(239,68,68,0.1)";
+                statusBox.innerText = `Process error encountered on execution: ${error.message}`;
+            });
+        }
+
+        statusBox.innerText = "Queue processed. Data structures synchronized across cloud buckets.";
+        alert(`Ingestion Completed successfully. Cleaned and deployed files.`);
+        
+        stagedFilesArray = [];
+        refreshQueueDisplay();
+        uploadForm.reset();
+        pBar.style.width = "0%";
+        pContainer.style.display = "none";
+        setTimeout(() => { statusBox.innerText = "Ready to process batch array queue."; }, 4000);
+        runGlobalTelemetryScan();
+    };
+
+    // Explorer State Engine Tracker
+    let masterFilesStateCache = [];
+    const subjectsList = ["Mathematics", "English", "Kiswahili", "Chemistry", "Physics", "Biology", "Geography", "History", "CRE", "Business Studies", "Agriculture", "Computer Studies"];
+    const formsList = ["Form 1", "Form 2", "Form 3", "Form 4"];
+
+    async function fetchStorageFiles() {
+        const listEl = document.getElementById('fileList');
+        const type = document.getElementById('mgrType').value;
+        const selectAllBox = document.getElementById('selectAllFiles');
+        
+        selectAllBox.checked = false;
+        updateSelectionUiCounters(0);
+        listEl.innerHTML = '<p class="status-box status-info"><i class="fas fa-spinner fa-spin"></i> interrogating partition allocations inside primary bucket arrays...</p>';
+        
+        masterFilesStateCache = [];
+        
+        for (const sub of subjectsList) {
+            for (const frm of formsList) {
+                try {
+                    const res = await listAll(ref(storage, `${type}/${sub}/${frm}`));
+                    res.items.forEach(item => {
+                        masterFilesStateCache.push({
+                            id: btoa(unescape(encodeURIComponent(item.name))).replace(/=/g, ''),
+                            name: item.name,
+                            fullPath: item.fullPath,
+                            subject: sub,
+                            form: frm
+                        });
+                    });
+                } catch (e) { console.warn("Directory sub-node scanning skipped: empty cluster context path."); }
+            }
+        }
+        renderFilteredStorageExplorerList();
+    }
+
+    function renderFilteredStorageExplorerList() {
+        const listEl = document.getElementById('fileList');
+        const searchQuery = document.getElementById('explorerSearch').value.toLowerCase().trim();
+        
+        listEl.innerHTML = '';
+        let matchCount = 0;
+
+        let filteredItems = masterFilesStateCache.filter(item => item.name.toLowerCase().includes(searchQuery));
+
+        if(filteredItems.length === 0) {
+            listEl.innerHTML = '<p class="status-box status-info">No structural matches found inside the selected layout filters.</p>';
+            document.getElementById('fileCount').innerText = "0 matches found.";
+            return;
+        }
+
+        filteredItems.forEach(item => {
+            matchCount++;
+            const card = document.createElement('div');
+            card.className = 'file-card';
+            card.innerHTML = `
+                <div class="file-info">
+                    <input type="checkbox" class="file-checkbox file-item-select" data-path="${item.fullPath.replace(/'/g, "\\'")}" data-name="${item.name.replace(/'/g, "\\'")}">
+                    <i class="fas fa-file-pdf file-icon"></i>
+                    <div>
+                        <div class="file-name-text">${item.name}</div>
+                        <span class="file-path-badge">${item.subject} • ${item.form}</span>
+                    </div>
+                </div>
+                <div class="card-actions-zone">
+                    <button class="btn-card-action" onclick="window.copyRawLink('${item.name.replace(/'/g, "\\'")}')" title="Copy database identification path token link"><i class="fas fa-link"></i></button>
+                    <button class="btn-card-action delete-hover" onclick="window.del('${item.fullPath.replace(/'/g, "\\'")}', '${item.name.replace(/'/g, "\\'")}')" title="Wipe item absolute values"><i class="fas fa-trash-can"></i></button>
+                </div>
+            `;
+            listEl.appendChild(card);
+        });
+
+        document.getElementById('fileCount').innerText = `${matchCount} assets mapped across active array lists.`;
+        hookItemSelectionTriggers();
+    }
+
+    function hookItemSelectionTriggers() {
+        const checkboxes = document.querySelectorAll('.file-item-select');
+        checkboxes.forEach(box => {
+            box.onchange = () => {
+                const totalChecked = document.querySelectorAll('.file-item-select:checked').length;
+                updateSelectionUiCounters(totalChecked);
+            };
+        });
+    }
+
+    function updateSelectionUiCounters(count) {
+        document.querySelectorAll('.selectCount').forEach(el => el.innerText = count);
+    }
+
+    // Toggle Select All Checked Flag Mapping
+    document.getElementById('selectAllFiles').onchange = (e) => {
+        const checkboxes = document.querySelectorAll('.file-item-select');
+        checkboxes.forEach(box => box.checked = e.target.checked);
+        updateSelectionUiCounters(e.target.checked ? checkboxes.length : 0);
+    };
+
+    // Live filtering structural hook
+    document.getElementById('explorerSearch').oninput = () => renderFilteredStorageExplorerList();
+
+    // Clipboard Copy Helper
+    window.copyRawLink = async (filename) => {
+        try {
+            const docId = btoa(unescape(encodeURIComponent(filename))).replace(/=/g, '');
+            const dbEndpointToken = `https://high-stars-aimers-5972f.firebaseapp.com/resource_metrics/${docId}`;
+            await navigator.clipboard.writeText(dbEndpointToken);
+            alert("Firestore object hash identity vector pathway tracking link recorded onto workspace clipboard arrays safely.");
+        } catch(e) {
+            alert("Clipboard security settings blocking inline context writes.");
+        }
+    };
+
+    // Absolute Clear Handler
+    window.del = async (storagePath, filename) => {
+        if(confirm(`Execute terminal purge of file: "${filename}"? This action cannot be undone.`)) {
+            try {
+                await deleteObject(ref(storage, storagePath));
+                const docId = btoa(unescape(encodeURIComponent(filename))).replace(/=/g, '');
+                await deleteDoc(doc(db, "resource_metrics", docId));
+                fetchStorageFiles();
+                runGlobalTelemetryScan();
+            } catch(e) { alert("Execution exception on cleanup."); }
+        }
+    };
+
+    // Massive Feature: Multiple Download Files Engine (Compiles Blob files as a downloadable ZIP package)
+    document.getElementById('batchDownloadBtn').onclick = async () => {
+        const targets = document.querySelectorAll('.file-item-select:checked');
+        if(targets.length === 0) {
+            alert("Operation aborted. Universal array pointer indices register zero file markers checked.");
+            return;
+        }
+
+        const btn = document.getElementById('batchDownloadBtn');
+        const oldHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Packaging Zip...`;
+
+        try {
+            const zipInstance = new JSZip();
+            
+            for(let check of targets) {
+                const path = check.getAttribute('data-path');
+                const name = check.getAttribute('data-name');
+                const fileRef = ref(storage, path);
+                const resolvedUrl = await getDownloadURL(fileRef);
+
+                // Use fetch to retrieve raw binary components bypassing strict origin boundaries if storage CORS is allowed
+                const fileResponse = await fetch(resolvedUrl);
+                const fileBlob = await fileResponse.blob();
+                
+                zipInstance.file(name, fileBlob);
+            }
+
+            const binaryZipOutputBlob = await zipInstance.generateAsync({ type: "blob" });
+            const temporaryAnchorUrlNode = URL.createObjectURL(binaryZipOutputBlob);
+            
+            const standardVirtualTriggerLink = document.createElement('a');
+            standardVirtualTriggerLink.href = temporaryAnchorUrlNode;
+            standardVirtualTriggerLink.download = `HighStarsAimers_ExportBatch_${Date.now()}.zip`;
+            document.body.appendChild(standardVirtualTriggerLink);
+            standardVirtualTriggerLink.click();
+            
+            // Clean up runtime artifacts immediately
+            document.body.removeChild(standardVirtualTriggerLink);
+            URL.revokeObjectURL(temporaryAnchorUrlNode);
+        } catch(err) {
+            console.error(err);
+            alert("Failed to build multi-download ZIP folder due to network block. Ensure Storage CORS handling configuration values are assigned wildcard parameters.");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = oldHtml;
+        }
+    };
+
+    // Purge Selected Elements at Once
+    document.getElementById('batchDeleteBtn').onclick = async () => {
+        const targets = document.querySelectorAll('.file-item-select:checked');
+        if(targets.length === 0) {
+            alert("No configuration selection addresses discovered inside active row models.");
+            return;
+        }
+
+        if(confirm(`Execute absolute deletion process commands parsing across ${targets.length} explicit cloud resource points?`)) {
+            const listEl = document.getElementById('fileList');
+            listEl.innerHTML = `<p class="status-box status-info"><i class="fas fa-radiation fa-beat"></i> Execution sequence underway... removing structural layout definitions safely.</p>`;
+            
+            for(let item of targets) {
+                const path = item.getAttribute('data-path');
+                const filename = item.getAttribute('data-name');
+                try {
+                    await deleteObject(ref(storage, path));
+                    const docId = btoa(unescape(encodeURIComponent(filename))).replace(/=/g, '');
+                    await deleteDoc(doc(db, "resource_metrics", docId));
+                } catch(err) { console.error("Index non-existent trace skipped during cascade removal routines.", err); }
+            }
+            alert("Batch operation finished running across indices arrays.");
+            fetchStorageFiles();
+            runGlobalTelemetryScan();
+        }
+    };
+
+    // Background Analytics Engine Stubs
+    async function runGlobalTelemetryScan() {
+        let papersCount = 0;
+        let notesCount = 0;
+        
+        try {
+            for(let sub of subjectsList) {
+                for(let frm of formsList) {
+                    const checkPapers = await listAll(ref(storage, `revision_papers/${sub}/${frm}`));
+                    papersCount += checkPapers.items.length;
+                    
+                    const checkNotes = await listAll(ref(storage, `subject_notes/${sub}/${frm}`));
+                    notesCount += checkNotes.items.length;
+                }
+            }
+            document.getElementById('statTotal').innerText = papersCount + notesCount;
+            document.getElementById('statPapers').innerText = papersCount;
+            document.getElementById('statNotes').innerText = notesCount;
+        } catch(error) { console.log("Analytics data refresh routine skipped."); }
+    }
+
+    document.getElementById('refreshBtn').onclick = fetchStorageFiles;
 </script>
 </body>
 </html>
