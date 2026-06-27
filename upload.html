@@ -20,7 +20,6 @@
   --radius: 14px;
 }
 
-/* Light Mode Variables override toggled via JS */
 body.light-theme {
   --background-dark: #f8fafc;
   --card-background: #ffffff;
@@ -69,7 +68,6 @@ html, body { margin:0; padding:0; font-family:'Plus Jakarta Sans', sans-serif; b
 main { padding:20px; max-width:750px; margin:0 auto; }
 h2 { color: var(--primary-color); margin-bottom:20px; text-align:center; font-weight: 800; }
 
-/* Drag and Drop Zone Premium Feature */
 .drag-zone {
     border: 2px dashed var(--primary-color); background: rgba(245, 124, 0, 0.02);
     border-radius: var(--radius); padding: 35px; text-align: center; cursor: pointer;
@@ -81,10 +79,9 @@ h2 { color: var(--primary-color); margin-bottom:20px; text-align:center; font-we
 .upload-card { background: var(--card-background); padding:30px; border-radius:16px; border:1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
 label { display:block; margin-top:15px; margin-bottom:5px; color: var(--secondary-color); font-weight:700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-input, select { width:100%; padding:14px; background-color: var(--input-bg); border:1px solid var(--border-color); color:var(--text-light); border-radius:8px; margin-bottom:15px; box-sizing: border-box; font-size: 0.95rem; font-weight: 500; transition: 0.2s; }
-input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(245,124,0,0.15); }
+input, select, textarea { width:100%; padding:14px; background-color: var(--input-bg); border:1px solid var(--border-color); color:var(--text-light); border-radius:8px; margin-bottom:15px; box-sizing: border-box; font-size: 0.95rem; font-weight: 500; transition: 0.2s; font-family: inherit; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(245,124,0,0.15); }
 
-/* File Queue Component */
 .queue-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-bottom: 15px; display: none; }
 .queue-title { font-size: 0.8rem; font-weight: 800; color: var(--secondary-color); margin-bottom: 8px; text-transform: uppercase; }
 .queue-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
@@ -190,7 +187,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             </div>
 
             <label>Shared Resource Metadata Synopsis:</label>
-            <input type="text" id="docSummaryInput" placeholder="Enter context overview summary notes or leave blank for dynamic defaults...">
+            <textarea id="docSummaryInput" rows="4" placeholder="Enter context overview summary notes or leave blank for dynamic defaults..."></textarea>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div>
@@ -314,14 +311,12 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
     const logoutBtn = document.getElementById('logoutBtn');
     const uploadForm = document.getElementById("uploadForm");
     
-    // Staging drag and drop queue handlers
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('file');
     const queueBox = document.getElementById('queueBox');
     const queueList = document.getElementById('queueList');
     let stagedFilesArray = [];
 
-    // Theme configuration matrix
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.onclick = () => {
         document.body.classList.toggle('light-theme');
@@ -329,7 +324,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         themeToggle.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
     };
 
-    // Authenticated credentials checkpoint
     const ADMIN_EMAIL = "bonimbugua13@gmail.com";
 
     loginBtn.onclick = async () => {
@@ -365,7 +359,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         if(tabId === 'manager-tab') fetchStorageFiles();
     };
 
-    // Drag-Drop UI triggers
     dropZone.onclick = () => fileInput.click();
     dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
     dropZone.ondragleave = () => dropZone.classList.remove('dragover');
@@ -415,7 +408,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         refreshQueueDisplay();
     };
 
-    // Sequenced Multi-File Queue Push Architecture
     uploadForm.onsubmit = async (e) => {
         e.preventDefault();
         const customSummary = document.getElementById("docSummaryInput").value.trim();
@@ -431,13 +423,11 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             return;
         }
 
-        pContainer.style.style = "block";
         pContainer.style.display = "block";
         const totalItemsCount = stagedFilesArray.length;
         
         for(let i = 0; i < totalItemsCount; i++) {
             let file = stagedFilesArray[i];
-            // Format check: enforce clean snake_case or parameterized formats with simple sanitization
             let cleanTitle = file.name.replace(/[^a-zA-Z0-9.\-\s]/g, "").trim();
             if(!cleanTitle.toLowerCase().endsWith('.pdf')) cleanTitle += ".pdf";
 
@@ -453,9 +443,8 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
                         const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
                         pBar.style.width = pct + "%";
                         
-                        // ETA calculation engine metrics
                         let elapsed = (Date.now() - startTime) / 1000;
-                        let speed = snap.bytesTransferred / elapsed; // bytes per sec
+                        let speed = snap.bytesTransferred / elapsed;
                         let remainingBytes = snap.totalBytes - snap.bytesTransferred;
                         let etaSeconds = speed > 0 ? Math.round(remainingBytes / speed) : 0;
                         
@@ -466,8 +455,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
                         try {
                             const downloadURL = await getDownloadURL(storageRef);
                             const docId = btoa(unescape(encodeURIComponent(cleanTitle))).replace(/=/g, '');
-                            
-                            // Check if metric index exists to retain views/likes if file was re-uploaded
                             const docRef = doc(db, "resource_metrics", docId);
                             const snapCheck = await getDoc(docRef);
                             
@@ -500,7 +487,7 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         }
 
         statusBox.innerText = "Queue processed. Data structures synchronized across cloud buckets.";
-        alert(`Ingestion Completed successfully. Cleaned and deployed files.`);
+        alert(`Ingestion Completed successfully.`);
         
         stagedFilesArray = [];
         refreshQueueDisplay();
@@ -511,7 +498,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         runGlobalTelemetryScan();
     };
 
-    // Explorer State Engine Tracker
     let masterFilesStateCache = [];
     const subjectsList = ["Mathematics", "English", "Kiswahili", "Chemistry", "Physics", "Biology", "Geography", "History", "CRE", "Business Studies", "Agriculture", "Computer Studies"];
     const formsList = ["Form 1", "Form 2", "Form 3", "Form 4"];
@@ -557,7 +543,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
 
         if(filteredItems.length === 0) {
             listEl.innerHTML = '<p class="status-box status-info">No structural matches found inside the selected layout filters.</p>';
-            document.getElementById('fileCount').innerText = "0 matches found.";
             return;
         }
 
@@ -582,7 +567,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             listEl.appendChild(card);
         });
 
-        document.getElementById('fileCount').innerText = `${matchCount} assets mapped across active array lists.`;
         hookItemSelectionTriggers();
     }
 
@@ -600,17 +584,14 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         document.querySelectorAll('.selectCount').forEach(el => el.innerText = count);
     }
 
-    // Toggle Select All Checked Flag Mapping
     document.getElementById('selectAllFiles').onchange = (e) => {
         const checkboxes = document.querySelectorAll('.file-item-select');
         checkboxes.forEach(box => box.checked = e.target.checked);
         updateSelectionUiCounters(e.target.checked ? checkboxes.length : 0);
     };
 
-    // Live filtering structural hook
     document.getElementById('explorerSearch').oninput = () => renderFilteredStorageExplorerList();
 
-    // Clipboard Copy Helper
     window.copyRawLink = async (filename) => {
         try {
             const docId = btoa(unescape(encodeURIComponent(filename))).replace(/=/g, '');
@@ -622,7 +603,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         }
     };
 
-    // Absolute Clear Handler
     window.del = async (storagePath, filename) => {
         if(confirm(`Execute terminal purge of file: "${filename}"? This action cannot be undone.`)) {
             try {
@@ -635,7 +615,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         }
     };
 
-    // Massive Feature: Multiple Download Files Engine (Compiles Blob files as a downloadable ZIP package)
     document.getElementById('batchDownloadBtn').onclick = async () => {
         const targets = document.querySelectorAll('.file-item-select:checked');
         if(targets.length === 0) {
@@ -657,7 +636,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
                 const fileRef = ref(storage, path);
                 const resolvedUrl = await getDownloadURL(fileRef);
 
-                // Use fetch to retrieve raw binary components bypassing strict origin boundaries if storage CORS is allowed
                 const fileResponse = await fetch(resolvedUrl);
                 const fileBlob = await fileResponse.blob();
                 
@@ -673,19 +651,17 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
             document.body.appendChild(standardVirtualTriggerLink);
             standardVirtualTriggerLink.click();
             
-            // Clean up runtime artifacts immediately
             document.body.removeChild(standardVirtualTriggerLink);
             URL.revokeObjectURL(temporaryAnchorUrlNode);
         } catch(err) {
             console.error(err);
-            alert("Failed to build multi-download ZIP folder due to network block. Ensure Storage CORS handling configuration values are assigned wildcard parameters.");
+            alert("Failed to build multi-download ZIP folder due to network block.");
         } finally {
             btn.disabled = false;
             btn.innerHTML = oldHtml;
         }
     };
 
-    // Purge Selected Elements at Once
     document.getElementById('batchDeleteBtn').onclick = async () => {
         const targets = document.querySelectorAll('.file-item-select:checked');
         if(targets.length === 0) {
@@ -712,7 +688,6 @@ button:hover { transform:scale(1.01); filter: brightness(1.1); box-shadow: 0 5px
         }
     };
 
-    // Background Analytics Engine Stubs
     async function runGlobalTelemetryScan() {
         let papersCount = 0;
         let notesCount = 0;
