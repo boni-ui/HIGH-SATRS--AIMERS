@@ -3,458 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>High Stars Aimers | Resource Hub Vault</title>
-    
+    <title>HSA Vault Core | Professional Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --primary: #f57c00;
-            --accent: #e65100;
-            --bg-deep: #05080f;
-            --card-bg: #0c121e;
-            --input-bg: #05080f;
-            --text: #ffffff;
-            --text-dim: #64748b;
-            --border: rgba(255, 255, 255, 0.06);
-            --success: #10b981;
-            --danger: #ef4444;
-            --pdf-color: #ef4444;
-        }
+        :root { --primary: #f57c00; --bg: #05080f; --card: #0c121e; --text: #ffffff; --dim: #94a3b8; --border: rgba(255,255,255,0.08); }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; padding: 40px 20px; }
+        .container { max-width: 850px; margin: 0 auto; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 40px 20px;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(245, 124, 0, 0.03) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(245, 124, 0, 0.03) 0%, transparent 40%);
-        }
-
-        .container { max-width: 900px; margin: 0 auto; position: relative; }
-
-        .hub-header { text-align: center; margin-bottom: 40px; position: relative; }
-        .hub-header i.main-icon { font-size: 3rem; color: var(--primary); margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(245, 124, 0, 0.3)); }
-        h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle-badge { display: inline-block; background: rgba(245, 124, 0, 0.1); border: 1px solid rgba(245, 124, 0, 0.2); color: var(--primary); padding: 6px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-
-        .control-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 25px; margin-bottom: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .search-wrapper { position: relative; display: flex; align-items: center; margin-bottom: 20px; }
-        .search-wrapper i { position: absolute; left: 20px; color: var(--text-dim); font-size: 1.1rem; }
-        .search-bar { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 16px 20px 16px 55px; border-radius: 14px; color: white; font-size: 0.95rem; transition: 0.3s; }
-        .search-bar:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(245, 124, 0, 0.1); }
-
-        .filter-row { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
-        .tabs-container { display: flex; gap: 8px; }
-        .filter-tab { background: var(--input-bg); border: 1px solid var(--border); color: var(--text-dim); padding: 10px 18px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .filter-tab:hover, .filter-tab.active { border-color: var(--primary); color: white; }
-        .filter-tab.active { background: var(--primary); box-shadow: 0 4px 12px rgba(245, 124, 0, 0.25); }
-        .metrics-counter { font-size: 0.8rem; color: var(--text-dim); font-weight: 600; }
-        .metrics-counter span { color: var(--primary); font-weight: 800; }
-
-        .resource-list { display: flex; flex-direction: column; gap: 15px; }
+        /* Professional Card System */
+        .file-item { background: var(--card); border: 1px solid var(--border); padding: 28px; border-radius: 20px; margin-bottom: 20px; transition: all 0.3s ease; position: relative; }
+        .file-item:hover { border-color: var(--primary); box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
         
-        .file-item { background: var(--card-bg); border: 1px solid var(--border); padding: 24px; border-radius: 18px; display: flex; flex-direction: column; gap: 16px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .file-item:hover { transform: translateY(-2px); border-color: rgba(245, 124, 0, 0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .type-pill { background: rgba(245, 124, 0, 0.1); color: var(--primary); padding: 4px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .file-name { font-size: 1.25rem; font-weight: 700; margin: 10px 0; display: block; }
+
+        /* Collapsible Summary System */
+        .summary-wrapper { position: relative; margin: 15px 0; }
+        .doc-summary { font-size: 0.9rem; color: var(--dim); line-height: 1.7; max-height: 75px; overflow: hidden; transition: max-height 0.4s ease; position: relative; }
+        .doc-summary.expanded { max-height: 1000px; }
+        .doc-summary::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 30px; background: linear-gradient(transparent, var(--card)); opacity: 0; transition: opacity 0.3s; }
+        .doc-summary:not(.expanded)::after { opacity: 1; }
         
-        .file-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .file-meta-zone { display: flex; align-items: center; gap: 18px; max-width: 70%; }
-        .file-icon-box { width: 48px; height: 48px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-        .text-details { display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
-        .file-name { font-weight: 700; font-size: 1.1rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .file-subtext { font-size: 0.75rem; color: var(--text-dim); font-weight: 600; text-transform: uppercase; }
-
-        .doc-summary { font-size: 0.85rem; color: #cbd5e1; background: rgba(5, 8, 15, 0.4); padding: 12px 16px; border-radius: 10px; border-left: 3px solid var(--primary); line-height: 1.5; }
-        .doc-summary ul { list-style-type: disc; margin-left: 20px; margin-top: 8px; }
-        .doc-summary li { margin-bottom: 4px; }
-
-        .file-social-metrics { display: flex; gap: 20px; align-items: center; font-size: 0.8rem; color: var(--text-dim); font-weight: 700; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 14px; }
-        .metric-pill { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
-        .metric-pill:hover { color: var(--text); }
-        .metric-pill.liked { color: var(--primary); }
-
-        .view-btn { background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; border: none; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.3s; }
-        .view-btn:hover { background: var(--primary); color: #ffffff; box-shadow: 0 5px 15px rgba(245, 124, 0, 0.3); }
-
-        .comments-tray { background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: none; flex-direction: column; gap: 12px; margin-top: 5px; }
-        .comment-item { font-size: 0.8rem; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; }
-        .comment-item span { color: var(--primary); font-weight: 700; margin-right: 5px; }
-        .comment-input-group { display: flex; gap: 10px; margin-top: 5px; }
-        .comment-field { flex: 1; background: var(--card-bg); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; color: white; font-size: 0.8rem; }
-        .comment-field:focus { outline: none; border-color: var(--primary); }
-        .comment-post-btn { background: var(--primary); border: none; color: white; padding: 0 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; cursor: pointer; }
-
-        .skeleton-item { height: 160px; background: linear-gradient(90deg, var(--card-bg) 25%, rgba(255,255,255,0.02) 50%, var(--card-bg) 75%); background-size: 200% 100%; animation: loadingMove 1.5s infinite; border-radius: 18px; border: 1px solid var(--border); }
-        @keyframes loadingMove { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-        .viewer-overlay { position: fixed; inset: 0; background: rgba(5, 8, 15, 0.95); backdrop-filter: blur(15px); z-index: 2000; display: none; opacity: 0; transition: 0.3s ease; padding: 30px; }
-        .viewer-overlay.active { display: block; opacity: 1; }
-        .viewer-window { width: 100%; height: 100%; background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        .viewer-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(12, 18, 30, 0.5); }
-        .close-viewer-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .close-viewer-btn:hover { background: var(--danger); border-color: var(--danger); }
-        .viewer-content-workspace { flex: 1; position: relative; background: #020408; }
-        .viewer-iframe { width: 100%; height: 100%; border: none; }
-        .document-watermark-layer { position: absolute; inset: 0; pointer-events: none; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 40px; opacity: 0.04; transform: rotate(-15deg) scale(1.2); user-select: none; z-index: 1000; }
-        .watermark-stamp { font-size: 0.85rem; font-weight: 800; color: white; text-transform: uppercase; text-align: center; }
-
-        .scroll-top-btn { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 14px; border: none; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 1500; }
-        .scroll-top-btn.visible { opacity: 1; visibility: visible; }
-        .msg-box { text-align: center; color: var(--text-dim); padding: 50px 0; font-weight: 600; }
-        .msg-box i { font-size: 2rem; color: var(--primary); margin-bottom: 15px; display: block; }
+        .toggle-btn { background: none; border: none; color: var(--primary); font-size: 0.75rem; font-weight: 800; cursor: pointer; margin-top: 8px; display: none; }
+        
+        .footer-metrics { display: flex; align-items: center; gap: 20px; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 15px; color: var(--dim); font-size: 0.85rem; }
+        .view-btn { margin-left: auto; background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .view-btn:hover { filter: brightness(1.2); }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <div class="hub-header">
-            <i class="fas fa-box-archive main-icon"></i>
-            <h1 id="pageTitle">Vault Core</h1>
-            <div class="subtitle-badge" id="categoryBadge">Syncing Library...</div>
-        </div>
-
-        <div class="control-panel">
-            <div class="search-wrapper">
-                <i class="fas fa-magnifying-glass"></i>
-                <input type="text" id="hubSearch" class="search-bar" placeholder="Search document titles in this vault tier...">
-            </div>
-            <div class="filter-row">
-                <div class="tabs-container">
-                    <button class="filter-tab active" data-filter="all">All Content</button>
-                    <button class="filter-tab" data-filter="notes">Notes</button>
-                    <button class="filter-tab" data-filter="papers">Exam Papers</button>
-                </div>
-                <div class="metrics-counter">Inventory Count: <span id="itemCounter">0</span> assets</div>
-            </div>
-        </div>
-
-        <div id="fileList" class="resource-list">
-            <div class="skeleton-item"></div>
-            <div class="skeleton-item"></div>
-        </div>
+        <div id="fileList"></div>
     </div>
-
-    <div class="viewer-overlay" id="portalViewer">
-        <div class="viewer-window">
-            <div class="viewer-header">
-                <div>
-                    <div style="font-size: 0.65rem; color: var(--primary); font-weight: 800; text-transform: uppercase;">Secure Vault Viewport</div>
-                    <h3 id="viewerDocName">Loading Document...</h3>
-                </div>
-                <button class="close-viewer-btn" id="closePortalBtn"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div class="viewer-content-workspace" id="secureWorkspace">
-                <div class="document-watermark-layer" id="watermarkGrid"></div>
-                <iframe id="viewerFrame" class="viewer-iframe" src=""></iframe>
-            </div>
-        </div>
-    </div>
-
-    <button class="scroll-top-btn" id="scrollToTop"><i class="fas fa-arrow-up"></i></button>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, arrayUnion, increment, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
-            authDomain: "high-stars-aimers-5972f.firebaseapp.com",
-            projectId: "high-stars-aimers-5972f",
-            storageBucket: "high-stars-aimers-5972f.firebasestorage.app",
-            messagingSenderId: "233345875942",
-            appId: "1:233345875942:web:cf7610de84f0b2262ce027",
-            measurementId: "G-X475KTSH5J"
-        };
+        // ... [Insert your Firebase Config Here] ...
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const typeParam = urlParams.get('type');       
-        const subjectParam = urlParams.get('subject'); 
-        const formParam = urlParams.get('form');       
-
         const listContainer = document.getElementById('fileList');
-        const titleElement = document.getElementById('pageTitle');
-        const badgeElement = document.getElementById('categoryBadge');
-        const itemCounter = document.getElementById('itemCounter');
-        const searchBar = document.getElementById('hubSearch');
-        
-        let localFilesDataset = [];
-        let currentActiveSegment = 'all';
 
-        const computeExtensionAesthetics = (filename) => {
-            return { icon: 'fa-file-pdf', color: 'var(--pdf-color)', type: 'Portable Document' };
-        };
-
-        if (typeParam && subjectParam && formParam) {
-            const normalizedForm = formParam.replace(/_/g, ' ');
-            titleElement.innerText = `${subjectParam}`;
-            badgeElement.innerText = `${normalizedForm} • ${typeParam.replace(/_/g, ' ')}`;
-            
-            const metricsRef = collection(db, "resource_metrics");
-
-            getDocs(metricsRef).then((querySnapshot) => {
-                if (querySnapshot.empty) {
-                    listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-folder-open"></i>No academic assets found matching this tier query.</div>`;
-                    itemCounter.innerText = "0";
-                    return;
-                }
-
-                querySnapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    let isMatch = false;
-
-                    if (data.type === typeParam && data.subject === subjectParam && data.form === normalizedForm) {
-                        isMatch = true;
-                    } 
-                    else if (data.url) {
-                        const urlLower = data.url.toLowerCase();
-                        const checkType = typeParam.toLowerCase();
-                        const checkSubject = subjectParam.toLowerCase().replace(/ /g, '%20');
-                        const checkForm = normalizedForm.toLowerCase().replace(/ /g, '%20');
-
-                        if (urlLower.includes(checkType) && urlLower.includes(checkSubject) && urlLower.includes(checkForm)) {
-                            isMatch = true;
-                        }
-                    }
-
-                    if (isMatch) {
-                        localFilesDataset.push({
-                            id: docSnap.id,
-                            name: data.name || "Untitled Resource Document.pdf",
-                            downloadUrl: data.url || "#",
-                            aesthetics: computeExtensionAesthetics(data.name || ""),
-                            downloads: parseInt(data.downloads) || 0,
-                            likes: parseInt(data.likes) || 0,
-                            summary: data.summary || "Syllabus revision companion text.",
-                            comments: Array.isArray(data.comments) ? data.comments : []
-                        });
-                    }
-                });
-
-                if (localFilesDataset.length === 0) {
-                    listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-folder-open"></i>No matching items inside this specific folder tier.</div>`;
-                    itemCounter.innerText = "0";
-                } else {
-                    renderActiveDataset();
-                }
-            }).catch((error) => {
-                console.error("Database Core Fetch Error: ", error);
-                listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-triangle-exclamation"></i>Failed to read matched library indexes.</div>`;
-            });
-        } else {
-            listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-circle-info"></i>Missing required routing context parameters.</div>`;
-        }
-
-        const renderActiveDataset = () => {
-            const queryText = searchBar.value.toLowerCase().trim();
+        async function fetchVaultData() {
+            const snap = await getDocs(collection(db, "resource_metrics"));
             listContainer.innerHTML = "";
-
-            let filtered = localFilesDataset.filter(file => {
-                const matchesSearch = file.name.toLowerCase().includes(queryText);
-                const nameLower = file.name.toLowerCase();
-                let matchesTab = true;
-                if (currentActiveSegment === 'notes') matchesTab = nameLower.includes('note') || nameLower.includes('summary');
-                if (currentActiveSegment === 'papers') matchesTab = nameLower.includes('paper') || nameLower.includes('exam');
-                return matchesSearch && matchesTab;
-            });
-
-            itemCounter.innerText = filtered.length;
-
-            if (filtered.length === 0) {
-                listContainer.innerHTML = `<div class="msg-box"><i class="fas fa-magnifying-glass"></i>No files match your filtration criteria.</div>`;
-                return;
-            }
-
-            filtered.forEach(file => {
+            snap.forEach(docSnap => {
+                const data = docSnap.data();
                 const element = document.createElement('div');
                 element.className = 'file-item';
                 
-                // Logic to format summary into points
-                const summaryParts = file.summary
-                    .split(/[•\-\n]/) 
-                    .filter(part => part.trim().length > 0)
-                    .map(part => `<li>${part.trim()}</li>`)
-                    .join('');
-                
-                const summaryHTML = summaryParts ? `<ul>${summaryParts}</ul>` : `<p>${file.summary}</p>`;
-                let commentsHTML = file.comments.map(c => `<div class="comment-item"><span>User:</span> ${c}</div>`).join('');
-
                 element.innerHTML = `
-                    <div class="file-top-row">
-                        <div class="file-meta-zone">
-                            <div class="file-icon-box" style="color: ${file.aesthetics.color}"><i class="fas ${file.aesthetics.icon}"></i></div>
-                            <div class="text-details">
-                                <span class="file-name" title="${file.name}">${file.name}</span>
-                                <span class="file-subtext">${file.aesthetics.type}</span>
-                            </div>
-                        </div>
-                        <button class="view-btn" data-id="${file.id}" data-url="${file.downloadUrl}" data-name="${file.name}">
-                            View File <i class="fas fa-chevron-right"></i>
-                        </button>
+                    <span class="type-pill">Portable Document</span>
+                    <span class="file-name">${data.name}</span>
+                    <div class="summary-wrapper">
+                        <div class="doc-summary" id="sum-${docSnap.id}">${data.summary || "No overview available."}</div>
+                        <button class="toggle-btn" id="btn-${docSnap.id}">Read more</button>
                     </div>
-
-                    <div class="doc-summary">
-                        <strong>Overview:</strong> ${summaryHTML}
-                    </div>
-
-                    <div class="file-social-metrics">
-                        <div class="metric-pill"><i class="fas fa-eye"></i> <span id="dl-${file.id}">${file.downloads}</span> Views</div>
-                        <div class="metric-pill like-trigger" data-id="${file.id}"><i class="fas fa-thumbs-up"></i> <span id="lk-${file.id}">${file.likes}</span> Likes</div>
-                        <div class="metric-pill comment-trigger" data-id="${file.id}"><i class="fas fa-comments"></i> <span id="cm-cnt-${file.id}">${file.comments.length}</span> Comments</div>
-                    </div>
-
-                    <div class="comments-tray" id="tray-${file.id}">
-                        <div id="list-${file.id}" style="max-height: 120px; overflow-y: auto; display:flex; flex-direction:column; gap:6px;">
-                            ${commentsHTML || '<p id="empty-hint-' + file.id + '" style="font-size:0.75rem; color:var(--text-dim)">No responses written yet.</p>'}
-                        </div>
-                        <div class="comment-input-group">
-                            <input type="text" class="comment-field" id="input-${file.id}" placeholder="Type security review note...">
-                            <button class="comment-post-btn" data-id="${file.id}">Post</button>
-                        </div>
+                    <div class="footer-metrics">
+                        <span><i class="fas fa-eye"></i> ${data.downloads || 0}</span>
+                        <span><i class="fas fa-thumbs-up"></i> ${data.likes || 0}</span>
+                        <button class="view-btn">View Document</button>
                     </div>
                 `;
                 listContainer.appendChild(element);
+
+                // Initialize Toggle Logic
+                const sum = document.getElementById(`sum-${docSnap.id}`);
+                const btn = document.getElementById(`btn-${docSnap.id}`);
+                if(sum.scrollHeight > 78) {
+                    btn.style.display = 'block';
+                    btn.onclick = () => {
+                        sum.classList.toggle('expanded');
+                        btn.innerText = sum.classList.contains('expanded') ? 'Read less' : 'Read more';
+                    };
+                }
             });
-
-            bindInteractiveHooks();
-        };
-
-        const bindInteractiveHooks = () => {
-            document.querySelectorAll('.view-btn').forEach(btn => {
-                btn.onclick = async () => {
-                    const docId = btn.getAttribute('data-id');
-                    const url = btn.getAttribute('data-url');
-                    const name = btn.getAttribute('data-name');
-                    
-                    launchSecurePortal(url, name);
-                    
-                    const currentObj = localFilesDataset.find(f => f.id === docId);
-                    if(currentObj) {
-                        currentObj.downloads++;
-                        document.getElementById(`dl-${docId}`).innerText = currentObj.downloads;
-                    }
-
-                    try {
-                        const docRef = doc(db, "resource_metrics", docId);
-                        const docSnap = await getDoc(docRef);
-                        
-                        if (!docSnap.exists()) {
-                            await setDoc(docRef, { name: name, url: url, downloads: 1, likes: 0, comments: [], type: typeParam, subject: subjectParam, form: formParam.replace(/_/g, ' ') });
-                        } else {
-                            await updateDoc(docRef, { downloads: increment(1) });
-                        }
-                    } catch(err) { console.error("Non-blocking tracking metric error skipped safely.", err); }
-                };
-            });
-
-            document.querySelectorAll('.like-trigger').forEach(trigger => {
-                trigger.onclick = async () => {
-                    const docId = trigger.getAttribute('data-id');
-                    if (trigger.classList.contains('liked')) return; 
-                    trigger.classList.add('liked');
-                    
-                    const currentObj = localFilesDataset.find(f => f.id === docId);
-                    if(currentObj) {
-                        currentObj.likes++;
-                        document.getElementById(`lk-${docId}`).innerText = currentObj.likes;
-                    }
-
-                    try {
-                        const docRef = doc(db, "resource_metrics", docId);
-                        const docSnap = await getDoc(docRef);
-                        if (!docSnap.exists()) {
-                            await setDoc(docRef, { name: currentObj.name, url: currentObj.downloadUrl, downloads: currentObj.downloads, likes: 1, comments: [], type: typeParam, subject: subjectParam, form: formParam.replace(/_/g, ' ') });
-                        } else {
-                            await updateDoc(docRef, { likes: increment(1) });
-                        }
-                    } catch(err) { console.error("Metric sync error safely caught.", err); }
-                };
-            });
-
-            document.querySelectorAll('.comment-trigger').forEach(trigger => {
-                trigger.onclick = () => {
-                    const docId = trigger.getAttribute('data-id');
-                    const tray = document.getElementById(`tray-${docId}`);
-                    tray.style.display = tray.style.display === 'flex' ? 'none' : 'flex';
-                };
-            });
-
-            document.querySelectorAll('.comment-post-btn').forEach(btn => {
-                btn.onclick = async () => {
-                    const docId = btn.getAttribute('data-id');
-                    const inputField = document.getElementById(`input-${docId}`);
-                    const commentText = inputField.value.trim();
-
-                    if(commentText === "") return;
-                    inputField.value = ""; 
-
-                    const currentObj = localFilesDataset.find(f => f.id === docId);
-                    if(currentObj) {
-                        currentObj.comments.push(commentText);
-                        const hint = document.getElementById(`empty-hint-${docId}`);
-                        if(hint) hint.remove();
-
-                        const box = document.getElementById(`list-${docId}`);
-                        const item = document.createElement('div');
-                        item.className = 'comment-item';
-                        item.innerHTML = `<span>User:</span> ${commentText}`;
-                        box.appendChild(item);
-                        document.getElementById(`cm-cnt-${docId}`).innerText = currentObj.comments.length;
-                    }
-
-                    try {
-                        const docRef = doc(db, "resource_metrics", docId);
-                        const docSnap = await getDoc(docRef);
-                        if (!docSnap.exists()) {
-                            await setDoc(docRef, { name: currentObj.name, url: currentObj.downloadUrl, downloads: currentObj.downloads, likes: currentObj.likes, comments: [commentText], type: typeParam, subject: subjectParam, form: formParam.replace(/_/g, ' ') });
-                        } else {
-                            await updateDoc(docRef, { comments: arrayUnion(commentText) });
-                        }
-                    } catch(err) { console.error("Comment submission trace caught safely.", err); }
-                };
-            });
-        };
-
-        searchBar.oninput = () => renderActiveDataset();
-        document.querySelectorAll('.filter-tab').forEach(tab => {
-            tab.onclick = (e) => {
-                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-                currentActiveSegment = e.target.getAttribute('data-filter');
-                renderActiveDataset();
-            };
-        });
-
-        const launchSecurePortal = (url, name) => {
-            document.getElementById('viewerDocName').innerText = name;
-            document.getElementById('viewerFrame').src = url;
-            document.getElementById('portalViewer').classList.add('active');
-            
-            const matrix = document.getElementById('watermarkGrid');
-            matrix.innerHTML = '';
-            for(let i=0; i<9; i++) {
-                const block = document.createElement('div');
-                block.className = 'watermark-stamp';
-                block.innerText = `HSA SECURE CLOUD // 2026`;
-                matrix.appendChild(block);
-            }
-        };
-
-        document.getElementById('closePortalBtn').onclick = () => {
-            document.getElementById('portalViewer').classList.remove('active');
-            document.getElementById('viewerFrame').src = "";
-        };
-
-        const scrollTopBtn = document.getElementById('scrollToTop');
-        window.onscroll = () => { window.scrollY > 300 ? scrollTopBtn.classList.add('visible') : scrollTopBtn.classList.remove('visible'); };
-        scrollTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        fetchVaultData();
     </script>
 </body>
 </html>
