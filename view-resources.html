@@ -14,35 +14,39 @@
         body { background-color: var(--bg-deep); color: var(--text); min-height: 100vh; padding: 30px 20px; }
         .container { max-width: 700px; margin: 0 auto; }
         
-        .header-wrapper { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        .controls { margin-bottom: 20px; }
-        #searchInput { width: 100%; padding: 12px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; color: white; }
-        
         .file-item { background: var(--card-bg); border: 1px solid var(--border); padding: 18px; border-radius: 16px; margin-bottom: 16px; }
         .file-name { font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         
         .interaction-bar { display: flex; gap: 15px; margin-bottom: 12px; font-size: 0.8rem; color: var(--text-dim); }
-        .interact-btn { cursor: pointer; }
+        .interact-btn { cursor: pointer; color: var(--text-dim); transition: 0.2s; }
         .interact-btn:hover { color: var(--primary); }
-
-        .doc-summary { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 10px; }
-        .toggle-btn { color: var(--primary); cursor: pointer; font-size: 0.8rem; text-decoration: underline; display: inline-block; margin-bottom: 8px; }
-        .btn-group { display: flex; gap: 10px; }
-        .view-btn, .download-btn { background: transparent; color: var(--primary); border: 1px solid var(--primary); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+        
+        /* Summary Layout Elements */
+        .doc-summary { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 12px; margin-top: 5px; }
+        .doc-summary ul { padding-left: 18px; margin-top: 6px; }
+        .doc-summary li { margin-bottom: 4px; }
+        .toggle-btn { color: var(--primary); cursor: pointer; font-size: 0.8rem; text-decoration: underline; display: inline-block; margin-bottom: 2px; font-weight: 500; }
+        
+        /* Inline Comment Area Elements */
+        .comment-area { display: none; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid var(--border); }
+        .comment-list { max-height: 150px; overflow-y: auto; margin-bottom: 12px; font-size: 0.85rem; }
+        .msg-bubble { background: rgba(255,255,255,0.06); padding: 8px; border-radius: 6px; margin-bottom: 6px; color: var(--text); }
+        .comment-input-group { display: flex; gap: 8px; }
+        .comment-input { flex-grow: 1; padding: 8px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: 6px; color: white; font-size: 0.85rem; }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .view-btn, .download-btn { background: transparent; color: var(--primary); border: 1px solid var(--primary); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; text-decoration: none; text-align: center; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header-wrapper">
-            <h1 id="pageTitle">Vault Core</h1>
-        </div>
-        <div class="controls"><input type="text" id="searchInput" placeholder="Search..." onkeyup="filterResources()"></div>
+        <h1 style="margin-bottom: 20px;">Vault Core</h1>
         <div id="fileList"></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, where, doc, updateDoc, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, arrayUnion, getDoc, increment } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDhJD5Ux22U393z6RqT4Nv570jqoNrg7Xc",
@@ -52,47 +56,108 @@
             messagingSenderId: "233345875942",
             appId: "1:233345875942:web:cf7610de84f0b2262ce027"
         };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const db = getFirestore(initializeApp(firebaseConfig));
 
-        // Global functions for UI interactions
-        window.incrementView = async (id) => { await updateDoc(doc(db, "resource_metrics", id), { views: increment(1) }); };
-        window.addComment = async (id) => {
-            const comment = prompt("Enter your comment:");
-            if (comment) { await updateDoc(doc(db, "resource_metrics", id), { comments: arrayUnion(comment) }); location.reload(); }
+        // Metric Increment Logic
+        window.incrementView = async (id) => { 
+            await updateDoc(doc(db, "resource_metrics", id), { views: increment(1) }); 
         };
 
+        // Logic to toggle comments and show existing ones inline
+        window.toggleComments = async (id) => {
+            const area = document.getElementById(`commentArea-${id}`);
+            const list = document.getElementById(`commentList-${id}`);
+            
+            if (area.style.display === 'block') {
+                area.style.display = 'none';
+            } else {
+                area.style.display = 'block';
+                const docSnap = await getDoc(doc(db, "resource_metrics", id));
+                const data = docSnap.data();
+                const comments = data.comments || [];
+                list.innerHTML = comments.length > 0 
+                    ? comments.map(c => `<div class="msg-bubble">${c}</div>`).join('')
+                    : '<p style="color:var(--text-dim); font-size: 0.8rem;">No messages yet.</p>';
+            }
+        };
+
+        // Logic to add a comment without a browser prompt
+        window.submitComment = async (id) => {
+            const input = document.getElementById(`input-${id}`);
+            if (input.value.trim()) {
+                await updateDoc(doc(db, "resource_metrics", id), { comments: arrayUnion(input.value) });
+                input.value = '';
+                toggleComments(id); // Close view
+                toggleComments(id); // Refresh view to fetch new item
+            }
+        };
+
+        // Document summary collapse/expand logic with clean bullet structures
         window.toggleSummary = (id, fullText) => {
             const el = document.getElementById(`sum-${id}`);
             const isExpanded = el.getAttribute('data-expanded') === 'true';
-            const textParts = fullText.split(/[•\-\n]/).filter(p => p.trim().length > 0);
-            const toggleBtn = `<span class="toggle-btn" onclick="toggleSummary('${id}', \`${fullText.replace(/'/g, "\\'")}\`)">${isExpanded ? 'See More' : 'See Less'}</span>`;
-            el.innerHTML = toggleBtn + (isExpanded ? `<ul><li>${textParts[0].split(' ').slice(0, 7).join(' ')}...</li></ul>` : `<ul>${textParts.map(p => `<li>${p.trim()}</li>`).join('')}</ul>`);
-            el.setAttribute('data-expanded', !isExpanded);
+            
+            // Clean content chunks separated by dots, dashes or list item formatting symbols
+            const textParts = fullText.split(/[•\-\n]/).map(p => p.trim()).filter(p => p.length > 0);
+            
+            if (textParts.length === 0) return;
+
+            const escapedText = fullText.replace(/`/g, "\\`").replace(/'/g, "\\'");
+            
+            if (isExpanded) {
+                // Return to collapsed mode
+                el.innerHTML = `
+                    <span class="toggle-btn" onclick="toggleSummary('${id}', \`${escapedText}\`)">See More</span>
+                    <ul><li>${textParts[0].split(' ').slice(0, 7).join(' ')}...</li></ul>
+                `;
+                el.setAttribute('data-expanded', 'false');
+            } else {
+                // Expand completely to explicit bullet arrangement list
+                el.innerHTML = `
+                    <span class="toggle-btn" onclick="toggleSummary('${id}', \`${escapedText}\`)">See Less</span>
+                    <ul>${textParts.map(p => `<li>${p}</li>`).join('')}</ul>
+                `;
+                el.setAttribute('data-expanded', 'true');
+            }
         };
 
-        // Fetch Data
-        const urlParams = new URLSearchParams(window.location.search);
-        const q = query(collection(db, "resource_metrics"), where("type", "==", urlParams.get('type') || ""), where("subject", "==", urlParams.get('subject') || ""), where("form", "==", urlParams.get('form') || ""));
-
-        getDocs(q).then(snapshot => {
+        // Fetch and Render Everything Dynamic
+        getDocs(collection(db, "resource_metrics")).then(snapshot => {
             const list = document.getElementById('fileList');
             snapshot.forEach(docSnap => {
                 const file = docSnap.data();
                 const id = docSnap.id;
+                const summaryRaw = file.summary || "No document summary detailed.";
+                const cleanSummaryParts = summaryRaw.split(/[•\-\n]/).map(p => p.trim()).filter(p => p.length > 0);
+                const partialDisplay = cleanSummaryParts.length > 0 ? cleanSummaryParts[0].split(' ').slice(0, 7).join(' ') + "..." : "No summary provided.";
+
                 list.innerHTML += `
                     <div class="file-item">
                         <div class="file-name">${file.name}</div>
                         <div class="interaction-bar">
                             <span><i class="fas fa-eye"></i> ${file.views || 0}</span>
-                            <span class="interact-btn" onclick="addComment('${id}')"><i class="fas fa-comment"></i> ${file.comments ? file.comments.length : 0}</span>
+                            <span class="interact-btn" onclick="toggleComments('${id}')">
+                                <i class="fas fa-comment"></i> ${file.comments ? file.comments.length : 0} Messages
+                            </span>
                         </div>
+                        
+                        <!-- Bullet Arranged Document Summary Box with Top Action Button Toggle -->
                         <div class="doc-summary" id="sum-${id}" data-expanded="false">
-                            <span class="toggle-btn" onclick="toggleSummary('${id}', \`${(file.summary || "").replace(/'/g, "\\'")}\`)">See More</span>
-                            <ul><li>${(file.summary || "").split(/[•\-\n]/)[0].split(' ').slice(0, 7).join(' ')}...</li></ul>
+                            <span class="toggle-btn" onclick="toggleSummary('${id}', \`${summaryRaw.replace(/`/g, "\\`").replace(/'/g, "\\'")}\`)">See More</span>
+                            <ul><li>${partialDisplay}</li></ul>
                         </div>
+
+                        <!-- Inline Interactive Custom Professional Comment System Container -->
+                        <div id="commentArea-${id}" class="comment-area">
+                            <div id="commentList-${id}" class="comment-list"></div>
+                            <div class="comment-input-group">
+                                <input type="text" id="input-${id}" class="comment-input" placeholder="Type a message...">
+                                <button onclick="submitComment('${id}')" style="background:var(--primary); color:white; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.85rem;">Send</button>
+                            </div>
+                        </div>
+
                         <div class="btn-group">
-                            <button class="view-btn" onclick="incrementView('${id}');">View</button>
+                            <button class="view-btn" onclick="incrementView('${id}'); window.open('${file.url}')">View</button>
                             <a href="${file.url}" download class="download-btn">Download</a>
                         </div>
                     </div>
