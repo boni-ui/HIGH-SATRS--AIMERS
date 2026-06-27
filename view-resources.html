@@ -5,73 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSA Vault Core | Professional Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #f57c00; --bg: #05080f; --card: #0c121e; --text: #ffffff; --dim: #94a3b8; --border: rgba(255,255,255,0.08); }
-        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; padding: 40px 20px; }
-        .container { max-width: 850px; margin: 0 auto; }
-
-        /* Professional Card System */
-        .file-item { background: var(--card); border: 1px solid var(--border); padding: 28px; border-radius: 20px; margin-bottom: 20px; transition: all 0.3s ease; position: relative; }
-        .file-item:hover { border-color: var(--primary); box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
+        :root { --primary: #f57c00; --bg: #05080f; --card: #0c121e; --text: #ffffff; --dim: #94a3b8; --border: rgba(255,255,255,0.08); --danger: #ef4444; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 40px 20px; min-height: 100vh; }
+        .container { max-width: 900px; margin: 0 auto; }
         
-        .type-pill { background: rgba(245, 124, 0, 0.1); color: var(--primary); padding: 4px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-        .file-name { font-size: 1.25rem; font-weight: 700; margin: 10px 0; display: block; }
+        /* Header & Controls */
+        .hub-header { text-align: center; margin-bottom: 40px; }
+        .hub-header i { font-size: 3rem; color: var(--primary); margin-bottom: 15px; }
+        .control-panel { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 25px; margin-bottom: 30px; }
+        .search-bar { width: 100%; background: #05080f; border: 1px solid var(--border); padding: 15px 20px; border-radius: 12px; color: white; margin-bottom: 15px; }
+        .filter-tab { background: #05080f; border: 1px solid var(--border); color: var(--dim); padding: 8px 16px; border-radius: 10px; cursor: pointer; }
+        .filter-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* Collapsible Summary System */
-        .summary-wrapper { position: relative; margin: 15px 0; }
+        /* Professional Card Design */
+        .file-item { background: var(--card); border: 1px solid var(--border); padding: 28px; border-radius: 20px; margin-bottom: 20px; transition: 0.3s; position: relative; }
+        .file-item:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .type-pill { background: rgba(245, 124, 0, 0.1); color: var(--primary); padding: 4px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
+        .file-name { font-size: 1.25rem; font-weight: 700; margin: 10px 0; display: block; }
+        
+        /* Summary Toggling */
         .doc-summary { font-size: 0.9rem; color: var(--dim); line-height: 1.7; max-height: 75px; overflow: hidden; transition: max-height 0.4s ease; position: relative; }
         .doc-summary.expanded { max-height: 1000px; }
         .doc-summary::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 30px; background: linear-gradient(transparent, var(--card)); opacity: 0; transition: opacity 0.3s; }
         .doc-summary:not(.expanded)::after { opacity: 1; }
-        
         .toggle-btn { background: none; border: none; color: var(--primary); font-size: 0.75rem; font-weight: 800; cursor: pointer; margin-top: 8px; display: none; }
-        
-        .footer-metrics { display: flex; align-items: center; gap: 20px; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 15px; color: var(--dim); font-size: 0.85rem; }
-        .view-btn { margin-left: auto; background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .view-btn:hover { filter: brightness(1.2); }
+
+        /* Footer & Viewer */
+        .footer-metrics { display: flex; align-items: center; gap: 20px; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 15px; color: var(--dim); }
+        .view-btn { margin-left: auto; background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
+        .viewer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; z-index: 2000; padding: 20px; }
+        .viewer-overlay.active { display: block; }
     </style>
 </head>
 <body>
+
     <div class="container">
+        <div class="hub-header">
+            <i class="fas fa-box-archive"></i>
+            <h1>Vault Core</h1>
+        </div>
+        <div class="control-panel">
+            <input type="text" id="hubSearch" class="search-bar" placeholder="Search vault assets...">
+            <div id="filterBar" class="tabs-container">
+                <button class="filter-tab active" data-filter="all">All</button>
+                <button class="filter-tab" data-filter="notes">Notes</button>
+                <button class="filter-tab" data-filter="papers">Papers</button>
+            </div>
+        </div>
         <div id="fileList"></div>
+    </div>
+
+    <div class="viewer-overlay" id="portalViewer">
+        <button id="closePortalBtn" style="color:white; background:none; border:none; font-size:2rem; cursor:pointer;">&times;</button>
+        <iframe id="viewerFrame" style="width:100%; height:90%; border:none;"></iframe>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-        // ... [Insert your Firebase Config Here] ...
-
+        const firebaseConfig = { /* YOUR CONFIG */ };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        
+        let localFilesDataset = [];
         const listContainer = document.getElementById('fileList');
 
-        async function fetchVaultData() {
+        async function init() {
             const snap = await getDocs(collection(db, "resource_metrics"));
+            snap.forEach(d => localFilesDataset.push({id: d.id, ...d.data()}));
+            render();
+        }
+
+        function render(filter = 'all', query = '') {
             listContainer.innerHTML = "";
-            snap.forEach(docSnap => {
-                const data = docSnap.data();
-                const element = document.createElement('div');
-                element.className = 'file-item';
-                
-                element.innerHTML = `
+            localFilesDataset.filter(f => f.name.toLowerCase().includes(query.toLowerCase())).forEach(file => {
+                const el = document.createElement('div');
+                el.className = 'file-item';
+                el.innerHTML = `
                     <span class="type-pill">Portable Document</span>
-                    <span class="file-name">${data.name}</span>
-                    <div class="summary-wrapper">
-                        <div class="doc-summary" id="sum-${docSnap.id}">${data.summary || "No overview available."}</div>
-                        <button class="toggle-btn" id="btn-${docSnap.id}">Read more</button>
-                    </div>
+                    <span class="file-name">${file.name}</span>
+                    <div class="doc-summary" id="sum-${file.id}">${file.summary || "No description."}</div>
+                    <button class="toggle-btn" id="btn-${file.id}">Read more</button>
                     <div class="footer-metrics">
-                        <span><i class="fas fa-eye"></i> ${data.downloads || 0}</span>
-                        <span><i class="fas fa-thumbs-up"></i> ${data.likes || 0}</span>
-                        <button class="view-btn">View Document</button>
+                        <span><i class="fas fa-eye"></i> ${file.downloads || 0}</span>
+                        <button class="view-btn" onclick="openDoc('${file.url}')">View File</button>
                     </div>
                 `;
-                listContainer.appendChild(element);
-
-                // Initialize Toggle Logic
-                const sum = document.getElementById(`sum-${docSnap.id}`);
-                const btn = document.getElementById(`btn-${docSnap.id}`);
+                listContainer.appendChild(el);
+                
+                const sum = el.querySelector('.doc-summary');
+                const btn = el.querySelector('.toggle-btn');
                 if(sum.scrollHeight > 78) {
                     btn.style.display = 'block';
                     btn.onclick = () => {
@@ -81,7 +108,16 @@
                 }
             });
         }
-        fetchVaultData();
+
+        window.openDoc = (url) => {
+            document.getElementById('viewerFrame').src = url;
+            document.getElementById('portalViewer').classList.add('active');
+        };
+
+        document.getElementById('closePortalBtn').onclick = () => document.getElementById('portalViewer').classList.remove('active');
+        document.getElementById('hubSearch').oninput = (e) => render('all', e.target.value);
+        
+        init();
     </script>
 </body>
 </html>
